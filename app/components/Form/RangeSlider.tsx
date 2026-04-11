@@ -25,9 +25,20 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
   const maxValRef = useRef(value[1]);
   const range = useRef<HTMLDivElement>(null);
 
+  // Synchronize internal state with external value changes (e.g., from a 'Clear All' button)
+  useEffect(() => {
+    // Check if the external value is actually different from our current values
+    if (value[0] !== minVal || value[1] !== maxVal) {
+      setMinVal(value[0]);
+      setMaxVal(value[1]);
+      minValRef.current = value[0];
+      maxValRef.current = value[1];
+    }
+  }, [value[0], value[1], minVal, maxVal]);
+
   // Convert to percentage
   const getPercent = useCallback(
-    (value: number) => Math.round(((value - min) / (max - min)) * 100),
+    (val: number) => Math.round(((val - min) / (max - min)) * 100),
     [min, max]
   );
 
@@ -52,10 +63,6 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
     }
   }, [maxVal, getPercent]);
 
-  // Get updated value and pass to onChange
-  useEffect(() => {
-    onChange([minVal, maxVal]);
-  }, [minVal, maxVal, onChange]);
 
   return (
     <div className={`relative flex items-center justify-center w-48 h-10 ${className}`}>
@@ -66,9 +73,10 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
         value={minVal}
         step={step}
         onChange={(event) => {
-          const value = Math.min(Number(event.target.value), maxVal - 1);
-          setMinVal(value);
-          minValRef.current = value;
+          const v = Math.min(Number(event.target.value), maxVal - 1);
+          setMinVal(v);
+          minValRef.current = v;
+          onChange([v, maxVal]);
         }}
         className="thumb thumb--left pointer-events-none absolute h-0 w-full outline-none z-[3]"
       />
@@ -79,9 +87,10 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
         value={maxVal}
         step={step}
         onChange={(event) => {
-          const value = Math.max(Number(event.target.value), minVal + 1);
-          setMaxVal(value);
-          maxValRef.current = value;
+          const v = Math.max(Number(event.target.value), minVal + 1);
+          setMaxVal(v);
+          maxValRef.current = v;
+          onChange([minVal, v]);
         }}
         className="thumb thumb--right pointer-events-none absolute h-0 w-full outline-none z-[4]"
       />

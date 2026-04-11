@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { Icon } from "../Icon";
-import { Checkbox, Radio } from "../Form/SelectionControls";
+import { Checkbox, Radio } from "@/app/components/Form";
 import { RangeSlider } from "../Form/RangeSlider";
 import { Rating } from "../Other/Rating";
 
@@ -33,39 +33,93 @@ const FilterSection: React.FC<FilterSectionProps> = ({ title, children, defaultO
   );
 };
 
-const FilterSidebar = () => {
-  const [priceRange, setPriceRange] = useState<[number, number]>([200, 800]);
+interface FilterSidebarProps {
+  filters: {
+    category: string | null;
+    brands: string[];
+    priceRange: [number, number];
+    condition: string;
+    ratings: number[];
+  };
+  setFilters: React.Dispatch<React.SetStateAction<{
+    category: string | null;
+    brands: string[];
+    priceRange: [number, number];
+    condition: string;
+    ratings: number[];
+  }>>;
+}
+
+const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilters }) => {
+  const handleCategoryClick = useCallback((category: string) => {
+    setFilters(prev => ({
+      ...prev,
+      category: prev.category === category ? null : category
+    }));
+  }, [setFilters]);
+
+  const handleBrandToggle = useCallback((brand: string) => {
+    setFilters(prev => ({
+      ...prev,
+      brands: prev.brands.includes(brand)
+        ? prev.brands.filter(b => b !== brand)
+        : [...prev.brands, brand]
+    }));
+  }, [setFilters]);
+
+  const handleConditionChange = useCallback((condition: string) => {
+    setFilters(prev => ({ ...prev, condition }));
+  }, [setFilters]);
+
+  const handleRatingToggle = useCallback((val: number) => {
+    setFilters(prev => ({
+      ...prev,
+      ratings: prev.ratings.includes(val)
+        ? prev.ratings.filter(r => r !== val)
+        : [...prev.ratings, val]
+    }));
+  }, [setFilters]);
+
+  const handlePriceRangeChange = useCallback((val: [number, number]) => {
+    setFilters(prev => ({ ...prev, priceRange: val }));
+  }, [setFilters]);
+
+  const handleMinPriceChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setFilters(prev => ({ ...prev, priceRange: [Number(e.target.value), prev.priceRange[1]] }));
+  }, [setFilters]);
+
+  const handleMaxPriceChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setFilters(prev => ({ ...prev, priceRange: [prev.priceRange[0], Number(e.target.value)] }));
+  }, [setFilters]);
 
   return (
     <aside className="w-64 flex-shrink-0 flex flex-col gap-4">
       {/* Categories */}
       <FilterSection title="Category">
-        <ul className="flex flex-col gap-2 text-sm text-gray-600">
-          <li className="hover:text-brand-blue cursor-pointer">Mobile accessory</li>
-          <li className="hover:text-brand-blue cursor-pointer">Electronics</li>
-          <li className="hover:text-brand-blue cursor-pointer">Smartphones </li>
-          <li className="hover:text-brand-blue cursor-pointer">Modern tech</li>
+        <ul className="flex flex-col gap-2 text-sm">
+          {["Mobile accessory", "Electronics", "Smartphones", "Modern tech"].map((cat) => (
+            <li 
+              key={cat}
+              onClick={() => handleCategoryClick(cat)}
+              className={`cursor-pointer transition-colors ${filters.category === cat ? "text-brand-blue font-bold" : "text-gray-600 hover:text-brand-blue"}`}
+            >
+              {cat}
+            </li>
+          ))}
           <li className="text-brand-blue font-medium mt-2 cursor-pointer">See all</li>
         </ul>
       </FilterSection>
 
       {/* Brands */}
       <FilterSection title="Brands">
-        <Checkbox label="Samsung" defaultChecked />
-        <Checkbox label="Apple" />
-        <Checkbox label="Huawei" />
-        <Checkbox label="Pocco" />
-        <Checkbox label="Lenovo" />
-        <span className="text-brand-blue text-sm font-medium mt-1 cursor-pointer">See all</span>
-      </FilterSection>
-
-      {/* Features */}
-      <FilterSection title="Features">
-        <Checkbox label="Metallic" defaultChecked />
-        <Checkbox label="Plastic cover" />
-        <Checkbox label="8GB RAM" />
-        <Checkbox label="Super AMOLED" defaultChecked />
-        <Checkbox label="Fingerprint" />
+        {["Samsung", "Apple", "Huawei", "Pocco", "Lenovo"].map((brand) => (
+          <Checkbox 
+            key={brand}
+            label={brand} 
+            checked={filters.brands.includes(brand)}
+            onChange={() => handleBrandToggle(brand)}
+          />
+        ))}
         <span className="text-brand-blue text-sm font-medium mt-1 cursor-pointer">See all</span>
       </FilterSection>
 
@@ -74,10 +128,10 @@ const FilterSidebar = () => {
         <div className="px-1 pt-2 pb-6">
           <RangeSlider
             min={0}
-            max={1000}
+            max={2000}
             step={10}
-            value={priceRange}
-            onChange={setPriceRange}
+            value={filters.priceRange}
+            onChange={handlePriceRangeChange}
           />
         </div>
         <div className="flex gap-2">
@@ -85,8 +139,8 @@ const FilterSidebar = () => {
             <span className="text-xs text-gray-400">Min</span>
             <input
               type="number"
-              value={priceRange[0]}
-              onChange={(e) => setPriceRange([Number(e.target.value), priceRange[1]])}
+              value={filters.priceRange[0]}
+              onChange={handleMinPriceChange}
               className="w-full border border-gray-200 rounded px-2 py-1.5 text-sm outline-none focus:border-brand-blue"
             />
           </div>
@@ -94,30 +148,35 @@ const FilterSidebar = () => {
             <span className="text-xs text-gray-400">Max</span>
             <input
               type="number"
-              value={priceRange[1]}
-              onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value)])}
+              value={filters.priceRange[1]}
+              onChange={handleMaxPriceChange}
               className="w-full border border-gray-200 rounded px-2 py-1.5 text-sm outline-none focus:border-brand-blue"
             />
           </div>
         </div>
-        <button className="w-full mt-2 py-2 border border-blue-100 text-brand-blue text-sm font-bold rounded-md bg-white hover:bg-blue-50 transition-colors  cursor-pointer">
-          Apply
-        </button>
       </FilterSection>
 
       {/* Condition */}
       <FilterSection title="Condition">
-        <Radio name="condition" label="Any" defaultChecked />
-        <Radio name="condition" label="Refurbished" />
-        <Radio name="condition" label="Brand new" />
-        <Radio name="condition" label="Old items" />
+        {["Any", "Refurbished", "Brand new", "Old items"].map((cond) => (
+          <Radio 
+            key={cond}
+            name="condition" 
+            label={cond} 
+            checked={filters.condition === cond}
+            onChange={() => handleConditionChange(cond)}
+          />
+        ))}
       </FilterSection>
 
       {/* Ratings */}
       <FilterSection title="Ratings">
         {[5, 4, 3, 2].map((val) => (
           <div key={val} className="flex items-center gap-2 group cursor-pointer">
-            <Checkbox />
+            <Checkbox 
+               checked={filters.ratings.includes(val)}
+               onChange={() => handleRatingToggle(val)}
+            />
             <Rating value={val} />
           </div>
         ))}

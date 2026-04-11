@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import { MobileMenuProvider } from "./context/MobileMenuContext";
+import { AuthModalProvider } from "./context/AuthModalContext";
 import { MobileMenuSidebar } from "./components/Mobile/MobileMenuSidebar";
 import { PageWrapper } from "./components/Mobile/PageWrapper";
+import { AuthModal } from "./components/Modal/AuthModal";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,12 +44,16 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${outfit.variable} h-full antialiased`}
     >
       <body className="min-h-full font-inter">
-        <MobileMenuProvider>
-          <MobileMenuSidebar />
-          <PageWrapper>
-            {children}
-          </PageWrapper>
-        </MobileMenuProvider>
+        <Toaster richColors closeButton position="top-right" />
+        <AuthModalProvider>
+          <MobileMenuProvider>
+            <MobileMenuSidebar />
+            <PageWrapper>
+              {children}
+            </PageWrapper>
+          </MobileMenuProvider>
+          <AuthModal />
+        </AuthModalProvider>
       </body>
     </html>
   );

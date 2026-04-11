@@ -2,6 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "../Button";
 import { Icon } from "../Icon";
 
@@ -45,13 +46,15 @@ const CartSummary = () => {
                <span className="font-bold text-xl text-gray-900">$1357.97</span>
             </div>
 
-            <Button
-               variant="ghost"
-               className="w-full text-white font-bold h-12 text-base hover:opacity-90 transition-all cursor-pointer"
-               style={{ backgroundColor: "#00B517" }}
-            >
-               Checkout
-            </Button>
+            <Link href="/checkout" className="w-full">
+              <Button
+                 variant="ghost"
+                 className="w-full text-white font-bold h-12 text-base hover:opacity-90 transition-all cursor-pointer"
+                 style={{ backgroundColor: "#00B517" }}
+              >
+                 Checkout
+              </Button>
+            </Link>
 
             <div className="flex items-center justify-center gap-3 pt-2">
                {["amex", "mastercard", "applepay", "visa", "pp"].map((pay, idx) => (

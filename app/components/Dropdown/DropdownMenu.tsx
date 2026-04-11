@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { motion, Variants } from "framer-motion";
 import { Icon } from "../Icon";
 import { Checkbox } from "../Form";
 
@@ -40,21 +41,21 @@ const DropdownItem: React.FC<DropdownItemProps> = ({
       `}
     >
       {showCheckbox && (
-        <Checkbox 
-          checked={checked} 
+        <Checkbox
+          checked={checked}
           onChange={(e) => {
             e.stopPropagation();
             onSelect?.();
-          }} 
+          }}
           className="pointer-events-none"
         />
       )}
-      
+
       {icon && (
-        <Icon 
-          name={icon} 
-          size="sm" 
-          className={isActive ? "text-brand-blue" : "text-gray-400"} 
+        <Icon
+          name={icon}
+          size="sm"
+          className={isActive ? "text-brand-blue" : "text-gray-400"}
         />
       )}
 
@@ -82,18 +83,53 @@ interface DropdownMenuProps {
   width?: string | number;
 }
 
-const DropdownMenu: React.FC<DropdownMenuProps> = ({ 
-  children, 
+const dropdownVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.95,
+    y: -10,
+    transition: {
+      duration: 0.15,
+      ease: "easeOut"
+    }
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 300,
+      damping: 24
+    }
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.95,
+    y: -10,
+    transition: {
+      duration: 0.1,
+      ease: "easeIn"
+    }
+  }
+};
+
+const DropdownMenu: React.FC<DropdownMenuProps> = ({
+  children,
   className = "",
   width = "auto"
 }) => {
   return (
-    <div 
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      variants={dropdownVariants}
       className={`bg-white border border-gray-100 rounded-lg shadow-xl overflow-hidden py-1 ${className}`}
       style={{ width }}
     >
       {children}
-    </div>
+    </motion.div>
   );
 };
 
@@ -124,7 +160,7 @@ const DropdownSearch: React.FC<DropdownSearchProps> = ({
           className="w-full bg-white border border-gray-100 rounded py-2 pl-9 pr-3 text-sm placeholder:text-gray-400 outline-none focus:border-brand-blue transition-colors"
         />
         {value && onClear && (
-          <button 
+          <button
             onClick={onClear}
             className="absolute right-3 p-0.5 hover:bg-gray-100 rounded text-gray-400"
           >
@@ -160,8 +196,8 @@ const DropdownFooterAction: React.FC<DropdownFooterActionProps> = ({
   );
 };
 
-const DropdownEmptyState: React.FC<{ message?: string }> = ({ 
-  message = "Not found" 
+const DropdownEmptyState: React.FC<{ message?: string }> = ({
+  message = "Not found"
 }) => (
   <div className="px-4 py-4 text-sm text-gray-400 font-medium">
     {message}

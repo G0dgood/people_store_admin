@@ -6,23 +6,46 @@ import Link from "next/link";
 import { Icon } from "./Icon";
 import { StoreButtons } from "./Other/Misc";
 
+import { useAuthModal } from "@/app/context/AuthModalContext";
+
 const Footer = () => {
+  const { openLogin, openRegister } = useAuthModal();
   const columns = [
     {
       title: "About",
-      links: ["About Us", "Find store", "Categories", "Blogs"],
+      links: [
+        { label: "About Us", href: "#" },
+        { label: "Find store", href: "#" },
+        { label: "Categories", href: "#" },
+        { label: "Blogs", href: "#" }
+      ],
     },
     {
       title: "Partnership",
-      links: ["About Us", "Find store", "Categories", "Blogs"],
+      links: [
+        { label: "About Us", href: "#" },
+        { label: "Find store", href: "#" },
+        { label: "Categories", href: "#" },
+        { label: "Blogs", href: "#" }
+      ],
     },
     {
       title: "Information",
-      links: ["Help Center", "Money Refund", "Shipping", "Contact us"],
+      links: [
+        { label: "Help Center", href: "#" },
+        { label: "Money Refund", href: "#" },
+        { label: "Shipping", href: "#" },
+        { label: "Contact us", href: "#" }
+      ],
     },
     {
       title: "For users",
-      links: ["Login", "Register", "Settings", "My Orders"],
+      links: [
+        { label: "Login", onClick: openLogin },
+        { label: "Register", onClick: openRegister },
+        { label: "Settings", href: "#" },
+        { label: "My Orders", href: "/orders" }
+      ],
     },
   ];
 
@@ -65,8 +88,12 @@ const Footer = () => {
           <div key={idx} className="flex flex-col gap-3">
              <h4 className="font-bold text-gray-900 text-sm">{col.title}</h4>
              <div className="flex flex-col gap-1.5 text-sm text-gray-500">
-                {col.links.map((link, lIdx) => (
-                  <Link key={lIdx} href="#" className="hover:underline">{link}</Link>
+                {col.links.map((link: any, lIdx) => (
+                  link.onClick ? (
+                    <button key={lIdx} onClick={link.onClick} className="hover:underline text-left cursor-pointer">{link.label}</button>
+                  ) : (
+                    <Link key={lIdx} href={link.href} className="hover:underline">{link.label}</Link>
+                  )
                 ))}
              </div>
           </div>

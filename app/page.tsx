@@ -99,9 +99,9 @@ const Home = () => {
 
     <RegionSuppliers />
 
-    <Newsletter />
 
    </main>
+   <Newsletter />
 
    <Footer />
   </div>

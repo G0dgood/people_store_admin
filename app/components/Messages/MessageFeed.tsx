@@ -123,7 +123,7 @@ export const MessageFeed: React.FC = () => {
     animate="show"
    >
     <AnimatePresence mode="popLayout">
-     {displayedMessages.map((message) => {
+     {displayedMessages?.map((message) => {
       return (
        <motion.div
         key={message.id}

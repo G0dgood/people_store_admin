@@ -1,9 +1,32 @@
-"use client";
-
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { motion, Variants } from "framer-motion";
 import { Button } from "@/app/components/Button";
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.05,
+      delayChildren: 0.1
+    }
+  }
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, scale: 0.95 },
+  visible: { 
+    opacity: 1, 
+    scale: 1,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 15
+    }
+  }
+};
 
 interface CategoryProduct {
   name: string;
@@ -51,10 +74,18 @@ const CategorySection: React.FC<CategorySectionProps> = ({
       </div>
 
       {/* Product Grid */}
-      <div className="flex-1 grid grid-cols-2 md:grid-cols-4 divide-x divide-y divide-gray-100">
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        className="flex-1 grid grid-cols-2 md:grid-cols-4 divide-x divide-y divide-gray-100"
+      >
         {products.map((item, idx) => (
-          <div 
+          <motion.div 
             key={idx} 
+            variants={itemVariants}
+            whileHover={{ y: -5, transition: { type: "spring", stiffness: 300, damping: 15 } }}
             className="p-4 md:p-5 flex flex-col gap-2 hover:bg-gray-50 transition-colors group cursor-pointer"
           >
             <div className="flex justify-between gap-3 h-full">
@@ -78,9 +109,9 @@ const CategorySection: React.FC<CategorySectionProps> = ({
                 )}
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 };

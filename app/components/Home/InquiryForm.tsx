@@ -8,22 +8,22 @@ import { Icon } from "@/app/components/Icon";
 
 const InquiryForm = () => {
   return (
-    <section className="w-full relative rounded-lg overflow-hidden min-h-[420px] shadow-sm">
-      <Image 
-        src="/web_images/Mask_group_two.png" 
-        alt="Inquiry BG" 
-        fill 
-        className="object-cover" 
+    <section className="w-full relative rounded-lg min-h-[420px] shadow-sm flex bg-brand-blue/90 overflow-hidden">
+      <Image
+        src="/web_images/Mask_group_two.png"
+        alt="Inquiry BG"
+        fill
+        className="object-cover absolute inset-0 z-0"
       />
-      <div className="absolute inset-0 bg-gradient-to-r from-[#2C7CF1] to-[#00d1ff]/50 mix-blend-multiply opacity-90"></div>
-      
-      <div className="absolute inset-0 p-6 md:p-10 flex flex-col lg:flex-row items-center justify-between gap-10">
+      <div className="absolute inset-0 z-0 bg-gradient-to-r from-brand-blue/0 via-brand-blue/0 to-transparent"></div>
+
+      <div className="relative z-10 w-full p-6 md:p-10 flex flex-col lg:flex-row justify-between gap-10">
         <div className="max-w-md text-white flex flex-col gap-4 z-10">
-          <h2 className="text-2xl md:text-4xl font-bold leading-tight drop-shadow-md">
+          <h2 className="text-3xl md:text-[32px] font-bold leading-tight drop-shadow-sm pr-4 text-white">
             An easy way to send requests to all suppliers
           </h2>
-          <p className="text-sm opacity-90 hidden md:block leading-relaxed">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          <p className="text-base text-white hidden md:block leading-relaxed max-w-[390px]">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.
           </p>
         </div>
 
@@ -32,9 +32,9 @@ const InquiryForm = () => {
           <Input placeholder="What item you need?" className="h-10" />
           <Textarea placeholder="Type more details" rows={3} />
           <div className="flex gap-4">
-            <Input placeholder="Quantity" className="w-full md:w-32 h-10" />
-            <div className="w-full md:w-28 flex items-center justify-between px-3 border border-gray-300 rounded-lg bg-white cursor-pointer h-10 hover:border-brand-blue transition-colors">
-              <span className="text-sm text-gray-400">Pcs</span>
+            <Input placeholder="Quantity" className="w-full md:flex-1 h-10" />
+            <div className="w-full md:w-[140px] flex items-center justify-between px-3 border border-gray-300 rounded-lg bg-white cursor-pointer h-10 hover:border-brand-blue transition-colors">
+              <span className="text-sm text-gray-900">Pcs</span>
               <Icon name="expand_more" size="xs" className="text-gray-400" />
             </div>
           </div>

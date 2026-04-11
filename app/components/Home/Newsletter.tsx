@@ -6,9 +6,9 @@ import { Button } from "@/app/components/Button";
 
 const Newsletter = () => {
   return (
-    <section className="w-full bg-[#EFF2F4] py-12 px-6 rounded-lg text-center flex flex-col items-center gap-6 relative overflow-hidden shadow-sm">
+    <section className="w-full bg-[#EFF2F4] py-12 px-6 text-center flex flex-col items-center gap-6 relative overflow-hidden">
       <div className="max-w-[500px] flex flex-col items-center text-center gap-2 z-10">
-        <h3 className="text-xl md:text-2xl font-bold text-gray-900 truncate w-full">Subscribe on our newsletter</h3>
+        <h3 className="text-xl md:text-2xl font-bold text-gray-900 truncate w-full">Subscribe to our newsletter</h3>
         <p className="text-sm text-gray-500 leading-relaxed">
           Get daily news on upcoming offers from many suppliers all over the world
         </p>
@@ -27,7 +27,7 @@ const Newsletter = () => {
           Subscribe
         </Button>
       </div>
-      
+
       {/* Decorative background element */}
       <div className="absolute top-0 right-0 w-32 h-32 bg-brand-blue/5 rounded-full -mr-16 -mt-16 blur-3xl"></div>
       <div className="absolute bottom-0 left-0 w-32 h-32 bg-brand-blue/5 rounded-full -ml-16 -mb-16 blur-3xl"></div>

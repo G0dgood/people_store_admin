@@ -1,7 +1,31 @@
-"use client";
-
 import React from "react";
 import Image from "next/image";
+import { motion, Variants } from "framer-motion";
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2
+    }
+  }
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 20, scale: 0.95 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    scale: 1,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 15
+    }
+  }
+};
 
 const dealProducts = [
   { name: "Smart watches", discount: "-25%", image: "/images/watch.jpg" },
@@ -38,10 +62,18 @@ const DealsSection = () => {
           ))}
         </div>
       </div>
-      <div className="flex-1 flex overflow-x-auto scrollbar-none divide-x divide-gray-100">
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        className="flex-1 flex overflow-x-auto scrollbar-none divide-x divide-gray-100"
+      >
         {dealProducts.map((prod, idx) => (
-          <div 
+          <motion.div 
             key={idx} 
+            variants={itemVariants}
+            whileHover={{ y: -5, transition: { type: "spring", stiffness: 300, damping: 15 } }}
             className="flex-shrink-0 w-[140px] md:w-[200px] p-4 md:p-6 flex flex-col items-center gap-2 md:gap-3 hover:bg-gray-50 transition-colors group cursor-pointer"
           >
             <div className="w-24 h-24 md:w-32 md:h-32 relative bg-white border border-gray-50 rounded-md p-2 flex items-center justify-center">
@@ -58,9 +90,9 @@ const DealsSection = () => {
             <span className="px-3 py-1 bg-[#FFE3E3] text-[#EB001B] text-[10px] md:text-xs font-bold rounded-full shadow-sm">
               {prod.discount}
             </span>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 };

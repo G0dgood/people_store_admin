@@ -1,0 +1,56 @@
+"use client";
+
+import React, { createContext, useContext, useState } from "react";
+
+type AuthView = "login" | "register";
+
+interface AuthModalContextType {
+  isOpen: boolean;
+  view: AuthView;
+  openLogin: () => void;
+  openRegister: () => void;
+  closeModal: () => void;
+  setView: (view: AuthView) => void;
+}
+
+const AuthModalContext = createContext<AuthModalContextType | undefined>(undefined);
+
+export const AuthModalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [view, setView] = useState<AuthView>("login");
+
+  const openLogin = () => {
+    setView("login");
+    setIsOpen(true);
+  };
+
+  const openRegister = () => {
+    setView("register");
+    setIsOpen(true);
+  };
+
+  const closeModal = () => setIsOpen(false);
+
+  return (
+    <AuthModalContext.Provider 
+      value={{ 
+        isOpen, 
+        view, 
+        openLogin, 
+        openRegister, 
+        closeModal, 
+        setView 
+      }}
+    >
+      {children}
+    </AuthModalContext.Provider>
+  );
+};
+
+export const useAuthModal = () => {
+  const context = useContext(AuthModalContext);
+  if (context === undefined) {
+    throw new Error("useAuthModal must be used within an AuthModalProvider");
+  }
+  return context;
+};

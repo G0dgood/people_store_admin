@@ -1,8 +1,31 @@
-"use client";
-
 import React from "react";
 import Image from "next/image";
+import { motion, Variants } from "framer-motion";
 import { Icon } from "@/app/components/Icon";
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.1
+    }
+  }
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 15
+    }
+  }
+};
 
 const services = [
   {
@@ -31,10 +54,17 @@ const ExtraServices = () => {
   return (
     <section className="w-full">
       <h3 className="text-xl md:text-2xl font-bold mb-6 md:mb-8 text-gray-900">Extra services</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+      <motion.div 
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5"
+      >
         {services.map((service, idx) => (
-          <div 
+          <motion.div 
             key={idx} 
+            variants={itemVariants}
             className="bg-white border border-gray-200 rounded-lg overflow-hidden group hover:shadow-lg transition-all duration-300 cursor-pointer relative"
           >
             <div className="h-32 relative overflow-hidden">
@@ -54,9 +84,9 @@ const ExtraServices = () => {
                 {service.title}
               </p>
             </div>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 };
