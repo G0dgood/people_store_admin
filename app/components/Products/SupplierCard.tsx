@@ -1,0 +1,57 @@
+"use client";
+
+import React from "react";
+import Image from "next/image";
+import { Icon } from "../Icon";
+import { Button } from "../Button";
+
+const SupplierCard = () => {
+   return (
+      <div className="w-72 flex-shrink-0 flex flex-col gap-3">
+         <div className="bg-white border border-gray-200 rounded-lg p-5 flex flex-col gap-5 ">
+            {/* Vendor Header */}
+            <div className="flex gap-3 pb-4 border-b border-gray-100 items-center">
+               <div className="w-12 h-12 bg-[#DDF0FF] rounded flex items-center justify-center text-brand-blue font-bold text-xl">
+                  R
+               </div>
+               <div className="flex flex-col">
+                  <span className="text-sm font-medium text-gray-900">Supplier</span>
+                  <span className="text-xs text-gray-400">Guanjoi Trading Co., Ltd.</span>
+               </div>
+            </div>
+
+            {/* Vendor Details */}
+            <div className="flex flex-col gap-2">
+               <div className="flex items-center gap-3">
+                  <div className="w-5 h-4 relative">
+                     <Image src="/country/Property 1=DE.png" alt="Germany" fill className="object-cover" />
+                  </div>
+                  <span className="text-sm text-gray-400">Germany, Berlin</span>
+               </div>
+               <div className="flex items-center gap-3">
+                  <Icon name="verified_user" size="sm" className="text-gray-400" />
+                  <span className="text-sm text-gray-400">Verified Seller</span>
+               </div>
+               <div className="flex items-center gap-3">
+                  <Icon name="public" size="sm" className="text-gray-400" />
+                  <span className="text-sm text-gray-400">Worldwide shipping</span>
+               </div>
+            </div>
+
+            {/* Actions */}
+            <div className="flex flex-col gap-2">
+               <Button className="w-full bg-brand-blue text-white h-10">Send inquiry</Button>
+               <Button variant="ghost" className="w-full bg-white text-brand-blue border border-gray-200 h-10">Seller's profile</Button>
+            </div>
+         </div>
+
+         {/* Favorite Button Overlay (Design-specific placement) */}
+         <button className="flex items-center justify-center gap-2 py-4 text-brand-blue text-sm font-medium hover:underline cursor-pointer">
+            <Icon name="favorite" size="sm" />
+            Save for later
+         </button>
+      </div>
+   );
+};
+
+export { SupplierCard };

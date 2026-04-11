@@ -3,6 +3,24 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Grayscale (Neutral) */
+  --neutral-900: #1A1A1A;
+  --neutral-700: #404040;
+  --neutral-500: #8D99AE;
+  --neutral-300: #B0B9C1;
+  --neutral-200: #D8E2DC;
+  --neutral-100: #F4F7F6;
+  --neutral-50: #FFFFFF;
+
+  /* Brand Colors */
+  --brand-blue-light: #E3F2FD;
+  --brand-blue: #2196F3;
+  --brand-green-light: #E8F5E9;
+  --brand-green: #4CAF50;
+  --brand-orange-light: #FFF3E0;
+  --brand-orange: #FF9800;
+  --brand-red: #F44336;
 }
 
 @theme inline {
@@ -10,6 +28,117 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Grayscale */
+  --color-neutral-900: var(--neutral-900);
+  --color-neutral-700: var(--neutral-700);
+  --color-neutral-500: var(--neutral-500);
+  --color-neutral-300: var(--neutral-300);
+  --color-neutral-200: var(--neutral-200);
+  --color-neutral-100: var(--neutral-100);
+  --color-neutral-50: var(--neutral-50);
+
+  /* Map standard tailwind gray to neutral colors to restore input/dropdown visibility */
+  --color-gray-900: var(--neutral-900);
+  --color-gray-800: #1f2937;
+  --color-gray-700: var(--neutral-700);
+  --color-gray-600: #4b5563;
+  --color-gray-500: var(--neutral-500);
+  --color-gray-400: #9ca3af;
+  --color-gray-300: var(--neutral-300);
+  --color-gray-200: var(--neutral-200);
+  --color-gray-100: var(--neutral-100);
+  --color-gray-50: var(--neutral-50);
+
+  /* Brand */
+  --color-brand-blue-light: var(--brand-blue-light);
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-green-light: var(--brand-green-light);
+  --color-brand-green: var(--brand-green);
+  --color-brand-orange-light: var(--brand-orange-light);
+  --color-brand-orange: var(--brand-orange);
+  --color-brand-red: var(--brand-red);
+
+  /* Fonts */
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-outfit);
+
+  /* Typography Scales */
+  --font-size-h1: 2.25rem;
+  --font-size-h2: 1.875rem;
+  --font-size-h3: 1.5rem;
+  --font-size-h4: 1.25rem;
+  --font-size-h5: 1.125rem;
+  --font-size-h6: 1rem;
+
+  --font-size-body: 1rem;
+  --font-size-body-sm: 0.875rem;
+  --font-size-body-xs: 0.75rem;
+
+  /* Cursors */
+  --cursor-default: default;
+  --cursor-pointer: pointer;
+  --cursor-text: text;
+  --cursor-grab: grab;
+  --cursor-grabbing: grabbing;
+  --cursor-zoom-in: zoom-in;
+  --cursor-zoom-out: zoom-out;
+  --cursor-move: move;
+  --cursor-alias: alias;
+  --cursor-no-drop: no-drop;
+  --cursor-copy: copy;
+  --cursor-row-resize: row-resize;
+  --cursor-col-resize: col-resize;
+  --cursor-nwse-resize: nwse-resize;
+  --cursor-nesw-resize: nesw-resize;
+  --cursor-n-resize: n-resize;
+  --cursor-e-resize: e-resize;
+  --cursor-s-resize: s-resize;
+  --cursor-w-resize: w-resize;
+  --cursor-vertical-text: vertical-text;
+}
+
+@layer base {
+  h1, .h1 {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h1);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: var(--neutral-900);
+  }
+  h2, .h2 {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h2);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    color: var(--neutral-900);
+  }
+  h3, .h3 {
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h3);
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--neutral-900);
+  }
+  h4, .h4 { font-family: var(--font-heading); font-size: var(--font-size-h4); font-weight: 700; color: var(--neutral-900); }
+  h5, .h5 { font-family: var(--font-heading); font-size: var(--font-size-h5); font-weight: 700; color: var(--neutral-900); }
+  h6, .h6 { font-family: var(--font-heading); font-size: var(--font-size-h6); font-weight: 700; color: var(--neutral-900); }
+
+  body {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-body);
+    color: var(--neutral-700);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer utilities {
+  .text-body-sm { font-size: var(--font-size-body-sm); }
+  .text-body-xs { font-size: var(--font-size-body-xs); }
+  .text-muted { color: var(--neutral-500); }
 }
 
 @media (prefers-color-scheme: dark) {
