@@ -17,7 +17,7 @@ const CartSummary = () => {
                   placeholder="Add coupon"
                   className="flex-1 h-10 px-3 border border-gray-300 rounded-l-lg outline-none focus:border-brand-blue transition-colors text-sm text-gray-900 placeholder-gray-400"
                />
-               <Button variant="ghost" className="h-10 px-4 border border-l-0 border-gray-300 bg-white text-brand-blue font-bold rounded-l-none rounded-r-lg hover:bg-gray-50 text-sm shadow-none">
+               <Button variant="primary" className="h-10 px-4 border border-l-0 border-brand-blue bg-brand-blue text-white font-bold rounded-l-none rounded-r-lg hover:bg-brand-blue/90 transition-colors text-sm shadow-none cursor-pointer">
                   Apply
                </Button>
             </div>
