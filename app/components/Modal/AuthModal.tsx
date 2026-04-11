@@ -16,8 +16,10 @@ const AuthModal = () => {
       <AnimatePresence mode="wait">
         {view === "login" ? (
           <LoginForm key="login" onSwitch={() => setView("register")} onClose={closeModal} />
-        ) : (
+        ) : view === "register" ? (
           <RegisterForm key="register" onSwitch={() => setView("login")} onClose={closeModal} />
+        ) : (
+          <ForgotPasswordForm key="forgot" onBack={() => setView("login")} onClose={closeModal} />
         )}
       </AnimatePresence>
     </Modal>
@@ -58,7 +60,12 @@ const LoginForm = ({ onSwitch, onClose }: { onSwitch: () => void; onClose: () =>
               }
             />
             <div className="flex justify-end px-1">
-              <button className="text-[10px] font-bold text-brand-blue hover:underline cursor-pointer">Forgot password?</button>
+              <button 
+                onClick={() => useAuthModal().setView("forgotPassword")}
+                className="text-[10px] font-bold text-brand-blue hover:underline cursor-pointer"
+              >
+                Forgot password?
+              </button>
             </div>
           </div>
         </div>
@@ -183,5 +190,43 @@ const RegisterForm = ({ onSwitch, onClose }: { onSwitch: () => void; onClose: ()
     </motion.div>
   );
 };
+
+const ForgotPasswordForm = ({ onBack, onClose }: { onBack: () => void; onClose: () => void }) => (
+  <motion.div
+    initial={{ opacity: 0, scale: 0.95 }}
+    animate={{ opacity: 1, scale: 1 }}
+    exit={{ opacity: 0, scale: 0.95 }}
+    transition={{ duration: 0.2 }}
+  >
+    <ModalHeader title="Reset Password" onClose={onClose} />
+    <ModalBody className="flex flex-col gap-6 py-6 p-10">
+      <div className="flex flex-col gap-2 text-center">
+        <p className="text-sm text-gray-500">
+          Enter your email address and we'll send you a link to reset your password.
+        </p>
+      </div>
+
+      <div className="flex flex-col gap-4">
+        <FloatingInput
+          label="Email Address"
+          placeholder="example@gmail.com"
+          type="email"
+        />
+      </div>
+
+      <Button
+        className="w-full h-12 font-bold"
+        size="lg"
+      >
+        Send Reset Link
+      </Button>
+
+      <p className="text-center text-sm text-gray-500 mt-2">
+        Remember your password?{" "}
+        <button onClick={onBack} className="text-brand-blue font-bold hover:underline cursor-pointer">Back to Login</button>
+      </p>
+    </ModalBody>
+  </motion.div>
+);
 
 export { AuthModal };
