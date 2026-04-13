@@ -9,7 +9,7 @@ interface ModalProps {
   onClose: () => void;
   title?: string;
   children: React.ReactNode;
-  size?: "sm" | "md" | "lg" | "xl";
+  size?: "sm" | "md" | "lg" | "xl" | "normal" | "large";
   footer?: React.ReactNode;
   className?: string;
   hideHeaderBorder?: boolean;
@@ -45,6 +45,8 @@ export default function Modal({
     md: "max-w-lg",
     lg: "max-w-2xl",
     xl: "max-w-4xl",
+    normal: "max-w-lg",
+    large: "max-w-2xl",
   };
 
   const modalContent = (
