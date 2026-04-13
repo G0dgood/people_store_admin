@@ -1,5 +1,7 @@
 export { default as Modal } from "./Modal";
 export { default as ModalHeader } from "./ModalHeader";
+export { default as ModalBody } from "./ModalBody";
+export { default as ModalFooter } from "./ModalFooter";
 export { ForgotPasswordModal } from "./ForgotPasswordModal";
 export { TermsModal } from "./TermsModal";
 export { ClearWishlistModal } from "./ClearWishlistModal";

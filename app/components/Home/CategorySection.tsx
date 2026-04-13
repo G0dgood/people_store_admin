@@ -82,34 +82,39 @@ const CategorySection: React.FC<CategorySectionProps> = ({
         className="flex-1 grid grid-cols-2 md:grid-cols-4 divide-x divide-y divide-gray-100"
       >
         {products.map((item, idx) => (
-          <motion.div 
+          <Link 
             key={idx} 
-            variants={itemVariants}
-            whileHover={{ y: -5, transition: { type: "spring", stiffness: 300, damping: 15 } }}
-            className="p-4 md:p-5 flex flex-col gap-2 hover:bg-gray-50 transition-colors group cursor-pointer"
+            href="/products/detail"
+            className="flex h-full"
           >
-            <div className="flex justify-between gap-3 h-full">
-              <div className="flex flex-col">
-                <h4 className="text-xs md:text-sm font-medium text-gray-700 group-hover:text-brand-blue transition-colors">
-                  {item.name}
-                </h4>
-                <p className="text-[10px] md:text-xs text-gray-400 mt-1">
-                  From <br className="hidden md:block" />
-                  <span className="font-medium">USD {item.price}</span>
-                </p>
+            <motion.div 
+              variants={itemVariants}
+              whileHover={{ y: -5, transition: { type: "spring", stiffness: 300, damping: 15 } }}
+              className="p-4 md:p-5 flex flex-col gap-2 hover:bg-gray-50 transition-colors group cursor-pointer w-full h-full"
+            >
+              <div className="flex justify-between gap-3 h-full">
+                <div className="flex flex-col">
+                  <h4 className="text-xs md:text-sm font-medium text-gray-700 group-hover:text-brand-blue transition-colors">
+                    {item.name}
+                  </h4>
+                  <p className="text-[10px] md:text-xs text-gray-400 mt-1">
+                    From <br className="hidden md:block" />
+                    <span className="font-medium">USD {item.price}</span>
+                  </p>
+                </div>
+                <div className="w-16 h-16 md:w-20 md:h-20 relative flex-shrink-0">
+                  {item.image && (
+                    <Image 
+                      src={item.image} 
+                      alt={item.name} 
+                      fill 
+                      className="object-contain group-hover:translate-y-[-2px] transition-transform duration-300" 
+                    />
+                  )}
+                </div>
               </div>
-              <div className="w-16 h-16 md:w-20 md:h-20 relative flex-shrink-0">
-                {item.image && (
-                  <Image 
-                    src={item.image} 
-                    alt={item.name} 
-                    fill 
-                    className="object-contain group-hover:translate-y-[-2px] transition-transform duration-300" 
-                  />
-                )}
-              </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </Link>
         ))}
       </motion.div>
     </section>

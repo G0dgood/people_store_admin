@@ -19,9 +19,12 @@ interface ProductProps {
 
 export const ProductGridItem: React.FC<{ product: ProductProps }> = ({ product }) => {
    return (
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow group flex flex-col h-full cursor-pointer">
+      <Link 
+         href="/products/detail" 
+         className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow group flex flex-col h-full cursor-pointer"
+      >
          <div className="relative w-full aspect-square p-5 border-b border-gray-100 flex items-center justify-center">
-            <div className="relative w-full h-full">
+            <div className="relative w-full h-full transition-transform duration-300 group-hover:scale-110">
                <Image src={product.image} alt={product.title} fill className="object-contain" />
             </div>
          </div>
@@ -34,11 +37,11 @@ export const ProductGridItem: React.FC<{ product: ProductProps }> = ({ product }
                <Rating value={product.rating} />
                <span className="text-orange-500 text-sm font-medium">{product.rating}</span>
             </div>
-            <Link href="/products/detail" className="text-gray-600 text-sm leading-relaxed line-clamp-2 hover:text-brand-blue cursor-pointer transition-colors">
+            <span className="text-gray-600 text-sm leading-relaxed line-clamp-2 group-hover:text-brand-blue cursor-pointer transition-colors">
                {product.title}
-            </Link>
+            </span>
          </div>
-      </div>
+      </Link>
    );
 };
 

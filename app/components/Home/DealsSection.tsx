@@ -70,27 +70,32 @@ const DealsSection = () => {
         className="flex-1 flex overflow-x-auto scrollbar-none divide-x divide-gray-100"
       >
         {dealProducts.map((prod, idx) => (
-          <motion.div 
+          <Link 
             key={idx} 
-            variants={itemVariants}
-            whileHover={{ y: -5, transition: { type: "spring", stiffness: 300, damping: 15 } }}
-            className="flex-shrink-0 w-[140px] md:w-[200px] p-4 md:p-6 flex flex-col items-center gap-2 md:gap-3 hover:bg-gray-50 transition-colors group cursor-pointer"
+            href="/products/detail" 
+            className="flex-shrink-0"
           >
-            <div className="w-24 h-24 md:w-32 md:h-32 relative bg-white border border-gray-50 rounded-md p-2 flex items-center justify-center">
-              <Image 
-                src={prod.image} 
-                alt={prod.name} 
-                fill 
-                className="object-contain group-hover:scale-105 transition-transform duration-300" 
-              />
-            </div>
-            <p className="text-xs md:text-sm text-center line-clamp-1 text-gray-600 group-hover:text-brand-blue transition-colors">
-              {prod.name}
-            </p>
-            <span className="px-3 py-1 bg-[#FFE3E3] text-[#EB001B] text-[10px] md:text-xs font-bold rounded-full shadow-sm">
-              {prod.discount}
-            </span>
-          </motion.div>
+            <motion.div 
+              variants={itemVariants}
+              whileHover={{ y: -5, transition: { type: "spring", stiffness: 300, damping: 15 } }}
+              className="w-[140px] md:w-[200px] p-4 md:p-6 flex flex-col items-center gap-2 md:gap-3 hover:bg-gray-50 transition-colors group cursor-pointer h-full"
+            >
+              <div className="w-24 h-24 md:w-32 md:h-32 relative bg-white border border-gray-50 rounded-md p-2 flex items-center justify-center">
+                <Image 
+                  src={prod.image} 
+                  alt={prod.name} 
+                  fill 
+                  className="object-contain group-hover:scale-105 transition-transform duration-300" 
+                />
+              </div>
+              <p className="text-xs md:text-sm text-center line-clamp-1 text-gray-600 group-hover:text-brand-blue transition-colors">
+                {prod.name}
+              </p>
+              <span className="px-3 py-1 bg-[#FFE3E3] text-[#EB001B] text-[10px] md:text-xs font-bold rounded-full shadow-sm">
+                {prod.discount}
+              </span>
+            </motion.div>
+          </Link>
         ))}
       </motion.div>
     </section>
