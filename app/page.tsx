@@ -12,6 +12,7 @@ import { InquiryForm } from "@/app/components/Home/InquiryForm";
 import { ExtraServices } from "@/app/components/Home/ExtraServices";
 import { RegionSuppliers } from "@/app/components/Home/RegionSuppliers";
 import { Newsletter } from "@/app/components/Home/Newsletter";
+import Link from "next/link";
 
 const homeOutdoorProducts = [
  { name: "Soft chairs", price: "19", image: "/images/chair.jpg" },
@@ -82,7 +83,11 @@ const Home = () => {
      <h3 className="text-xl md:text-2xl font-bold mb-6 md:mb-8 text-gray-900">Recommended items</h3>
      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-5">
       {recommendedItems.map((item, idx) => (
-       <div key={idx} className="bg-white border border-gray-200 rounded-lg p-4 flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer group">
+       <Link
+        key={idx}
+        href="/products/detail"
+        className="bg-white border border-gray-200 rounded-lg p-4 flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer group"
+       >
         <div className="w-full aspect-square relative mb-2">
          <Image src={item.image} alt={item.title} fill className="object-contain group-hover:scale-105 transition-transform" />
         </div>
@@ -90,7 +95,7 @@ const Home = () => {
          <span className="font-bold text-gray-900">{item.price}</span>
          <p className="text-sm text-gray-500 line-clamp-2 leading-tight group-hover:text-brand-blue transition-colors">{item.title}</p>
         </div>
-       </div>
+       </Link>
       ))}
      </div>
     </section>
