@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { Icon } from "../Icon";
 import { Button } from "../Button";
+import { FavoriteButton } from "../Other";
 
 const SupplierCard = () => {
    return (
@@ -46,10 +47,12 @@ const SupplierCard = () => {
          </div>
 
          {/* Favorite Button Overlay (Design-specific placement) */}
-         <button className="flex items-center justify-center gap-2 py-4 text-brand-blue text-sm font-medium hover:underline cursor-pointer">
-            <Icon name="favorite" size="sm" />
+         <FavoriteButton 
+            variant="none" 
+            className="flex items-center justify-center gap-2 py-4 text-brand-blue text-sm font-medium hover:underline cursor-pointer"
+         >
             Save for later
-         </button>
+         </FavoriteButton>
       </div>
    );
 };

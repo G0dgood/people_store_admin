@@ -7,7 +7,7 @@ const PageWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isOpen, closeMenu } = useMobileMenu();
 
   return (
-    <div className="relative overflow-x-hidden min-h-screen">
+    <div className="relative overflow-clip min-h-screen">
       {/* Backdrop for mobile menu */}
       <div 
         className={`fixed inset-0 bg-black/50 z-[90] transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}

@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { Icon } from "../Icon";
 import { DropdownMenu, DropdownItem } from "../Dropdown/DropdownMenu";
@@ -8,6 +9,9 @@ import { DropdownMenu, DropdownItem } from "../Dropdown/DropdownMenu";
 export const SecondaryNavbar: React.FC = () => {
   const [isSecondaryCategoryOpen, setIsSecondaryCategoryOpen] = useState(false);
   const secondaryCategoryRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+
+  const isActive = (path: string) => pathname === path;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -18,6 +22,13 @@ export const SecondaryNavbar: React.FC = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const navLinks = [
+    { label: "Hot deals", href: "/products" },
+    { label: "Gift boxes", href: "/gift-boxes" },
+    { label: "Projects", href: "/projects" },
+    { label: "Menu item", href: "/menu" },
+  ];
 
   return (
     <div className="w-full bg-white border-t border-gray-100 hidden lg:block">
@@ -52,12 +63,19 @@ export const SecondaryNavbar: React.FC = () => {
             </AnimatePresence>
           </div>
 
-          <div className="flex items-center gap-6 text-sm font-medium text-gray-900">
-            <Link href="/products" className="hover:text-brand-blue">Hot deals</Link>
-            <Link href="#" className="hover:text-brand-blue">Gift boxes</Link>
-            <Link href="#" className="hover:text-brand-blue">Projects</Link>
-            <Link href="#" className="hover:text-brand-blue">Menu item</Link>
-            <div className="flex items-center gap-1 cursor-pointer hover:text-brand-blue">
+          <div className="flex items-center gap-6 text-sm font-medium">
+            {navLinks.map((link) => (
+              <Link 
+                key={link.label}
+                href={link.href} 
+                className={`transition-colors ${
+                  isActive(link.href) ? "text-brand-blue font-bold" : "text-gray-900 hover:text-brand-blue"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+            <div className="flex items-center gap-1 cursor-pointer text-gray-900 hover:text-brand-blue transition-colors">
               Help
               <Icon name="expand_more" size="xs" />
             </div>

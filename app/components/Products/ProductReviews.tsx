@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { Icon } from "../Icon";
 import { toast } from "sonner";
+import { ReviewModal } from "../Modal";
 
 interface Review {
   id: number;
@@ -47,6 +48,8 @@ const mockReviews: Review[] = [
 ];
 
 const ProductReviews = () => {
+  const [isReviewModalOpen, setIsReviewModalOpen] = React.useState(false);
+
   return (
     <motion.div 
       initial={{ opacity: 0, y: 10 }}
@@ -93,12 +96,18 @@ const ProductReviews = () => {
         <div className="flex items-center justify-between">
           <h3 className="text-xl font-bold text-gray-900 tracking-tight">User Reviews</h3>
           <button 
-            onClick={() => toast.success("Thank you for your interest! Review form coming soon.")}
-            className="text-sm font-bold text-brand-blue hover:underline"
+            onClick={() => setIsReviewModalOpen(true)}
+            className="text-sm font-bold text-brand-blue hover:underline cursor-pointer"
           >
             Write a Review
           </button>
         </div>
+
+        <ReviewModal 
+          isOpen={isReviewModalOpen}
+          onClose={() => setIsReviewModalOpen(false)}
+          productName="Canon EOS R5 Mirrorless Camera"
+        />
 
         <div className="flex flex-col gap-8 divide-y divide-gray-100">
           {mockReviews.map((review) => (
