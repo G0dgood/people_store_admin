@@ -39,8 +39,8 @@ const ProductsPage = () => {
     {
       id: "1",
       title: "Canon EOS R5 Mirrorless Camera with 24-105mm Lens Black, ultra high resolution",
-      price: "$998.00",
-      originalPrice: "$1,128.00",
+      price: "₦998.00",
+      originalPrice: "₦1,128.00",
       rating: 4.8,
       orders: 154,
       shipping: "Free Shipping",
@@ -53,7 +53,7 @@ const ProductsPage = () => {
     {
       id: "2",
       title: "Apple iPhone 14 Pro Max 128GB Deep Purple, unlocked and optimized for global speed",
-      price: "$1,099.00",
+      price: "₦1,099.00",
       rating: 4.9,
       orders: 2310,
       shipping: "Fast Shipping",
@@ -66,8 +66,8 @@ const ProductsPage = () => {
     {
       id: "3",
       title: "Sony WH-1000XM5 Noise Canceling Headphones with Auto NC Optimizer",
-      price: "$348.00",
-      originalPrice: "$399.00",
+      price: "₦348.00",
+      originalPrice: "₦399.00",
       rating: 4.7,
       orders: 890,
       shipping: "Free Shipping",
@@ -80,7 +80,7 @@ const ProductsPage = () => {
     {
       id: "4",
       title: "Samsung Galaxy Watch5 Pro Bluetooth SM-R920NZKAXAA Gray Titanium",
-      price: "$449.00",
+      price: "₦449.00",
       rating: 4.5,
       orders: 450,
       shipping: "Free Shipping",
@@ -93,8 +93,8 @@ const ProductsPage = () => {
     {
       id: "5",
       title: "Microsoft Surface Laptop 5 13.5\" Touchscreen with Intel Core i7",
-      price: "$1,299.00",
-      originalPrice: "$1,499.00",
+      price: "₦1,299.00",
+      originalPrice: "₦1,499.00",
       rating: 4.6,
       orders: 210,
       shipping: "Free Shipping",
@@ -107,7 +107,7 @@ const ProductsPage = () => {
     {
       id: "6",
       title: "GoPro HERO11 Black Waterproof Action Camera with 5.3K Video",
-      price: "$399.00",
+      price: "₦399.00",
       rating: 4.8,
       orders: 1200,
       shipping: "Free Shipping",
@@ -128,7 +128,7 @@ const ProductsPage = () => {
       if (filters.brands.length > 0 && !filters.brands.includes(product.brand)) return false;
 
       // Price filter
-      const price = parseFloat(product.price.replace(/[$,]/g, ""));
+      const price = parseFloat(product.price.replace(/[₦$,]/g, ""));
       if (price < filters.priceRange[0] || price > filters.priceRange[1]) return false;
 
       // Condition filter
@@ -154,7 +154,7 @@ const ProductsPage = () => {
     {/* Mobile Header */}
     <ProductMobileHeader title={filters.category || "Mobile accessory"} />
 
-    <main className="flex-1 max-w-[1440px] mx-auto px-0 md:px-6 py-0 md:py-6 flex flex-col gap-0 md:gap-6 w-full">
+    <main className="flex-1 max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 py-0 md:py-6 flex flex-col gap-0 md:gap-6 w-full">
       {/* Category Chips (Mobile only) */}
       <CategoryChips 
         categories={categories}
@@ -214,25 +214,25 @@ const ProductsPage = () => {
           {
             id: "r1",
             title: "Solid Backpack blue jeans large size",
-            price: "$10.30",
+            price: "₦10.30",
             image: "/images/bag.jpg"
           },
           {
             id: "r2",
             title: "T-shirts with multiple colors, for men",
-            price: "$10.30",
+            price: "₦10.30",
             image: "/images/shirt.jpg"
           },
           {
             id: "r3",
             title: "Smart watch premium edition",
-            price: "$10.30",
+            price: "₦10.30",
             image: "/images/watch.jpg"
           },
           {
             id: "r4",
             title: "Leather wallet for men",
-            price: "$10.30",
+            price: "₦10.30",
             image: "/images/wallet.jpg"
           }
         ]}

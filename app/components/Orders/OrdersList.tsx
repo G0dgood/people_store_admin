@@ -3,8 +3,12 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { Badge } from "../Badge";
-import { Button } from "../Button";
+import { Button } from "../Button/Button";
 import { Icon } from "../Icon";
+import { Pagination } from "../Navigation/Pagination";
+import { useCart } from "@/app/context/CartContext";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface OrderData {
   id: string;
@@ -53,7 +57,8 @@ const MOCK_ORDERS: OrderData[] = [
     date: "Aug 12, 2026",
     items: 4,
     total: 820.00,
-    status: "Delivered"
+    status: "Delivered",
+    image: "/images/headphone.jpg"
   },
   {
     id: "#ORD-99326",
@@ -85,6 +90,8 @@ export const OrdersList: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 3;
+  const router = useRouter();
+  const { addToCart } = useCart();
 
   React.useEffect(() => {
     setCurrentPage(1);
@@ -100,6 +107,24 @@ export const OrdersList: React.FC = () => {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  const handleReorder = (order: OrderData) => {
+    // In a real app, we would fetch the order items and add them all.
+    // For this mock, we'll add the primary item representing the order.
+    addToCart({
+      id: `reorder-${order.id}`,
+      title: `Items from ${order.id}`,
+      price: `₦${order.total / order.items}`,
+      image: order.image || "/images/camera.jpg",
+    });
+    toast.success(`Items from order ${order.id} added to cart`);
+  };
+
+  const handleViewDetails = (orderId: string) => {
+    // Navigate directly to product details as requested
+    router.push(`/products/detail`);
+    toast.info(`Viewing details for ${orderId}`);
+  };
 
   const getStatusBadge = (status: OrderData["status"]) => {
     switch (status) {
@@ -160,16 +185,24 @@ export const OrdersList: React.FC = () => {
 
               {/* Price & Status */}
               <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-2 md:w-32 lg:w-48">
-                <span className="font-bold text-lg md:text-xl text-brand-blue">${order.total.toFixed(2)}</span>
+                <span className="font-bold text-lg md:text-xl text-brand-blue">₦{order.total.toLocaleString()}</span>
                 {getStatusBadge(order.status)}
               </div>
 
               {/* Actions */}
               <div className="flex gap-3 md:flex-col mt-4 md:mt-0 pt-4 md:pt-0 border-t border-gray-50 md:border-t-0 md:border-l border-gray-100 md:pl-6 w-full md:w-auto flex-shrink-0">
-                <Button variant="primary" className="flex-1 md:w-[130px] h-10 md:h-11 text-sm font-bold shadow-none rounded-lg">
+                <Button 
+                  onClick={() => handleReorder(order)}
+                  variant="primary" 
+                  className="flex-1 md:w-[130px] h-10 md:h-11 text-sm font-bold shadow-none rounded-lg active:scale-95 transition-all"
+                >
                   Reorder
                 </Button>
-                <Button variant="ghost" className="flex-1 md:w-[130px] h-10 md:h-11 text-sm font-bold border border-gray-200 text-gray-700 hover:text-brand-blue shadow-none rounded-lg focus:ring-0 transition-colors">
+                <Button 
+                  onClick={() => handleViewDetails(order.id)}
+                  variant="secondary" 
+                  className="flex-1 md:w-[130px] h-10 md:h-11 text-sm font-bold border border-gray-200 text-gray-700 hover:text-brand-blue shadow-none rounded-lg focus:ring-0 transition-colors active:scale-95 transition-all"
+                >
                   View Details
                 </Button>
               </div>
@@ -183,40 +216,14 @@ export const OrdersList: React.FC = () => {
         )}
       </div>
 
-      {/* Pagination */}
+      {/* Pagination component replaces manual buttons */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-end gap-2 mt-2">
-          <button 
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-            className="w-10 h-10 rounded-lg flex items-center justify-center border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 hover:text-brand-blue hover:border-brand-blue active:scale-95 disabled:opacity-50 disabled:pointer-events-none transition-all"
-          >
-            <Icon name="chevron_left" size="sm" />
-          </button>
-          
-          <div className="flex items-center gap-1">
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-              <button
-                key={page}
-                onClick={() => setCurrentPage(page)}
-                className={`w-10 h-10 rounded-lg flex items-center justify-center text-sm font-bold transition-all active:scale-95 ${
-                  currentPage === page 
-                    ? 'bg-brand-blue text-white shadow-md shadow-brand-blue/20' 
-                    : 'border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 hover:text-brand-blue hover:border-brand-blue'
-                }`}
-              >
-                {page}
-              </button>
-            ))}
-          </div>
-
-          <button 
-            disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-            className="w-10 h-10 rounded-lg flex items-center justify-center border border-gray-200 bg-white text-gray-500 hover:bg-gray-50 hover:text-brand-blue hover:border-brand-blue active:scale-95 disabled:opacity-50 disabled:pointer-events-none transition-all"
-          >
-            <Icon name="chevron_right" size="sm" />
-          </button>
+        <div className="flex justify-end mt-2">
+          <Pagination 
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={(page) => setCurrentPage(page)}
+          />
         </div>
       )}
     </div>

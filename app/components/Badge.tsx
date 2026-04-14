@@ -15,7 +15,7 @@ const Badge: React.FC<BadgeProps> = ({
 
   const variants = {
     default: "bg-gray-100 text-gray-400",
-    success: "bg-[#E6F9F1] text-[#10B981]",
+    success: "bg-brand-blue-light text-[#2196F3]",
     warning: "bg-[#FFF7ED] text-[#F59E0B]",
     error: "bg-[#FEE2E2] text-[#EF4444]",
     info: "bg-brand-blue-light text-brand-blue",

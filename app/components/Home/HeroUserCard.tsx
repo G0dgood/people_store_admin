@@ -29,7 +29,7 @@ const HeroUserCard = () => {
       {/* Promo Cards */}
       <div className="flex flex-col gap-2.5">
         <div className="bg-[#F38332] p-4 pr-12 rounded-lg text-white shadow-sm hover:shadow-md transition-shadow cursor-pointer">
-          <p className="text-sm font-normal">Get US $10 off with a new supplier</p>
+          <p className="text-sm font-normal">Get ₦5,000 off with a new supplier</p>
         </div>
         <div className="bg-[#55BDC3] p-4 pr-12 rounded-lg text-white shadow-sm hover:shadow-md transition-shadow cursor-pointer">
           <p className="text-sm font-normal">Send quotes with supplier preferences</p>

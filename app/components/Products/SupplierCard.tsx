@@ -5,8 +5,22 @@ import Image from "next/image";
 import { Icon } from "../Icon";
 import { Button } from "../Button";
 import { FavoriteButton } from "../Other";
+import { useCart } from "@/app/context/CartContext";
+import { toast } from "sonner";
 
 const SupplierCard = () => {
+   const { addToCart } = useCart();
+
+   const handleAddToCart = () => {
+      addToCart({
+         id: "detail-1",
+         title: "Mens Long Sleeve T-shirt Cotton Base Layer Slim Muscle",
+         price: "₦98.00",
+         image: "/images/shirt.jpg",
+      });
+      toast.success("Added to cart");
+   };
+
    return (
       <div className="w-72 flex-shrink-0 flex flex-col gap-3">
          <div className="bg-white border border-gray-200 rounded-lg p-5 flex flex-col gap-5 ">
@@ -41,13 +55,24 @@ const SupplierCard = () => {
 
             {/* Actions */}
             <div className="flex flex-col gap-2">
-               <Button className="w-full bg-brand-blue text-white h-10">Send inquiry</Button>
-               <Button variant="ghost" className="w-full bg-white text-brand-blue border border-gray-200 h-10">Seller's profile</Button>
+               <Button 
+                  onClick={handleAddToCart}
+                  className="w-full bg-brand-blue text-white h-10 hover:bg-brand-blue/90 shadow-none cursor-pointer"
+               >
+                  Add to cart
+               </Button>
+               <Button variant="ghost" className="w-full bg-white text-brand-blue border border-gray-200 h-10 hover:bg-gray-50 shadow-none cursor-pointer">Seller's profile</Button>
             </div>
          </div>
 
          {/* Favorite Button Overlay (Design-specific placement) */}
          <FavoriteButton 
+            item={{
+               id: "detail-1",
+               title: "Mens Long Sleeve T-shirt Cotton Base Layer Slim Muscle",
+               price: "₦98.00",
+               image: "/images/shirt.jpg",
+            }}
             variant="none" 
             className="flex items-center justify-center gap-2 py-4 text-brand-blue text-sm font-medium hover:underline cursor-pointer"
          >

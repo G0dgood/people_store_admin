@@ -6,13 +6,16 @@ import { Icon } from "../Icon";
 import { MessageDropdown } from "./MessageDropdown";
 
 import { useAuthModal } from "@/app/context/AuthModalContext";
+import { useCart } from "@/app/context/CartContext";
 
 export const ActionIcons: React.FC = () => {
   const [isMessagesOpen, setIsMessagesOpen] = useState(false);
   const { openLogin } = useAuthModal();
+  const { cartItems } = useCart();
   const pathname = usePathname();
 
   const isActive = (path: string) => pathname === path;
+  const cartCount = cartItems.length;
 
   return (
     <div className="flex items-center gap-4 md:gap-6">
@@ -54,11 +57,18 @@ export const ActionIcons: React.FC = () => {
       </Link>
       <Link 
         href="/cart" 
-        className={`flex flex-col items-center group transition-colors ${
+        className={`relative flex flex-col items-center group transition-colors ${
           isActive("/cart") ? "text-brand-blue font-bold" : "text-gray-500 hover:text-brand-blue"
         }`}
       >
-        <Icon name="My_cart" size="md" />
+        <div className="relative">
+          <Icon name="My_cart" size="md" />
+          {cartCount > 0 && (
+            <span className="absolute -top-1.5 -right-1.5 bg-[#EB001B] text-white text-[10px] font-bold min-w-[16px] h-[16px] flex items-center justify-center rounded-full px-1 border-2 border-white">
+              {cartCount}
+            </span>
+          )}
+        </div>
         <span className="text-[10px] font-medium mt-1 hidden md:block">My cart</span>
       </Link>
     </div>

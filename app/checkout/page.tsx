@@ -24,7 +24,7 @@ export default function CheckoutPage() {
 
       <Header />
 
-      <main className="flex-1 max-w-[1440px] w-full mx-auto px-4 md:px-6 py-8 md:py-12">
+      <main className="flex-1 max-w-[1440px] w-full mx-auto px-6 md:px-10 lg:px-16 py-8 md:py-12">
         {/* Breadcrumbs */}
         <div className="mb-8 hidden md:block">
           <Breadcrumbs

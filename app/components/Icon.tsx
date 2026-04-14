@@ -3,17 +3,18 @@ import React from "react";
 interface IconProps extends React.HTMLAttributes<HTMLDivElement> {
   name: string;
   size?: "xs" | "sm" | "md" | "lg";
+  folder?: "icon" | "dashboardIcon";
 }
 
-const Icon: React.FC<IconProps> = ({ name, size = "md", className = "", ...props }) => {
+const Icon: React.FC<IconProps> = ({ name, size = "md", folder = "icon", className = "", ...props }) => {
   const sizes = {
-    xs: "w-3 h-3",
-    sm: "w-4 h-4",
+    xs: "w-2.5 h-2.5",
+    sm: "w-3.5 h-3.5",
     md: "w-5 h-5",
     lg: "w-6 h-6",
   };
 
-  const iconUrl = `/icon/${name}.svg`;
+  const iconUrl = `/${folder}/${name}.svg`;
 
   return (
     <span

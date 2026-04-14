@@ -8,56 +8,18 @@ import { Icon } from "@/app/components/Icon";
 import { ProductListItem } from "@/app/components/Products/ProductItems";
 import { ClearWishlistModal, RemoveItemModal } from "@/app/components/Modal";
 import Link from "next/link";
+import { useWishlist } from "@/app/context/WishlistContext";
 
 const WishlistPage = () => {
-  // Wishlist products state
-  const [products, setProducts] = useState([
-    {
-      id: "1",
-      title:
-        "Canon EOS R5 Mirrorless Camera with 24-105mm Lens Black, ultra high resolution",
-      price: "$998.00",
-      originalPrice: "$1,128.00",
-      rating: 4.8,
-      orders: 154,
-      shipping: "Free Shipping",
-      description:
-        "Experience the ultimate in photography with the Canon EOS R5. featuring a 45MP full-frame CMOS sensor and 8K video recording capabilities. This bundle includes the versatile 24-105mm lens for all your professional needs.",
-      image: "/images/camera.jpg",
-    },
-    {
-      id: "2",
-      title:
-        "Apple iPhone 14 Pro Max 128GB Deep Purple, unlocked and optimized for global speed",
-      price: "$1,099.00",
-      rating: 4.9,
-      orders: 2310,
-      shipping: "Fast Shipping",
-      description:
-        "The latest flagship from Apple featuring the Dynamic Island, 48MP main camera, and the lightning-fast A16 Bionic chip. Experience the best in mobile technology and premium design.",
-      image: "/images/iphone.jpg",
-    },
-    {
-      id: "3",
-      title: "Sony WH-1000XM5 Noise Canceling Headphones with Auto NC Optimizer",
-      price: "$348.00",
-      originalPrice: "$399.00",
-      rating: 4.7,
-      orders: 890,
-      shipping: "Free Shipping",
-      description:
-        "Industry-leading noise cancellation with two processors and eight microphones. Experience crystal clear sound and ultimate comfort with the newest Sony flagship headphones.",
-      image: "/images/headphone.jpg",
-    },
-  ]);
+  const { wishlistItems, removeFromWishlist, clearWishlist } = useWishlist();
 
   const [isClearModalOpen, setIsClearModalOpen] = useState(false);
   const [isRemoveOneModalOpen, setIsRemoveOneModalOpen] = useState(false);
   const [itemToRemove, setItemToRemove] = useState<any>(null);
 
   const handleClearWishlist = () => {
-    setProducts([]);
-    // Logic to clear actual storage would go here
+    clearWishlist();
+    setIsClearModalOpen(false);
   };
 
   const handleRemoveOneRequest = (product: any) => {
@@ -67,8 +29,9 @@ const WishlistPage = () => {
 
   const confirmRemoveOne = () => {
     if (itemToRemove) {
-      setProducts(products.filter((p) => p.id !== itemToRemove.id));
+      removeFromWishlist(itemToRemove.id);
       setItemToRemove(null);
+      setIsRemoveOneModalOpen(false);
     }
   };
 
@@ -76,7 +39,7 @@ const WishlistPage = () => {
     <div className="min-h-screen bg-[#F7FAFC] flex flex-col font-sans text-black">
       <Header />
 
-      <main className="flex-1 max-w-[1440px] mx-auto px-4 md:px-6 py-4 md:py-8 flex flex-col gap-4 md:gap-8 w-full">
+      <main className="flex-1 max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 py-4 md:py-8 flex flex-col gap-4 md:gap-8 w-full">
         {/* Breadcrumbs */}
         <div className="flex items-center gap-2 text-sm text-gray-400 overflow-x-auto whitespace-nowrap scrollbar-none pb-2">
           <Link href="/" className="hover:text-brand-blue transition-colors">
@@ -92,9 +55,9 @@ const WishlistPage = () => {
               <h1 className="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight">
                 My Wishlist
               </h1>
-              <p className="text-gray-500 text-sm">{products.length} items saved</p>
+              <p className="text-gray-500 text-sm">{wishlistItems.length} items saved</p>
             </div>
-            {products.length > 0 && (
+            {wishlistItems.length > 0 && (
               <button
                 onClick={() => setIsClearModalOpen(true)}
                 className="text-sm font-bold text-red-500 hover:text-red-600 transition-colors flex items-center gap-2 cursor-pointer"
@@ -105,9 +68,9 @@ const WishlistPage = () => {
             )}
           </div>
 
-          {products.length > 0 ? (
+          {wishlistItems.length > 0 ? (
             <div className="flex flex-col gap-3 md:gap-4">
-              {products.map((product) => (
+              {wishlistItems.map((product) => (
                 <ProductListItem
                   key={product.id}
                   product={product as any}
@@ -151,37 +114,37 @@ const WishlistPage = () => {
               {
                 id: "rv1",
                 title: "Men's fashion blue jeans",
-                price: "$12.50",
+                price: "₦12.50",
                 image: "/images/shirt.jpg",
               },
               {
                 id: "rv2",
                 title: "Leather brown wallet",
-                price: "$34.00",
+                price: "₦34.00",
                 image: "/images/wallet.jpg",
               },
               {
                 id: "rv3",
                 title: "Smart watch silver edition",
-                price: "$19.00",
+                price: "₦19.00",
                 image: "/images/watch.jpg",
               },
               {
                 id: "rv4",
                 title: "Blue backpack collection",
-                price: "$10.00",
+                price: "₦10.00",
                 image: "/images/bag.jpg",
               },
               {
                 id: "rv5",
                 title: "Tech accessories bundle",
-                price: "$99.00",
+                price: "₦99.00",
                 image: "/images/camera.jpg",
               },
               {
                 id: "rv6",
                 title: "Wireless headphones gray",
-                price: "$89.00",
+                price: "₦89.00",
                 image: "/images/headphone.jpg",
               },
             ].map((item) => (

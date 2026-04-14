@@ -8,9 +8,9 @@ import { PriceTiers, SpecsTable, ProtectionWarranty } from "./ProductDetailSpecs
 
 const ProductDetailsInfo = () => {
   const priceTiers = [
-    { price: "$98.00", range: "50-100 pcs", isActive: true },
-    { price: "$90.00", range: "100-700 pcs" },
-    { price: "$78.00", range: "700+ pcs" },
+    { price: "₦98.00", range: "50-100 pcs", isActive: true },
+    { price: "₦90.00", range: "100-700 pcs" },
+    { price: "₦78.00", range: "700+ pcs" },
   ];
 
   const specs = [

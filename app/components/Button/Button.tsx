@@ -1,9 +1,9 @@
 import React from "react";
 import { Icon } from "../Icon";
 
-type ButtonVariant = "primary" | "secondary" | "ghost";
+type ButtonVariant = "primary" | "secondary" | "emerald" | "rose" | "outline" | "ghost";
 type ButtonSize = "sm" | "md" | "lg";
-type ButtonShape = "rounded" | "pill";
+type ButtonShape = "rounded" | "rounded-sm" | "pill";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
@@ -36,27 +36,31 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const variants = {
       primary: "bg-brand-blue text-white hover:bg-blue-600 active:bg-blue-700 focus:ring-brand-blue/50 border border-transparent ",
       secondary: "bg-white text-brand-blue border border-brand-blue hover:bg-brand-blue/5 active:bg-brand-blue/10 focus:ring-brand-blue/50 ",
+      emerald: "bg-brand-blue text-white hover:bg-blue-600 active:bg-blue-700 focus:ring-brand-blue/50 border border-transparent shadow-sm",
+      rose: "bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white active:bg-rose-600 focus:ring-rose-500/50 border border-transparent shadow-sm transition-all",
+      outline: "bg-white text-[#1D3557] border border-gray-100 hover:bg-gray-50 active:bg-gray-100 focus:ring-gray-100/50 shadow-sm",
       ghost: "bg-transparent text-brand-blue hover:bg-brand-blue/10 active:bg-brand-blue/20 focus:ring-brand-blue/50",
     };
 
     // Size styles
     const sizes = {
-      sm: "px-3 py-1.5 text-xs gap-1.5",
-      md: "px-4 py-2 text-sm gap-2",
-      lg: "px-6 py-3 text-base gap-3",
+      sm: "px-2.5 py-1 text-xs gap-1.5",
+      md: "px-3.5 py-1.5 text-sm gap-2 font-semibold",
+      lg: "px-5 py-2.5 text-base gap-3 font-bold",
     };
 
     // Shape styles
     const shapes = {
       rounded: "rounded-lg",
+      "rounded-sm": "rounded-[6px]",
       pill: "rounded-full",
     };
 
     const combinedClassName = `
       ${baseStyles}
-      ${variants[variant]}
-      ${sizes[size]}
-      ${shapes[shape]}
+      ${variants[variant as keyof typeof variants] || variants.primary}
+      ${sizes[size as keyof typeof sizes] || sizes.md}
+      ${shapes[shape as keyof typeof shapes] || shapes.rounded}
       ${className}
     `.trim().replace(/\s+/g, " ");
 

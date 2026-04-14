@@ -13,7 +13,7 @@ export default function MessagesPage() {
     <div className="min-h-screen bg-[#F7FAFC] flex flex-col font-inter">
       <Header />
       
-      <main className="flex-1 w-full max-w-[1440px] mx-auto p-4 md:p-6 lg:p-8">
+      <main className="flex-1 w-full max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 py-4 md:py-8">
         <div className="text-sm text-gray-500 mb-6 hidden md:flex items-center gap-2">
            <span>Home</span>
            <span className="text-gray-300">/</span>

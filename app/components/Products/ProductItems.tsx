@@ -4,6 +4,9 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Rating, FavoriteButton } from "../Other";
+import { Button } from "../Button/Button";
+import { useCart } from "@/app/context/CartContext";
+import { toast } from "sonner";
 
 interface ProductProps {
    id: string;
@@ -18,30 +21,63 @@ interface ProductProps {
 }
 
 export const ProductGridItem: React.FC<{ product: ProductProps }> = ({ product }) => {
+   const { addToCart } = useCart();
+
+   const handleAddToCart = (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      addToCart({
+         id: product.id,
+         title: product.title,
+         price: product.price,
+         image: product.image,
+      });
+      toast.success("Added to cart");
+   };
+
    return (
-      <Link 
-         href="/products/detail" 
-         className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow group flex flex-col h-full cursor-pointer"
-      >
-         <div className="relative w-full aspect-square p-5 border-b border-gray-100 flex items-center justify-center">
-            <div className="relative w-full h-full transition-transform duration-300 group-hover:scale-110">
-               <Image src={product.image} alt={product.title} fill className="object-contain" />
+      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow group flex flex-col h-full relative">
+         <Link href="/products/detail" className="flex flex-col flex-1">
+            <div className="relative w-full aspect-square p-5 border-b border-gray-100 flex items-center justify-center">
+               <div className="relative w-full h-full transition-transform duration-300 group-hover:scale-110">
+                  <Image src={product.image} alt={product.title} fill className="object-contain" />
+               </div>
+               {/* Heart Icon (Overlay) */}
+               <div className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <FavoriteButton item={product as any} variant="outline" size="sm" />
+               </div>
             </div>
+            <div className="p-5 flex flex-col gap-2 pb-16"> {/* Add padding for buttons */}
+               <div className="flex items-center justify-between">
+                  <span className="font-bold text-lg text-gray-900">{product.price}</span>
+               </div>
+               <div className="flex items-center gap-2">
+                  <Rating value={product.rating} />
+                  <span className="text-orange-500 text-sm font-medium">{product.rating}</span>
+               </div>
+               <span className="text-gray-600 text-sm leading-relaxed line-clamp-2 group-hover:text-brand-blue transition-colors font-medium">
+                  {product.title}
+               </span>
+            </div>
+         </Link>
+
+         {/* Actions Footer */}
+         <div className="absolute bottom-0 left-0 right-0 p-3 bg-white border-t border-gray-50 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0 duration-200">
+            <Link href="/products/detail" className="flex-1">
+               <Button variant="secondary" size="sm" className="w-full text-xs font-bold py-2 border-gray-200">
+                  View details
+               </Button>
+            </Link>
+            <Button 
+               onClick={handleAddToCart}
+               variant="primary" 
+               size="sm" 
+               className="flex-1 text-xs font-bold py-2 shadow-none"
+            >
+               Add to cart
+            </Button>
          </div>
-         <div className="p-5 flex flex-col flex-1 gap-2">
-            <div className="flex items-center justify-between">
-               <span className="font-bold text-lg text-gray-900">{product.price}</span>
-               <FavoriteButton />
-            </div>
-            <div className="flex items-center gap-2">
-               <Rating value={product.rating} />
-               <span className="text-orange-500 text-sm font-medium">{product.rating}</span>
-            </div>
-            <span className="text-gray-600 text-sm leading-relaxed line-clamp-2 group-hover:text-brand-blue cursor-pointer transition-colors">
-               {product.title}
-            </span>
-         </div>
-      </Link>
+      </div>
    );
 };
 
@@ -54,6 +90,20 @@ export const ProductListItem: React.FC<{
    onRemove,
    showFavorite = true
 }) => {
+   const { addToCart } = useCart();
+
+   const handleAddToCart = (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      addToCart({
+         id: product.id,
+         title: product.title,
+         price: product.price,
+         image: product.image,
+      });
+      toast.success("Added to cart");
+   };
+
    return (
       <div className="bg-white border border-gray-200 rounded-lg p-3 md:p-5 flex gap-3 md:gap-6 hover:shadow-md transition-shadow relative group">
          {/* Product Image */}
@@ -89,9 +139,9 @@ export const ProductListItem: React.FC<{
                      <div className="w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-gray-300" />
                      <span>{product.orders} orders</span>
                   </div>
-                  {/* Shipping Info - Mobile design shows color dot and text */}
-                  <div className="flex items-center gap-1.5 text-[#00B517]">
-                     <div className="w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-[#00B517]" />
+                  {/* Shipping Info */}
+                  <div className="flex items-center gap-1.5 text-brand-blue">
+                     <div className="w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-brand-blue" />
                      <span className="font-medium">{product.shipping}</span>
                   </div>
                </div>
@@ -102,15 +152,32 @@ export const ProductListItem: React.FC<{
                {product.description}
             </p>
 
-            <Link href="/products/detail" className="hidden md:block text-brand-blue font-bold text-sm hover:underline pt-2 cursor-pointer w-fit">
-               View details
-            </Link>
+            <div className="flex items-center gap-4 mt-auto pt-2">
+               <Link href="/products/detail" className="text-brand-blue font-bold text-sm hover:underline cursor-pointer flex items-center gap-1">
+                  View details
+               </Link>
+               <button 
+                  onClick={handleAddToCart}
+                  className="md:hidden text-brand-blue font-bold text-sm hover:underline cursor-pointer"
+               >
+                  Add to cart
+               </button>
+            </div>
          </div>
 
          {/* Actions Section (Right Side) */}
-         <div className="flex flex-col items-end justify-between py-1 min-w-[70px]">
-            {/* Heart Icon (Desktop) */}
-            {showFavorite && <FavoriteButton className="hidden md:flex flex-shrink-0" />}
+         <div className="hidden md:flex flex-col items-end justify-between py-1 min-w-[140px]">
+            <div className="flex flex-col gap-2 items-end w-full">
+               {showFavorite && <FavoriteButton item={product as any} className="flex-shrink-0" />}
+               <Button 
+                  onClick={handleAddToCart}
+                  variant="primary" 
+                  size="sm" 
+                  className="w-full font-bold mt-2 shadow-none"
+               >
+                  Add to cart
+               </Button>
+            </div>
 
             {onRemove && (
                <button 
@@ -125,9 +192,9 @@ export const ProductListItem: React.FC<{
             )}
          </div>
 
-         {/* Heart Icon (Mobile - Floating like the design) */}
+         {/* Heart Icon (Mobile) */}
          {showFavorite && (
-            <FavoriteButton variant="ghost" className="md:hidden absolute top-3 right-3" />
+            <FavoriteButton item={product as any} variant="ghost" className="md:hidden absolute top-3 right-3" />
          )}
       </div>
    );

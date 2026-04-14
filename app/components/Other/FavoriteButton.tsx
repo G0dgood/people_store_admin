@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Icon } from "../Icon";
+import { useWishlist, WishlistItem } from "@/app/context/WishlistContext";
 
 interface FavoriteButtonProps {
   className?: string;
-  isFavorite?: boolean;
+  item?: WishlistItem;
   onToggle?: (isFavorite: boolean) => void;
   variant?: "outline" | "ghost" | "none";
   size?: "sm" | "md";
@@ -15,21 +16,30 @@ interface FavoriteButtonProps {
 
 export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
   className = "",
-  isFavorite: initialFavorite = false,
+  item,
   onToggle,
   variant = "outline",
   size = "md",
   children,
   showIcon = true,
 }) => {
-  const [isFavorite, setIsFavorite] = useState(initialFavorite);
+  const { wishlistItems, addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+  
+  const isFavorite = item ? isInWishlist(item.id) : false;
 
   const handleToggle = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    const newState = !isFavorite;
-    setIsFavorite(newState);
-    if (onToggle) onToggle(newState);
+    
+    if (!item) return;
+
+    if (isFavorite) {
+      removeFromWishlist(item.id);
+      if (onToggle) onToggle(false);
+    } else {
+      addToWishlist(item);
+      if (onToggle) onToggle(true);
+    }
   };
 
   const baseStyles = "transition-all duration-200 flex items-center justify-center cursor-pointer";
@@ -49,7 +59,7 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
     ${baseStyles} 
     ${variant === "outline" ? variants.outline : variant === "ghost" ? variants.ghost : variants.none} 
     ${variant === "outline" ? sizes[size] : ""} 
-    ${isFavorite ? "text-red-500 border-red-200" : ""} 
+    ${isFavorite ? "text-red-500 border-red-200 bg-red-50" : ""} 
     ${className}
   `.trim();
 
@@ -57,7 +67,7 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
     <button className={combinedClassName} onClick={handleToggle} type="button">
       {showIcon && (
         <Icon
-          name="favorite"
+          name={isFavorite ? "favorite" : "favorite_border"}
           size={size === "sm" ? "xs" : "sm"}
           className={isFavorite ? "fill-current" : ""}
         />

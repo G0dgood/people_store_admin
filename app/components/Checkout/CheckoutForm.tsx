@@ -99,7 +99,7 @@ export const CheckoutForm: React.FC = () => {
               onClick={() => setPaymentMethod("card")}
               className={`flex-1 flex flex-col items-start p-5 rounded-2xl border-2 transition-all gap-4 text-left relative overflow-hidden
                 ${paymentMethod === "card"
-                  ? "border-brand-blue bg-blue-50/30 shadow-[0_4px_12px_rgb(0,181,23,0.05)]"
+                  ? "border-brand-blue bg-brand-blue-light/30 shadow-[0_4px_12px_rgb(0,181,23,0.05)]"
                   : "border-gray-50 bg-gray-50/30 hover:border-brand-blue/30 hover:bg-white"}`}
             >
               <div className="flex items-center justify-between w-full">
@@ -122,7 +122,7 @@ export const CheckoutForm: React.FC = () => {
               onClick={() => setPaymentMethod("paypal")}
               className={`flex-1 flex flex-col items-start p-5 rounded-2xl border-2 transition-all gap-4 text-left relative overflow-hidden
                 ${paymentMethod === "paypal"
-                  ? "border-[#0070BA] bg-blue-50/30 shadow-[0_4px_12px_rgb(0,112,186,0.05)]"
+                  ? "border-[#0070BA] bg-brand-blue-light/30 shadow-[0_4px_12px_rgb(0,112,186,0.05)]"
                   : "border-gray-50 bg-gray-50/30 hover:border-[#0070BA]/30 hover:bg-white"}`}
             >
               <div className="flex items-center justify-between w-full">

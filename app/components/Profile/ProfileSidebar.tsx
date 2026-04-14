@@ -42,7 +42,7 @@ export const ProfileSidebar: React.FC = () => {
         </div>
         <h3 className="text-xl font-bold text-gray-900 mb-0.5">Alex John</h3>
         <p className="text-sm font-medium text-gray-400 mb-3 uppercase tracking-tighter">Premium Member</p>
-        <div className="px-3 py-1 bg-blue-50 text-brand-blue text-[10px] font-bold rounded-full uppercase tracking-wider">
+        <div className="px-3 py-1 bg-brand-blue-light text-brand-blue text-[10px] font-bold rounded-full uppercase tracking-wider">
           Verified Buyer
         </div>
       </div>
@@ -57,7 +57,7 @@ export const ProfileSidebar: React.FC = () => {
               href={item.href}
               className={`flex items-center gap-4 px-5 py-3.5 rounded-xl font-bold text-sm transition-all group relative overflow-hidden
                 ${isActive
-                  ? "text-brand-blue bg-blue-50/50"
+                  ? "text-brand-blue bg-brand-blue-light"
                   : "text-gray-500 hover:text-brand-blue hover:bg-gray-50"}`}
             >
               {isActive && (

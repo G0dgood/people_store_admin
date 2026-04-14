@@ -131,7 +131,7 @@ const ProductReviews = () => {
                 </div>
 
                 {review.verified && (
-                  <div className="flex items-center gap-1.5 px-3 py-1 bg-green-50 text-[10px] font-black text-green-600 uppercase tracking-wider rounded-full border border-green-100">
+                  <div className="flex items-center gap-1.5 px-3 py-1 bg-brand-blue-light text-[10px] font-black text-blue-600 uppercase tracking-wider rounded-full border border-blue-100">
                     <Icon name="check" size="xs" />
                     Verified
                   </div>

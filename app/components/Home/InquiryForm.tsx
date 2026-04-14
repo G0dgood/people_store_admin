@@ -27,7 +27,7 @@ const InquiryForm = () => {
           </p>
         </div>
 
-        <div className="w-full max-w-[490px] bg-white p-6 md:p-8 rounded-lg shadow-2xl flex flex-col gap-5 z-10 border border-blue-50/50">
+        <div className="w-full max-w-[490px] bg-white p-6 md:p-8 rounded-lg shadow-2xl flex flex-col gap-5 z-10 border border-brand-blue-light">
           <h3 className="text-xl font-bold text-gray-900">Send quote to suppliers</h3>
           <Input placeholder="What item you need?" className="h-10" />
           <Textarea placeholder="Type more details" rows={3} />

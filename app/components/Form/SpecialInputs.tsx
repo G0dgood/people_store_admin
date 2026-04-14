@@ -7,20 +7,41 @@ import { Icon } from "../Icon";
 interface SearchInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   onClear?: () => void;
   showClear?: boolean;
+  iconName?: string;
+  iconFolder?: string;
+  iconPosition?: "left" | "right";
+  containerClassName?: string;
 }
 
-const SearchInput: React.FC<SearchInputProps> = ({ onClear, showClear, value, ...props }) => {
+const SearchInput: React.FC<SearchInputProps> = ({ 
+  onClear, 
+  showClear, 
+  value, 
+  iconName = "search", 
+  iconFolder, 
+  iconPosition = "left",
+  containerClassName = "",
+  className = "",
+  ...props 
+}) => {
+  const icon = <Icon name={iconName} folder={iconFolder as any} size="sm" className="text-gray-400" />;
+  
   return (
     <Input
-      prefixElement={<Icon name="search" size="sm" className="text-gray-400" />}
+      prefixElement={iconPosition === "left" ? icon : undefined}
       suffixElement={
-        (showClear || (value && String(value).length > 0)) ? (
-          <button onClick={onClear} className="hover:text-gray-600 transition-colors">
-            <Icon name="clear" size="sm" className="text-gray-400" />
-          </button>
-        ) : undefined
+        <div className="flex items-center gap-2">
+          {iconPosition === "right" && icon}
+          {(showClear || (value && String(value).length > 0)) && (
+            <button onClick={onClear} className="hover:text-gray-600 transition-colors">
+              <Icon name="clear" size="sm" className="text-gray-400" />
+            </button>
+          )}
+        </div>
       }
       value={value}
+      containerClassName={containerClassName}
+      className={className}
       {...props}
     />
   );
