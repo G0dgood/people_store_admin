@@ -6,11 +6,25 @@ import { Button } from "../../../components/Button";
 import { Select } from "../../../components/Form/Select";
 import { Switch } from "../../../components/Form/Switch";
 import { Input, Textarea } from "../../../components/Form/Inputs";
+import { ConfirmationModal } from "../../../components/Admin/ConfirmationModal";
+import Modal from "../../../components/Modal/Modal";
+import ModalBody from "../../../components/Modal/ModalBody";
+import ModalFooter from "../../../components/Modal/ModalFooter";
+import { useRouter } from "next/navigation";
+import { UploadMediaModal } from "../../../components/Admin/UploadMediaModal";
+import { HiPhoto, HiArrowPath } from "react-icons/hi2";
 
 export default function CreateProduct() {
+  const router = useRouter();
   const [stockStatus, setStockStatus] = useState("In Stock");
   const [category, setCategory] = useState("");
   const [tag, setTag] = useState("");
+  const [isPublishConfirmOpen, setIsPublishConfirmOpen] = useState(false);
+  const [isPublishSuccessOpen, setIsPublishSuccessOpen] = useState(false);
+  const [isDraftConfirmOpen, setIsDraftConfirmOpen] = useState(false);
+  const [isDraftSuccessOpen, setIsDraftSuccessOpen] = useState(false);
+  const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
   return (
     <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
@@ -31,6 +45,7 @@ export default function CreateProduct() {
               variant="primary"
               shape="rounded-sm"
               size="md"
+              onClick={() => setIsPublishConfirmOpen(true)}
             >
               Publish Product
             </Button>
@@ -39,6 +54,7 @@ export default function CreateProduct() {
               shape="rounded-sm"
               size="md"
               iconLeft={<Icon name="ticket" folder="dashboardIcon" size="xs" className="opacity-70" />}
+              onClick={() => setIsDraftConfirmOpen(true)}
             >
               Save to draft
             </Button>
@@ -46,6 +62,7 @@ export default function CreateProduct() {
               variant="outline"
               shape="rounded-sm"
               className="px-2"
+              onClick={() => setIsResetConfirmOpen(true)}
             >
               <Icon name="circle-plus" folder="dashboardIcon" size="sm" />
             </Button>
@@ -194,7 +211,11 @@ export default function CreateProduct() {
             </div>
 
             <div className="flex gap-3 justify-end mt-4 pt-6 border-t border-gray-50">
-              <button className="bg-white border border-gray-100 text-[#1D3557] px-6 py-2.5 rounded-[6px] text-xs font-bold hover:bg-gray-50 transition-all flex items-center gap-2">
+              <button
+                type="button"
+                className="bg-white border border-gray-100 text-[#1D3557] px-6 py-2.5 rounded-[6px] text-xs font-bold hover:bg-gray-50 transition-all flex items-center gap-2"
+                onClick={() => setIsDraftConfirmOpen(true)}
+              >
                 <Icon name="ticket" folder="dashboardIcon" size="xs" className="opacity-70" />
                 Save to draft
               </button>
@@ -202,6 +223,7 @@ export default function CreateProduct() {
                 variant="primary"
                 shape="rounded-sm"
                 className="px-8 py-2.5"
+                onClick={() => setIsPublishConfirmOpen(true)}
               >
                 Publish Product
               </Button>
@@ -220,15 +242,25 @@ export default function CreateProduct() {
               <div className="relative aspect-square w-full rounded-[6px] bg-gray-50/50 border border-gray-100 overflow-hidden group">
                 <img src="/dashboardImage/Frame 4259 copy.png" alt="Preview" className="w-full h-full object-contain p-8" />
 
-                <div className="absolute bottom-4 left-4 right-4 flex gap-2">
-                  <button className="flex-1 flex items-center justify-center gap-2 bg-white/90 backdrop-blur-sm border border-gray-100 py-2 rounded-[6px] text-[10px] font-bold text-gray-700 hover:bg-white transition-all shadow-sm">
-                    <Icon name="Picture" folder="dashboardIcon" size="xs" />
+                <div className="absolute bottom-4 left-4 right-4 flex justify-between gap-2">
+                  <Button
+                    variant="outline"
+                    shape="rounded-sm"
+                    className="bg-white/90 backdrop-blur-sm shadow-sm py-2 px-6 text-[10px]"
+                    iconLeft={<HiPhoto />}
+                    onClick={() => setIsUploadModalOpen(true)}
+                  >
                     Browse
-                  </button>
-                  <button className="flex-1 flex items-center justify-center gap-2 bg-white/90 backdrop-blur-sm border border-gray-100 py-2 rounded-[6px] text-[10px] font-bold text-gray-700 hover:bg-white transition-all shadow-sm">
-                    <Icon name="arrow-refresh-06" folder="dashboardIcon" size="xs" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    shape="rounded-sm"
+                    className="bg-white/90 backdrop-blur-sm shadow-sm py-2 px-6 text-[10px]"
+                    iconLeft={<HiArrowPath />}
+                    onClick={() => setIsUploadModalOpen(true)}
+                  >
                     Replace
-                  </button>
+                  </Button>
                 </div>
               </div>
 
@@ -245,7 +277,10 @@ export default function CreateProduct() {
                     <Icon name="menu-close" folder="dashboardIcon" size="xs" />
                   </button>
                 </div>
-                <div className="aspect-square border-2 border-dashed border-blue-200 rounded-[6px] flex flex-col items-center justify-center gap-2 bg-brand-blue-light hover:bg-brand-blue-light transition-all cursor-pointer group">
+                <div
+                  className="aspect-square border-2 border-dashed border-blue-200 rounded-[6px] flex flex-col items-center justify-center gap-2 bg-brand-blue-light hover:bg-brand-blue-light transition-all cursor-pointer group"
+                  onClick={() => setIsUploadModalOpen(true)}
+                >
                   <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white scale-90 group-hover:scale-100 transition-transform">
                     <Icon name="circle-plus" folder="dashboardIcon" size="xs" />
                   </div>
@@ -302,6 +337,126 @@ export default function CreateProduct() {
           </div>
         </div>
       </div>
+
+      <ConfirmationModal
+        isOpen={isPublishConfirmOpen}
+        onClose={() => setIsPublishConfirmOpen(false)}
+        onConfirm={() => {
+          setIsPublishConfirmOpen(false);
+          setIsPublishSuccessOpen(true);
+        }}
+        title="Confirm Publication"
+        message="Are you sure you want to publish this product? It will be immediately visible to all customers on the storefront."
+        confirmText="Yes, publish now"
+        type="success"
+      />
+
+      <ConfirmationModal
+        isOpen={isDraftConfirmOpen}
+        onClose={() => setIsDraftConfirmOpen(false)}
+        onConfirm={() => {
+          setIsDraftConfirmOpen(false);
+          setIsDraftSuccessOpen(true);
+        }}
+        title="Save as Draft"
+        message="Are you sure you want to save this product as a draft? It will be stored in your catalog but hidden from the storefront."
+        confirmText="Yes, save draft"
+        type="info"
+      />
+
+      <ConfirmationModal
+        isOpen={isResetConfirmOpen}
+        onClose={() => setIsResetConfirmOpen(false)}
+        onConfirm={() => {
+          console.log("Resetting form...");
+          setIsResetConfirmOpen(false);
+        }}
+        title="Reset Form"
+        message="Are you sure you want to clear all fields and start a new product entry? This action will discard your current progress."
+        confirmText="Yes, start over"
+        type="warning"
+      />
+
+      <Modal
+        isOpen={isPublishSuccessOpen}
+        onClose={() => setIsPublishSuccessOpen(false)}
+        title=""
+        size="md"
+      >
+        <ModalBody className="flex flex-col items-center text-center py-10 gap-6">
+          <div className="w-20 h-20 rounded-full bg-green-50 flex items-center justify-center text-green-500 shadow-inner">
+            <Icon name="task_alt" folder="icon" size="lg" className="w-10 h-10" />
+          </div>
+          <div className="flex flex-col gap-2">
+            <h2 className="text-xl font-black text-[#1D3557]">Product Published!</h2>
+            <p className="text-sm font-medium text-gray-400 max-w-[280px] mx-auto leading-relaxed">
+              Your new product has been successfully uploaded and is now live on the storefront.
+            </p>
+          </div>
+        </ModalBody>
+        <ModalFooter className="flex flex-col gap-3 pb-8">
+          <Button
+            variant="primary"
+            className="w-full h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
+            onClick={() => {
+              setIsPublishSuccessOpen(false);
+              router.push("/admin/products");
+            }}
+          >
+            Done, back to products
+          </Button>
+          <Button
+            variant="ghost"
+            className="w-full h-12 text-[11px] font-bold text-gray-400"
+            onClick={() => setIsPublishSuccessOpen(false)}
+          >
+            View live product
+          </Button>
+        </ModalFooter>
+      </Modal>
+
+      <Modal
+        isOpen={isDraftSuccessOpen}
+        onClose={() => setIsDraftSuccessOpen(false)}
+        title=""
+        size="md"
+      >
+        <ModalBody className="flex flex-col items-center text-center py-10 gap-6">
+          <div className="w-20 h-20 rounded-full bg-blue-50 flex items-center justify-center text-brand-blue shadow-inner border border-blue-100">
+            <Icon name="drafts" folder="icon" size="lg" className="w-10 h-10" />
+          </div>
+          <div className="flex flex-col gap-2">
+            <h2 className="text-xl font-black text-[#1D3557]">Saved to Drafts</h2>
+            <p className="text-sm font-medium text-gray-400 max-w-[280px] mx-auto leading-relaxed">
+              The product has been securely stored. You can find it in the "Draft" tab of the product listing.
+            </p>
+          </div>
+        </ModalBody>
+        <ModalFooter className="flex flex-col gap-3 pb-8">
+          <Button
+            variant="primary"
+            className="w-full h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
+            onClick={() => {
+              setIsDraftSuccessOpen(false);
+              router.push("/admin/products");
+            }}
+          >
+            Back to catalog
+          </Button>
+          <Button
+            variant="ghost"
+            className="w-full h-12 text-[11px] font-bold text-gray-400"
+            onClick={() => setIsDraftSuccessOpen(false)}
+          >
+            Continue editing
+          </Button>
+        </ModalFooter>
+      </Modal>
+
+      <UploadMediaModal
+        isOpen={isUploadModalOpen}
+        onClose={() => setIsUploadModalOpen(false)}
+      />
     </div>
   );
 }

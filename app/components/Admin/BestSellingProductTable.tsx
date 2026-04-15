@@ -55,7 +55,7 @@ export function BestSellingProductTable() {
       <div className="admin-table-container">
         <table>
           <thead>
-            <tr className="text-[10px] uppercase tracking-widest bg-[#E9F4E9]/50">
+            <tr>
               <th className="pl-4">PRODUCT</th>
               <th>TOTAL ORDER</th>
               <th>STATUS</th>

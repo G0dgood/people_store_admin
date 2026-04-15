@@ -16,7 +16,7 @@ export const ProductMobileHeader: React.FC<ProductMobileHeaderProps> = ({ title 
       {/* Top row */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <button 
+          <button
             onClick={() => router.back()}
             className="p-1 hover:bg-gray-100 rounded-full transition-colors"
           >

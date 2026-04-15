@@ -42,14 +42,14 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
       shadow: "shadow-orange-100",
     },
     success: {
-      icon: "check_circle",
+      icon: "verified",
       iconBg: "bg-brand-blue-light",
       iconColor: "text-brand-blue",
       buttonBg: "bg-brand-blue hover:bg-blue-600",
       shadow: "shadow-blue-100",
     },
     info: {
-      icon: "info",
+      icon: "help_outline",
       iconBg: "bg-brand-blue-light",
       iconColor: "text-brand-blue",
       buttonBg: "bg-brand-blue hover:bg-blue-600",

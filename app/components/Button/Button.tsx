@@ -66,9 +66,21 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     return (
       <button ref={ref} className={combinedClassName} {...props}>
-        {iconLeft && <span className="flex items-center shrink-0">{iconLeft}</span>}
-        <span className="truncate">{children}</span>
-        {iconRight && <span className="flex items-center shrink-0">{iconRight}</span>}
+        {iconLeft && (
+          <span className="flex justify-center items-center shrink-0">
+            {iconLeft}
+          </span>
+        )}
+        {children && (
+          <span className="flex items-center justify-center truncate">
+            {children}
+          </span>
+        )}
+        {iconRight && (
+          <span className="flex justify-center items-center shrink-0">
+            {iconRight}
+          </span>
+        )}
         {showChevron && (
           <Icon
             name="expand_more"

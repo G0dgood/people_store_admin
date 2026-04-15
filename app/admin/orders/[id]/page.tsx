@@ -7,10 +7,13 @@ import { Button } from "@/app/components/Button";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Select } from "@/app/components/Form/Select";
+import { ConfirmationModal } from "../../components/Admin/ConfirmationModal";
 
 export default function OrderDetails() {
   const { id } = useParams();
   const [currentStatus, setCurrentStatus] = useState("Shipped");
+  const [pendingStatus, setPendingStatus] = useState<string | null>(null);
+  const [isStatusConfirmOpen, setIsStatusConfirmOpen] = useState(false);
 
   const order = {
     id: id || "ORD-7281",
@@ -72,8 +75,11 @@ export default function OrderDetails() {
       </Button>
       <div className="w-48">
        <Select
-        value={currentStatus}
-        onChange={(val: string) => setCurrentStatus(val as string)}
+        value={pendingStatus || currentStatus}
+        onChange={(val: string) => {
+          setPendingStatus(val as string);
+          setIsStatusConfirmOpen(true);
+        }}
         options={[
          { label: "Pending", value: "Pending" },
          { label: "Processing", value: "Processing" },
@@ -242,6 +248,26 @@ export default function OrderDetails() {
      </div>
     </div>
    </div>
+
+   <ConfirmationModal
+      isOpen={isStatusConfirmOpen}
+      onClose={() => {
+        setIsStatusConfirmOpen(false);
+        setPendingStatus(null);
+      }}
+      onConfirm={() => {
+        if (pendingStatus) {
+          setCurrentStatus(pendingStatus);
+          console.log("Order status updated to:", pendingStatus);
+        }
+        setIsStatusConfirmOpen(false);
+        setPendingStatus(null);
+      }}
+      title="Update Order Status"
+      message={`Are you sure you want to change the status of this order to "${pendingStatus}"? This may trigger automated customer notifications and inventory adjustments.`}
+      confirmText="Yes, update status"
+      type={pendingStatus === "Cancelled" ? "danger" : "primary"}
+    />
   </div>
  );
 }

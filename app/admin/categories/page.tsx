@@ -1,11 +1,15 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Icon } from "../../components/Icon";
 import { TabFilter } from "../../components/Admin/TabFilter";
 import { Pagination } from "../../components/Admin/Pagination";
 import { Button } from "@/app/components/Button";
 import { Input } from "../../components/Form/Inputs";
+import { AddCategoryModal } from "../../components/Admin/AddCategoryModal";
+import { CategoriesMoreActionsDrawer } from "../../components/Admin/CategoriesMoreActionsDrawer";
+import { ConfirmationModal } from "../../components/Admin/ConfirmationModal";
+import { EditCategoryDrawer } from "../../components/Admin/EditCategoryDrawer";
 
 const categories = [
   { name: "Electronics", image: "/dashboardImage/Electronics.png" },
@@ -34,6 +38,24 @@ const products = [
 export default function CategoriesPage() {
   const [activeTab, setActiveTab] = useState("All Product (145)");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isMoreActionsOpen, setIsMoreActionsOpen] = useState(false);
+  const [isBulkDeleteConfirmOpen, setIsBulkDeleteConfirmOpen] = useState(false);
+  const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
+  const [categoryToEdit, setCategoryToEdit] = useState<any>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [categoryToDelete, setCategoryToDelete] = useState<any>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = 300;
+      scrollContainerRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth"
+      });
+    }
+  };
 
   return (
     <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
@@ -44,13 +66,15 @@ export default function CategoriesPage() {
             variant="primary"
             shape="rounded-sm"
             iconLeft={<Icon name="add" folder="icon" size="xs" />}
+            onClick={() => setIsAddModalOpen(true)}
           >
-            Add Product
+            Add Category
           </Button>
           <Button
             variant="outline"
             shape="rounded-sm"
             iconRight={<Icon name="more_vert" folder="icon" size="xs" />}
+            onClick={() => setIsMoreActionsOpen(true)}
           >
             More Action
           </Button>
@@ -59,17 +83,31 @@ export default function CategoriesPage() {
 
       {/* Categories Horizontal Scroll */}
       <div className="relative group">
-        <div className="flex gap-4 overflow-x-auto pb-2 no-scrollbar scroll-smooth">
+        <button 
+          className="absolute left-[-20px] top-1/2 -translate-y-1/2 w-10 h-10 bg-white border border-gray-100 rounded-full flex items-center justify-center shadow-lg text-gray-400 hover:text-gray-900 z-10 opacity-0 group-hover:opacity-100 transition-opacity hover:border-brand-blue/30"
+          onClick={() => scroll("left")}
+        >
+          <Icon name="chevron_left" folder="icon" size="sm" />
+        </button>
+
+        <div 
+          ref={scrollContainerRef}
+          className="flex gap-4 overflow-x-auto pb-2 no-scrollbar scroll-smooth px-1"
+        >
           {categories.map((cat, i) => (
-            <div key={i} className="flex-shrink-0 w-[220px] bg-white border border-gray-100 p-3 rounded-[6px] flex items-center gap-3 hover:shadow-md transition-shadow cursor-pointer">
-              <div className="w-12 h-12 rounded-[6px] overflow-hidden bg-gray-50 flex items-center justify-center p-1">
+            <div key={i} className="flex-shrink-0 w-[220px] bg-white border border-gray-100 p-3 rounded-[6px] flex items-center gap-3 hover:shadow-md transition-shadow cursor-pointer hover:border-brand-blue/30 group/item">
+              <div className="w-12 h-12 rounded-[6px] overflow-hidden bg-gray-50 flex items-center justify-center p-1 group-hover/item:bg-brand-blue-light transition-colors">
                 <img src={cat.image} alt={cat.name} className="w-full h-full object-contain" />
               </div>
-              <span className="text-sm font-bold text-[#1D3557]">{cat.name}</span>
+              <span className="text-sm font-bold text-[#1D3557] group-hover/item:text-brand-blue transition-colors">{cat.name}</span>
             </div>
           ))}
         </div>
-        <button className="absolute right-[-20px] top-1/2 -translate-y-1/2 w-10 h-10 bg-white border border-gray-100 rounded-full flex items-center justify-center shadow-lg text-gray-400 hover:text-gray-900 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
+
+        <button 
+          className="absolute right-[-20px] top-1/2 -translate-y-1/2 w-10 h-10 bg-white border border-gray-100 rounded-full flex items-center justify-center shadow-lg text-gray-400 hover:text-gray-900 z-10 opacity-0 group-hover:opacity-100 transition-opacity hover:border-brand-blue/30"
+          onClick={() => scroll("right")}
+        >
           <Icon name="chevron_right" folder="icon" size="sm" />
         </button>
       </div>
@@ -138,10 +176,22 @@ export default function CategoriesPage() {
                   <td className="text-sm font-bold text-gray-900 text-center">{p.order}</td>
                   <td className="text-right">
                     <div className="flex justify-end gap-2">
-                      <button className="p-1.5 border border-gray-50 rounded-[6px] text-gray-400 hover:text-brand-blue hover:bg-brand-blue-light transition-all">
-                        <Icon name="create" folder="icon" size="sm" />
+                      <button 
+                        className="p-1.5 border border-gray-50 rounded-[6px] text-gray-400 hover:text-brand-blue hover:bg-brand-blue-light transition-all"
+                        onClick={() => {
+                          setCategoryToEdit(p); // Assuming products array used for demo, should be cat
+                          setIsEditDrawerOpen(true);
+                        }}
+                      >
+                        <Icon name="settings" folder="dashboardIcon" size="sm" />
                       </button>
-                      <button className="p-1.5 border border-gray-50 rounded-[6px] text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all">
+                      <button 
+                        className="p-1.5 border border-gray-50 rounded-[6px] text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
+                        onClick={() => {
+                          setCategoryToDelete(p);
+                          setIsDeleteModalOpen(true);
+                        }}
+                      >
                         <Icon name="delete_outline" folder="icon" size="sm" />
                       </button>
                     </div>
@@ -159,6 +209,49 @@ export default function CategoriesPage() {
           onPageChange={setCurrentPage}
         />
       </div>
+
+      <AddCategoryModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+      />
+
+      <CategoriesMoreActionsDrawer
+        isOpen={isMoreActionsOpen}
+        onClose={() => setIsMoreActionsOpen(false)}
+        onCleanEmpty={() => setIsBulkDeleteConfirmOpen(true)}
+      />
+
+      <ConfirmationModal
+        isOpen={isBulkDeleteConfirmOpen}
+        onClose={() => setIsBulkDeleteConfirmOpen(false)}
+        onConfirm={() => {
+          console.log("Cleaning empty categories...");
+          setIsBulkDeleteConfirmOpen(false);
+        }}
+        title="Clean Empty Categories"
+        message="Are you sure you want to remove all categories with 0 products? This will clean up your storefront hierarchy and cannot be undone."
+        confirmText="Yes, clean categories"
+        type="danger"
+      />
+
+      <EditCategoryDrawer
+        isOpen={isEditDrawerOpen}
+        onClose={() => setIsEditDrawerOpen(false)}
+        category={categoryToEdit}
+      />
+
+      <ConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={() => {
+          console.log("Deleting category:", categoryToDelete?.name);
+          setIsDeleteModalOpen(false);
+        }}
+        title="Delete Category"
+        message={`Are you sure you want to delete the category "${categoryToDelete?.name}"? This will remove it from all associated products.`}
+        confirmText="Yes, delete category"
+        type="danger"
+      />
     </div>
   );
 }

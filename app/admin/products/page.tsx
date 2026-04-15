@@ -8,6 +8,9 @@ import { SearchInput } from "../../components/Form/SpecialInputs";
 import { TabFilter } from "../../components/Admin/TabFilter";
 import { Pagination } from "../../components/Admin/Pagination";
 import { Input } from "@/app/components/Form";
+import { ProductsMoreActionsDrawer } from "../../components/Admin/ProductsMoreActionsDrawer";
+import { EditProductDrawer } from "../../components/Admin/EditProductDrawer";
+import { ConfirmationModal } from "../../components/Admin/ConfirmationModal";
 
 const productsData = [
   {
@@ -42,6 +45,17 @@ const statusStyles = {
 export default function ProductListing() {
   const [activeTab, setActiveTab] = useState("All products");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isMoreActionsOpen, setIsMoreActionsOpen] = useState(false);
+  const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
+  const [productToEdit, setProductToEdit] = useState<any>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<any>(null);
+  const [isArchiveConfirmOpen, setIsArchiveConfirmOpen] = useState(false);
+
+  const filteredProducts = productsData.filter(product => {
+    if (activeTab === "All products") return true;
+    return product.status === activeTab;
+  });
 
   return (
     <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
@@ -61,6 +75,7 @@ export default function ProductListing() {
             variant="outline"
             shape="rounded-sm"
             iconRight={<Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" className="text-gray-400" />}
+            onClick={() => setIsMoreActionsOpen(true)}
           >
             More Action
           </Button>
@@ -111,7 +126,7 @@ export default function ProductListing() {
               </tr>
             </thead>
             <tbody>
-              {productsData.map((product) => (
+              {filteredProducts.map((product) => (
                 <tr key={product.id} className="group">
                   <td>
                     <div className="flex items-center gap-4">
@@ -144,12 +159,24 @@ export default function ProductListing() {
                   </td>
                   <td className="text-right">
                     <div className="flex justify-end items-center gap-4 text-gray-300">
-                      <button className="hover:text-blue-500 transition-colors">
+                      <button 
+                        className="hover:text-blue-500 transition-colors"
+                        onClick={() => {
+                          setProductToEdit(product);
+                          setIsEditDrawerOpen(true);
+                        }}
+                      >
                         <Icon name="settings" folder="dashboardIcon" size="sm" />
                       </button>
-                      <button className="hover:text-rose-500 transition-colors">
+                      <button 
+                        className="hover:text-rose-500 transition-colors"
+                        onClick={() => {
+                          setProductToDelete(product);
+                          setIsDeleteModalOpen(true);
+                        }}
+                      >
                         <Icon name="Delete" folder="dashboardIcon" size="sm" />
-                      </button>
+                       </button>
                     </div>
                   </td>
                 </tr>
@@ -164,6 +191,44 @@ export default function ProductListing() {
           onPageChange={setCurrentPage}
         />
       </div>
+
+      <ProductsMoreActionsDrawer
+        isOpen={isMoreActionsOpen}
+        onClose={() => setIsMoreActionsOpen(false)}
+        onArchiveOutOfStock={() => setIsArchiveConfirmOpen(true)}
+      />
+
+      <EditProductDrawer
+        isOpen={isEditDrawerOpen}
+        onClose={() => setIsEditDrawerOpen(false)}
+        product={productToEdit}
+      />
+
+      <ConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={() => {
+          console.log("Deleting product:", productToDelete?.name);
+          setIsDeleteModalOpen(false);
+        }}
+        title="Delete Product"
+        message={`Are you sure you want to delete "${productToDelete?.name}"? This action will permanently remove it from the catalog and storefront.`}
+        confirmText="Yes, delete product"
+        type="danger"
+      />
+
+      <ConfirmationModal
+        isOpen={isArchiveConfirmOpen}
+        onClose={() => setIsArchiveConfirmOpen(false)}
+        onConfirm={() => {
+          console.log("Archiving out-of-stock products...");
+          setIsArchiveConfirmOpen(false);
+        }}
+        title="Archive Out of Stock"
+        message="Are you sure you want to archive all products with 0 stock units? They will be moved to the Draft status and hidden from the storefront."
+        confirmText="Yes, archive all"
+        type="danger"
+      />
     </div>
   );
 }

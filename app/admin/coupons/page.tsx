@@ -6,6 +6,10 @@ import { Button } from "../../components/Button";
 import { Input } from "../../components/Form/Inputs";
 import { TabFilter } from "../../components/Admin/TabFilter";
 import { Pagination } from "../../components/Admin/Pagination";
+import { ConfirmationModal } from "../../components/Admin/ConfirmationModal";
+import { EditCouponDrawer } from "../../components/Admin/EditCouponDrawer";
+import { AddCouponModal } from "../../components/Admin/AddCouponModal";
+import { CouponsMoreActionsDrawer } from "../../components/Admin/CouponsMoreActionsDrawer";
 
 const couponsData = [
   { id: 1, code: "SUMMER SALE", discount: "15%", type: "Percentage", startDate: "01-06-2025", endDate: "30-08-2025", status: "Active" },
@@ -27,6 +31,12 @@ const statusConfig = {
 export default function CouponsListing() {
   const [activeTab, setActiveTab] = useState("All coupons");
   const [currentPage, setCurrentPage] = useState(1);
+  const [couponToDelete, setCouponToDelete] = useState<any>(null);
+  const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
+  const [couponToEdit, setCouponToEdit] = useState<any>(null);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isMoreActionsOpen, setIsMoreActionsOpen] = useState(false);
+  const [isBulkDeleteConfirmOpen, setIsBulkDeleteConfirmOpen] = useState(false);
 
   return (
     <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
@@ -37,6 +47,7 @@ export default function CouponsListing() {
             variant="primary"
             shape="rounded-sm"
             iconLeft={<Icon name="ticket" folder="dashboardIcon" size="sm" />}
+            onClick={() => setIsAddModalOpen(true)}
           >
             Add Coupon
           </Button>
@@ -44,6 +55,7 @@ export default function CouponsListing() {
             variant="outline"
             shape="rounded-sm"
             iconRight={<Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" className="text-gray-400" />}
+            onClick={() => setIsMoreActionsOpen(true)}
           >
             More Action
           </Button>
@@ -123,10 +135,19 @@ export default function CouponsListing() {
                   </td>
                   <td className="text-right">
                     <div className="flex justify-end items-center gap-4 text-gray-400">
-                      <button className="hover:text-[#2196F3] transition-colors">
+                      <button 
+                        className="hover:text-[#2196F3] transition-colors"
+                        onClick={() => {
+                          setCouponToEdit(coupon);
+                          setIsEditDrawerOpen(true);
+                        }}
+                      >
                         <Icon name="settings" folder="dashboardIcon" size="sm" />
                       </button>
-                      <button className="hover:text-rose-500 transition-colors">
+                      <button 
+                        className="hover:text-rose-500 transition-colors"
+                        onClick={() => setCouponToDelete(coupon)}
+                      >
                         <Icon name="Delete" folder="dashboardIcon" size="sm" />
                       </button>
                     </div>
@@ -144,6 +165,49 @@ export default function CouponsListing() {
           onPageChange={setCurrentPage}
         />
       </div>
+
+      <ConfirmationModal
+        isOpen={!!couponToDelete}
+        onClose={() => setCouponToDelete(null)}
+        onConfirm={() => {
+          console.log(`Deleting coupon ${couponToDelete?.code}...`);
+          setCouponToDelete(null);
+        }}
+        title="Delete Coupon"
+        message={`Are you sure you want to delete coupon ${couponToDelete?.code}? This will permanently remove the discount from all associated products.`}
+        confirmText="Yes, delete coupon"
+        type="danger"
+      />
+
+      <EditCouponDrawer
+        isOpen={isEditDrawerOpen}
+        onClose={() => setIsEditDrawerOpen(false)}
+        coupon={couponToEdit}
+      />
+
+      <AddCouponModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+      />
+
+      <CouponsMoreActionsDrawer
+        isOpen={isMoreActionsOpen}
+        onClose={() => setIsMoreActionsOpen(false)}
+        onDeleteExpired={() => setIsBulkDeleteConfirmOpen(true)}
+      />
+
+      <ConfirmationModal
+        isOpen={isBulkDeleteConfirmOpen}
+        onClose={() => setIsBulkDeleteConfirmOpen(false)}
+        onConfirm={() => {
+          console.log("Deleting all expired coupons...");
+          setIsBulkDeleteConfirmOpen(false);
+        }}
+        title="Delete Expired Coupons"
+        message="Are you sure you want to permanently delete all expired coupons? This action cannot be undone and will clean up your coupon database."
+        confirmText="Yes, delete all expired"
+        type="danger"
+      />
     </div>
   );
 }

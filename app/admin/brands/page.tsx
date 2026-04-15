@@ -6,6 +6,10 @@ import { Button } from "../../components/Button";
 import { Input } from "../../components/Form/Inputs";
 import { TabFilter } from "../../components/Admin/TabFilter";
 import { Pagination } from "../../components/Admin/Pagination";
+import { AddBrandModal } from "../../components/Admin/AddBrandModal";
+import { EditBrandDrawer } from "../../components/Admin/EditBrandDrawer";
+import { ConfirmationModal } from "../../components/Admin/ConfirmationModal";
+import { BrandsMoreActionsDrawer } from "../../components/Admin/BrandsMoreActionsDrawer";
 
 const brandsData = [
  { id: 1, name: "Apple", logo: "/dashboardImage/Electronics.png", category: "Electronics", rating: 4.8, status: "Active" },
@@ -26,6 +30,13 @@ const statusConfig = {
 export default function BrandsListing() {
  const [activeTab, setActiveTab] = useState("All brands");
  const [currentPage, setCurrentPage] = useState(1);
+ const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+ const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
+ const [brandToEdit, setBrandToEdit] = useState<any>(null);
+ const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+ const [brandToDelete, setBrandToDelete] = useState<any>(null);
+ const [isMoreActionsOpen, setIsMoreActionsOpen] = useState(false);
+ const [isBulkDeactivateConfirmOpen, setIsBulkDeactivateConfirmOpen] = useState(false);
 
  return (
   <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
@@ -36,6 +47,7 @@ export default function BrandsListing() {
       variant="primary"
       shape="rounded-sm"
       iconLeft={<Icon name="circle-plus" folder="dashboardIcon" size="sm" />}
+      onClick={() => setIsAddModalOpen(true)}
      >
       Add Brand
      </Button>
@@ -43,6 +55,7 @@ export default function BrandsListing() {
       variant="outline"
       shape="rounded-sm"
       iconRight={<Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" className="text-gray-400" />}
+      onClick={() => setIsMoreActionsOpen(true)}
      >
       More Action
      </Button>
@@ -120,16 +133,28 @@ export default function BrandsListing() {
            {brand.status}
           </span>
          </td>
-         <td className="text-right">
-          <div className="flex justify-end items-center gap-4 text-gray-400">
-           <button className="hover:text-[#2196F3] transition-colors">
-            <Icon name="settings" folder="dashboardIcon" size="sm" />
-           </button>
-           <button className="hover:text-rose-500 transition-colors">
-            <Icon name="Delete" folder="dashboardIcon" size="sm" />
-           </button>
-          </div>
-         </td>
+          <td className="text-right">
+           <div className="flex justify-end items-center gap-4 text-gray-400">
+            <button 
+              className="hover:text-[#2196F3] transition-colors"
+              onClick={() => {
+                setBrandToEdit(brand);
+                setIsEditDrawerOpen(true);
+              }}
+            >
+             <Icon name="settings" folder="dashboardIcon" size="sm" />
+            </button>
+            <button 
+              className="hover:text-rose-500 transition-colors"
+              onClick={() => {
+                setBrandToDelete(brand);
+                setIsDeleteModalOpen(true);
+              }}
+            >
+             <Icon name="Delete" folder="dashboardIcon" size="sm" />
+            </button>
+           </div>
+          </td>
         </tr>
        ))}
       </tbody>
@@ -143,6 +168,49 @@ export default function BrandsListing() {
       onPageChange={setCurrentPage}
     />
    </div>
+
+   <AddBrandModal
+    isOpen={isAddModalOpen}
+    onClose={() => setIsAddModalOpen(false)}
+   />
+
+   <EditBrandDrawer
+    isOpen={isEditDrawerOpen}
+    onClose={() => setIsEditDrawerOpen(false)}
+    brand={brandToEdit}
+   />
+
+   <ConfirmationModal
+    isOpen={isDeleteModalOpen}
+    onClose={() => setIsDeleteModalOpen(false)}
+    onConfirm={() => {
+      console.log("Deleting brand:", brandToDelete?.name);
+      setIsDeleteModalOpen(false);
+    }}
+    title="Delete Brand"
+    message={`Are you sure you want to delete the brand "${brandToDelete?.name}"? This action will remove it from the storefront and cannot be undone.`}
+    confirmText="Yes, delete brand"
+    type="danger"
+   />
+
+   <BrandsMoreActionsDrawer
+    isOpen={isMoreActionsOpen}
+    onClose={() => setIsMoreActionsOpen(false)}
+    onDeactivateInactive={() => setIsBulkDeactivateConfirmOpen(true)}
+   />
+
+   <ConfirmationModal
+    isOpen={isBulkDeactivateConfirmOpen}
+    onClose={() => setIsBulkDeactivateConfirmOpen(false)}
+    onConfirm={() => {
+      console.log("Bulk deactivating inactive brands...");
+      setIsBulkDeactivateConfirmOpen(false);
+    }}
+    title="Bulk Deactivate Brands"
+    message="Are you sure you want to deactivate all brands currently marked as 'Inactive'? They will no longer be visible on the storefront."
+    confirmText="Yes, deactivate all"
+    type="danger"
+   />
   </div>
  );
 }

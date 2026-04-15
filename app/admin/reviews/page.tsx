@@ -6,6 +6,12 @@ import { Button } from "../../components/Button";
 import { Input } from "../../components/Form/Inputs";
 import { TabFilter } from "../../components/Admin/TabFilter";
 import { Pagination } from "../../components/Admin/Pagination";
+import { ReviewReplyDrawer } from "../../components/Admin/ReviewReplyDrawer";
+import { ReviewsMoreActionsDrawer } from "../../components/Admin/ReviewsMoreActionsDrawer";
+import { ConfirmationModal } from "../../components/Admin/ConfirmationModal";
+import Modal from "../../components/Modal/Modal";
+import ModalBody from "../../components/Modal/ModalBody";
+import ModalFooter from "../../components/Modal/ModalFooter";
 
 const reviewsData = [
   { 
@@ -73,6 +79,19 @@ const statusStyles = {
 export default function ReviewListing() {
   const [activeTab, setActiveTab] = useState("All reviews");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isMoreActionsOpen, setIsMoreActionsOpen] = useState(false);
+  const [isReplyDrawerOpen, setIsReplyDrawerOpen] = useState(false);
+  const [reviewToReply, setReviewToReply] = useState<any>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [reviewToDelete, setReviewToDelete] = useState<any>(null);
+  const [isClearSpamConfirmOpen, setIsClearSpamConfirmOpen] = useState(false);
+  const [isBulkApproveConfirmOpen, setIsBulkApproveConfirmOpen] = useState(false);
+  const [isExportSuccessOpen, setIsExportSuccessOpen] = useState(false);
+
+  const filteredReviews = reviewsData.filter(review => {
+    if (activeTab === "All reviews") return true;
+    return review.status === activeTab;
+  });
 
   return (
     <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
@@ -83,6 +102,7 @@ export default function ReviewListing() {
             variant="primary"
             shape="rounded-sm"
             iconLeft={<Icon name="ticket" folder="dashboardIcon" size="sm" />}
+            onClick={() => setIsExportSuccessOpen(true)}
           >
             Export Reviews
           </Button>
@@ -90,6 +110,7 @@ export default function ReviewListing() {
             variant="outline"
             shape="rounded-sm"
             iconRight={<Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" className="text-gray-400" />}
+            onClick={() => setIsMoreActionsOpen(true)}
           >
             More Action
           </Button>
@@ -140,7 +161,7 @@ export default function ReviewListing() {
               </tr>
             </thead>
             <tbody>
-              {reviewsData.map((review) => (
+              {filteredReviews.map((review) => (
                 <tr key={review.id} className="group">
                   <td>
                     <div className="flex items-center gap-3">
@@ -189,10 +210,22 @@ export default function ReviewListing() {
                   </td>
                   <td className="text-right text-gray-300">
                     <div className="flex justify-end gap-4">
-                       <button className="hover:text-blue-500 transition-colors">
+                       <button 
+                         className="hover:text-blue-500 transition-colors"
+                         onClick={() => {
+                           setReviewToReply(review);
+                           setIsReplyDrawerOpen(true);
+                         }}
+                       >
                           <Icon name="reply" folder="dashboardIcon" size="sm" />
                        </button>
-                       <button className="hover:text-rose-500 transition-colors">
+                       <button 
+                         className="hover:text-rose-500 transition-colors"
+                         onClick={() => {
+                           setReviewToDelete(review);
+                           setIsDeleteModalOpen(true);
+                         }}
+                       >
                           <Icon name="Delete" folder="dashboardIcon" size="sm" />
                        </button>
                     </div>
@@ -210,6 +243,87 @@ export default function ReviewListing() {
           onPageChange={setCurrentPage}
         />
       </div>
+
+      <ReviewsMoreActionsDrawer
+        isOpen={isMoreActionsOpen}
+        onClose={() => setIsMoreActionsOpen(false)}
+        onClearSpam={() => setIsClearSpamConfirmOpen(true)}
+        onBulkApprove={() => setIsBulkApproveConfirmOpen(true)}
+        onExport={() => setIsExportSuccessOpen(true)}
+      />
+
+      <ReviewReplyDrawer
+        isOpen={isReplyDrawerOpen}
+        onClose={() => setIsReplyDrawerOpen(false)}
+        review={reviewToReply}
+      />
+
+      <ConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        onConfirm={() => {
+          console.log("Deleting review from:", reviewToDelete?.customer.name);
+          setIsDeleteModalOpen(false);
+        }}
+        title="Delete Review"
+        message={`Are you sure you want to delete the review from "${reviewToDelete?.customer.name}"? This action cannot be undone.`}
+        confirmText="Yes, delete review"
+        type="danger"
+      />
+
+      <ConfirmationModal
+        isOpen={isClearSpamConfirmOpen}
+        onClose={() => setIsClearSpamConfirmOpen(false)}
+        onConfirm={() => {
+          console.log("Clearing spam queue...");
+          setIsClearSpamConfirmOpen(false);
+        }}
+        title="Clear Spam Queue"
+        message="Are you sure you want to permanently delete all reviews flagged as Spam? This action will free up database space but is irreversible."
+        confirmText="Yes, clear queue"
+        type="danger"
+      />
+
+      <ConfirmationModal
+        isOpen={isBulkApproveConfirmOpen}
+        onClose={() => setIsBulkApproveConfirmOpen(false)}
+        onConfirm={() => {
+          console.log("Bulk approving pending reviews...");
+          setIsBulkApproveConfirmOpen(false);
+        }}
+        title="Bulk Approve"
+        message="Are you sure you want to publish all currently pending reviews? This will make them visible on the storefront immediately."
+        confirmText="Yes, approve all"
+        type="success"
+      />
+
+      <Modal 
+        isOpen={isExportSuccessOpen} 
+        onClose={() => setIsExportSuccessOpen(false)} 
+        title=""
+        size="md"
+      >
+        <ModalBody className="flex flex-col items-center text-center py-10 gap-6">
+           <div className="w-20 h-20 rounded-full bg-green-50 flex items-center justify-center text-green-500 shadow-inner">
+              <Icon name="task_alt" folder="icon" size="lg" className="w-10 h-10" />
+           </div>
+           <div className="flex flex-col gap-2">
+              <h2 className="text-xl font-black text-[#1D3557]">Export Started!</h2>
+              <p className="text-sm font-medium text-gray-400 max-w-[280px] mx-auto leading-relaxed">
+                 Your feedback report is being generated and will be downloaded automatically in a few moments.
+              </p>
+           </div>
+        </ModalBody>
+        <ModalFooter className="flex flex-col gap-3 pb-8">
+           <Button 
+            variant="primary" 
+            className="w-full h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
+            onClick={() => setIsExportSuccessOpen(false)}
+           >
+              Great, thank you
+           </Button>
+        </ModalFooter>
+      </Modal>
     </div>
   );
 }

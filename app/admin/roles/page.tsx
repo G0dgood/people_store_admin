@@ -4,11 +4,22 @@ import React, { useState } from "react";
 import { Icon } from "../../components/Icon";
 import { Button } from "../../components/Button";
 import { Input, Textarea } from "../../components/Form/Inputs";
+import { UploadAvatarModal } from "../../components/Admin/UploadAvatarModal";
+import Modal from "../../components/Modal/Modal";
+import ModalBody from "../../components/Modal/ModalBody";
+import ModalFooter from "../../components/Modal/ModalFooter";
+import { ConfirmationModal } from "../../components/Admin/ConfirmationModal";
+import { SecurityHelpDrawer } from "../../components/Admin/SecurityHelpDrawer";
 
 export default function ProfilePage() {
    const [showCurrentPassword, setShowCurrentPassword] = useState(false);
    const [showNewPassword, setShowNewPassword] = useState(false);
    const [showReenterPassword, setShowReenterPassword] = useState(false);
+   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
+   const [isChangeSuccessOpen, setIsChangeSuccessOpen] = useState(false);
+   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+   const [isEditMode, setIsEditMode] = useState(false);
+   const [isHelpDrawerOpen, setIsHelpDrawerOpen] = useState(false);
 
    return (
       <div className="flex flex-col gap-8 max-w-[1600px] mx-auto pb-12">
@@ -64,7 +75,12 @@ export default function ProfilePage() {
                <div className="bg-white rounded-[6px] border border-gray-100 shadow-sm p-8 flex flex-col gap-6">
                   <div className="flex items-center justify-between">
                      <h3 className="text-sm font-bold text-[#1D3557]">Change Password</h3>
-                     <button className="text-[10px] font-bold text-brand-blue underline underline-offset-2">Need help? <Icon name="Bell outline" folder="dashboardIcon" size="xs" className="inline ml-1" /></button>
+                     <button 
+                        className="text-[10px] font-bold text-brand-blue underline underline-offset-2 hover:text-blue-600 transition-colors"
+                        onClick={() => setIsHelpDrawerOpen(true)}
+                     >
+                        Need help? <Icon name="live_help" folder="icon" size="xs" className="inline ml-1" />
+                     </button>
                   </div>
 
                   <div className="flex flex-col gap-5">
@@ -124,6 +140,7 @@ export default function ProfilePage() {
                         variant="primary"
                         shape="rounded-sm"
                         className="w-full py-3 mt-2 shadow-md"
+                        onClick={() => setIsChangeSuccessOpen(true)}
                      >
                         Save Change
                      </Button>
@@ -136,9 +153,21 @@ export default function ProfilePage() {
                <div className="bg-white rounded-[6px] border border-gray-100 shadow-sm p-8 flex flex-col gap-8 relative">
                   <div className="flex items-center justify-between mb-2">
                      <h3 className="text-sm font-bold text-[#1D3557]">Profile Update</h3>
-                     <button className="flex items-center gap-2 px-4 py-2 border border-gray-100 rounded-[6px] text-xs font-bold text-gray-500 hover:bg-gray-50 transition-all shadow-sm">
-                        <Icon name="settings" folder="dashboardIcon" size="xs" />
-                        Edit
+                     <button 
+                        className={`flex items-center gap-2 px-4 py-2 border rounded-[6px] text-xs font-bold transition-all shadow-sm
+                           ${isEditMode 
+                              ? "bg-brand-blue border-brand-blue text-white hover:bg-blue-600" 
+                              : "bg-white border-gray-100 text-gray-500 hover:bg-gray-50"}
+                        `}
+                        onClick={() => {
+                           if (isEditMode) {
+                              setIsChangeSuccessOpen(true);
+                           }
+                           setIsEditMode(!isEditMode);
+                        }}
+                     >
+                        <Icon name={isEditMode ? "verified" : "settings"} folder={isEditMode ? "icon" : "dashboardIcon"} size="xs" />
+                        {isEditMode ? "Update Profile" : "Edit"}
                      </button>
                   </div>
 
@@ -152,10 +181,14 @@ export default function ProfilePage() {
                            variant="primary"
                            shape="rounded-sm"
                            className="px-5 py-2 text-[10px] shadow-sm"
+                           onClick={() => setIsAvatarModalOpen(true)}
                         >
                            Upload New
                         </Button>
-                        <button className="bg-white border border-gray-100 text-gray-400 px-5 py-2 rounded-[6px] text-[10px] font-bold hover:bg-gray-50 transition-all shadow-sm">
+                        <button 
+                           className="bg-white border border-gray-100 text-gray-400 px-5 py-2 rounded-[6px] text-[10px] font-bold hover:bg-gray-50 transition-all shadow-sm"
+                           onClick={() => setIsDeleteConfirmOpen(true)}
+                        >
                            Delete
                         </button>
                      </div>
@@ -168,7 +201,8 @@ export default function ProfilePage() {
                         <Input
                            type="text"
                            defaultValue="Wade"
-                           className="bg-gray-50/80 border-gray-50 text-xs font-bold text-gray-900"
+                           readOnly={!isEditMode}
+                           className={`${!isEditMode ? "bg-gray-50/50" : "bg-white"} border-gray-50 text-xs font-bold text-gray-900 transition-colors`}
                         />
                      </div>
                      <div className="flex flex-col gap-2">
@@ -176,7 +210,8 @@ export default function ProfilePage() {
                         <Input
                            type="text"
                            defaultValue="Warren"
-                           className="bg-gray-50/80 border-gray-50 text-xs font-bold text-gray-900"
+                           readOnly={!isEditMode}
+                           className={`${!isEditMode ? "bg-gray-50/50" : "bg-white"} border-gray-50 text-xs font-bold text-gray-900 transition-colors`}
                         />
                      </div>
 
@@ -185,7 +220,8 @@ export default function ProfilePage() {
                         <Input
                            type="password"
                            defaultValue="**********"
-                           className="bg-gray-50/80 border-gray-50 text-xs font-bold text-gray-900"
+                           readOnly={!isEditMode}
+                           className={`${!isEditMode ? "bg-gray-50/50" : "bg-white"} border-gray-50 text-xs font-bold text-gray-900 transition-colors`}
                            suffixElement={
                               <button className="text-gray-300">
                                  <Icon name="menu-close" folder="dashboardIcon" size="xs" />
@@ -198,7 +234,8 @@ export default function ProfilePage() {
                         <Input
                            type="text"
                            defaultValue="(406) 555-0120"
-                           className="bg-gray-50/80 border-gray-50 text-xs font-bold text-gray-900"
+                           readOnly={!isEditMode}
+                           className={`${!isEditMode ? "bg-gray-50/50" : "bg-white"} border-gray-50 text-xs font-bold text-gray-900 transition-colors`}
                            suffixElement={
                               <div className="flex items-center gap-2 px-2 py-0.5 bg-white border border-gray-100 rounded-[3px] shadow-sm cursor-pointer">
                                  <img src="/dashboardIcon/usa.svg" alt="USA" className="w-5 h-3 object-cover rounded-[1px]" />
@@ -213,7 +250,8 @@ export default function ProfilePage() {
                         <Input
                            type="email"
                            defaultValue="wade.warren@example.com"
-                           className="bg-gray-50/80 border-gray-50 text-xs font-bold text-gray-900"
+                           readOnly={!isEditMode}
+                           className={`${!isEditMode ? "bg-gray-50/50" : "bg-white"} border-gray-50 text-xs font-bold text-gray-900 transition-colors`}
                         />
                      </div>
                      <div className="flex flex-col gap-2">
@@ -233,7 +271,8 @@ export default function ProfilePage() {
                         <Input
                            type="text"
                            defaultValue="2972 Westheimer Rd. Santa Ana, Illinois 85486"
-                           className="bg-gray-50/80 border-gray-50 text-xs font-bold text-gray-900"
+                           readOnly={!isEditMode}
+                           className={`${!isEditMode ? "bg-gray-50/50" : "bg-white"} border-gray-50 text-xs font-bold text-gray-900 transition-colors`}
                         />
                      </div>
 
@@ -242,7 +281,8 @@ export default function ProfilePage() {
                         <Input
                            type="text"
                            defaultValue="843-4359-4444"
-                           className="bg-gray-50/80 border-gray-50 text-xs font-bold text-gray-900"
+                           readOnly={!isEditMode}
+                           className={`${!isEditMode ? "bg-gray-50/50" : "bg-white"} border-gray-50 text-xs font-bold text-gray-900 transition-colors`}
                            prefixElement={
                               <div className="flex items-center gap-2">
                                  <div className="w-6 h-4 bg-[#EB001B] rounded-[2px] relative flex items-center justify-center p-0.5">
@@ -263,7 +303,8 @@ export default function ProfilePage() {
                            <Textarea
                               rows={4}
                               placeholder="Enter a biography about you"
-                              className="bg-gray-50/80 border-gray-50 text-xs font-medium text-gray-700 resize-none leading-relaxed"
+                              readOnly={!isEditMode}
+                              className={`${!isEditMode ? "bg-gray-50/50" : "bg-white"} border-gray-50 text-xs font-medium text-gray-700 resize-none leading-relaxed transition-colors`}
                            />
                            <div className="absolute bottom-4 right-4 flex gap-2 opacity-50 group-hover:opacity-100 transition-opacity">
                               <Icon name="settings" folder="dashboardIcon" size="xs" className="cursor-pointer hover:text-gray-900" />
@@ -275,6 +316,61 @@ export default function ProfilePage() {
                </div>
             </div>
          </div>
-      </div>
-   );
-}
+
+         <UploadAvatarModal 
+            isOpen={isAvatarModalOpen} 
+            onClose={() => {
+               setIsAvatarModalOpen(false);
+               setIsChangeSuccessOpen(true);
+            }} 
+         />
+
+         <Modal 
+            isOpen={isChangeSuccessOpen} 
+            onClose={() => setIsChangeSuccessOpen(false)} 
+            title=""
+            size="md"
+         >
+            <ModalBody className="flex flex-col items-center text-center py-10 gap-6">
+               <div className="w-20 h-20 rounded-full bg-blue-50 flex items-center justify-center text-brand-blue shadow-inner border border-blue-100">
+                  <Icon name="verified" folder="icon" size="lg" className="w-10 h-10" />
+               </div>
+               <div className="flex flex-col gap-2">
+                  <h2 className="text-xl font-black text-[#1D3557]">Update Successful!</h2>
+                  <p className="text-sm font-medium text-gray-400 max-w-[280px] mx-auto leading-relaxed">
+                     Your profile information has been securely updated and synchronized across the administrative system.
+                  </p>
+               </div>
+               </ModalBody>
+               <ModalFooter className="flex flex-col gap-3 pb-8">
+                  <Button 
+                     variant="primary" 
+                     className="w-full h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
+                     onClick={() => setIsChangeSuccessOpen(false)}
+                  >
+                     Great, thank you
+                  </Button>
+               </ModalFooter>
+            </Modal>
+
+            <ConfirmationModal
+               isOpen={isDeleteConfirmOpen}
+               onClose={() => setIsDeleteConfirmOpen(false)}
+               onConfirm={() => {
+                  console.log("Removing avatar...");
+                  setIsDeleteConfirmOpen(false);
+                  setIsChangeSuccessOpen(true);
+               }}
+               title="Remove Photo"
+               message="Are you sure you want to remove your profile photo? You can upload a new one at any time."
+               confirmText="Yes, remove it"
+               type="danger"
+            />
+
+            <SecurityHelpDrawer 
+               isOpen={isHelpDrawerOpen} 
+               onClose={() => setIsHelpDrawerOpen(false)} 
+            />
+         </div>
+      );
+   }

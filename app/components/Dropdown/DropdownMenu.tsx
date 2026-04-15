@@ -8,7 +8,7 @@ import { Checkbox } from "../Form";
 interface DropdownItemProps {
   label: string;
   subtext?: string;
-  icon?: string;
+  icon?: string | React.ReactNode;
   showCheckbox?: boolean;
   checked?: boolean;
   onSelect?: () => void;
@@ -52,11 +52,17 @@ const DropdownItem: React.FC<DropdownItemProps> = ({
       )}
 
       {icon && (
-        <Icon
-          name={icon}
-          size="sm"
-          className={isActive ? "text-brand-blue" : "text-gray-400"}
-        />
+        typeof icon === "string" ? (
+          <Icon
+            name={icon}
+            size="sm"
+            className={isActive ? "text-brand-blue" : "text-gray-400"}
+          />
+        ) : (
+          <div className={`text-base flex items-center justify-center shrink-0 w-5 h-5 ${isActive ? "text-brand-blue" : "text-gray-400"}`}>
+            {icon}
+          </div>
+        )
       )}
 
       <div className="flex-1 flex flex-col min-w-0">

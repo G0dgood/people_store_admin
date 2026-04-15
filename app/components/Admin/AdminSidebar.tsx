@@ -25,6 +25,7 @@ const navGroups: NavGroup[] = [
       { name: "Categories", href: "/admin/categories", icon: "circle-square" },
       { name: "Transaction", href: "/admin/transactions", icon: "famicons_card-outline" },
       { name: "Brand", href: "/admin/brands", icon: "star" },
+      { name: "Notifications", href: "/admin/notifications", icon: "Bell outline" },
     ],
   },
   {

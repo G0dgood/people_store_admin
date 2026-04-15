@@ -6,6 +6,10 @@ import { Button } from "../../components/Button";
 import { Input } from "../../components/Form/Inputs";
 import { TabFilter } from "../../components/Admin/TabFilter";
 import { Pagination } from "../../components/Admin/Pagination";
+import { ConfirmationModal } from "../../components/Admin/ConfirmationModal";
+import { AddRoleModal } from "../../components/Admin/AddRoleModal";
+import { EditRoleDrawer } from "../../components/Admin/EditRoleDrawer";
+import { RolesMoreActionsDrawer } from "../../components/Admin/RolesMoreActionsDrawer";
 
 const rolesData = [
   { 
@@ -53,6 +57,20 @@ const statusStyles = {
 export default function PermissionsListing() {
   const [activeTab, setActiveTab] = useState("All roles");
   const [currentPage, setCurrentPage] = useState(1);
+  const [roleToDelete, setRoleToDelete] = useState<any>(null);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
+  const [roleToEdit, setRoleToEdit] = useState<any>(null);
+  const [isMoreActionsOpen, setIsMoreActionsOpen] = useState(false);
+  const [isSyncConfirmOpen, setIsSyncConfirmOpen] = useState(false);
+
+  const filteredRoles = rolesData.filter(role => {
+    if (activeTab === "All roles") return true;
+    if (activeTab === "Admin") return role.name.includes("Admin");
+    if (activeTab === "Staff") return role.name.includes("Manager") || role.name.includes("Editor") || role.name.includes("Staff");
+    if (activeTab === "User") return !role.name.includes("Admin") && !role.name.includes("Staff") && !role.name.includes("Manager");
+    return true;
+  });
 
   return (
     <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
@@ -63,6 +81,7 @@ export default function PermissionsListing() {
             variant="primary"
             shape="rounded-sm"
             iconLeft={<Icon name="circle-plus" folder="dashboardIcon" size="sm" />}
+            onClick={() => setIsAddModalOpen(true)}
           >
             Add Role
           </Button>
@@ -70,6 +89,7 @@ export default function PermissionsListing() {
             variant="outline"
             shape="rounded-sm"
             iconRight={<Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" className="text-gray-400" />}
+            onClick={() => setIsMoreActionsOpen(true)}
           >
             More Action
           </Button>
@@ -118,7 +138,7 @@ export default function PermissionsListing() {
               </tr>
             </thead>
             <tbody>
-              {rolesData.map((role) => (
+              {filteredRoles.map((role) => (
                 <tr key={role.id} className="group">
                   <td>
                     <span className="text-sm font-bold text-[#1D3557] group-hover:text-blue-600 transition-colors">
@@ -145,10 +165,19 @@ export default function PermissionsListing() {
                   </td>
                   <td className="text-right text-gray-300">
                     <div className="flex justify-end gap-4 text-gray-400">
-                       <button className="hover:text-blue-500 transition-colors">
+                       <button 
+                         className="hover:text-blue-500 transition-colors"
+                         onClick={() => {
+                           setRoleToEdit(role);
+                           setIsEditDrawerOpen(true);
+                         }}
+                       >
                           <Icon name="settings" folder="dashboardIcon" size="sm" />
                        </button>
-                       <button className="hover:text-rose-500 transition-colors">
+                       <button 
+                         className="hover:text-rose-500 transition-colors"
+                         onClick={() => setRoleToDelete(role)}
+                       >
                           <Icon name="Delete" folder="dashboardIcon" size="sm" />
                        </button>
                     </div>
@@ -166,6 +195,49 @@ export default function PermissionsListing() {
           onPageChange={setCurrentPage}
         />
       </div>
+
+      <ConfirmationModal
+        isOpen={!!roleToDelete}
+        onClose={() => setRoleToDelete(null)}
+        onConfirm={() => {
+          console.log(`Deleting role ${roleToDelete?.name}...`);
+          setRoleToDelete(null);
+        }}
+        title="Delete Administrative Role"
+        message={`Are you sure you want to delete the "${roleToDelete?.name}" role? This will affect all ${roleToDelete?.users.length} users assigned to it and cannot be undone.`}
+        confirmText="Yes, delete role"
+        type="danger"
+      />
+
+      <AddRoleModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+      />
+
+      <EditRoleDrawer
+        isOpen={isEditDrawerOpen}
+        onClose={() => setIsEditDrawerOpen(false)}
+        role={roleToEdit}
+      />
+
+      <RolesMoreActionsDrawer
+        isOpen={isMoreActionsOpen}
+        onClose={() => setIsMoreActionsOpen(false)}
+        onSyncPermissions={() => setIsSyncConfirmOpen(true)}
+      />
+
+      <ConfirmationModal
+        isOpen={isSyncConfirmOpen}
+        onClose={() => setIsSyncConfirmOpen(false)}
+        onConfirm={() => {
+          console.log("Synchronizing global permissions...");
+          setIsSyncConfirmOpen(false);
+        }}
+        title="Sync Global Rules"
+        message="Are you sure you want to force synchronize administrative access rules across all server instances? this will temporarily override local configurations."
+        confirmText="Yes, sync now"
+        type="success"
+      />
     </div>
   );
 }

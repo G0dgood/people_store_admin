@@ -32,7 +32,7 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-[#F7FAFC] flex flex-col font-inter">
       <Header />
 
-      <main className="flex-1 max-w-[1440px] w-full mx-auto px-6 md:px-10 lg:px-16 py-6 md:py-8">
+      <div className="flex-1 max-w-[1440px] w-full mx-auto px-6 md:px-10 lg:px-16 py-6 md:py-8">
         {/* Breadcrumbs */}
         <Breadcrumbs
           items={[{ label: "User Dashboard", href: "/profile" }, { label: "Personal Info" }]}
@@ -142,7 +142,7 @@ export default function ProfilePage() {
           </motion.div>
 
         </div>
-      </main>
+      </div>
 
       <Footer />
     </div>

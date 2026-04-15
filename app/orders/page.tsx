@@ -12,18 +12,18 @@ export default function OrdersPage() {
   return (
     <div className="min-h-screen bg-[#F7FAFC] flex flex-col font-inter">
       <Header />
-      
-      <main className="flex-1 w-full max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 py-4 md:py-6 lg:py-8">
+
+      <div className="flex-1 w-full max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 py-4 md:py-6 lg:py-8">
         <div className="text-sm text-gray-500 mb-6 hidden md:flex items-center gap-2">
-           <span>Home</span>
-           <span className="text-gray-300">/</span>
-           <span className="text-gray-900 font-medium">My Orders</span>
+          <span>Home</span>
+          <span className="text-gray-300">/</span>
+          <span className="text-gray-900 font-medium">My Orders</span>
         </div>
-        
+
         <h1 className="text-2xl font-bold text-gray-900 mb-6 font-outfit">Order History</h1>
-        
+
         <OrdersList />
-      </main>
+      </div>
 
       <Footer />
     </div>

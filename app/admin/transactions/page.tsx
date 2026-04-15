@@ -7,6 +7,7 @@ import { Input } from "../../components/Form/Inputs";
 import { StatCard } from "../../components/Admin/StatCard";
 import { TabFilter } from "../../components/Admin/TabFilter";
 import { Pagination } from "../../components/Admin/Pagination";
+import { TransactionDetailDrawer } from "../../components/Admin/TransactionDetailDrawer";
 
 const transactionsData = [
   { custId: "#CUST001", name: "John Doe", date: "01-01-2025", total: "₦2,904", method: "CC", status: "Complete" },
@@ -30,6 +31,8 @@ const statusStyles = {
 export default function TransactionsPage() {
   const [activeTab, setActiveTab] = useState("All transactions");
   const [currentPage, setCurrentPage] = useState(1);
+  const [isDetailDrawerOpen, setIsDetailDrawerOpen] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
 
   return (
     <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
@@ -219,7 +222,15 @@ export default function TransactionsPage() {
                        </div>
                     </td>
                     <td className="text-right">
-                       <button className="text-[11px] font-black text-brand-blue uppercase hover:underline">View Details</button>
+                       <button 
+                         className="text-[11px] font-black text-brand-blue uppercase hover:underline"
+                         onClick={() => {
+                           setSelectedTransaction(tx);
+                           setIsDetailDrawerOpen(true);
+                         }}
+                       >
+                         View Details
+                       </button>
                     </td>
                   </tr>
                 ))}
@@ -231,9 +242,15 @@ export default function TransactionsPage() {
           <Pagination 
             currentPage={currentPage}
             totalPages={24}
-            onPageChange={setCurrentPage}
-          />
+          onPageChange={setCurrentPage}
+        />
       </div>
+
+      <TransactionDetailDrawer
+        isOpen={isDetailDrawerOpen}
+        onClose={() => setIsDetailDrawerOpen(false)}
+        transaction={selectedTransaction}
+      />
     </div>
   );
 }

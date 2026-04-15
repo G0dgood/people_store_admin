@@ -39,7 +39,7 @@ const WishlistPage = () => {
     <div className="min-h-screen bg-[#F7FAFC] flex flex-col font-sans text-black">
       <Header />
 
-      <main className="flex-1 max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 py-4 md:py-8 flex flex-col gap-4 md:gap-8 w-full">
+      <div className="flex-1 max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 py-4 md:py-8 flex flex-col gap-4 md:gap-8 w-full">
         {/* Breadcrumbs */}
         <div className="flex items-center gap-2 text-sm text-gray-400 overflow-x-auto whitespace-nowrap scrollbar-none pb-2">
           <Link href="/" className="hover:text-brand-blue transition-colors">
@@ -175,7 +175,7 @@ const WishlistPage = () => {
             ))}
           </div>
         </div>
-      </main>
+      </div>
 
       <ClearWishlistModal
         isOpen={isClearModalOpen}

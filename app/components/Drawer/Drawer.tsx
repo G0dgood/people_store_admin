@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import { createPortal } from "react-dom";
-import { Icon } from "../Icon";
+import { IoMdClose } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface DrawerProps {
@@ -67,7 +67,7 @@ export default function Drawer({
                 onClick={onClose}
                 className="p-2 -mr-2 rounded-full hover:bg-gray-50 text-gray-400 hover:text-gray-600 transition-all active:scale-95"
               >
-                <Icon name="close" size="sm" />
+                <IoMdClose size={24} />
               </button>
             </div>
 
