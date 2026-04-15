@@ -37,7 +37,7 @@
   --text-secondary: var(--dark-slate-gray);
   --text-tertiary: var(--slate-gray);
   --text-inverse: var(--off-white);
-  
+
    /* Primary Color for Light Mode */
   --primary: oklch(0.205 0 0);
   --text-primary: var(--primary); 
@@ -195,6 +195,18 @@ main {
   padding: 32px;
   background-color: var(--background);
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#page-wrapper {
+  display: grid;
+  position: relative;
+  height: 100dvh;
+  grid-template-columns: max-content 1fr;
+  grid-template-rows: 70px 1fr;
+  grid-template-areas:
+    "sidenav header"
+    "sidenav main"
+    "sidenav footer";
 }
 
 @media (max-width: 768px) {

@@ -5,6 +5,7 @@ import { Icon } from "../../components/Icon";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Form/Inputs";
 import { TabFilter } from "../../components/Admin/TabFilter";
+import { Pagination } from "../../components/Admin/Pagination";
 
 const reviewsData = [
   { 
@@ -71,6 +72,7 @@ const statusStyles = {
 
 export default function ReviewListing() {
   const [activeTab, setActiveTab] = useState("All reviews");
+  const [currentPage, setCurrentPage] = useState(1);
 
   return (
     <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
@@ -125,22 +127,22 @@ export default function ReviewListing() {
         </div>
 
         {/* Reviews Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+        <div className="admin-table-container">
+          <table>
             <thead>
-              <tr className="bg-gray-50/50 text-[#1D3557]">
-                <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Customer</th>
-                <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Review</th>
-                <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Product</th>
-                <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Date</th>
-                <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Status</th>
-                <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-right pr-6">Action</th>
+              <tr>
+                <th>Customer</th>
+                <th>Review</th>
+                <th>Product</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th className="text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody>
               {reviewsData.map((review) => (
-                <tr key={review.id} className="hover:bg-gray-50/50 transition-colors group">
-                  <td className="px-6 py-5">
+                <tr key={review.id} className="group">
+                  <td>
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-full overflow-hidden bg-gray-100 border border-gray-100">
                         <img src={review.customer.avatar} alt={review.customer.name} className="w-full h-full object-cover" />
@@ -151,7 +153,7 @@ export default function ReviewListing() {
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-5 max-w-[300px]">
+                  <td className="max-w-[300px]">
                     <div className="flex flex-col gap-1.5">
                       <div className="flex items-center gap-0.5">
                         {[1, 2, 3, 4, 5].map((star) => (
@@ -169,7 +171,7 @@ export default function ReviewListing() {
                       </p>
                     </div>
                   </td>
-                  <td className="px-6 py-5">
+                  <td>
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-[6px] border border-gray-100 overflow-hidden bg-white p-1 shadow-sm">
                         <img src={review.product.image} alt={review.product.name} className="w-full h-full object-contain" />
@@ -177,15 +179,15 @@ export default function ReviewListing() {
                       <span className="text-xs font-bold text-gray-500 max-w-[120px] truncate">{review.product.name}</span>
                     </div>
                   </td>
-                  <td className="px-6 py-5">
+                  <td>
                     <span className="text-xs font-bold text-gray-400">{review.date}</span>
                   </td>
-                  <td className="px-6 py-5">
+                  <td>
                     <span className={`px-3 py-1.5 rounded-[6px] text-[10px] font-bold ${statusStyles[review.status as keyof typeof statusStyles]}`}>
                       {review.status}
                     </span>
                   </td>
-                  <td className="px-6 py-5 text-right pr-6 text-gray-300">
+                  <td className="text-right text-gray-300">
                     <div className="flex justify-end gap-4">
                        <button className="hover:text-blue-500 transition-colors">
                           <Icon name="reply" folder="dashboardIcon" size="sm" />
@@ -202,32 +204,11 @@ export default function ReviewListing() {
         </div>
 
         {/* Pagination Footer */}
-        <div className="p-6 flex items-center justify-between border-t border-gray-50">
-          <button className="flex items-center gap-2 px-4 py-2 border border-gray-100 rounded-[6px] text-xs font-bold text-[#1D3557] hover:bg-gray-50 transition-all shadow-sm group">
-            <Icon name="arrow_back" folder="icon" size="xs" className="transition-transform group-hover:-translate-x-0.5" />
-            Previous
-          </button>
-          
-          <div className="flex items-center gap-1">
-            {[1, 2, 3, "...", 85].map((page, i) => (
-              <button
-                key={i}
-                className={`w-8 h-8 flex items-center justify-center rounded-[6px] text-xs font-bold transition-all ${
-                  page === 1 
-                    ? "bg-blue-100 text-blue-600 shadow-sm" 
-                    : "text-gray-400 hover:text-[#1D3557] hover:bg-gray-50"
-                }`}
-              >
-                {page}
-              </button>
-            ))}
-          </div>
-
-          <button className="flex items-center gap-2 px-4 py-2 border border-gray-100 rounded-[6px] text-xs font-bold text-[#1D3557] hover:bg-gray-50 transition-all shadow-sm group">
-            Next
-            <Icon name="arrow_forward" folder="icon" size="xs" className="transition-transform group-hover:translate-x-0.5" />
-          </button>
-        </div>
+        <Pagination 
+          currentPage={currentPage}
+          totalPages={85}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </div>
   );

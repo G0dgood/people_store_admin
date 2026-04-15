@@ -1,16 +1,11 @@
-#side-nav {
+#sidenav {
   position: relative;
-  grid-area: sidenav;
-  background-color: var(--accent-white);
+  grid-area: sidenav; 
+  border-right: 1px solid rgba(28, 28, 28, 0.1);
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-#sidenav-setup {
-  position: relative;
-  grid-area: sidenav-setup;
-  background-color: var(--accent-white);
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-}
+ 
 
 .dark #side-nav {
   background-color: var(--accent-white);

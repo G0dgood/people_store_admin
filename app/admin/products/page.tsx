@@ -6,11 +6,24 @@ import { Icon } from "../../components/Icon";
 import { Button } from "../../components/Button";
 import { SearchInput } from "../../components/Form/SpecialInputs";
 import { TabFilter } from "../../components/Admin/TabFilter";
+import { Pagination } from "../../components/Admin/Pagination";
 import { Input } from "@/app/components/Form";
 
 const productsData = [
-  { id: 1, name: "Premium Wireless Headphones", sku: "AU-10293", category: "Electronics", price: "₦35,000", stock: 124, status: "Published", image: "/dashboardImage/Headphones.png" },
-  { id: 2, name: "Smart Fitness Watch", sku: "SW-45812", category: "Electronics", price: "₦18,500", stock: 56, status: "Published", image: "/dashboardImage/Electronics.png" },
+  {
+    id: 1,
+    name: "Premium Wireless Headphones",
+    sku: "AU-10293",
+    category: "Electronics",
+    price: "₦35,000",
+    stock: 124,
+    status: "Published",
+    image: "/dashboardImage/Headphones.png"
+  },
+  {
+    id: 2,
+    name: "Smart Fitness Watch", sku: "SW-45812", category: "Electronics", price: "₦18,500", stock: 56, status: "Published", image: "/dashboardImage/Electronics.png"
+  },
   { id: 3, name: "Organic Cotton T-Shirt", sku: "TS-99201", category: "Fashion", price: "₦4,500", stock: 0, status: "Out of Stock", image: "/dashboardImage/T-Shirt.png" },
   { id: 4, name: "Leather Travel Bag", sku: "BG-33104", category: "Fashion", price: "₦25,000", stock: 12, status: "Published", image: "/dashboardImage/Fashion.png" },
   { id: 5, name: "Minimalist Wall Clock", sku: "HC-77210", category: "Home", price: "₦8,900", stock: 89, status: "Draft", image: "/dashboardImage/Home & Kitchen.png" },
@@ -28,6 +41,7 @@ const statusStyles = {
 
 export default function ProductListing() {
   const [activeTab, setActiveTab] = useState("All products");
+  const [currentPage, setCurrentPage] = useState(1);
 
   return (
     <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
@@ -84,22 +98,22 @@ export default function ProductListing() {
         </div>
 
         {/* Product Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+        <div className="admin-table-container">
+          <table>
             <thead>
-              <tr className="bg-gray-50/50 text-[#1D3557]">
-                <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Product</th>
-                <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Category</th>
-                <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Price</th>
-                <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Stock</th>
-                <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Status</th>
-                <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-right pr-6">Action</th>
+              <tr>
+                <th className="text-xs">Product</th>
+                <th className="text-xs">Category</th>
+                <th className="text-xs">Price</th>
+                <th className="text-xs">Stock</th>
+                <th className="text-xs">Status</th>
+                <th className="text-xs text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody>
               {productsData.map((product) => (
-                <tr key={product.id} className="hover:bg-gray-50/50 transition-colors group">
-                  <td className="px-6 py-5">
+                <tr key={product.id} className="group">
+                  <td>
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 rounded-[6px] border border-gray-100 overflow-hidden bg-white p-1 shadow-sm ring-1 ring-gray-100">
                         <img src={product.image} alt={product.name} className="w-full h-full object-contain" />
@@ -110,25 +124,25 @@ export default function ProductListing() {
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-5">
+                  <td>
                     <span className="text-sm font-bold text-gray-500">{product.category}</span>
                   </td>
-                  <td className="px-6 py-5">
-                    <span className="text-sm font-black text-[#56A881]">{product.price}</span>
+                  <td>
+                    <span className="text-sm font-black text-[#2196F3]">{product.price}</span>
                   </td>
-                  <td className="px-6 py-5">
+                  <td>
                     <div className="flex flex-col gap-1">
                       <span className={`text-sm font-bold ${product.stock === 0 ? "text-rose-500" : "text-gray-700"}`}>
                         {product.stock} units
                       </span>
                     </div>
                   </td>
-                  <td className="px-6 py-5">
+                  <td>
                     <span className={`px-3 py-1.5 rounded-[6px] text-[10px] font-bold ${statusStyles[product.status as keyof typeof statusStyles]}`}>
                       {product.status}
                     </span>
                   </td>
-                  <td className="px-6 py-5 text-right pr-6">
+                  <td className="text-right">
                     <div className="flex justify-end items-center gap-4 text-gray-300">
                       <button className="hover:text-blue-500 transition-colors">
                         <Icon name="settings" folder="dashboardIcon" size="sm" />
@@ -144,32 +158,11 @@ export default function ProductListing() {
           </table>
         </div>
 
-        {/* Pagination Footer */}
-        <div className="p-6 flex items-center justify-between border-t border-gray-50">
-          <button className="flex items-center gap-2 px-4 py-2 border border-gray-100 rounded-[6px] text-xs font-bold text-[#1D3557] hover:bg-gray-50 transition-all shadow-sm group">
-            <Icon name="arrow_back" folder="icon" size="xs" className="transition-transform group-hover:-translate-x-0.5" />
-            Previous
-          </button>
-
-          <div className="flex items-center gap-1">
-            {[1, 2, 3, "...", 24].map((page, i) => (
-              <button
-                key={i}
-                className={`w-8 h-8 flex items-center justify-center rounded-[6px] text-xs font-bold transition-all ${page === 1
-                    ? "bg-blue-100 text-blue-600 shadow-sm"
-                    : "text-gray-400 hover:text-[#1D3557] hover:bg-gray-50"
-                  }`}
-              >
-                {page}
-              </button>
-            ))}
-          </div>
-
-          <button className="flex items-center gap-2 px-4 py-2 border border-gray-100 rounded-[6px] text-xs font-bold text-[#1D3557] hover:bg-gray-50 transition-all shadow-sm group">
-            Next
-            <Icon name="arrow_forward" folder="icon" size="xs" className="transition-transform group-hover:translate-x-0.5" />
-          </button>
-        </div>
+        <Pagination
+          currentPage={currentPage}
+          totalPages={24}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </div>
   );

@@ -26,7 +26,7 @@ export const AdminHeader: React.FC = () => {
   };
 
   return (
-    <header className="h-20 bg-white border-b border-gray-100 flex items-center justify-between px-12 sticky top-0 z-30">
+    <header id="header" className="h-20 bg-white border-b border-gray-100 flex items-center justify-between px-12 sticky top-0 z-30">
       <div className="flex-1">
         <h1 className="text-[20px] font-black text-[#1D3557] tracking-tight">{getPageTitle()}</h1>
       </div>
@@ -51,7 +51,7 @@ export const AdminHeader: React.FC = () => {
 
           {/* Theme Toggle Switch */}
           <div className="flex items-center">
-            <button className="w-12 h-7 bg-[#E9F4E9] rounded-full p-1 flex items-center relative transition-colors cursor-pointer">
+            <button className="w-12 h-7 bg-brand-blue-light rounded-full p-1 flex items-center relative transition-colors cursor-pointer">
               <div className="w-5 h-5 bg-white rounded-full shadow-sm flex items-center justify-center transition-all transform">
                 <Icon name="Group" folder="dashboardIcon" size="xs" className="text-gray-400 opacity-60" />
               </div>

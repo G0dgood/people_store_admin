@@ -5,6 +5,7 @@ import { Icon } from "../../components/Icon";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Form/Inputs";
 import { TabFilter } from "../../components/Admin/TabFilter";
+import { Pagination } from "../../components/Admin/Pagination";
 
 const rolesData = [
   { 
@@ -51,6 +52,7 @@ const statusStyles = {
 
 export default function PermissionsListing() {
   const [activeTab, setActiveTab] = useState("All roles");
+  const [currentPage, setCurrentPage] = useState(1);
 
   return (
     <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
@@ -104,31 +106,31 @@ export default function PermissionsListing() {
         </div>
 
         {/* Roles Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+        <div className="admin-table-container">
+          <table>
             <thead>
-              <tr className="bg-gray-50/50 text-[#1D3557]">
-                <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Role Name</th>
-                <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Description</th>
-                <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Assigned Users</th>
-                <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider">Status</th>
-                <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-right pr-6">Action</th>
+              <tr>
+                <th>Role Name</th>
+                <th>Description</th>
+                <th>Assigned Users</th>
+                <th>Status</th>
+                <th className="text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody>
               {rolesData.map((role) => (
-                <tr key={role.id} className="hover:bg-gray-50/50 transition-colors group">
-                  <td className="px-6 py-5">
+                <tr key={role.id} className="group">
+                  <td>
                     <span className="text-sm font-bold text-[#1D3557] group-hover:text-blue-600 transition-colors">
                        {role.name}
                     </span>
                   </td>
-                  <td className="px-6 py-5 max-w-[400px]">
+                  <td className="max-w-[400px]">
                     <p className="text-xs font-medium text-gray-500 leading-relaxed line-clamp-2">
                        {role.description}
                     </p>
                   </td>
-                  <td className="px-6 py-5">
+                  <td>
                     <div className="flex items-center gap-2">
                        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-50 border border-gray-100">
                           <Icon name="user-profile-circle" folder="dashboardIcon" size="sm" className="text-gray-400" />
@@ -136,12 +138,12 @@ export default function PermissionsListing() {
                        <span className="text-sm font-bold text-[#1D3557]">{role.users.length} Users</span>
                     </div>
                   </td>
-                  <td className="px-6 py-5">
+                  <td>
                     <span className={`px-3 py-1.5 rounded-[6px] text-[10px] font-bold ${statusStyles[role.status as keyof typeof statusStyles]}`}>
                       {role.status}
                     </span>
                   </td>
-                  <td className="px-6 py-5 text-right pr-6 text-gray-300">
+                  <td className="text-right text-gray-300">
                     <div className="flex justify-end gap-4 text-gray-400">
                        <button className="hover:text-blue-500 transition-colors">
                           <Icon name="settings" folder="dashboardIcon" size="sm" />
@@ -158,32 +160,11 @@ export default function PermissionsListing() {
         </div>
 
         {/* Pagination Footer */}
-        <div className="p-6 flex items-center justify-between border-t border-gray-50">
-          <button className="flex items-center gap-2 px-4 py-2 border border-gray-100 rounded-[6px] text-xs font-bold text-[#1D3557] hover:bg-gray-50 transition-all shadow-sm group">
-            <Icon name="arrow_back" folder="icon" size="xs" className="transition-transform group-hover:-translate-x-0.5" />
-            Previous
-          </button>
-          
-          <div className="flex items-center gap-1">
-            {[1, 2, 3, "...", 12].map((page, i) => (
-              <button
-                key={i}
-                className={`w-8 h-8 flex items-center justify-center rounded-[6px] text-xs font-bold transition-all ${
-                  page === 1 
-                    ? "bg-blue-100 text-blue-600 shadow-sm" 
-                    : "text-gray-400 hover:text-[#1D3557] hover:bg-gray-50"
-                }`}
-              >
-                {page}
-              </button>
-            ))}
-          </div>
-
-          <button className="flex items-center gap-2 px-4 py-2 border border-gray-100 rounded-[6px] text-xs font-bold text-[#1D3557] hover:bg-gray-50 transition-all shadow-sm group">
-            Next
-            <Icon name="arrow_forward" folder="icon" size="xs" className="transition-transform group-hover:translate-x-0.5" />
-          </button>
-        </div>
+        <Pagination 
+          currentPage={currentPage}
+          totalPages={12}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </div>
   );

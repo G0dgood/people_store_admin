@@ -5,6 +5,7 @@ import { Icon } from "../../../components/Icon";
 import { Button } from "../../../components/Button";
 import { Input } from "../../../components/Form/Inputs";
 import { TabFilter } from "../../../components/Admin/TabFilter";
+import { Pagination } from "../../../components/Admin/Pagination";
 
 const mediaData = [
   { id: 1, name: "Product_Hero_01.png", size: "1.2 MB", date: "Oct 12, 2023", type: "image", url: "/dashboardImage/Electronics.png" },
@@ -19,6 +20,7 @@ const mediaData = [
 
 export default function ProductMediaListing() {
   const [activeTab, setActiveTab] = useState("All media (250)");
+  const [currentPage, setCurrentPage] = useState(1);
 
   return (
     <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
@@ -116,32 +118,11 @@ export default function ProductMediaListing() {
         </div>
 
         {/* Pagination */}
-        <div className="p-6 flex items-center justify-between border-t border-gray-50">
-          <button className="flex items-center gap-2 px-4 py-2 border border-gray-100 rounded-[6px] text-xs font-bold text-[#1D3557] hover:bg-gray-50 transition-all shadow-sm group">
-            <Icon name="arrow_back" folder="icon" size="xs" className="transition-transform group-hover:-translate-x-0.5" />
-            Previous
-          </button>
-          
-          <div className="flex items-center gap-1">
-            {[1, 2, 3, "...", 12].map((page, i) => (
-              <button
-                key={i}
-                className={`w-8 h-8 flex items-center justify-center rounded-[6px] text-xs font-bold transition-all ${
-                  page === 1 
-                    ? "bg-blue-100 text-blue-600 shadow-sm" 
-                    : "text-gray-400 hover:text-[#1D3557] hover:bg-gray-50"
-                }`}
-              >
-                {page}
-              </button>
-            ))}
-          </div>
-
-          <button className="flex items-center gap-2 px-4 py-2 border border-gray-100 rounded-[6px] text-xs font-bold text-[#1D3557] hover:bg-gray-50 transition-all shadow-sm group">
-            Next
-            <Icon name="arrow_forward" folder="icon" size="xs" className="transition-transform group-hover:translate-x-0.5" />
-          </button>
-        </div>
+        <Pagination 
+          currentPage={currentPage}
+          totalPages={12}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </div>
   );

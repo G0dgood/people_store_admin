@@ -97,19 +97,20 @@ export default function OrderDetails() {
        <span className="text-sm font-bold text-gray-400">{order.items.length} Items</span>
       </div>
       <div className="overflow-x-auto">
-       <table className="w-full text-left">
+      <div className="admin-table-container">
+       <table>
         <thead>
-         <tr className="bg-gray-50/50">
-          <th className="px-8 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Product</th>
-          <th className="px-8 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Price</th>
-          <th className="px-8 py-4 text-[10px] font-black text-gray-400 uppercase tracking-widest">Quantity</th>
-          <th className="px-8 py-4 text-right pr-12 text-[10px] font-black text-gray-400 uppercase tracking-widest">Total</th>
+         <tr>
+          <th className="pl-8">Product</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th className="text-right pr-12">Total</th>
          </tr>
         </thead>
         <tbody className="divide-y divide-gray-50">
          {order.items.map((item) => (
           <tr key={item.id}>
-           <td className="px-8 py-5">
+           <td className="pl-8">
             <div className="flex items-center gap-4">
              <div className="w-12 h-12 rounded-xl bg-gray-100 overflow-hidden border border-gray-100 flex-shrink-0">
               <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
@@ -117,13 +118,14 @@ export default function OrderDetails() {
              <span className="text-sm font-black text-gray-900 leading-tight">{item.name}</span>
             </div>
            </td>
-           <td className="px-8 py-5 text-sm font-bold text-gray-500">{item.price}</td>
-           <td className="px-8 py-5 text-sm font-bold text-gray-900">{item.quantity}</td>
-           <td className="px-8 py-5 text-sm font-black text-gray-900 text-right pr-12">{item.total}</td>
+           <td className="text-sm font-bold text-gray-500">{item.price}</td>
+           <td className="text-sm font-bold text-gray-900">{item.quantity}</td>
+           <td className="text-sm font-black text-gray-900 text-right pr-12">{item.total}</td>
           </tr>
          ))}
         </tbody>
        </table>
+      </div>
       </div>
 
       {/* Calculations Area */}

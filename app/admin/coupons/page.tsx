@@ -5,6 +5,7 @@ import { Icon } from "../../components/Icon";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Form/Inputs";
 import { TabFilter } from "../../components/Admin/TabFilter";
+import { Pagination } from "../../components/Admin/Pagination";
 
 const couponsData = [
   { id: 1, code: "SUMMER SALE", discount: "15%", type: "Percentage", startDate: "01-06-2025", endDate: "30-08-2025", status: "Active" },
@@ -25,6 +26,7 @@ const statusConfig = {
 
 export default function CouponsListing() {
   const [activeTab, setActiveTab] = useState("All coupons");
+  const [currentPage, setCurrentPage] = useState(1);
 
   return (
     <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
@@ -82,46 +84,46 @@ export default function CouponsListing() {
         </div>
 
         {/* Table Area */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
+        <div className="admin-table-container">
+          <table>
             <thead>
-              <tr className="bg-gray-50/50">
-                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">No.</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Coupon Code</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Discount</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Type</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Start Date</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">End Date</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-wider text-right pr-6">Action</th>
+              <tr>
+                <th>No.</th>
+                <th>Coupon Code</th>
+                <th>Discount</th>
+                <th>Type</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Status</th>
+                <th className="text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50">
+            <tbody>
               {couponsData.map((coupon, index) => (
-                <tr key={coupon.id} className="hover:bg-gray-50/50 transition-colors group">
-                  <td className="px-6 py-5 text-sm font-medium text-gray-900">{index + 1}</td>
-                  <td className="px-6 py-5">
+                <tr key={coupon.id} className="group">
+                  <td className="text-sm font-medium text-gray-900">{index + 1}</td>
+                  <td>
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-[4px] bg-brand-blue-light flex items-center justify-center">
-                        <Icon name="ticket" folder="dashboardIcon" size="sm" className="text-[#56A881]" />
+                        <Icon name="ticket" folder="dashboardIcon" size="sm" className="text-[#2196F3]" />
                       </div>
                       <span className="text-sm font-bold text-[#1D3557] group-hover:text-blue-600 transition-colors">
                         {coupon.code}
                       </span>
                     </div>
                   </td>
-                  <td className="px-6 py-5 text-sm font-bold text-gray-700">{coupon.discount}</td>
-                  <td className="px-6 py-5 text-xs font-semibold text-gray-500">{coupon.type}</td>
-                  <td className="px-6 py-5 text-xs font-bold text-gray-500">{coupon.startDate}</td>
-                  <td className="px-6 py-5 text-xs font-bold text-gray-500">{coupon.endDate}</td>
-                  <td className="px-6 py-5">
+                  <td className="text-sm font-bold text-gray-700">{coupon.discount}</td>
+                  <td className="text-xs font-semibold text-gray-500">{coupon.type}</td>
+                  <td className="text-xs font-bold text-gray-500">{coupon.startDate}</td>
+                  <td className="text-xs font-bold text-gray-500">{coupon.endDate}</td>
+                  <td>
                     <span className={`px-3 py-1.5 rounded-[6px] text-[10px] font-bold ${statusConfig[coupon.status as keyof typeof statusConfig]}`}>
                       {coupon.status}
                     </span>
                   </td>
-                  <td className="px-6 py-5 text-right pr-6">
+                  <td className="text-right">
                     <div className="flex justify-end items-center gap-4 text-gray-400">
-                      <button className="hover:text-[#56A881] transition-colors">
+                      <button className="hover:text-[#2196F3] transition-colors">
                         <Icon name="settings" folder="dashboardIcon" size="sm" />
                       </button>
                       <button className="hover:text-rose-500 transition-colors">
@@ -136,32 +138,11 @@ export default function CouponsListing() {
         </div>
 
         {/* Pagination Area */}
-        <div className="p-6 flex items-center justify-between border-t border-gray-50">
-          <button className="flex items-center gap-2 px-4 py-2 border border-gray-100 rounded-[6px] text-xs font-bold text-[#1D3557] hover:bg-gray-50 transition-all shadow-sm group">
-            <Icon name="arrow_back" folder="icon" size="xs" className="transition-transform group-hover:-translate-x-0.5" />
-            Previous
-          </button>
-          
-          <div className="flex items-center gap-1">
-            {[1, 2, 3, 4, 5, "...", 24].map((page, i) => (
-              <button
-                key={i}
-                className={`w-8 h-8 flex items-center justify-center rounded-[6px] text-xs font-bold transition-all ${
-                  page === 1 
-                    ? "bg-blue-100 text-blue-600 shadow-sm" 
-                    : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
-                }`}
-              >
-                {page}
-              </button>
-            ))}
-          </div>
-
-          <button className="flex items-center gap-2 px-4 py-2 border border-gray-100 rounded-[6px] text-xs font-bold text-[#1D3557] hover:bg-gray-50 transition-all shadow-sm group">
-            Next
-            <Icon name="arrow_forward" folder="icon" size="xs" className="transition-transform group-hover:translate-x-0.5" />
-          </button>
-        </div>
+        <Pagination 
+          currentPage={currentPage}
+          totalPages={24}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </div>
   );

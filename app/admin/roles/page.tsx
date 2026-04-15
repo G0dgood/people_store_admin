@@ -120,9 +120,13 @@ export default function ProfilePage() {
                         />
                      </div>
 
-                     <button className="w-full bg-[#56A881] text-white py-3 rounded-[6px] text-xs font-bold hover:bg-[#4a9370] transition-all shadow-md mt-2">
+                     <Button
+                        variant="primary"
+                        shape="rounded-sm"
+                        className="w-full py-3 mt-2 shadow-md"
+                     >
                         Save Change
-                     </button>
+                     </Button>
                   </div>
                </div>
             </div>
@@ -144,9 +148,13 @@ export default function ProfilePage() {
                         <img src="/dashboardImage/Picture.png" alt="Avatar" className="w-full h-full object-cover" />
                      </div>
                      <div className="flex gap-2">
-                        <button className="bg-[#56A881] text-white px-5 py-2 rounded-[6px] text-[10px] font-bold hover:bg-[#4a9370] transition-all shadow-sm">
+                        <Button
+                           variant="primary"
+                           shape="rounded-sm"
+                           className="px-5 py-2 text-[10px] shadow-sm"
+                        >
                            Upload New
-                        </button>
+                        </Button>
                         <button className="bg-white border border-gray-100 text-gray-400 px-5 py-2 rounded-[6px] text-[10px] font-bold hover:bg-gray-50 transition-all shadow-sm">
                            Delete
                         </button>

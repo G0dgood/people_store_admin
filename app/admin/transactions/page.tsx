@@ -6,6 +6,7 @@ import { Button } from "../../components/Button";
 import { Input } from "../../components/Form/Inputs";
 import { StatCard } from "../../components/Admin/StatCard";
 import { TabFilter } from "../../components/Admin/TabFilter";
+import { Pagination } from "../../components/Admin/Pagination";
 
 const transactionsData = [
   { custId: "#CUST001", name: "John Doe", date: "01-01-2025", total: "₦2,904", method: "CC", status: "Complete" },
@@ -28,6 +29,7 @@ const statusStyles = {
 
 export default function TransactionsPage() {
   const [activeTab, setActiveTab] = useState("All transactions");
+  const [currentPage, setCurrentPage] = useState(1);
 
   return (
     <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
@@ -187,36 +189,36 @@ export default function TransactionsPage() {
           </div>
 
           {/* Table */}
-          <div className="overflow-x-auto">
-            <table className="w-full text-left">
+          <div className="admin-table-container">
+            <table>
               <thead>
-                <tr className="bg-[#E9F4E9]/30 border-b border-gray-50">
-                  <th className="px-6 py-5 text-[11px] font-bold text-[#1D3557] uppercase tracking-widest pl-8">Customer Id</th>
-                  <th className="px-6 py-5 text-[11px] font-bold text-[#1D3557] uppercase tracking-widest">Name</th>
-                  <th className="px-6 py-5 text-[11px] font-bold text-[#1D3557] uppercase tracking-widest text-center">Date</th>
-                  <th className="px-6 py-5 text-[11px] font-bold text-[#1D3557] uppercase tracking-widest">Total</th>
-                  <th className="px-6 py-5 text-[11px] font-bold text-[#1D3557] uppercase tracking-widest text-center">Method</th>
-                  <th className="px-6 py-5 text-[11px] font-bold text-[#1D3557] uppercase tracking-widest">Status</th>
-                  <th className="px-6 py-5 text-[11px] font-bold text-[#1D3557] uppercase tracking-widest text-right pr-6">Action</th>
+                <tr>
+                  <th className="pl-8">Customer Id</th>
+                  <th>Name</th>
+                  <th className="text-center">Date</th>
+                  <th>Total</th>
+                  <th className="text-center">Method</th>
+                  <th>Status</th>
+                  <th className="text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50">
+              <tbody>
                 {transactionsData.map((tx, idx) => (
-                  <tr key={idx} className="hover:bg-gray-50/50 transition-all group">
-                    <td className="px-6 py-5 pl-8">
+                  <tr key={idx} className="group">
+                    <td className="pl-8">
                        <span className="text-xs font-bold text-gray-900">{tx.custId}</span>
                     </td>
-                    <td className="px-6 py-5 text-xs font-bold text-gray-700">{tx.name}</td>
-                    <td className="px-6 py-5 text-xs font-bold text-gray-400 text-center">{tx.date}</td>
-                    <td className="px-6 py-5 text-xs font-bold text-gray-900">{tx.total}</td>
-                    <td className="px-6 py-5 text-xs font-bold text-gray-700 text-center">{tx.method}</td>
-                    <td className="px-6 py-5">
+                    <td className="text-xs font-bold text-gray-700">{tx.name}</td>
+                    <td className="text-xs font-bold text-gray-400 text-center">{tx.date}</td>
+                    <td className="text-xs font-bold text-gray-900">{tx.total}</td>
+                    <td className="text-xs font-bold text-gray-700 text-center">{tx.method}</td>
+                    <td>
                        <div className="flex items-center gap-2">
                           <span className={`w-1.5 h-1.5 rounded-full ${statusStyles[tx.status as keyof typeof statusStyles].bg}`}></span>
                           <span className={`text-xs font-bold ${statusStyles[tx.status as keyof typeof statusStyles].color}`}>{tx.status}</span>
                        </div>
                     </td>
-                    <td className="px-6 py-5 text-right pr-6">
+                    <td className="text-right">
                        <button className="text-[11px] font-black text-brand-blue uppercase hover:underline">View Details</button>
                     </td>
                   </tr>
@@ -226,32 +228,11 @@ export default function TransactionsPage() {
           </div>
 
           {/* Pagination Footer */}
-          <div className="p-8 flex justify-between items-center bg-white border-t border-gray-50">
-            <button className="flex items-center gap-2 px-6 py-2.5 rounded-[6px] border border-gray-100 text-[11px] font-black text-gray-500 hover:bg-gray-50 transition-all group uppercase tracking-widest leading-none">
-              <Icon name="material-symbols_arrow-left-alt-rounded" size="xs" className="transition-transform group-hover:-translate-x-1" />
-              Previous
-            </button>
-            
-            <div className="flex items-center gap-2">
-              {[1, 2, 3, 4, 5, "...", 24].map((page, i) => (
-                <button
-                  key={i}
-                  className={`w-9 h-9 rounded-[6px] flex items-center justify-center text-[12px] font-bold transition-all ${
-                    page === 1 
-                      ? "bg-brand-blue text-white shadow-lg shadow-blue-100" 
-                      : "text-gray-400 hover:text-gray-900 hover:bg-gray-50"
-                  }`}
-                >
-                  {page}
-                </button>
-              ))}
-            </div>
-
-            <button className="flex items-center gap-2 px-6 py-2.5 rounded-[6px] border border-gray-100 text-[11px] font-black text-gray-500 hover:bg-gray-50 transition-all group uppercase tracking-widest leading-none">
-              Next
-              <Icon name="material-symbols_arrow-right-alt-rounded" size="xs" className="transition-transform group-hover:translate-x-1" />
-            </button>
-          </div>
+          <Pagination 
+            currentPage={currentPage}
+            totalPages={24}
+            onPageChange={setCurrentPage}
+          />
       </div>
     </div>
   );

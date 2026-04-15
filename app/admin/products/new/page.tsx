@@ -198,9 +198,13 @@ export default function CreateProduct() {
                 <Icon name="ticket" folder="dashboardIcon" size="xs" className="opacity-70" />
                 Save to draft
               </button>
-              <button className="bg-[#56A881] text-white px-8 py-2.5 rounded-[6px] text-xs font-bold hover:bg-[#4a9370] transition-all shadow-md">
+              <Button
+                variant="primary"
+                shape="rounded-sm"
+                className="px-8 py-2.5"
+              >
                 Publish Product
-              </button>
+              </Button>
             </div>
           </div>
         </div>

@@ -50,7 +50,7 @@ export const AdminSidebar: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = React.useState(false);
 
   return (
-    <aside className={`${isCollapsed ? "w-20" : "w-64"} bg-white border-r border-gray-100 h-screen sticky top-0 flex flex-col transition-all duration-300 ease-in-out`}>
+    <aside id="sidenav" className={`${isCollapsed ? "w-20" : "w-64"} bg-white border-r border-gray-100 h-screen sticky top-0 flex flex-col transition-all duration-300 ease-in-out`}>
       {/* Brand */}
       <div className={`p-8 flex items-center ${isCollapsed ? "justify-center px-4" : "justify-between"}`}>
         <div className="flex items-center gap-2">
@@ -87,11 +87,11 @@ export const AdminSidebar: React.FC = () => {
             {group.items.map((item) => {
               // Exact match or sub-path match (e.g., /admin/orders/1 matches /admin/orders)
               const isMatch = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href + "/"));
-              
+
               // Ensure we don't highlight a base path if a more specific sibling path is also a match
-              const isMoreSpecificMatch = navGroups.flatMap(g => g.items).some(other => 
-                other.href !== item.href && 
-                other.href.startsWith(item.href + "/") && 
+              const isMoreSpecificMatch = navGroups.flatMap(g => g.items).some(other =>
+                other.href !== item.href &&
+                other.href.startsWith(item.href + "/") &&
                 (pathname === other.href || pathname.startsWith(other.href + "/"))
               );
 
@@ -104,7 +104,7 @@ export const AdminSidebar: React.FC = () => {
                   title={isCollapsed ? item.name : ""}
                   className={`flex items-center gap-3 px-4 py-2.5 rounded-md transition-all text-sm font-medium ${isCollapsed ? "justify-center px-2" : ""} ${isActive
                     ? "bg-brand-blue text-white shadow-md shadow-blue-100"
-                    : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
+                    : "text-gray-500 hover:bg-brand-blue-light hover:text-brand-blue"
                     }`}
                 >
                   <Icon name={item.icon} folder="dashboardIcon" size="sm" />
@@ -140,7 +140,7 @@ export const AdminSidebar: React.FC = () => {
         {!isCollapsed ? (
           <Link
             href="/"
-            className="flex items-center justify-between px-4 py-2.5 border border-gray-100 rounded-md hover:border-brand-blue/30 hover:shadow-lg hover:shadow-gray-100 transition-all group"
+            className="flex items-center justify-between px-4 py-2.5 border border-gray-100 rounded-md hover:border-brand-blue/30 hover:bg-brand-blue-light hover:shadow-lg hover:shadow-gray-100 transition-all group"
           >
             <div className="flex items-center gap-3 text-gray-600 font-bold">
               <Icon name="Cart" folder="dashboardIcon" size="sm" className="text-brand-blue" />

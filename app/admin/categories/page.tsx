@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { Icon } from "../../components/Icon";
 import { TabFilter } from "../../components/Admin/TabFilter";
+import { Pagination } from "../../components/Admin/Pagination";
 import { Button } from "@/app/components/Button";
 import { Input } from "../../components/Form/Inputs";
 
@@ -32,6 +33,7 @@ const products = [
 
 export default function CategoriesPage() {
   const [activeTab, setActiveTab] = useState("All Product (145)");
+  const [currentPage, setCurrentPage] = useState(1);
 
   return (
     <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
@@ -103,38 +105,38 @@ export default function CategoriesPage() {
         </div>
 
         {/* Table */}
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
+        <div className="admin-table-container">
+          <table>
             <thead>
-              <tr className="bg-[gray-50]/50 border-y border-gray-50">
-                <th className="pl-6 py-4 w-12">
+              <tr>
+                <th className="pl-6 w-12">
                   <input type="checkbox" className="rounded-[4px] border-gray-300 text-[#2196F3] focus:ring-[#2196F3]" />
                 </th>
-                <th className="px-4 py-4 text-[11px] font-bold text-[#1D3557] uppercase tracking-wider">No.</th>
-                <th className="px-6 py-4 text-[11px] font-bold text-[#1D3557] uppercase tracking-wider">Product</th>
-                <th className="px-6 py-4 text-[11px] font-bold text-[#1D3557] uppercase tracking-wider">Created Date</th>
-                <th className="px-6 py-4 text-[11px] font-bold text-[#1D3557] uppercase tracking-wider text-center">Order</th>
-                <th className="px-6 py-4 text-[11px] font-bold text-[#1D3557] uppercase tracking-wider text-right pr-6">Action</th>
+                <th className="px-4">No.</th>
+                <th>Product</th>
+                <th>Created Date</th>
+                <th className="text-center">Order</th>
+                <th className="text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-50 font-medium text-gray-500">
+            <tbody>
               {products.map((p, idx) => (
-                <tr key={idx} className="hover:bg-gray-50/50 transition-colors group">
-                  <td className="pl-6 py-4">
+                <tr key={idx} className="group">
+                  <td className="pl-6">
                     <input type="checkbox" className="rounded-[4px] border-gray-300 text-[#2196F3] focus:ring-[#2196F3]" />
                   </td>
-                  <td className="px-4 py-4">
+                  <td className="px-4">
                     <span className="text-sm font-bold text-gray-900">1</span>
                   </td>
-                  <td className="px-6 py-4 flex items-center gap-3">
+                  <td className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-[6px] overflow-hidden bg-gray-50 border border-gray-100 p-1">
                       <img src={p.image} alt="" className="w-full h-full object-contain" />
                     </div>
                     <span className="text-sm font-bold text-gray-900 leading-tight block truncate max-w-[200px]">{p.name}</span>
                   </td>
-                  <td className="px-6 py-4 text-sm font-bold text-gray-900">{p.date}</td>
-                  <td className="px-6 py-4 text-sm font-bold text-gray-900 text-center">{p.order}</td>
-                  <td className="px-6 py-4 text-right pr-6">
+                  <td className="text-sm font-bold text-gray-900">{p.date}</td>
+                  <td className="text-sm font-bold text-gray-900 text-center">{p.order}</td>
+                  <td className="text-right">
                     <div className="flex justify-end gap-2">
                       <button className="p-1.5 border border-gray-50 rounded-[6px] text-gray-400 hover:text-brand-blue hover:bg-brand-blue-light transition-all">
                         <Icon name="create" folder="icon" size="sm" />
@@ -151,27 +153,11 @@ export default function CategoriesPage() {
         </div>
 
         {/* Footer / Pagination */}
-        <div className="p-8 flex justify-between items-center bg-white border-t border-gray-50">
-          <button className="flex items-center gap-2 px-4 py-2 rounded-[6px] border border-gray-100 text-sm font-bold text-gray-600 hover:bg-gray-50 transition-all">
-            <Icon name="arrow_back" folder="icon" size="xs" />
-            Previous
-          </button>
-          <div className="flex items-center gap-1.5">
-            {[1, 2, 3, 4, 5, "...", 24].map((page, i) => (
-              <button
-                key={i}
-                className={`w-9 h-9 rounded-[6px] flex items-center justify-center text-sm font-bold transition-all ${page === 1 ? "bg-[#2196F3]/20 text-[#2196F3]" : "text-gray-400 hover:text-gray-900 hover:bg-gray-50"
-                  }`}
-              >
-                {page}
-              </button>
-            ))}
-          </div>
-          <button className="flex items-center gap-2 px-4 py-2 rounded-[6px] border border-gray-100 text-sm font-bold text-gray-600 hover:bg-gray-50 transition-all">
-            Next
-            <Icon name="arrow_forward" folder="icon" size="xs" />
-          </button>
-        </div>
+        <Pagination 
+          currentPage={currentPage}
+          totalPages={24}
+          onPageChange={setCurrentPage}
+        />
       </div>
     </div>
   );
