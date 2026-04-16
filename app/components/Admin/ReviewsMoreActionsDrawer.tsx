@@ -7,12 +7,18 @@ import { Icon } from "../Icon";
 interface ReviewsMoreActionsDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  onClearSpam: () => void;
-  onBulkApprove: () => void;
-  onExport: () => void;
+  onClearSpam?: () => void;
+  onBulkApprove?: () => void;
+  onExport?: () => void;
 }
 
-export function ReviewsMoreActionsDrawer({ isOpen, onClose, onClearSpam, onBulkApprove, onExport }: ReviewsMoreActionsDrawerProps) {
+export function ReviewsMoreActionsDrawer({ 
+  isOpen, 
+  onClose, 
+  onClearSpam, 
+  onBulkApprove, 
+  onExport 
+}: ReviewsMoreActionsDrawerProps) {
   const actions = [
     {
       id: "export",
@@ -22,7 +28,7 @@ export function ReviewsMoreActionsDrawer({ isOpen, onClose, onClearSpam, onBulkA
       folder: "icon",
       onClick: () => {
         onClose();
-        onExport();
+        onExport?.();
       },
     },
     {
@@ -33,7 +39,7 @@ export function ReviewsMoreActionsDrawer({ isOpen, onClose, onClearSpam, onBulkA
       folder: "icon",
       onClick: () => {
         onClose();
-        onBulkApprove();
+        onBulkApprove?.();
       },
     },
     {
@@ -45,7 +51,7 @@ export function ReviewsMoreActionsDrawer({ isOpen, onClose, onClearSpam, onBulkA
       variant: "danger",
       onClick: () => {
         onClose();
-        onClearSpam();
+        onClearSpam?.();
       },
     },
     {

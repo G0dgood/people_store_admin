@@ -19,7 +19,7 @@ export default function AdminDashboard() {
   const [activeInsightSection, setActiveInsightSection] = useState<'revenue' | 'funnel' | 'traffic' | null>(null);
   const [isReportDropdownOpen, setIsReportDropdownOpen] = useState(false);
   const [isRealtimeDropdownOpen, setIsRealtimeDropdownOpen] = useState(false);
-  
+
   const reportDropdownRef = useRef<HTMLDivElement>(null);
   const realtimeDropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -35,7 +35,7 @@ export default function AdminDashboard() {
         setIsRealtimeDropdownOpen(false);
       }
     };
-    
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -94,7 +94,7 @@ export default function AdminDashboard() {
                   <button className="px-5 py-2 rounded-[6px] text-[11px] font-black text-gray-400">Last week</button>
                 </div>
                 <div className="relative" ref={reportDropdownRef}>
-                  <button 
+                  <button
                     className={`p-1 rounded-[6px] transition-all ${isReportDropdownOpen ? "bg-brand-blue-light text-brand-blue shadow-sm" : "text-gray-400 hover:bg-gray-50"}`}
                     onClick={() => setIsReportDropdownOpen(!isReportDropdownOpen)}
                   >
@@ -104,23 +104,23 @@ export default function AdminDashboard() {
                   {isReportDropdownOpen && (
                     <div className="absolute top-full right-0 mt-2 z-50">
                       <DropdownMenu width={240} className="shadow-2xl border-gray-100">
-                        <DropdownItem 
-                          label="Print Detailed Report" 
-                          subtext="Generate printer-friendly PDF" 
-                          icon={<HiPrinter />} 
-                          onSelect={() => { console.log("Print"); setIsReportDropdownOpen(false); }} 
+                        <DropdownItem
+                          label="Print Detailed Report"
+                          subtext="Generate printer-friendly PDF"
+                          icon={<HiPrinter />}
+                          onSelect={() => { console.log("Print"); setIsReportDropdownOpen(false); }}
                         />
-                        <DropdownItem 
-                          label="Export as Image" 
-                          subtext="Download chart as PNG" 
-                          icon={<HiPhoto />} 
-                          onSelect={() => { console.log("Export Image"); setIsReportDropdownOpen(false); }} 
+                        <DropdownItem
+                          label="Export as Image"
+                          subtext="Download chart as PNG"
+                          icon={<HiPhoto />}
+                          onSelect={() => { console.log("Export Image"); setIsReportDropdownOpen(false); }}
                         />
-                        <DropdownItem 
-                          label="Report Settings" 
-                          subtext="Adjust data visualization" 
-                          icon={<HiCog6Tooth />} 
-                          onSelect={() => { console.log("Settings"); setIsReportDropdownOpen(false); }} 
+                        <DropdownItem
+                          label="Report Settings"
+                          subtext="Adjust data visualization"
+                          icon={<HiCog6Tooth />}
+                          onSelect={() => { console.log("Settings"); setIsReportDropdownOpen(false); }}
                         />
                       </DropdownMenu>
                     </div>
@@ -197,7 +197,7 @@ export default function AdminDashboard() {
                 <p className="text-[11px] font-bold text-gray-500 mt-2">Users per minute</p>
               </div>
               <div className="relative" ref={realtimeDropdownRef}>
-                <button 
+                <button
                   className={`p-1 rounded-[6px] transition-all ${isRealtimeDropdownOpen ? "bg-brand-blue-light text-brand-blue shadow-sm" : "text-gray-400 hover:bg-gray-50"}`}
                   onClick={() => setIsRealtimeDropdownOpen(!isRealtimeDropdownOpen)}
                 >
@@ -207,23 +207,23 @@ export default function AdminDashboard() {
                 {isRealtimeDropdownOpen && (
                   <div className="absolute top-full right-0 mt-2 z-50">
                     <DropdownMenu width={220} className="shadow-2xl border-gray-100">
-                      <DropdownItem 
-                        label="Force Refresh" 
-                        subtext="Manual data pull" 
-                        icon={<HiArrowPath />} 
-                        onSelect={() => { console.log("Refresh"); setIsRealtimeDropdownOpen(false); }} 
+                      <DropdownItem
+                        label="Force Refresh"
+                        subtext="Manual data pull"
+                        icon={<HiArrowPath />}
+                        onSelect={() => { console.log("Refresh"); setIsRealtimeDropdownOpen(false); }}
                       />
-                      <DropdownItem 
-                        label="Mute Live Feed" 
-                        subtext="Stop realtime updates" 
-                        icon={<HiPower />} 
-                        onSelect={() => { console.log("Mute"); setIsRealtimeDropdownOpen(false); }} 
+                      <DropdownItem
+                        label="Mute Live Feed"
+                        subtext="Stop realtime updates"
+                        icon={<HiPower />}
+                        onSelect={() => { console.log("Mute"); setIsRealtimeDropdownOpen(false); }}
                       />
-                      <DropdownItem 
-                        label="Alert Config" 
-                        subtext="Set user spike thresholds" 
-                        icon={<HiBell />} 
-                        onSelect={() => { console.log("Alerts"); setIsRealtimeDropdownOpen(false); }} 
+                      <DropdownItem
+                        label="Alert Config"
+                        subtext="Set user spike thresholds"
+                        icon={<HiBell />}
+                        onSelect={() => { console.log("Alerts"); setIsRealtimeDropdownOpen(false); }}
                       />
                     </DropdownMenu>
                   </div>

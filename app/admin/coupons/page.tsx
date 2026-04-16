@@ -8,16 +8,19 @@ import { TabFilter } from "../../components/Admin/TabFilter";
 import { Pagination } from "../../components/Admin/Pagination";
 import { ConfirmationModal } from "../../components/Admin/ConfirmationModal";
 import { EditCouponDrawer } from "../../components/Admin/EditCouponDrawer";
+import { RowsPerPage } from "@/app/components/rows-per-page";
+import Checkbox from "@/app/components/Checkbox";
 import { AddCouponModal } from "../../components/Admin/AddCouponModal";
 import { CouponsMoreActionsDrawer } from "../../components/Admin/CouponsMoreActionsDrawer";
+import { BulkActionsDrawer } from "../../components/Admin/BulkActionsDrawer";
 
 const couponsData = [
-  { id: 1, code: "SUMMER SALE", discount: "15%", type: "Percentage", startDate: "01-06-2025", endDate: "30-08-2025", status: "Active" },
-  { id: 2, code: "WELCOME10", discount: "$10.00", type: "Fixed Rate", startDate: "01-01-2025", endDate: "31-12-2025", status: "Active" },
-  { id: 3, code: "BLACKFRIDAY", discount: "50%", type: "Percentage", startDate: "24-11-2025", endDate: "27-11-2025", status: "Scheduled" },
-  { id: 4, code: "EXPIRED20", discount: "20%", type: "Percentage", startDate: "01-01-2024", endDate: "01-02-2024", status: "Expired" },
-  { id: 5, code: "FREESHIP", discount: "Free Shipping", type: "Shipping", startDate: "01-03-2025", endDate: "31-03-2025", status: "Active" },
-  { id: 6, code: "FLASH25", discount: "25%", type: "Percentage", startDate: "15-04-2025", endDate: "16-04-2025", status: "Active" },
+  { code: "SUMMER SALE", discount: "15%", type: "Percentage", startDate: "01-06-2025", endDate: "30-08-2025", status: "Active" },
+  { code: "WELCOME10", discount: "$10.00", type: "Fixed Rate", startDate: "01-01-2025", endDate: "31-12-2025", status: "Active" },
+  { code: "BLACKFRIDAY", discount: "50%", type: "Percentage", startDate: "24-11-2025", endDate: "27-11-2025", status: "Scheduled" },
+  { code: "EXPIRED20", discount: "20%", type: "Percentage", startDate: "01-01-2024", endDate: "01-02-2024", status: "Expired" },
+  { code: "FREESHIP", discount: "Free Shipping", type: "Shipping", startDate: "01-03-2025", endDate: "31-03-2025", status: "Active" },
+  { code: "FLASH25", discount: "25%", type: "Percentage", startDate: "15-04-2025", endDate: "16-04-2025", status: "Active" },
   { id: 7, code: "STUDENT5", discount: "5%", type: "Percentage", startDate: "01-01-2025", endDate: "31-12-2025", status: "Active" },
   { id: 8, code: "NEWYEAR25", discount: "25%", type: "Percentage", startDate: "01-01-2025", endDate: "31-01-2025", status: "Expired" },
 ];
@@ -30,11 +33,28 @@ const statusConfig = {
 
 export default function CouponsListing() {
   const [activeTab, setActiveTab] = useState("All coupons");
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [couponToDelete, setCouponToDelete] = useState<any>(null);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [couponToEdit, setCouponToEdit] = useState<any>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const toggleAll = () => {
+    if (selectedIds.length === couponsData.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(couponsData.map(c => c.code));
+    }
+  };
+
+  const toggleItem = (id: string) => {
+    setSelectedIds(prev =>
+      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+    );
+  };
   const [isMoreActionsOpen, setIsMoreActionsOpen] = useState(false);
   const [isBulkDeleteConfirmOpen, setIsBulkDeleteConfirmOpen] = useState(false);
 
@@ -72,25 +92,38 @@ export default function CouponsListing() {
           />
 
           <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
-            <div className="flex-1 xl:w-72 bg-gray-50/80 rounded-[6px] px-4 py-2.5 flex items-center border border-transparent focus-within:bg-white focus-within:border-gray-100 transition-all">
-              <input
-                type="text"
-                placeholder="Search coupon code"
-                className="bg-transparent border-none focus:outline-none text-sm text-gray-900 w-full placeholder:text-gray-400 font-medium"
-              />
-              <Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400 ml-2" />
-            </div>
+            <Input
+              type="text"
+              placeholder="Search coupon code"
+              containerClassName="flex-1 xl:w-72"
+              className="bg-white border-gray-100 placeholder:text-gray-400 text-sm font-medium"
+              suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
+            />
+
+            <RowsPerPage value={rowsPerPage} onChange={setRowsPerPage} />
 
             <div className="flex gap-2">
-              <button className="p-2.5 rounded-[6px] border border-gray-100 text-gray-400 hover:bg-gray-50 transition-all">
+              <Button
+                variant="outline"
+                shape="rounded-sm"
+                className="!p-2.5 text-gray-400"
+              >
                 <Icon name="sort" folder="dashboardIcon" size="sm" />
-              </button>
-              <button className="p-2.5 rounded-[6px] border border-gray-100 text-gray-400 hover:bg-gray-50 transition-all">
+              </Button>
+              <Button
+                variant="outline"
+                shape="rounded-sm"
+                className="!p-2.5 text-gray-400"
+              >
                 <Icon name="flowbite_arrow-up-down-outline" folder="dashboardIcon" size="sm" />
-              </button>
-              <button className="p-2.5 rounded-[6px] border border-gray-100 text-gray-400 hover:bg-gray-50 transition-all">
+              </Button>
+              <Button
+                variant="outline"
+                shape="rounded-sm"
+                className="!p-2.5 text-gray-400"
+              >
                 <Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -100,7 +133,12 @@ export default function CouponsListing() {
           <table>
             <thead>
               <tr>
-                <th>No.</th>
+                <th className="w-10">
+                  <Checkbox
+                    checked={selectedIds.length === couponsData.length && couponsData.length > 0}
+                    onChange={toggleAll}
+                  />
+                </th>
                 <th>Coupon Code</th>
                 <th>Discount</th>
                 <th>Type</th>
@@ -112,22 +150,27 @@ export default function CouponsListing() {
             </thead>
             <tbody>
               {couponsData.map((coupon, index) => (
-                <tr key={coupon.id} className="group">
-                  <td className="text-sm font-medium text-gray-900">{index + 1}</td>
+                <tr key={coupon.code} className="group">
+                  <td>
+                    <Checkbox
+                      checked={selectedIds.includes(coupon.code)}
+                      onChange={() => toggleItem(coupon.code)}
+                    />
+                  </td>
                   <td>
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-[4px] bg-brand-blue-light flex items-center justify-center">
-                        <Icon name="ticket" folder="dashboardIcon" size="sm" className="text-[#2196F3]" />
+                        <Icon name="local_offer" folder="icon" size="sm" className="text-brand-blue" />
                       </div>
-                      <span className="text-sm font-bold text-[#1D3557] group-hover:text-blue-600 transition-colors">
+                      <span className="text-xs font-bold text-[#1D3557] group-hover:text-blue-600 transition-colors">
                         {coupon.code}
                       </span>
                     </div>
                   </td>
-                  <td className="text-sm font-bold text-gray-700">{coupon.discount}</td>
-                  <td className="text-xs font-semibold text-gray-500">{coupon.type}</td>
-                  <td className="text-xs font-bold text-gray-500">{coupon.startDate}</td>
-                  <td className="text-xs font-bold text-gray-500">{coupon.endDate}</td>
+                  <td>{coupon.discount}</td>
+                  <td>{coupon.type}</td>
+                  <td>{coupon.startDate}</td>
+                  <td>{coupon.endDate}</td>
                   <td>
                     <span className={`px-3 py-1.5 rounded-[6px] text-[10px] font-bold ${statusConfig[coupon.status as keyof typeof statusConfig]}`}>
                       {coupon.status}
@@ -135,21 +178,25 @@ export default function CouponsListing() {
                   </td>
                   <td className="text-right">
                     <div className="flex justify-end items-center gap-4 text-gray-400">
-                      <button 
-                        className="hover:text-[#2196F3] transition-colors"
+                      <Button
+                        variant="outline"
+                        shape="rounded-sm"
+                        className="!p-1.5 text-gray-400 hover:text-[#2196F3] transition-colors"
                         onClick={() => {
                           setCouponToEdit(coupon);
                           setIsEditDrawerOpen(true);
                         }}
                       >
                         <Icon name="settings" folder="dashboardIcon" size="sm" />
-                      </button>
-                      <button 
-                        className="hover:text-rose-500 transition-colors"
+                      </Button>
+                      <Button
+                        variant="outline"
+                        shape="rounded-sm"
+                        className="!p-1.5 text-gray-400 hover:text-rose-500 transition-colors"
                         onClick={() => setCouponToDelete(coupon)}
                       >
                         <Icon name="Delete" folder="dashboardIcon" size="sm" />
-                      </button>
+                      </Button>
                     </div>
                   </td>
                 </tr>
@@ -159,7 +206,7 @@ export default function CouponsListing() {
         </div>
 
         {/* Pagination Area */}
-        <Pagination 
+        <Pagination
           currentPage={currentPage}
           totalPages={24}
           onPageChange={setCurrentPage}
@@ -194,6 +241,34 @@ export default function CouponsListing() {
         isOpen={isMoreActionsOpen}
         onClose={() => setIsMoreActionsOpen(false)}
         onDeleteExpired={() => setIsBulkDeleteConfirmOpen(true)}
+      />
+
+      <BulkActionsDrawer
+        isOpen={selectedIds.length > 0}
+        onClose={() => setSelectedIds([])}
+        selectedIds={selectedIds}
+        items={couponsData}
+        onClearSelection={() => setSelectedIds([])}
+        idProp="code"
+        labelProp="code"
+        title="Coupons Selected"
+        actions={[
+          {
+            id: "export",
+            title: "Export Selected",
+            icon: "cloud_download",
+            folder: "icon",
+            onClick: () => console.log("Exporting selected coupons..."),
+          },
+          {
+            id: "delete",
+            title: "Delete All Selected",
+            icon: "Delete",
+            folder: "dashboardIcon",
+            variant: "danger",
+            onClick: () => setIsDeleteModalOpen(true),
+          },
+        ]}
       />
 
       <ConfirmationModal

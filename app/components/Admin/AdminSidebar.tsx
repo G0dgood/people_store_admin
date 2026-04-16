@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon } from "../Icon";
+import { ConfirmationModal } from "./ConfirmationModal";
 
 interface NavGroup {
   title: string;
@@ -16,7 +17,7 @@ interface NavGroup {
 
 const navGroups: NavGroup[] = [
   {
-    title: "Main menu",
+    title: "",
     items: [
       { name: "Dashboard", href: "/admin", icon: "Frame" },
       { name: "Order Management", href: "/admin/orders", icon: "Cart" },
@@ -40,7 +41,7 @@ const navGroups: NavGroup[] = [
   {
     title: "Admin",
     items: [
-      { name: "Admin role", href: "/admin/roles", icon: "user-profile-circle" },
+      { name: "View Profile", href: "/admin/roles", icon: "user-profile-circle" },
       { name: "Control Authority", href: "/admin/permissions", icon: "settings" },
     ],
   },
@@ -49,6 +50,7 @@ const navGroups: NavGroup[] = [
 export const AdminSidebar: React.FC = () => {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = React.useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = React.useState(false);
 
   return (
     <aside id="sidenav" className={`${isCollapsed ? "w-20" : "w-64"} bg-white border-r border-gray-100 h-screen sticky top-0 flex flex-col transition-all duration-300 ease-in-out`}>
@@ -120,19 +122,25 @@ export const AdminSidebar: React.FC = () => {
       {/* Footer Profile & Shop */}
       <div className="p-4 flex flex-col gap-4 border-t border-gray-50">
         <div className={`flex items-center ${isCollapsed ? "justify-center px-0" : "justify-between px-2"}`}>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full border border-gray-100 overflow-hidden shadow-sm flex-shrink-0">
+          <div 
+            onClick={() => setIsLogoutModalOpen(true)}
+            className="flex items-center gap-3 min-w-0 group cursor-pointer"
+          >
+            <div className="w-10 h-10 rounded-full border border-gray-100 overflow-hidden shadow-sm flex-shrink-0 group-hover:border-rose-500 group-hover:shadow-md transition-all">
               <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop" alt="User" />
             </div>
             {!isCollapsed && (
               <div className="flex flex-col min-w-0">
-                <span className="text-sm font-bold text-gray-900 truncate">Dealport</span>
+                <span className="text-sm font-bold text-gray-900 truncate group-hover:text-rose-500 transition-colors">Dealport</span>
                 <span className="text-[10px] font-medium text-gray-400 truncate">Mark@thedesigner...</span>
               </div>
             )}
           </div>
           {!isCollapsed && (
-            <button className="text-gray-400 hover:text-red-500 transition-colors">
+            <button 
+              className="text-gray-400 hover:text-red-500 transition-colors"
+              onClick={() => setIsLogoutModalOpen(true)}
+            >
               <Icon name="ic_round-logout" folder="dashboardIcon" size="sm" />
             </button>
           )}
@@ -159,6 +167,20 @@ export const AdminSidebar: React.FC = () => {
           </Link>
         )}
       </div>
+
+      <ConfirmationModal
+        isOpen={isLogoutModalOpen}
+        onClose={() => setIsLogoutModalOpen(false)}
+        onConfirm={() => {
+          console.log("Sidebar: Session terminated. Redirecting to login...");
+          // Implement actual logout logic/redirect here
+        }}
+        title="Logout Session"
+        message="Are you sure you want to end your current session? You will need to sign in again to access the administrative dashboard."
+        confirmText="Yes, Logout Now"
+        cancelText="Stay Logged In"
+        type="danger"
+      />
     </aside>
   );
 };

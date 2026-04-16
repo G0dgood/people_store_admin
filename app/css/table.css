@@ -9,13 +9,20 @@ table {
 /* Header Styles */
 thead {
   background-color: var(--brand-blue-light);
-  margin: 1rem 1.5rem !important; 
-  border-radius: 6px !important;
+}
+
+th:first-child {
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+
+th:last-child {
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
 }
 
 thead tr {
   border-bottom: 1px solid #F3F4F6; /* border-gray-50 */
- 
 }
 
 th {
@@ -42,15 +49,30 @@ tbody tr {
 tbody tr:hover {
   background-color: rgba(243, 244, 246, 0.3); /* hover:bg-gray-50/30 */
 } 
+
 td {
   padding: 1rem 1.5rem; /* px-6 py-4 */
   font-size: 14px;
   color: #111827; /* text-gray-900 */
 }
 
+table > thead > tr > td,
+table > tbody > tr > td,
+table > tfoot > tr > td  { 
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 23px;  
+  color: rgba(31, 31, 31, 0.5); 
+}
+
+
 /* Utility classes for specific overrides */
 .text-center { text-align: center; }
 .text-right { text-align: right; }
+.admin-table-container {
+  padding: 0 1.5rem;
+}
 
 /* Pagination Footer (Classes still used for layout) */
 .admin-pagination-footer {

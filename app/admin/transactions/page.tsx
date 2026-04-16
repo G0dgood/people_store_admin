@@ -8,18 +8,20 @@ import { StatCard } from "../../components/Admin/StatCard";
 import { TabFilter } from "../../components/Admin/TabFilter";
 import { Pagination } from "../../components/Admin/Pagination";
 import { TransactionDetailDrawer } from "../../components/Admin/TransactionDetailDrawer";
+import { RowsPerPage } from "@/app/components/rows-per-page";
+import Checkbox from "@/app/components/Checkbox";
 
 const transactionsData = [
   { custId: "#CUST001", name: "John Doe", date: "01-01-2025", total: "₦2,904", method: "CC", status: "Complete" },
-  { custId: "#CUST001", name: "John Doe", date: "01-01-2025", total: "₦2,904", method: "PayPal", status: "Complete" },
-  { custId: "#CUST001", name: "John Doe", date: "01-01-2025", total: "₦2,904", method: "CC", status: "Complete" },
-  { custId: "#CUST001", name: "John Doe", date: "01-01-2025", total: "₦2,904", method: "Bank", status: "Complete" },
-  { custId: "#CUST001", name: "Jane Smith", date: "01-01-2025", total: "₦2,904", method: "CC", status: "Canceled" },
-  { custId: "#CUST001", name: "Emily Davis", date: "01-01-2025", total: "₦2,904", method: "PayPal", status: "Pending" },
-  { custId: "#CUST001", name: "Jane Smith", date: "01-01-2025", total: "₦2,904", method: "Bank", status: "Canceled" },
-  { custId: "#CUST001", name: "John Doe", date: "01-01-2025", total: "₦2,904", method: "CC", status: "Complete" },
-  { custId: "#CUST001", name: "Emily Davis", date: "01-01-2025", total: "₦2,904", method: "PayPal", status: "Pending" },
-  { custId: "#CUST001", name: "Jane Smith", date: "01-01-2025", total: "₦2,904", method: "Bank", status: "Canceled" },
+  { custId: "#CUST002", name: "John Doe", date: "01-01-2025", total: "₦2,904", method: "PayPal", status: "Complete" },
+  { custId: "#CUST003", name: "John Doe", date: "01-01-2025", total: "₦2,904", method: "CC", status: "Complete" },
+  { custId: "#CUST004", name: "John Doe", date: "01-01-2025", total: "₦2,904", method: "Bank", status: "Complete" },
+  { custId: "#CUST005", name: "Jane Smith", date: "01-01-2025", total: "₦2,904", method: "CC", status: "Canceled" },
+  { custId: "#CUST006", name: "Emily Davis", date: "01-01-2025", total: "₦2,904", method: "PayPal", status: "Pending" },
+  { custId: "#CUST007", name: "Jane Smith", date: "01-01-2025", total: "₦2,904", method: "Bank", status: "Canceled" },
+  { custId: "#CUST008", name: "John Doe", date: "01-01-2025", total: "₦2,904", method: "CC", status: "Complete" },
+  { custId: "#CUST009", name: "Emily Davis", date: "01-01-2025", total: "₦2,904", method: "PayPal", status: "Pending" },
+  { custId: "#CUST010", name: "Jane Smith", date: "01-01-2025", total: "₦2,904", method: "Bank", status: "Canceled" },
 ];
 
 const statusStyles = {
@@ -30,9 +32,25 @@ const statusStyles = {
 
 export default function TransactionsPage() {
   const [activeTab, setActiveTab] = useState("All transactions");
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isDetailDrawerOpen, setIsDetailDrawerOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
+
+  const toggleAll = () => {
+    if (selectedIds.length === transactionsData.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(transactionsData.map(t => t.custId));
+    }
+  };
+
+  const toggleItem = (id: string) => {
+    setSelectedIds(prev =>
+      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+    );
+  };
 
   return (
     <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
@@ -79,9 +97,12 @@ export default function TransactionsPage() {
         <div className="xl:col-span-2 bg-white rounded-[6px] border border-gray-100 shadow-sm p-6 flex flex-col gap-6">
           <div className="flex justify-between items-center">
             <h3 className="text-sm font-bold text-[#1D3557]">Payment Method</h3>
-            <button className="text-gray-300 hover:text-gray-600">
+            <Button 
+              variant="ghost" 
+              className="text-gray-300 hover:text-gray-600 !p-1"
+            >
               <Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />
-            </button>
+            </Button>
           </div>
 
           <div className="flex flex-col lg:flex-row gap-8 items-center lg:items-start">
@@ -133,9 +154,12 @@ export default function TransactionsPage() {
                       <span className="text-xs font-bold text-[#1D3557]">₦50,000</span>
                    </div>
                 </div>
-                <button className="text-[11px] font-black text-brand-blue uppercase tracking-widest hover:underline text-left mt-2">
+                <Button
+                  variant="ghost"
+                  className="text-[11px] font-black text-brand-blue uppercase tracking-widest hover:underline !px-0 !justify-start"
+                >
                    View Transactions
-                </button>
+                </Button>
              </div>
           </div>
 
@@ -177,14 +201,28 @@ export default function TransactionsPage() {
               suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
             />
 
+            <RowsPerPage value={rowsPerPage} onChange={setRowsPerPage} />
+
               <div className="flex gap-2">
-                <Button variant="outline" shape="rounded-sm" className="p-2.5">
+                <Button 
+                  variant="outline" 
+                  shape="rounded-sm" 
+                  className="!p-2.5 text-gray-400"
+                >
                   <Icon name="sort" folder="dashboardIcon" size="sm" />
                 </Button>
-                <Button variant="outline" shape="rounded-sm" className="p-2.5">
+                <Button 
+                  variant="outline" 
+                  shape="rounded-sm" 
+                  className="!p-2.5 text-gray-400"
+                >
                   <Icon name="flowbite_arrow-up-down-outline" folder="dashboardIcon" size="sm" />
                 </Button>
-                <Button variant="outline" shape="rounded-sm" className="p-2.5">
+                <Button 
+                  variant="outline" 
+                  shape="rounded-sm" 
+                  className="!p-2.5 text-gray-400"
+                >
                   <Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />
                 </Button>
               </div>
@@ -196,7 +234,13 @@ export default function TransactionsPage() {
             <table>
               <thead>
                 <tr>
-                  <th className="pl-8">Customer Id</th>
+                  <th className="w-10 pl-8">
+                    <Checkbox
+                      checked={selectedIds.length === transactionsData.length && transactionsData.length > 0}
+                      onChange={toggleAll}
+                    />
+                  </th>
+                  <th>Customer Id</th>
                   <th>Name</th>
                   <th className="text-center">Date</th>
                   <th>Total</th>
@@ -208,7 +252,13 @@ export default function TransactionsPage() {
               <tbody>
                 {transactionsData.map((tx, idx) => (
                   <tr key={idx} className="group">
-                    <td className="pl-8">
+                    <td className="w-10 pl-8">
+                      <Checkbox
+                        checked={selectedIds.includes(tx.custId)}
+                        onChange={() => toggleItem(tx.custId)}
+                      />
+                    </td>
+                    <td>
                        <span className="text-xs font-bold text-gray-900">{tx.custId}</span>
                     </td>
                     <td className="text-xs font-bold text-gray-700">{tx.name}</td>
@@ -222,15 +272,16 @@ export default function TransactionsPage() {
                        </div>
                     </td>
                     <td className="text-right">
-                       <button 
-                         className="text-[11px] font-black text-brand-blue uppercase hover:underline"
+                       <Button 
+                         variant="ghost"
+                         className="text-[11px] font-black text-brand-blue uppercase hover:underline !px-0"
                          onClick={() => {
                            setSelectedTransaction(tx);
                            setIsDetailDrawerOpen(true);
                          }}
                        >
                          View Details
-                       </button>
+                       </Button>
                     </td>
                   </tr>
                 ))}

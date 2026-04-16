@@ -2,13 +2,28 @@
 
 import React, { useState } from "react";
 import { Input, Textarea } from "./Inputs";
-import { Icon } from "../Icon";
+import { 
+  HiMagnifyingGlass, 
+  HiXMark, 
+  HiChevronLeft, 
+  HiChevronRight,
+  HiPlus,
+  HiMinus
+} from "react-icons/hi2";
+import { 
+  MdFormatBold, 
+  MdFormatItalic, 
+  MdInsertLink, 
+  MdFormatQuote, 
+  MdCode, 
+  MdImage, 
+  MdFormatListBulleted, 
+  MdFormatListNumbered 
+} from "react-icons/md";
 
 interface SearchInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   onClear?: () => void;
   showClear?: boolean;
-  iconName?: string;
-  iconFolder?: string;
   iconPosition?: "left" | "right";
   containerClassName?: string;
 }
@@ -17,14 +32,12 @@ const SearchInput: React.FC<SearchInputProps> = ({
   onClear, 
   showClear, 
   value, 
-  iconName = "search", 
-  iconFolder, 
   iconPosition = "left",
   containerClassName = "",
   className = "",
   ...props 
 }) => {
-  const icon = <Icon name={iconName} folder={iconFolder as any} size="sm" className="text-gray-400" />;
+  const icon = <HiMagnifyingGlass className="w-4 h-4 text-gray-400" />;
   
   return (
     <Input
@@ -33,8 +46,8 @@ const SearchInput: React.FC<SearchInputProps> = ({
         <div className="flex items-center gap-2">
           {iconPosition === "right" && icon}
           {(showClear || (value && String(value).length > 0)) && (
-            <button onClick={onClear} className="hover:text-gray-600 transition-colors">
-              <Icon name="clear" size="sm" className="text-gray-400" />
+            <button onClick={onClear} className="hover:text-gray-600 transition-colors p-1 rounded-full hover:bg-gray-100">
+              <HiXMark className="w-4 h-4 text-gray-400" />
             </button>
           )}
         </div>
@@ -71,7 +84,7 @@ const NumberInput: React.FC<NumberInputProps> = ({
         className="px-4 py-2 text-brand-blue hover:bg-gray-50 transition-colors border-r border-gray-100 disabled:opacity-30"
         disabled={value <= min}
       >
-        <Icon name="remove" size="xs" />
+        <HiMinus className="w-3 h-3" />
       </button>
       <input
         type="number"
@@ -84,7 +97,7 @@ const NumberInput: React.FC<NumberInputProps> = ({
         className="px-4 py-2 text-brand-blue hover:bg-gray-50 transition-colors border-l border-gray-100 disabled:opacity-30"
         disabled={value >= max}
       >
-        <Icon name="add" size="xs" />
+        <HiPlus className="w-3 h-3" />
       </button>
     </div>
   );
@@ -96,32 +109,32 @@ interface RichTextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaEle
 
 const RichTextArea: React.FC<RichTextAreaProps> = ({ label, ...props }) => {
   const toolbarIcons = [
-    { name: "format_bold", label: "Bold" }, // Placeholder names if not found
-    { name: "format_italic", label: "Italic" },
-    { name: "link", label: "Link" },
-    { name: "create", label: "Quote" },
-    { name: "code", label: "Code" },
-    { name: "photo", label: "Image" },
-    { name: "list", label: "List" },
-    { name: "sort", label: "Ordered List" },
+    { icon: MdFormatBold, label: "Bold" },
+    { icon: MdFormatItalic, label: "Italic" },
+    { icon: MdInsertLink, label: "Link" },
+    { icon: MdFormatQuote, label: "Quote" },
+    { icon: MdCode, label: "Code" },
+    { icon: MdImage, label: "Image" },
+    { icon: MdFormatListBulleted, label: "List" },
+    { icon: MdFormatListNumbered, label: "Ordered List" },
   ];
 
   return (
-    <div className="flex flex-col border border-gray-200 rounded-md overflow-hidden bg-white focus-within:ring-2 focus-within:ring-brand-blue/20 focus-within:border-brand-blue transition-all">
-      <div className="flex items-center gap-1 p-2 border-b border-gray-100 bg-gray-50/50">
-        {toolbarIcons.map((icon, index) => (
+    <div className="flex flex-col border border-gray-200 rounded-lg overflow-hidden bg-white focus-within:ring-4 focus-within:ring-brand-blue/5 focus-within:border-brand-blue transition-all">
+      <div className="flex items-center gap-1 p-1.5 border-b border-gray-100 bg-gray-50/30">
+        {toolbarIcons.map((item, index) => (
           <button
             key={index}
             type="button"
-            className="p-1.5 rounded-md text-gray-600 hover:bg-gray-200 transition-colors"
-            title={icon.label}
+            className="p-2 rounded-md text-gray-500 hover:text-brand-blue hover:bg-brand-blue/10 transition-all"
+            title={item.label}
           >
-            <Icon name={icon.name} size="xs" />
+            <item.icon className="w-4 h-4" />
           </button>
         ))}
       </div>
       <Textarea
-        className="border-none rounded-none focus:ring-0 min-h-[150px]"
+        className="border-none rounded-none focus:ring-0 min-h-[140px] px-4 py-3 text-[13px] leading-relaxed"
         {...props}
       />
     </div>

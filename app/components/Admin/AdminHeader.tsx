@@ -9,7 +9,11 @@ import { AdminProfileDropdown } from "./AdminProfileDropdown";
 import { AdminSearchDropdown } from "./AdminSearchDropdown";
 import { useState, useRef, useEffect } from "react";
 
+import { useUser } from "../../context/UserContext";
+import { HiUser } from "react-icons/hi2";
+
 export const AdminHeader: React.FC = () => {
+  const { userImage } = useUser();
   const pathname = usePathname();
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -134,19 +138,20 @@ export const AdminHeader: React.FC = () => {
           {/* User Profile */}
           <div className="relative" ref={profileRef}>
             <div 
-              className={`w-11 h-11 rounded-full border-2 overflow-hidden shadow-sm cursor-pointer hover:shadow-md transition-all
+              className={`w-11 h-11 rounded-full border-2 overflow-hidden shadow-sm cursor-pointer hover:shadow-md transition-all flex items-center justify-center bg-brand-blue-light
                 ${isProfileOpen ? "border-brand-blue shadow-blue-100 scale-105" : "border-gray-200 hover:border-brand-blue/50"}
               `}
               onClick={toggleProfile}
             >
-              <img
-                src="/dashboardImage/Picture.png"
-                alt="Admin"
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.currentTarget.src = "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop";
-                }}
-              />
+              {userImage ? (
+                <img
+                  src={userImage}
+                  alt="Admin"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <HiUser className="text-brand-blue w-6 h-6" />
+              )}
             </div>
 
             {isProfileOpen && <AdminProfileDropdown />}

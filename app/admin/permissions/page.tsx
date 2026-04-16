@@ -8,41 +8,44 @@ import { TabFilter } from "../../components/Admin/TabFilter";
 import { Pagination } from "../../components/Admin/Pagination";
 import { ConfirmationModal } from "../../components/Admin/ConfirmationModal";
 import { AddRoleModal } from "../../components/Admin/AddRoleModal";
+import { RowsPerPage } from "@/app/components/rows-per-page";
+import Checkbox from "@/app/components/Checkbox";
 import { EditRoleDrawer } from "../../components/Admin/EditRoleDrawer";
 import { RolesMoreActionsDrawer } from "../../components/Admin/RolesMoreActionsDrawer";
+import { BulkActionsDrawer } from "../../components/Admin/BulkActionsDrawer";
 
 const rolesData = [
-  { 
-    id: 1, 
-    name: "Super Admin", 
+  {
+    id: 1,
+    name: "Super Admin",
     description: "Full access to all system modules and settings including financial data and user management.",
     users: ["/dashboardImage/Fashion.png", "/dashboardImage/T-Shirt.png", "/dashboardImage/Cap.png"],
     status: "Active"
   },
-  { 
-    id: 2, 
-    name: "Editor", 
+  {
+    id: 2,
+    name: "Editor",
     description: "Can manage products, categories, and brands. Access to media gallery and reviews.",
     users: ["/dashboardImage/Electronics.png", "/dashboardImage/Accessories.png"],
     status: "Active"
   },
-  { 
-    id: 3, 
-    name: "Order Manager", 
+  {
+    id: 3,
+    name: "Order Manager",
     description: "Handles order processing, shipping updates, and transaction monitoring.",
     users: ["/dashboardImage/Cap.png", "/dashboardImage/Fashion.png"],
     status: "Active"
   },
-  { 
-    id: 4, 
-    name: "Support Staff", 
+  {
+    id: 4,
+    name: "Support Staff",
     description: "Access to customer reviews, support tickets, and basic user information.",
     users: ["/dashboardImage/T-Shirt.png"],
     status: "Inactive"
   },
-  { 
-    id: 5, 
-    name: "Content Creator", 
+  {
+    id: 5,
+    name: "Content Creator",
     description: "Permission to upload media, write product descriptions, and manage blog content.",
     users: ["/dashboardImage/Accessories.png", "/dashboardImage/Electronics.png", "/dashboardImage/Fashion.png"],
     status: "Active"
@@ -56,10 +59,28 @@ const statusStyles = {
 
 export default function PermissionsListing() {
   const [activeTab, setActiveTab] = useState("All roles");
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [roleToDelete, setRoleToDelete] = useState<any>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const toggleAll = () => {
+    if (selectedIds.length === rolesData.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(rolesData.map(r => r.id));
+    }
+  };
+
+  const toggleItem = (id: number) => {
+    setSelectedIds(prev =>
+      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+    );
+  };
+
   const [roleToEdit, setRoleToEdit] = useState<any>(null);
   const [isMoreActionsOpen, setIsMoreActionsOpen] = useState(false);
   const [isSyncConfirmOpen, setIsSyncConfirmOpen] = useState(false);
@@ -113,14 +134,23 @@ export default function PermissionsListing() {
               className="bg-white border-gray-100 placeholder:text-gray-400 text-xs font-medium"
               suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
             />
+            <RowsPerPage value={rowsPerPage} onChange={setRowsPerPage} />
 
             <div className="flex gap-2">
-              <button className="p-2.5 rounded-[6px] border border-gray-100 text-gray-400 hover:bg-gray-50 transition-all">
+              <Button
+                variant="outline"
+                shape="rounded-sm"
+                className="!p-2.5 text-gray-400"
+              >
                 <Icon name="sort" folder="dashboardIcon" size="sm" />
-              </button>
-              <button className="p-2.5 rounded-[6px] border border-gray-100 text-gray-400 hover:bg-gray-50 transition-all">
+              </Button>
+              <Button
+                variant="outline"
+                shape="rounded-sm"
+                className="!p-2.5 text-gray-400"
+              >
                 <Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -130,6 +160,12 @@ export default function PermissionsListing() {
           <table>
             <thead>
               <tr>
+                <th className="w-10">
+                  <Checkbox
+                    checked={selectedIds.length === rolesData.length && rolesData.length > 0}
+                    onChange={toggleAll}
+                  />
+                </th>
                 <th>Role Name</th>
                 <th>Description</th>
                 <th>Assigned Users</th>
@@ -141,21 +177,27 @@ export default function PermissionsListing() {
               {filteredRoles.map((role) => (
                 <tr key={role.id} className="group">
                   <td>
+                    <Checkbox
+                      checked={selectedIds.includes(role.id)}
+                      onChange={() => toggleItem(role.id)}
+                    />
+                  </td>
+                  <td>
                     <span className="text-sm font-bold text-[#1D3557] group-hover:text-blue-600 transition-colors">
-                       {role.name}
+                      {role.name}
                     </span>
                   </td>
                   <td className="max-w-[400px]">
                     <p className="text-xs font-medium text-gray-500 leading-relaxed line-clamp-2">
-                       {role.description}
+                      {role.description}
                     </p>
                   </td>
                   <td>
                     <div className="flex items-center gap-2">
-                       <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-50 border border-gray-100">
-                          <Icon name="user-profile-circle" folder="dashboardIcon" size="sm" className="text-gray-400" />
-                       </div>
-                       <span className="text-sm font-bold text-[#1D3557]">{role.users.length} Users</span>
+                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-50 border border-gray-100">
+                        <Icon name="user-profile-circle" folder="dashboardIcon" size="sm" className="text-gray-400" />
+                      </div>
+                      <span className="text-sm font-bold text-[#1D3557]">{role.users.length} Users</span>
                     </div>
                   </td>
                   <td>
@@ -165,21 +207,25 @@ export default function PermissionsListing() {
                   </td>
                   <td className="text-right text-gray-300">
                     <div className="flex justify-end gap-4 text-gray-400">
-                       <button 
-                         className="hover:text-blue-500 transition-colors"
-                         onClick={() => {
-                           setRoleToEdit(role);
-                           setIsEditDrawerOpen(true);
-                         }}
-                       >
-                          <Icon name="settings" folder="dashboardIcon" size="sm" />
-                       </button>
-                       <button 
-                         className="hover:text-rose-500 transition-colors"
-                         onClick={() => setRoleToDelete(role)}
-                       >
-                          <Icon name="Delete" folder="dashboardIcon" size="sm" />
-                       </button>
+                      <Button
+                        variant="outline"
+                        shape="rounded-sm"
+                        className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
+                        onClick={() => {
+                          setRoleToEdit(role);
+                          setIsEditDrawerOpen(true);
+                        }}
+                      >
+                        <Icon name="settings" folder="dashboardIcon" size="sm" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        shape="rounded-sm"
+                        className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
+                        onClick={() => setRoleToDelete(role)}
+                      >
+                        <Icon name="Delete" folder="dashboardIcon" size="sm" />
+                      </Button>
                     </div>
                   </td>
                 </tr>
@@ -189,7 +235,7 @@ export default function PermissionsListing() {
         </div>
 
         {/* Pagination Footer */}
-        <Pagination 
+        <Pagination
           currentPage={currentPage}
           totalPages={12}
           onPageChange={setCurrentPage}
@@ -221,9 +267,35 @@ export default function PermissionsListing() {
       />
 
       <RolesMoreActionsDrawer
-        isOpen={isMoreActionsOpen}
+        isOpen={isMoreActionsOpen && selectedIds.length === 0}
         onClose={() => setIsMoreActionsOpen(false)}
         onSyncPermissions={() => setIsSyncConfirmOpen(true)}
+      />
+
+      <BulkActionsDrawer
+        isOpen={selectedIds.length > 0}
+        onClose={() => setSelectedIds([])}
+        selectedIds={selectedIds}
+        items={rolesData}
+        onClearSelection={() => setSelectedIds([])}
+        title="Roles Selected"
+        actions={[
+          {
+            id: "export",
+            title: "Export Selected",
+            icon: "cloud_download",
+            folder: "icon",
+            onClick: () => console.log("Exporting selected roles..."),
+          },
+          {
+            id: "delete",
+            title: "Delete All Selected",
+            icon: "Delete",
+            folder: "dashboardIcon",
+            variant: "danger",
+            onClick: () => setIsDeleteModalOpen(true),
+          },
+        ]}
       />
 
       <ConfirmationModal

@@ -37,10 +37,10 @@ export default function ProductMediaListing() {
 
   const filteredMedia = mediaData.filter(item => {
     // Tab Filter
-    const matchesTab = activeTab === "All media (250)" || 
-                       (activeTab === "Images" && item.type === "image") || 
-                       (activeTab === "Videos" && item.type === "video");
-    
+    const matchesTab = activeTab === "All media (250)" ||
+      (activeTab === "Images" && item.type === "image") ||
+      (activeTab === "Videos" && item.type === "video");
+
     // Search Filter
     const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
 
@@ -83,41 +83,48 @@ export default function ProductMediaListing() {
           <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
             <Input
               type="text"
-              placeholder="Search media filename"
+              placeholder="Search media filename..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              containerClassName="flex-1 xl:w-72"
-              className="bg-gray-50/80 border-transparent focus:bg-white focus:border-gray-100 text-sm font-medium"
+              containerClassName="flex-1 xl:w-96"
+              className="bg-white border-gray-100 placeholder:text-gray-400 text-xs font-medium"
               suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
             />
 
             <div className="flex gap-2">
-              <button 
-                className={`p-2.5 rounded-[6px] border transition-all
-                  ${viewType === "grid" 
-                    ? "border-brand-blue bg-brand-blue-light text-brand-blue shadow-sm" 
-                    : "border-gray-100 text-gray-400 hover:bg-gray-50"}
+              <Button
+                variant="outline"
+                shape="rounded-sm"
+                className={`!p-2.5 w-10 h-10 transition-all
+                  ${viewType === "grid"
+                    ? "border-brand-blue bg-brand-blue-light text-brand-blue shadow-sm"
+                    : "text-gray-400"}
                 `}
                 onClick={() => setViewType("grid")}
                 title="Grid View"
               >
-                 <Icon name="grid_view" folder="icon" size="sm" />
-              </button>
-              <button 
-                className={`p-2.5 rounded-[6px] border transition-all
-                  ${viewType === "list" 
-                    ? "border-brand-blue bg-brand-blue-light text-brand-blue shadow-sm" 
-                    : "border-gray-100 text-gray-400 hover:bg-gray-50"}
+                <Icon name="grid_view" folder="icon" size="sm" />
+              </Button>
+              <Button
+                variant="outline"
+                shape="rounded-sm"
+                className={`!p-2.5 w-10 h-10 transition-all
+                  ${viewType === "list"
+                    ? "border-brand-blue bg-brand-blue-light text-brand-blue shadow-sm"
+                    : "text-gray-400"}
                 `}
                 onClick={() => setViewType("list")}
                 title="List View"
               >
                 <Icon name="menu" folder="icon" size="sm" />
-              </button>
-              <div className="w-px h-8 bg-gray-100 mx-1"></div>
-              <button className="p-2.5 rounded-[6px] border border-gray-100 text-gray-400 hover:bg-gray-50 transition-all">
+              </Button>
+              <Button
+                variant="outline"
+                shape="rounded-sm"
+                className="!p-2.5 w-10 h-10 text-gray-400"
+              >
                 <Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -130,7 +137,7 @@ export default function ProductMediaListing() {
                 <div key={item.id} className="group relative bg-white border border-gray-100 rounded-[6px] overflow-hidden hover:shadow-md hover:border-blue-100 transition-all">
                   <div className="relative aspect-video bg-gray-50 flex items-center justify-center p-4">
                     <img src={item.url} alt={item.name} className="w-full h-full object-contain transition-transform group-hover:scale-105" />
-                    
+
                     {item.type === "video" && (
                       <div className="absolute inset-0 flex items-center justify-center bg-black/5 group-hover:bg-black/10 transition-colors">
                         <div className="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-sm">
@@ -140,24 +147,24 @@ export default function ProductMediaListing() {
                     )}
 
                     <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0">
-                       <button 
-                         className="p-2 bg-white/95 rounded-[6px] shadow-sm hover:text-blue-500 transition-colors"
-                         onClick={() => {
-                           setMediaToEdit(item);
-                           setIsEditDrawerOpen(true);
-                         }}
-                       >
-                         <Icon name="settings" folder="dashboardIcon" size="xs" />
-                       </button>
-                       <button 
-                         className="p-2 bg-white/95 rounded-[6px] shadow-sm hover:text-rose-500 transition-colors"
-                         onClick={() => {
-                           setMediaToDelete(item);
-                           setIsDeleteModalOpen(true);
-                         }}
-                       >
-                         <Icon name="Delete" folder="dashboardIcon" size="xs" />
-                       </button>
+                      <button
+                        className=" w-8 h-8 text-gray-500 bg-white/95 rounded-[6px] shadow-sm hover:text-blue-500 transition-colors cursor-pointer"
+                        onClick={() => {
+                          setMediaToEdit(item);
+                          setIsEditDrawerOpen(true);
+                        }}
+                      >
+                        <Icon name="settings" folder="dashboardIcon" size="xs" />
+                      </button>
+                      <button
+                        className="w-8 h-8 bg-white/95 rounded-[6px] shadow-sm text-gray-500 hover:text-rose-500 transition-colors cursor-pointer"
+                        onClick={() => {
+                          setMediaToDelete(item);
+                          setIsDeleteModalOpen(true);
+                        }}
+                      >
+                        <Icon name="Delete" folder="dashboardIcon" size="xs" />
+                      </button>
                     </div>
                   </div>
 
@@ -194,7 +201,7 @@ export default function ProductMediaListing() {
                           <img src={item.url} alt={item.name} className="w-full h-full object-contain" />
                           {item.type === "video" && (
                             <div className="absolute inset-0 flex items-center justify-center bg-black/5">
-                               <Icon name="play_circle" folder="icon" size="xs" className="text-[#1D3557]" />
+                              <Icon name="play_circle" folder="icon" size="xs" className="text-[#1D3557]" />
                             </div>
                           )}
                         </div>
@@ -208,22 +215,22 @@ export default function ProductMediaListing() {
                         <span className="text-xs font-bold text-gray-500">{item.size}</span>
                       </td>
                       <td>
-                         <div className="flex items-center gap-1.5">
-                            <Icon 
-                              name={item.type === "video" ? "play_circle" : "photo"} 
-                              folder="icon" 
-                              size="xs" 
-                              className="text-gray-400" 
-                            />
-                            <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">{item.type}</span>
-                         </div>
+                        <div className="flex items-center gap-1.5">
+                          <Icon
+                            name={item.type === "video" ? "play_circle" : "photo"}
+                            folder="icon"
+                            size="xs"
+                            className="text-gray-400"
+                          />
+                          <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">{item.type}</span>
+                        </div>
                       </td>
                       <td>
                         <span className="text-xs font-medium text-gray-400">{item.date}</span>
                       </td>
                       <td className="text-right">
                         <div className="flex justify-end items-center gap-4 text-gray-300">
-                          <button 
+                          <button
                             className="hover:text-blue-500 transition-colors"
                             onClick={() => {
                               setMediaToEdit(item);
@@ -232,7 +239,7 @@ export default function ProductMediaListing() {
                           >
                             <Icon name="settings" folder="dashboardIcon" size="sm" />
                           </button>
-                          <button 
+                          <button
                             className="hover:text-rose-500 transition-colors"
                             onClick={() => {
                               setMediaToDelete(item);
@@ -240,7 +247,7 @@ export default function ProductMediaListing() {
                             }}
                           >
                             <Icon name="Delete" folder="dashboardIcon" size="sm" />
-                           </button>
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -252,7 +259,7 @@ export default function ProductMediaListing() {
         </div>
 
         {/* Pagination */}
-        <Pagination 
+        <Pagination
           currentPage={currentPage}
           totalPages={12}
           onPageChange={setCurrentPage}

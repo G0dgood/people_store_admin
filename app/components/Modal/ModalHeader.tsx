@@ -20,7 +20,7 @@ export default function ModalHeader({
 }: ModalHeaderProps) {
   return (
     <div
-      className={`flex items-center justify-between bg-white px-6 py-4 ${hideBorder ? "" : "border-b border-gray-200"
+      className={`flex items-center justify-between bg-white px-6 py-6 ${hideBorder ? "" : "border-b border-gray-200"
         }`}
     >
       <div className="flex items-center gap-3">

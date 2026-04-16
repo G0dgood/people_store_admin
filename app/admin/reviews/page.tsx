@@ -4,18 +4,22 @@ import React, { useState } from "react";
 import { Icon } from "../../components/Icon";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Form/Inputs";
+import { HiMiniArrowUturnLeft } from "react-icons/hi2";
 import { TabFilter } from "../../components/Admin/TabFilter";
 import { Pagination } from "../../components/Admin/Pagination";
 import { ReviewReplyDrawer } from "../../components/Admin/ReviewReplyDrawer";
 import { ReviewsMoreActionsDrawer } from "../../components/Admin/ReviewsMoreActionsDrawer";
+import Checkbox from "@/app/components/Checkbox";
 import { ConfirmationModal } from "../../components/Admin/ConfirmationModal";
+import { BulkActionsDrawer } from "../../components/Admin/BulkActionsDrawer";
+import { RowsPerPage } from "@/app/components/rows-per-page";
 import Modal from "../../components/Modal/Modal";
 import ModalBody from "../../components/Modal/ModalBody";
 import ModalFooter from "../../components/Modal/ModalFooter";
 
 const reviewsData = [
-  { 
-    id: 1, 
+  {
+    id: 1,
     customer: { name: "Arlene McCoy", email: "arlene.mccoy@example.com", avatar: "/dashboardImage/Fashion.png" },
     rating: 5,
     comment: "The sound quality is exceptional. Best headphones I've owned!",
@@ -23,8 +27,8 @@ const reviewsData = [
     date: "Oct 24, 2023",
     status: "Published"
   },
-  { 
-    id: 2, 
+  {
+    id: 2,
     customer: { name: "Brooklyn Simmons", email: "brooklyn.s@example.com", avatar: "/dashboardImage/T-Shirt.png" },
     rating: 4,
     comment: "Great fitness tracker, but the strap is a bit stiff initially.",
@@ -32,8 +36,8 @@ const reviewsData = [
     date: "Oct 22, 2023",
     status: "Pending"
   },
-  { 
-    id: 3, 
+  {
+    id: 3,
     customer: { name: "Cody Fisher", email: "cody.f@example.com", avatar: "/dashboardImage/Cap.png" },
     rating: 2,
     comment: "The color is slightly different from the photos. Disappointed.",
@@ -41,8 +45,8 @@ const reviewsData = [
     date: "Oct 20, 2023",
     status: "Published"
   },
-  { 
-    id: 4, 
+  {
+    id: 4,
     customer: { name: "Jane Cooper", email: "jane.c@example.com", avatar: "/dashboardImage/Electronics.png" },
     rating: 5,
     comment: "Stunning design and very accurate timekeeping. Love it!",
@@ -50,8 +54,8 @@ const reviewsData = [
     date: "Oct 18, 2023",
     status: "Published"
   },
-  { 
-    id: 5, 
+  {
+    id: 5,
     customer: { name: "Robert Fox", email: "robert.f@example.com", avatar: "/dashboardImage/Accessories.png" },
     rating: 1,
     comment: "Item arrived damaged. Customer support was helpful though.",
@@ -59,8 +63,8 @@ const reviewsData = [
     date: "Oct 15, 2023",
     status: "Spam"
   },
-  { 
-    id: 6, 
+  {
+    id: 6,
     customer: { name: "Esther Howard", email: "esther.h@example.com", avatar: "/dashboardImage/Fashion.png" },
     rating: 4,
     comment: "Very comfortable bag for daily commute. Highly recommend.",
@@ -78,6 +82,8 @@ const statusStyles = {
 
 export default function ReviewListing() {
   const [activeTab, setActiveTab] = useState("All reviews");
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isMoreActionsOpen, setIsMoreActionsOpen] = useState(false);
   const [isReplyDrawerOpen, setIsReplyDrawerOpen] = useState(false);
@@ -87,6 +93,20 @@ export default function ReviewListing() {
   const [isClearSpamConfirmOpen, setIsClearSpamConfirmOpen] = useState(false);
   const [isBulkApproveConfirmOpen, setIsBulkApproveConfirmOpen] = useState(false);
   const [isExportSuccessOpen, setIsExportSuccessOpen] = useState(false);
+
+  const toggleAll = () => {
+    if (selectedIds.length === filteredReviews.length && filteredReviews.length > 0) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(filteredReviews.map(r => r.id));
+    }
+  };
+
+  const toggleItem = (id: number) => {
+    setSelectedIds(prev =>
+      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+    );
+  };
 
   const filteredReviews = reviewsData.filter(review => {
     if (activeTab === "All reviews") return true;
@@ -135,14 +155,24 @@ export default function ReviewListing() {
               suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
             />
 
+            <RowsPerPage value={rowsPerPage} onChange={setRowsPerPage} />
+
             <div className="flex gap-2">
-              <button className="p-2.5 rounded-[6px] border border-gray-100 text-gray-400 hover:bg-gray-50 transition-all">
+              <Button
+                variant="outline"
+                shape="rounded-sm"
+                className="!p-2.5 text-gray-400"
+              >
                 <Icon name="sort" folder="dashboardIcon" size="sm" />
-              </button>
-              <button className="p-2.5 rounded-[6px] border border-gray-100 text-gray-400 hover:bg-gray-50 transition-all flex items-center gap-2 px-4 shadow-sm">
+              </Button>
+              <Button
+                variant="outline"
+                shape="rounded-sm"
+                className="text-gray-400 flex items-center gap-2 px-4 shadow-sm"
+              >
                 <Icon name="filter" folder="dashboardIcon" size="sm" />
                 <span className="text-xs font-bold text-[#1D3557]">Filters</span>
-              </button>
+              </Button>
             </div>
           </div>
         </div>
@@ -152,6 +182,12 @@ export default function ReviewListing() {
           <table>
             <thead>
               <tr>
+                <th className="w-10">
+                  <Checkbox
+                    checked={selectedIds.length === filteredReviews.length && filteredReviews.length > 0}
+                    onChange={toggleAll}
+                  />
+                </th>
                 <th>Customer</th>
                 <th>Review</th>
                 <th>Product</th>
@@ -163,6 +199,12 @@ export default function ReviewListing() {
             <tbody>
               {filteredReviews.map((review) => (
                 <tr key={review.id} className="group">
+                  <td>
+                    <Checkbox
+                      checked={selectedIds.includes(review.id)}
+                      onChange={() => toggleItem(review.id)}
+                    />
+                  </td>
                   <td>
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-full overflow-hidden bg-gray-100 border border-gray-100">
@@ -178,17 +220,17 @@ export default function ReviewListing() {
                     <div className="flex flex-col gap-1.5">
                       <div className="flex items-center gap-0.5">
                         {[1, 2, 3, 4, 5].map((star) => (
-                          <Icon 
-                            key={star} 
-                            name="star" 
-                            folder="dashboardIcon" 
-                            size="xs" 
-                            className={star <= review.rating ? "text-amber-400" : "text-gray-200"} 
+                          <Icon
+                            key={star}
+                            name="star"
+                            folder="dashboardIcon"
+                            size="xs"
+                            className={star <= review.rating ? "text-amber-400" : "text-gray-200"}
                           />
                         ))}
                       </div>
                       <p className="text-xs font-medium text-[#1D3557] leading-relaxed line-clamp-2 italic tracking-tight opacity-80">
-                         "{review.comment}"
+                        "{review.comment}"
                       </p>
                     </div>
                   </td>
@@ -210,24 +252,28 @@ export default function ReviewListing() {
                   </td>
                   <td className="text-right text-gray-300">
                     <div className="flex justify-end gap-4">
-                       <button 
-                         className="hover:text-blue-500 transition-colors"
-                         onClick={() => {
-                           setReviewToReply(review);
-                           setIsReplyDrawerOpen(true);
-                         }}
-                       >
-                          <Icon name="reply" folder="dashboardIcon" size="sm" />
-                       </button>
-                       <button 
-                         className="hover:text-rose-500 transition-colors"
-                         onClick={() => {
-                           setReviewToDelete(review);
-                           setIsDeleteModalOpen(true);
-                         }}
-                       >
-                          <Icon name="Delete" folder="dashboardIcon" size="sm" />
-                       </button>
+                      <Button
+                        variant="outline"
+                        shape="rounded-sm"
+                        className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
+                        onClick={() => {
+                          setReviewToReply(review);
+                          setIsReplyDrawerOpen(true);
+                        }}
+                      >
+                        <HiMiniArrowUturnLeft className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        shape="rounded-sm"
+                        className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
+                        onClick={() => {
+                          setReviewToDelete(review);
+                          setIsDeleteModalOpen(true);
+                        }}
+                      >
+                        <Icon name="Delete" folder="dashboardIcon" size="sm" />
+                      </Button>
                     </div>
                   </td>
                 </tr>
@@ -237,7 +283,7 @@ export default function ReviewListing() {
         </div>
 
         {/* Pagination Footer */}
-        <Pagination 
+        <Pagination
           currentPage={currentPage}
           totalPages={85}
           onPageChange={setCurrentPage}
@@ -245,11 +291,36 @@ export default function ReviewListing() {
       </div>
 
       <ReviewsMoreActionsDrawer
-        isOpen={isMoreActionsOpen}
+        isOpen={isMoreActionsOpen && selectedIds.length === 0}
         onClose={() => setIsMoreActionsOpen(false)}
-        onClearSpam={() => setIsClearSpamConfirmOpen(true)}
         onBulkApprove={() => setIsBulkApproveConfirmOpen(true)}
         onExport={() => setIsExportSuccessOpen(true)}
+      />
+
+      <BulkActionsDrawer
+        isOpen={selectedIds.length > 0}
+        onClose={() => setSelectedIds([])}
+        selectedIds={selectedIds}
+        items={reviewsData}
+        onClearSelection={() => setSelectedIds([])}
+        title="Reviews Selected"
+        actions={[
+          {
+            id: "approve",
+            title: "Approve Selected",
+            icon: "verified",
+            folder: "icon",
+            onClick: () => setIsBulkApproveConfirmOpen(true),
+          },
+          {
+            id: "delete",
+            title: "Delete All Selected",
+            icon: "Delete",
+            folder: "dashboardIcon",
+            variant: "danger",
+            onClick: () => setIsDeleteModalOpen(true),
+          },
+        ]}
       />
 
       <ReviewReplyDrawer
@@ -297,31 +368,31 @@ export default function ReviewListing() {
         type="success"
       />
 
-      <Modal 
-        isOpen={isExportSuccessOpen} 
-        onClose={() => setIsExportSuccessOpen(false)} 
+      <Modal
+        isOpen={isExportSuccessOpen}
+        onClose={() => setIsExportSuccessOpen(false)}
         title=""
         size="md"
       >
         <ModalBody className="flex flex-col items-center text-center py-10 gap-6">
-           <div className="w-20 h-20 rounded-full bg-green-50 flex items-center justify-center text-green-500 shadow-inner">
-              <Icon name="task_alt" folder="icon" size="lg" className="w-10 h-10" />
-           </div>
-           <div className="flex flex-col gap-2">
-              <h2 className="text-xl font-black text-[#1D3557]">Export Started!</h2>
-              <p className="text-sm font-medium text-gray-400 max-w-[280px] mx-auto leading-relaxed">
-                 Your feedback report is being generated and will be downloaded automatically in a few moments.
-              </p>
-           </div>
+          <div className="w-20 h-20 rounded-full bg-green-50 flex items-center justify-center text-green-500 shadow-inner">
+            <Icon name="task_alt" folder="icon" size="lg" className="w-10 h-10" />
+          </div>
+          <div className="flex flex-col gap-2">
+            <h2 className="text-xl font-black text-[#1D3557]">Export Started!</h2>
+            <p className="text-sm font-medium text-gray-400 max-w-[280px] mx-auto leading-relaxed">
+              Your feedback report is being generated and will be downloaded automatically in a few moments.
+            </p>
+          </div>
         </ModalBody>
         <ModalFooter className="flex flex-col gap-3 pb-8">
-           <Button 
-            variant="primary" 
+          <Button
+            variant="primary"
             className="w-full h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
             onClick={() => setIsExportSuccessOpen(false)}
-           >
-              Great, thank you
-           </Button>
+          >
+            Great, thank you
+          </Button>
         </ModalFooter>
       </Modal>
     </div>

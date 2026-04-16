@@ -6,7 +6,10 @@ import { Button } from "../../components/Button";
 import { TabFilter } from "../../components/Admin/TabFilter";
 import { Pagination } from "../../components/Admin/Pagination";
 import { NotificationDetailDrawer } from "../../components/Admin/NotificationDetailDrawer";
+import { RowsPerPage } from "@/app/components/rows-per-page";
+import Checkbox from "@/app/components/Checkbox";
 import { ConfirmationModal } from "../../components/Admin/ConfirmationModal";
+import { BulkActionsDrawer } from "../../components/Admin/BulkActionsDrawer";
 
 const notificationsData = [
   {
@@ -73,11 +76,28 @@ const typeStyles = {
 
 export default function NotificationCenter() {
   const [activeTab, setActiveTab] = useState("All");
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [isDetailDrawerOpen, setIsDetailDrawerOpen] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState<any>(null);
   const [isMarkAllModalOpen, setIsMarkAllModalOpen] = useState(false);
   const [isClearHistoryModalOpen, setIsClearHistoryModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const toggleAll = () => {
+    if (selectedIds.length === filteredNotifications.length && filteredNotifications.length > 0) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(filteredNotifications.map(n => n.id));
+    }
+  };
+
+  const toggleItem = (id: number) => {
+    setSelectedIds(prev =>
+      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+    );
+  };
 
   const filteredNotifications = notificationsData.filter(item => {
     if (activeTab === "All") return true;
@@ -108,12 +128,22 @@ export default function NotificationCenter() {
 
       <div className="bg-white rounded-[6px] border border-gray-100 shadow-sm overflow-hidden flex flex-col">
         {/* Filter Bar */}
-        <div className="p-6 border-b border-gray-50 bg-gray-50/30">
-          <TabFilter
-            tabs={["All", "Orders", "Stock", "Security"]}
-            activeTab={activeTab}
-            onChange={setActiveTab}
-          />
+        <div className="p-6 border-b border-gray-50 bg-gray-50/30 flex items-center justify-between">
+          <div className="flex items-center gap-6">
+            <Checkbox 
+               checked={selectedIds.length === filteredNotifications.length && filteredNotifications.length > 0}
+               onChange={toggleAll}
+            />
+            <TabFilter
+              tabs={["All", "Orders", "Stock", "Security"]}
+              activeTab={activeTab}
+              onChange={(tab) => {
+                setActiveTab(tab);
+                setSelectedIds([]); // Clear selection when changing tabs
+              }}
+            />
+          </div>
+          <RowsPerPage value={rowsPerPage} onChange={setRowsPerPage} />
         </div>
 
         {/* Notifications List */}
@@ -129,6 +159,13 @@ export default function NotificationCenter() {
               {!item.isRead && (
                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-blue shadow-lg shadow-blue-100"></div>
               )}
+
+              <div className="flex items-center self-center">
+                <Checkbox 
+                  checked={selectedIds.includes(item.id)}
+                  onChange={() => toggleItem(item.id)}
+                />
+              </div>
 
               <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 shadow-sm ${typeStyles[item.type as keyof typeof typeStyles].bg} ${typeStyles[item.type as keyof typeof typeStyles].color}`}>
                  <Icon 
@@ -195,6 +232,32 @@ export default function NotificationCenter() {
            />
         </div>
       </div>
+
+      <BulkActionsDrawer
+        isOpen={selectedIds.length > 0}
+        onClose={() => setSelectedIds([])}
+        selectedIds={selectedIds}
+        items={notificationsData}
+        onClearSelection={() => setSelectedIds([])}
+        title="Notifications Selected"
+        actions={[
+          {
+            id: "read",
+            title: "Mark as Read",
+            icon: "verified",
+            folder: "icon",
+            onClick: () => console.log("Marking notifications as read..."),
+          },
+          {
+            id: "delete",
+            title: "Delete All Selected",
+            icon: "Delete",
+            folder: "dashboardIcon",
+            variant: "danger",
+            onClick: () => setIsDeleteModalOpen(true),
+          },
+        ]}
+      />
 
       <NotificationDetailDrawer
          isOpen={isDetailDrawerOpen}

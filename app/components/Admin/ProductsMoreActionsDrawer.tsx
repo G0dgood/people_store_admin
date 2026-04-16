@@ -67,8 +67,8 @@ export function ProductsMoreActionsDrawer({ isOpen, onClose, onArchiveOutOfStock
                 `}
               >
                 <div className={`mt-1 w-10 h-10 rounded-lg flex items-center justify-center transition-all
-                  ${action.variant === "danger" 
-                    ? "bg-rose-50 text-rose-500 group-hover:bg-rose-100" 
+                  ${action.variant === "danger"
+                    ? "bg-rose-50 text-rose-500 group-hover:bg-rose-100"
                     : "bg-brand-blue-light text-brand-blue group-hover:bg-brand-blue group-hover:text-white"}
                 `}>
                   <Icon name={action.icon} folder={action.folder} size="sm" />
@@ -93,18 +93,18 @@ export function ProductsMoreActionsDrawer({ isOpen, onClose, onArchiveOutOfStock
 
         <div className="mt-auto p-5 bg-[#1D3557] rounded-2xl border border-blue-900 shadow-xl overflow-hidden relative">
           <div className="absolute top-0 right-0 p-4 opacity-10 rotate-12">
-             <Icon name="star" folder="icon" size="lg" className="text-white w-20 h-20" />
+            <Icon name="star" folder="icon" size="lg" className="text-white w-20 h-20" />
           </div>
           <div className="relative z-10 flex flex-col gap-3">
-             <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/20 flex items-center justify-center text-blue-400">
-                <Icon name="verified" folder="icon" size="sm" />
-             </div>
-             <div className="flex flex-col gap-1">
-                <span className="text-[14px] font-black text-white">Pro Inventory Management</span>
-                <span className="text-[11px] font-medium text-blue-200/60 leading-relaxed">
-                   Maintain a healthy catalog by archiving inactive items and syncing stock levels daily.
-                </span>
-             </div>
+            <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/20 flex items-center justify-center text-blue-400">
+              <Icon name="verified" folder="icon" size="sm" />
+            </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-[14px] font-black text-white">Pro Inventory Management</span>
+              <span className="text-[11px] font-medium text-blue-200/60 leading-relaxed">
+                Maintain a healthy catalog by archiving inactive items and syncing stock levels daily.
+              </span>
+            </div>
           </div>
         </div>
       </div>

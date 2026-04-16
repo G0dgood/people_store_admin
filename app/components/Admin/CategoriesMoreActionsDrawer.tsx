@@ -4,13 +4,25 @@ import React from "react";
 import Drawer from "../Drawer/Drawer";
 import { Icon } from "../Icon";
 
+import { SelectionSummary } from "./SelectionSummary";
+
 interface CategoriesMoreActionsDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   onCleanEmpty: () => void;
+  selectedIds: number[];
+  items: any[];
+  onClearSelection: () => void;
 }
 
-export function CategoriesMoreActionsDrawer({ isOpen, onClose, onCleanEmpty }: CategoriesMoreActionsDrawerProps) {
+export function CategoriesMoreActionsDrawer({ 
+  isOpen, 
+  onClose, 
+  onCleanEmpty,
+  selectedIds,
+  items,
+  onClearSelection
+}: CategoriesMoreActionsDrawerProps) {
   const actions = [
     {
       id: "export",
@@ -53,6 +65,14 @@ export function CategoriesMoreActionsDrawer({ isOpen, onClose, onCleanEmpty }: C
   return (
     <Drawer isOpen={isOpen} onClose={onClose} title="Categories: More Actions">
       <div className="flex flex-col h-full gap-8">
+        <SelectionSummary
+          selectedIds={selectedIds}
+          items={items}
+          onClear={onClearSelection}
+          title="Categories Selected"
+          labelProp="name"
+        />
+
         <div className="flex flex-col gap-2">
           <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] px-4 mb-2">
             System Operations
@@ -67,8 +87,8 @@ export function CategoriesMoreActionsDrawer({ isOpen, onClose, onCleanEmpty }: C
                 `}
               >
                 <div className={`mt-1 w-10 h-10 rounded-lg flex items-center justify-center transition-all
-                  ${action.variant === "danger" 
-                    ? "bg-rose-50 text-rose-500 group-hover:bg-rose-100" 
+                  ${action.variant === "danger"
+                    ? "bg-rose-50 text-rose-500 group-hover:bg-rose-100"
                     : "bg-brand-blue-light text-brand-blue group-hover:bg-brand-blue group-hover:text-white"}
                 `}>
                   <Icon name={action.icon} folder={action.folder} size="sm" />
@@ -93,18 +113,18 @@ export function CategoriesMoreActionsDrawer({ isOpen, onClose, onCleanEmpty }: C
 
         <div className="mt-auto p-5 bg-[#1D3557] rounded-2xl border border-blue-900 shadow-xl overflow-hidden relative">
           <div className="absolute top-0 right-0 p-4 opacity-10 rotate-12">
-             <Icon name="star" folder="icon" size="lg" className="text-white w-20 h-20" />
+            <Icon name="star" folder="icon" size="lg" className="text-white w-20 h-20" />
           </div>
           <div className="relative z-10 flex flex-col gap-3">
-             <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/20 flex items-center justify-center text-blue-400">
-                <Icon name="verified" folder="icon" size="sm" />
-             </div>
-             <div className="flex flex-col gap-1">
-                <span className="text-[14px] font-black text-white">Advanced Catalog Control</span>
-                <span className="text-[11px] font-medium text-blue-200/60 leading-relaxed">
-                   Use these tools to clean up and reorganize your storefront's hierarchy for better SEO.
-                </span>
-             </div>
+            <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/20 flex items-center justify-center text-blue-400">
+              <Icon name="verified" folder="icon" size="sm" />
+            </div>
+            <div className="flex flex-col gap-1">
+              <span className="text-[14px] font-black text-white">Advanced Catalog Control</span>
+              <span className="text-[11px] font-medium text-blue-200/60 leading-relaxed">
+                Use these tools to clean up and reorganize your storefront's hierarchy for better SEO.
+              </span>
+            </div>
           </div>
         </div>
       </div>

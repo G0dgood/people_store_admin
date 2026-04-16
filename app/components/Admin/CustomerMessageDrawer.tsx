@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Drawer from "../Drawer/Drawer";
 import { Icon } from "../Icon";
 import { Button } from "../Button";
+import { RichTextArea } from "../Form/SpecialInputs";
 
 interface Message {
   id: number;
@@ -94,19 +95,12 @@ export function CustomerMessageDrawer({ isOpen, onClose, customer }: CustomerMes
 
         {/* Input Area */}
         <div className="flex flex-col gap-3 mt-auto pt-6 border-t border-gray-50">
-          <div className="relative">
-            <textarea 
-              value={messageText}
-              onChange={(e) => setMessageText(e.target.value)}
-              placeholder="Type your message here..."
-              className="w-full bg-gray-50 border-none rounded-2xl p-4 text-[13px] font-medium placeholder:text-gray-300 focus:ring-2 focus:ring-[#1D3557]/10 min-h-[100px] resize-none transition-all"
-            />
-            <div className="absolute bottom-4 right-4 flex items-center gap-2">
-               <button className="p-2 text-gray-300 hover:text-[#1D3557] transition-all">
-                  <Icon name="Picture" folder="dashboardIcon" size="sm" />
-               </button>
-            </div>
-          </div>
+          <RichTextArea
+            value={messageText}
+            onChange={(e) => setMessageText(e.target.value)}
+            placeholder="Type your message here..."
+            className="min-h-[120px]"
+          />
           
           <Button 
             variant="primary" 

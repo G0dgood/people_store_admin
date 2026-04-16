@@ -10,9 +10,10 @@ import { useState } from "react";
 interface OrdersMoreActionsDrawerProps {
   isOpen: boolean;
   onClose: () => void;
+  onBulkPrint: () => void;
 }
 
-export function OrdersMoreActionsDrawer({ isOpen, onClose }: OrdersMoreActionsDrawerProps) {
+export function OrdersMoreActionsDrawer({ isOpen, onClose, onBulkPrint }: OrdersMoreActionsDrawerProps) {
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
   const actions = [
@@ -72,6 +73,9 @@ export function OrdersMoreActionsDrawer({ isOpen, onClose }: OrdersMoreActionsDr
               onClick={() => {
                 if (action.title === "Delete All Cancelled") {
                   setIsDeleteConfirmOpen(true);
+                } else if (action.title === "Print Packing Slips") {
+                  onBulkPrint();
+                  onClose();
                 } else {
                   console.log(`Triggering ${action.title}`);
                   onClose();

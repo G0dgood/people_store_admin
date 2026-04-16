@@ -3,6 +3,7 @@
 import React from "react";
 import { AdminSidebar } from "../components/Admin/AdminSidebar";
 import { AdminHeader } from "../components/Admin/AdminHeader";
+import { UserProvider } from "../context/UserContext";
 
 export default function AdminLayout({
   children,
@@ -10,12 +11,14 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div id="page-wrapper">
-      <AdminSidebar />
-      <AdminHeader />
-      <main>
-        {children}
-      </main>
-    </div>
+    <UserProvider>
+      <div id="page-wrapper">
+        <AdminSidebar />
+        <AdminHeader />
+        <main>
+          {children}
+        </main>
+      </div>
+    </UserProvider>
   );
 }
