@@ -13,7 +13,7 @@ import { Input } from "@/app/components/Form";
 import { ProductsMoreActionsDrawer } from "../../components/Admin/ProductsMoreActionsDrawer";
 import { EditProductDrawer } from "../../components/Admin/EditProductDrawer";
 import { BulkActionsDrawer } from "../../components/Admin/BulkActionsDrawer";
-import { ConfirmationModal } from "../../components/Admin/ConfirmationModal";
+import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 
 const productsData = [
  {

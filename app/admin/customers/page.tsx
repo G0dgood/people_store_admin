@@ -8,7 +8,7 @@ import { Pagination } from "../../components/Admin/Pagination";
 import { Input } from "../../components/Form/Inputs";
 import { motion, AnimatePresence } from "framer-motion";
 import { CustomerSideCard } from "../../components/Admin/CustomerSideCard";
-import { ConfirmationModal } from "../../components/Admin/ConfirmationModal";
+import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import { CustomerMessageDrawer } from "../../components/Admin/CustomerMessageDrawer";
 import { AdminChart } from "../../components/Admin/AdminChart";
 import { RowsPerPage } from "@/app/components/rows-per-page";

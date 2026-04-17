@@ -6,7 +6,7 @@ import { Button } from "../../components/Button";
 import { Input } from "../../components/Form/Inputs";
 import { TabFilter } from "../../components/Admin/TabFilter";
 import { Pagination } from "../../components/Admin/Pagination";
-import { ConfirmationModal } from "../../components/Admin/ConfirmationModal";
+import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import { EditCouponDrawer } from "../../components/Admin/EditCouponDrawer";
 import { RowsPerPage } from "@/app/components/rows-per-page";
 import Checkbox from "@/app/components/Checkbox";

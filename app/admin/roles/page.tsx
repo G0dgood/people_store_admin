@@ -8,7 +8,7 @@ import { UploadAvatarModal } from "../../components/Admin/UploadAvatarModal";
 import Modal from "../../components/Modal/Modal";
 import ModalBody from "../../components/Modal/ModalBody";
 import ModalFooter from "../../components/Modal/ModalFooter";
-import { ConfirmationModal } from "../../components/Admin/ConfirmationModal";
+import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import { SecurityHelpDrawer } from "../../components/Admin/SecurityHelpDrawer";
 import { HiLockClosed, HiKey, HiShieldCheck, HiEye, HiEyeSlash, HiCalendarDays, HiUser } from "react-icons/hi2";
 import { useUser } from "../../context/UserContext";

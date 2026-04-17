@@ -11,7 +11,7 @@ import { useState } from "react";
 import { AddOrderModal } from "../../components/Admin/AddOrderModal";
 import { OrdersMoreActionsDrawer } from "../../components/Admin/OrdersMoreActionsDrawer";
 import { RowsPerPage } from "@/app/components/rows-per-page";
-import { ConfirmationModal } from "../../components/Admin/ConfirmationModal";
+import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import { BulkActionsDrawer } from "../../components/Admin/BulkActionsDrawer";
 import Checkbox from "@/app/components/Checkbox";
 

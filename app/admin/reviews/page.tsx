@@ -10,7 +10,7 @@ import { Pagination } from "../../components/Admin/Pagination";
 import { ReviewReplyDrawer } from "../../components/Admin/ReviewReplyDrawer";
 import { ReviewsMoreActionsDrawer } from "../../components/Admin/ReviewsMoreActionsDrawer";
 import Checkbox from "@/app/components/Checkbox";
-import { ConfirmationModal } from "../../components/Admin/ConfirmationModal";
+import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import { BulkActionsDrawer } from "../../components/Admin/BulkActionsDrawer";
 import { RowsPerPage } from "@/app/components/rows-per-page";
 import Modal from "../../components/Modal/Modal";

@@ -7,7 +7,7 @@ import { Button } from "@/app/components/Button";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Select } from "@/app/components/Form/Select";
-import { ConfirmationModal } from "../../components/Admin/ConfirmationModal";
+import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 
 export default function OrderDetails() {
   const { id } = useParams();
@@ -266,7 +266,7 @@ export default function OrderDetails() {
       title="Update Order Status"
       message={`Are you sure you want to change the status of this order to "${pendingStatus}"? This may trigger automated customer notifications and inventory adjustments.`}
       confirmText="Yes, update status"
-      type={pendingStatus === "Cancelled" ? "danger" : "primary"}
+      type={pendingStatus === "Cancelled" ? "danger" : "info"}
     />
   </div>
  );

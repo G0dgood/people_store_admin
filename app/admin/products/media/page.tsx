@@ -6,7 +6,7 @@ import { Button } from "../../../components/Button";
 import { Input } from "../../../components/Form/Inputs";
 import { TabFilter } from "../../../components/Admin/TabFilter";
 import { Pagination } from "../../../components/Admin/Pagination";
-import { ConfirmationModal } from "../../../components/Admin/ConfirmationModal";
+import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import { UploadMediaModal } from "../../../components/Admin/UploadMediaModal";
 import { MediaMoreActionsDrawer } from "../../../components/Admin/MediaMoreActionsDrawer";
 import { EditMediaDrawer } from "../../../components/Admin/EditMediaDrawer";

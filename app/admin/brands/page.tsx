@@ -11,7 +11,7 @@ import { RowsPerPage } from "@/app/components/rows-per-page";
 import Checkbox from "@/app/components/Checkbox";
 import { EditBrandDrawer } from "../../components/Admin/EditBrandDrawer";
 import { BulkActionsDrawer } from "../../components/Admin/BulkActionsDrawer";
-import { ConfirmationModal } from "../../components/Admin/ConfirmationModal";
+import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import { BrandsMoreActionsDrawer } from "../../components/Admin/BrandsMoreActionsDrawer";
 
 const brandsData = [

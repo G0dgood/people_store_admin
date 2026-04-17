@@ -8,7 +8,7 @@ import { Pagination } from "../../components/Admin/Pagination";
 import { NotificationDetailDrawer } from "../../components/Admin/NotificationDetailDrawer";
 import { RowsPerPage } from "@/app/components/rows-per-page";
 import Checkbox from "@/app/components/Checkbox";
-import { ConfirmationModal } from "../../components/Admin/ConfirmationModal";
+import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import { BulkActionsDrawer } from "../../components/Admin/BulkActionsDrawer";
 
 const notificationsData = [

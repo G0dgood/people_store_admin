@@ -6,7 +6,7 @@ import { Button } from "../../../components/Button";
 import { Select } from "../../../components/Form/Select";
 import { Switch } from "../../../components/Form/Switch";
 import { Input, Textarea } from "../../../components/Form/Inputs";
-import { ConfirmationModal } from "../../../components/Admin/ConfirmationModal";
+import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import Modal from "../../../components/Modal/Modal";
 import ModalBody from "../../../components/Modal/ModalBody";
 import ModalFooter from "../../../components/Modal/ModalFooter";

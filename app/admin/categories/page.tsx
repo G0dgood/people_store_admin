@@ -8,7 +8,7 @@ import { Button } from "@/app/components/Button";
 import { Input } from "../../components/Form/Inputs";
 import { AddCategoryModal } from "../../components/Admin/AddCategoryModal";
 import { CategoriesMoreActionsDrawer } from "../../components/Admin/CategoriesMoreActionsDrawer";
-import { ConfirmationModal } from "../../components/Admin/ConfirmationModal";
+import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import Checkbox from "@/app/components/Checkbox";
 import { EditCategoryDrawer } from "../../components/Admin/EditCategoryDrawer";
 import { BulkActionsDrawer } from "../../components/Admin/BulkActionsDrawer";

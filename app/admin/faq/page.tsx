@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Button } from "../../components/Button";
 import { CreateFAQModal } from "../../components/Admin/CreateFAQModal";
-import { ConfirmationModal } from "../../components/Admin/ConfirmationModal";
+import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import { StatCard } from "../../components/Admin/StatCard";
 import { TabFilter } from "../../components/Admin/TabFilter";
 import { Input } from "../../components/Form/Inputs";

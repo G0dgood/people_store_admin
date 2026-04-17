@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Button } from "../../components/Button";
 import { UpdateDealsTimerModal } from "../../components/Admin/UpdateDealsTimerModal";
 import { CreateOfferModal } from "../../components/Admin/CreateOfferModal";
-import { ConfirmationModal } from "../../components/Admin/ConfirmationModal";
+import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import {
   HiOutlinePlusCircle,
   HiOutlineCube,
@@ -235,11 +235,11 @@ export default function DealsPage() {
             <table>
               <thead>
                 <tr className="bg-gray-50/50">
-                  <th className="pl-8 text-[11px] font-black text-gray-400 uppercase tracking-widest py-5">Product</th>
-                  <th className="text-[11px] font-black text-gray-400 uppercase tracking-widest py-5">Original Price</th>
-                  <th className="text-[11px] font-black text-gray-400 uppercase tracking-widest py-5">Discount</th>
-                  <th className="text-[11px] font-black text-gray-400 uppercase tracking-widest py-5">Deal Price</th>
-                  <th className="pr-8 text-right text-[11px] font-black text-gray-400 uppercase tracking-widest py-5">Action</th>
+                  <th>Product</th>
+                  <th>Original Price</th>
+                  <th>Discount</th>
+                  <th>Deal Price</th>
+                  <th className=" text-right">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
