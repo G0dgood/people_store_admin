@@ -9,6 +9,8 @@ import { MobileMenuSidebar } from "./components/Mobile/MobileMenuSidebar";
 import { PageWrapper } from "./components/Mobile/PageWrapper";
 import { AuthModal } from "./components/Modal/AuthModal";
 import { Toaster } from "sonner";
+import { SocketProvider } from "@/app/context/SocketContext";
+import OfflineBanner from "@/app/components/ui/OfflineBanner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -59,19 +61,22 @@ export default function RootLayout({
     >
       <body className="min-h-full font-inter">
         <Toaster richColors closeButton position="bottom-right" />
-        <AuthModalProvider>
-          <CartProvider>
-            <WishlistProvider>
-              <MobileMenuProvider>
-                <MobileMenuSidebar />
-                <PageWrapper>
-                  {children}
-                </PageWrapper>
-              </MobileMenuProvider>
-            </WishlistProvider>
-          </CartProvider>
-          <AuthModal />
-        </AuthModalProvider>
+        <SocketProvider>
+          <OfflineBanner />
+          <AuthModalProvider>
+            <CartProvider>
+              <WishlistProvider>
+                <MobileMenuProvider>
+                  <MobileMenuSidebar />
+                  <PageWrapper>
+                    {children}
+                  </PageWrapper>
+                </MobileMenuProvider>
+              </WishlistProvider>
+            </CartProvider>
+            <AuthModal />
+          </AuthModalProvider>
+        </SocketProvider>
       </body>
     </html>
   );

@@ -164,7 +164,7 @@ export function UploadMediaModal({ isOpen, onClose, onUploadSuccess }: UploadMed
         <Button 
           variant="outline" 
           onClick={onClose} 
-          className="px-8 h-12 text-[11px] font-bold"
+          className="px-8 h-10 sm:h-12 text-[11px] font-bold"
         >
           Cancel
         </Button>
@@ -172,7 +172,7 @@ export function UploadMediaModal({ isOpen, onClose, onUploadSuccess }: UploadMed
           variant="primary" 
           onClick={handleUpload}
           disabled={isUploading || stagedFiles.length === 0}
-          className="px-8 h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100 disabled:opacity-50 disabled:shadow-none transition-all"
+          className="px-8 h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100 disabled:opacity-50 disabled:shadow-none transition-all"
         >
           {isUploading ? "Uploading..." : "Start Upload"}
         </Button>

@@ -52,7 +52,7 @@ export function AddBrandModal({ isOpen, onClose }: AddBrandModalProps) {
       <form onSubmit={handleSubmit}>
         <ModalBody className="flex flex-col gap-6">
           <div className="flex flex-col gap-2">
-            <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Brand Name</label>
+            <label className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Brand Name</label>
             <Input
               placeholder="e.g. Apple, Nike, etc."
               value={formData.name}
@@ -63,7 +63,7 @@ export function AddBrandModal({ isOpen, onClose }: AddBrandModalProps) {
           </div>
 
           <div className="flex flex-col gap-2">
-            <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Brand Logo Path</label>
+            <label className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Brand Logo Path</label>
             <div className="flex gap-4">
               <Input
                 placeholder="/dashboardImage/example.png"
@@ -108,14 +108,14 @@ export function AddBrandModal({ isOpen, onClose }: AddBrandModalProps) {
             variant="outline" 
             type="button" 
             onClick={onClose} 
-            className="px-8 h-12 text-[11px] font-bold"
+            className="px-8 h-10 sm:h-12 text-[11px] font-bold"
           >
             Cancel
           </Button>
           <Button 
             variant="primary" 
             type="submit" 
-            className="px-8 h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
+            className="px-8 h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
           >
             Create Brand
           </Button>

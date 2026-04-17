@@ -2,7 +2,8 @@
 
 import React, { useState, useCallback } from "react";
 import { Icon } from "../Icon";
-import { Checkbox, Radio } from "@/app/components/Form";
+import { Radio } from "@/app/components/Form";
+import Checkbox from "@/app/components/Checkbox";
 import { RangeSlider } from "../Form/RangeSlider";
 import { Rating } from "../Other/Rating";
 
@@ -98,7 +99,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilters }) =>
       <FilterSection title="Category">
         <ul className="flex flex-col gap-2 text-sm">
           {["Mobile accessory", "Electronics", "Smartphones", "Modern tech"].map((cat) => (
-            <li 
+            <li
               key={cat}
               onClick={() => handleCategoryClick(cat)}
               className={`cursor-pointer transition-colors ${filters.category === cat ? "text-brand-blue font-bold" : "text-gray-600 hover:text-brand-blue"}`}
@@ -113,11 +114,12 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilters }) =>
       {/* Brands */}
       <FilterSection title="Brands">
         {["Samsung", "Apple", "Huawei", "Pocco", "Lenovo"].map((brand) => (
-          <Checkbox 
+          <Checkbox
             key={brand}
-            label={brand} 
+            label={brand}
             checked={filters.brands.includes(brand)}
             onChange={() => handleBrandToggle(brand)}
+            size="lg"
           />
         ))}
         <span className="text-brand-blue text-sm font-medium mt-1 cursor-pointer">See all</span>
@@ -159,10 +161,10 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilters }) =>
       {/* Condition */}
       <FilterSection title="Condition">
         {["Any", "Refurbished", "Brand new", "Old items"].map((cond) => (
-          <Radio 
+          <Radio
             key={cond}
-            name="condition" 
-            label={cond} 
+            name="condition"
+            label={cond}
             checked={filters.condition === cond}
             onChange={() => handleConditionChange(cond)}
           />
@@ -172,10 +174,11 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilters }) =>
       {/* Ratings */}
       <FilterSection title="Ratings">
         {[5, 4, 3, 2].map((val) => (
-          <div key={val} className="flex items-center gap-2 group cursor-pointer">
-            <Checkbox 
-               checked={filters.ratings.includes(val)}
-               onChange={() => handleRatingToggle(val)}
+          <div key={val} className="flex items-center gap-2 group cursor-pointer" onClick={() => handleRatingToggle(val)}>
+            <Checkbox
+              checked={filters.ratings.includes(val)}
+              onChange={() => handleRatingToggle(val)}
+              size="lg"
             />
             <Rating value={val} />
           </div>

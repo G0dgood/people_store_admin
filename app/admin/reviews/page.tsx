@@ -137,9 +137,9 @@ export default function ReviewListing() {
         </div>
       </div>
 
-      <div className="bg-white rounded-[6px] border border-gray-100 shadow-sm overflow-hidden flex flex-col">
+      <div className="bg-white overflow-hidden flex flex-col border border-[#1C1C1C1A] rounded-[6px]">
         {/* Filter Controls Bar */}
-        <div className="p-6 flex flex-col xl:flex-row gap-6 items-center justify-between border-b border-gray-50">
+        <div className="p-4 sm:p-6 flex flex-col lg:flex-row gap-6 items-center justify-between border-b border-gray-50">
           <TabFilter
             tabs={["All reviews", "Published", "Pending", "Spam"]}
             activeTab={activeTab}
@@ -164,14 +164,6 @@ export default function ReviewListing() {
                 className="!p-2.5 text-gray-400"
               >
                 <Icon name="sort" folder="dashboardIcon" size="sm" />
-              </Button>
-              <Button
-                variant="outline"
-                shape="rounded-sm"
-                className="text-gray-400 flex items-center gap-2 px-4 shadow-sm"
-              >
-                <Icon name="filter" folder="dashboardIcon" size="sm" />
-                <span className="text-xs font-bold text-[#1D3557]">Filters</span>
               </Button>
             </div>
           </div>

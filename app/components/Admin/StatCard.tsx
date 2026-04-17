@@ -40,7 +40,7 @@ export const StatCard: React.FC<StatCardProps> = ({
         setIsDropdownOpen(false);
       }
     };
-    
+
     if (isDropdownOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
@@ -49,37 +49,37 @@ export const StatCard: React.FC<StatCardProps> = ({
 
   const actions = [
     {
-       label: "Refresh metric",
-       subtext: "Poll latest data from the server",
-       icon: <MdRefresh />,
-       onClick: () => console.log("Refresh", title)
+      label: "Refresh metric",
+      subtext: "Poll latest data from the server",
+      icon: <MdRefresh />,
+      onClick: () => console.log("Refresh", title)
     },
     {
-       label: "Export Trend",
-       subtext: "Download CSV of current period",
-       icon: <MdDownload />,
-       onClick: () => console.log("Export", title)
+      label: "Export Trend",
+      subtext: "Download CSV of current period",
+      icon: <MdDownload />,
+      onClick: () => console.log("Export", title)
     },
     {
-       label: "Copy Analytics ID",
-       subtext: "Useful for deep-link debugging",
-       icon: <MdContentCopy />,
-       onClick: () => console.log("Copy ID", title)
+      label: "Copy Analytics ID",
+      subtext: "Useful for deep-link debugging",
+      icon: <MdContentCopy />,
+      onClick: () => console.log("Copy ID", title)
     },
     {
-       label: "Pin to Home",
-       subtext: "Keep this metric on login",
-       icon: <MdPushPin />,
-       onClick: () => console.log("Pin", title)
+      label: "Pin to Home",
+      subtext: "Keep this metric on login",
+      icon: <MdPushPin />,
+      onClick: () => console.log("Pin", title)
     }
   ];
 
   return (
-    <div className="bg-white p-6 rounded-[6px] border border-gray-100 shadow-sm flex flex-col gap-4 relative group transition-all hover:shadow-md">
+    <div className="bg-white p-6 rounded-[6px] border border-[#1C1C1C1A] flex flex-col gap-4 relative group transition-all hover:shadow-md">
       <div className="flex justify-between items-start">
         <h3 className="text-[13px] font-black text-gray-400 uppercase tracking-widest leading-none">{title}</h3>
         <div className="relative" ref={dropdownRef}>
-          <button 
+          <button
             className={`transition-colors p-1 rounded-md ${isDropdownOpen ? "bg-brand-blue-light text-brand-blue" : "text-gray-300 hover:text-gray-600"}`}
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
@@ -90,7 +90,7 @@ export const StatCard: React.FC<StatCardProps> = ({
             <div className="absolute top-full right-0 mt-1 z-50">
               <DropdownMenu width={220} className="shadow-2xl border-gray-100">
                 {actions.map((action, i) => (
-                  <DropdownItem 
+                  <DropdownItem
                     key={i}
                     label={action.label}
                     subtext={action.subtext}

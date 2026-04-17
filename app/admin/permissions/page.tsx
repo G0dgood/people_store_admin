@@ -119,7 +119,7 @@ export default function PermissionsListing() {
 
       <div className="bg-white rounded-[6px] border border-gray-100 shadow-sm overflow-hidden flex flex-col">
         {/* Filter Controls Bar */}
-        <div className="p-6 flex flex-col xl:flex-row gap-6 items-center justify-between border-b border-gray-50">
+        <div className="p-4 sm:p-6 flex flex-col lg:flex-row gap-6 items-center justify-between border-b border-gray-50">
           <TabFilter
             tabs={["All roles", "Admin", "Staff", "User"]}
             activeTab={activeTab}

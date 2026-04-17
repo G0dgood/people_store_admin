@@ -73,28 +73,28 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
         </div>
 
         <div className="flex flex-col gap-2 mt-2">
-          <h3 className="text-xl font-black text-gray-900 leading-tight">{title}</h3>
-          <p className="text-sm text-gray-500 font-medium leading-relaxed px-4">
+          <h3 className="text-lg sm:text-xl font-black text-gray-900 leading-tight">{title}</h3>
+          <p className="text-[13px] sm:text-sm text-gray-500 font-medium leading-relaxed px-4">
             {message}
           </p>
         </div>
 
-        <div className="flex flex-col w-full gap-3 mt-4">
+        <div className="flex flex-row w-full gap-3 mt-4">
           <Button
-            className={`w-full h-12 font-black text-white border-transparent shadow-lg ${config.shadow} transition-all active:scale-95 ${config.buttonBg}`}
+            variant="ghost"
+            className="flex-1 h-10 sm:h-12 font-bold text-gray-500 hover:text-gray-700 hover:bg-gray-50"
+            onClick={onClose}
+          >
+            {cancelText}
+          </Button>
+          <Button
+            className={`flex-1 h-10 sm:h-12 font-black text-white border-transparent shadow-lg ${config.shadow} transition-all active:scale-95 ${config.buttonBg}`}
             onClick={() => {
               onConfirm();
               onClose();
             }}
           >
             {confirmText}
-          </Button>
-          <Button
-            variant="ghost"
-            className="w-full h-12 font-bold text-gray-500 hover:text-gray-700 hover:bg-gray-50"
-            onClick={onClose}
-          >
-            {cancelText}
           </Button>
         </div>
       </div>

@@ -49,6 +49,11 @@
   --brand-orange-light: #FFF3E0;
   --brand-orange: #FF9800;
   --brand-red: #F44336;
+
+  /* Status Colors (for OfflineBanner and alerts) */
+  --status-success: #10B981;
+  --status-warning: #F59E0B;
+  --status-error: #EF4444;
 }
 
 @theme inline {
@@ -211,13 +216,33 @@ main {
 
 @media (max-width: 768px) {
   #page-wrapper {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto 1fr;
     grid-template-areas:
-      "header header"
-      "main main"
-      "footer footer";
-    height: 100dvh;
+      "sidenav header"
+      "sidenav main"
+      "sidenav footer";
+    grid-template-columns: 0px 100%;
+    grid-template-rows: 70px 1fr auto;
+    width: 100vw;
+    overflow-x: hidden;
+    transition: grid-template-columns 0.3s ease;
+  }
+
+  #footer {
+    width: 100%;
+  }
+
+  #page-wrapper.mobile-nav-open {
+    grid-template-areas:
+      "sidenav header"
+      "sidenav main"
+      "sidenav footer";
+    grid-template-columns: 16rem 100%;
+    overflow-x: hidden;
+  }
+
+  #page-wrapper.mobile-nav-open #sidenav {
+    display: flex;
+    transform: translateX(0);
   }
 
   main {

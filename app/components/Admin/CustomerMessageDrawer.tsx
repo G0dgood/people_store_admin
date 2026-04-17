@@ -104,7 +104,7 @@ export function CustomerMessageDrawer({ isOpen, onClose, customer }: CustomerMes
           
           <Button 
             variant="primary" 
-            className="w-full h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-[#1D3557]/10"
+            className="w-full h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-[#1D3557]/10"
             disabled={!messageText.trim()}
             iconRight={<Icon name="arrow_forward" folder="icon" size="sm" />}
             onClick={() => {

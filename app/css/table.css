@@ -72,6 +72,9 @@ table > tfoot > tr > td  {
 .text-right { text-align: right; }
 .admin-table-container {
   padding: 0 1.5rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
 }
 
 /* Pagination Footer (Classes still used for layout) */

@@ -11,6 +11,7 @@ interface DrawerProps {
   title?: string;
   children: React.ReactNode;
   width?: string;
+  rightElement?: React.ReactNode;
 }
 
 export default function Drawer({
@@ -19,6 +20,7 @@ export default function Drawer({
   title,
   children,
   width = "max-w-md",
+  rightElement,
 }: DrawerProps) {
   const [mounted, setMounted] = React.useState(false);
 
@@ -63,12 +65,15 @@ export default function Drawer({
             {/* Header */}
             <div className="flex items-center justify-between px-8 py-6 border-b border-gray-100 flex-shrink-0">
               <h3 className="text-[18px] font-black text-[#1D3557]">{title}</h3>
-              <button
-                onClick={onClose}
-                className="p-2 -mr-2 rounded-full hover:bg-gray-50 text-gray-400 hover:text-gray-600 transition-all active:scale-95"
-              >
-                <IoMdClose size={24} />
-              </button>
+              <div className="flex items-center gap-3">
+                {rightElement && rightElement}
+                <button
+                  onClick={onClose}
+                  className="p-2 -mr-2 rounded-full hover:bg-gray-50 text-gray-400 hover:text-gray-600 transition-all active:scale-95"
+                >
+                  <IoMdClose size={24} />
+                </button>
+              </div>
             </div>
 
             {/* Content */}

@@ -11,28 +11,40 @@ import { useState, useRef, useEffect } from "react";
 
 import { useUser } from "../../context/UserContext";
 import { HiUser } from "react-icons/hi2";
+import { RxHamburgerMenu } from "react-icons/rx";
+import { IoMdClose } from "react-icons/io";
+import Modal from "../Modal/Modal";
+import { NotificationList } from "./AdminNotificationDropdown";
 
-export const AdminHeader: React.FC = () => {
+type HeaderProps = {
+  onOpenMenu?: () => void;
+  className?: string;
+  isOpen?: boolean;
+  role?: string;
+};
+
+export const AdminHeader: React.FC<HeaderProps> = ({ onOpenMenu, className, isOpen, role }) => {
   const { userImage } = useUser();
   const pathname = usePathname();
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  
+
   const notificationRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   // Close dropdowns on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
-      
+
       if (notificationRef.current && !notificationRef.current.contains(target)) {
         setIsNotificationsOpen(false);
       }
-      
+
       if (profileRef.current && !profileRef.current.contains(target)) {
         setIsProfileOpen(false);
       }
@@ -41,9 +53,19 @@ export const AdminHeader: React.FC = () => {
         setIsSearchOpen(false);
       }
     };
-    
+
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Responsive check
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   const toggleNotifications = () => {
@@ -74,18 +96,37 @@ export const AdminHeader: React.FC = () => {
     if (pathname.includes("/admin/customers")) return "Customer List";
     if (pathname.includes("/admin/brands")) return "Brand List";
     if (pathname.includes("/admin/transactions")) return "Transactions";
+    if (pathname.includes("/admin/refunds")) return "Refund Management";
+    if (pathname.includes("/admin/support")) return "Support Tickets";
     if (pathname.includes("/admin/coupons")) return "Coupon Code";
+    if (pathname.includes("/admin/deals")) return "Deals and Offers";
     if (pathname.includes("/admin/reviews")) return "Product Reviews";
     if (pathname.includes("/admin/permissions")) return "Permissions";
     if (pathname.includes("/admin/categories")) return "Categories";
     if (pathname.includes("/admin/notifications")) return "Notification Center";
+    if (pathname.includes("/admin/faq")) return "FAQ Management";
     return "Admin Panel";
   };
 
   return (
-    <header id="header" className="h-20 bg-white border-b border-gray-100 flex items-center justify-between px-12 sticky top-0 z-30">
-      <div className="flex-shrink-0 mr-8">
-        <h1 className="text-[20px] font-black text-[#1D3557] tracking-tight truncate max-w-[200px] xl:max-w-none">
+    <header id="header" className={`  bg-white border-b border-gray-100 flex items-center justify-between px-4 sm:px-12 sticky top-0 z-30 ${className}`}>
+      <div className="flex items-center gap-3">
+        <button
+          type="button"
+          className="sm:hidden text-neutral-900 relative flex items-center justify-center w-8 h-8"
+          onClick={onOpenMenu}
+        >
+          <div className={`absolute inset-0 transition-all duration-300 ease-in-out flex items-center justify-center ${isOpen ? 'opacity-0 rotate-180 scale-0' : 'opacity-100 rotate-0 scale-100'}`}>
+            <RxHamburgerMenu size={20} />
+          </div>
+          <div className={`absolute inset-0 transition-all duration-300 ease-in-out flex items-center justify-center ${isOpen ? 'opacity-100 rotate-0 scale-100' : 'opacity-0 -rotate-180 scale-0'}`}>
+            <IoMdClose size={20} />
+          </div>
+        </button>
+
+      </div>
+      <div className="flex-shrink-0 mr-4 sm:mr-8">
+        <h1 className="text-[16px] sm:text-[20px] font-black text-[#1D3557] tracking-tight truncate max-w-[150px] sm:max-w-[200px] xl:max-w-none">
           {getPageTitle()}
         </h1>
       </div>
@@ -113,9 +154,9 @@ export const AdminHeader: React.FC = () => {
         <div className="flex items-center gap-6">
           {/* Notifications */}
           <div className="relative" ref={notificationRef}>
-            <button 
+            <button
               className={`relative p-2 transition-colors group rounded-lg
-                ${isNotificationsOpen ? "bg-brand-blue-light text-brand-blue shadow-sm" : "text-gray-400 hover:text-brand-blue"}
+                ${isNotificationsOpen ? "bg-brand-blue-light text-brand-blue border border-[#1C1C1C1A]" : "text-gray-400 hover:text-brand-blue"}
               `}
               onClick={toggleNotifications}
             >
@@ -123,13 +164,25 @@ export const AdminHeader: React.FC = () => {
               <span className="absolute top-2 right-2 w-[7px] h-[7px] bg-red-500 rounded-full border border-white"></span>
             </button>
 
-            {isNotificationsOpen && <AdminNotificationDropdown />}
+            {isNotificationsOpen && !isMobile && <AdminNotificationDropdown />}
+
+            {isMobile && (
+              <Modal
+                isOpen={isNotificationsOpen}
+                onClose={() => setIsNotificationsOpen(false)}
+                hideHeaderBorder={true}
+                className="p-0"
+                size="md"
+              >
+                <NotificationList onAction={() => setIsNotificationsOpen(false)} />
+              </Modal>
+            )}
           </div>
 
           {/* Theme Toggle Switch */}
           <div className="flex items-center">
             <button className="w-12 h-7 bg-brand-blue-light rounded-full p-1 flex items-center relative transition-colors cursor-pointer">
-              <div className="w-5 h-5 bg-white rounded-full shadow-sm flex items-center justify-center transition-all transform">
+              <div className="w-5 h-5 bg-white rounded-full border border-[#1C1C1C1A] flex items-center justify-center transition-all transform">
                 <Icon name="Group" folder="dashboardIcon" size="xs" className="text-gray-400 opacity-60" />
               </div>
             </button>
@@ -137,9 +190,9 @@ export const AdminHeader: React.FC = () => {
 
           {/* User Profile */}
           <div className="relative" ref={profileRef}>
-            <div 
-              className={`w-11 h-11 rounded-full border-2 overflow-hidden shadow-sm cursor-pointer hover:shadow-md transition-all flex items-center justify-center bg-brand-blue-light
-                ${isProfileOpen ? "border-brand-blue shadow-blue-100 scale-105" : "border-gray-200 hover:border-brand-blue/50"}
+            <div
+              className={`w-11 h-11 rounded-full border border-[#1C1C1C1A] overflow-hidden cursor-pointer transition-all flex items-center justify-center bg-brand-blue-light
+                ${isProfileOpen ? "border-brand-blue scale-105" : "hover:border-brand-blue/50"}
               `}
               onClick={toggleProfile}
             >

@@ -61,11 +61,12 @@ export default function CouponsListing() {
   return (
     <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
       {/* Header Area */}
-      <div className="flex justify-end items-center">
-        <div className="flex gap-3">
+      <div className="flex flex-col sm:flex-row justify-end items-center gap-3">
+        <div className="flex gap-3 w-full sm:w-auto">
           <Button
             variant="primary"
             shape="rounded-sm"
+            className="flex-1 sm:flex-initial"
             iconLeft={<Icon name="ticket" folder="dashboardIcon" size="sm" />}
             onClick={() => setIsAddModalOpen(true)}
           >
@@ -74,6 +75,7 @@ export default function CouponsListing() {
           <Button
             variant="outline"
             shape="rounded-sm"
+            className="flex-1 sm:flex-initial"
             iconRight={<Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" className="text-gray-400" />}
             onClick={() => setIsMoreActionsOpen(true)}
           >
@@ -82,48 +84,50 @@ export default function CouponsListing() {
         </div>
       </div>
 
-      <div className="bg-white rounded-[6px] border border-gray-100 shadow-sm overflow-hidden flex flex-col">
+      <div className="bg-white rounded-[6px] overflow-hidden flex flex-col border border-[#1C1C1C1A] rounded-[6px]">
         {/* Filter Controls Row */}
-        <div className="p-6 flex flex-col xl:flex-row gap-6 items-center justify-between border-b border-gray-50">
+        <div className="p-4 sm:p-6 flex flex-col lg:flex-row gap-6 items-center justify-between border-b border-gray-50">
           <TabFilter
             tabs={["All coupons", "Active", "Inactive", "Expired"]}
             activeTab={activeTab}
             onChange={setActiveTab}
           />
 
-          <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
+          <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
             <Input
               type="text"
               placeholder="Search coupon code"
-              containerClassName="flex-1 xl:w-72"
+              containerClassName="w-full lg:w-80 xl:w-72"
               className="bg-white border-gray-100 placeholder:text-gray-400 text-sm font-medium"
               suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
             />
 
-            <RowsPerPage value={rowsPerPage} onChange={setRowsPerPage} />
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              <RowsPerPage value={rowsPerPage} onChange={setRowsPerPage} />
 
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                shape="rounded-sm"
-                className="!p-2.5 text-gray-400"
-              >
-                <Icon name="sort" folder="dashboardIcon" size="sm" />
-              </Button>
-              <Button
-                variant="outline"
-                shape="rounded-sm"
-                className="!p-2.5 text-gray-400"
-              >
-                <Icon name="flowbite_arrow-up-down-outline" folder="dashboardIcon" size="sm" />
-              </Button>
-              <Button
-                variant="outline"
-                shape="rounded-sm"
-                className="!p-2.5 text-gray-400"
-              >
-                <Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />
-              </Button>
+              <div className="flex gap-2 ml-auto sm:ml-0">
+                <Button
+                  variant="outline"
+                  shape="rounded-sm"
+                  className="!p-2.5 text-gray-400"
+                >
+                  <Icon name="sort" folder="dashboardIcon" size="sm" />
+                </Button>
+                <Button
+                  variant="outline"
+                  shape="rounded-sm"
+                  className="!p-2.5 text-gray-400"
+                >
+                  <Icon name="flowbite_arrow-up-down-outline" folder="dashboardIcon" size="sm" />
+                </Button>
+                <Button
+                  variant="outline"
+                  shape="rounded-sm"
+                  className="!p-2.5 text-gray-400"
+                >
+                  <Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />
+                </Button>
+              </div>
             </div>
           </div>
         </div>

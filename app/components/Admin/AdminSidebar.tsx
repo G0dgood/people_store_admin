@@ -5,14 +5,24 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon } from "../Icon";
 import { ConfirmationModal } from "./ConfirmationModal";
+import { motion, AnimatePresence } from "framer-motion";
+import { HiChevronDown, HiOutlineQuestionMarkCircle } from "react-icons/hi2";
+import { RiPercentLine } from "react-icons/ri";
 
 interface NavGroup {
   title: string;
   items: {
     name: string;
     href: string;
-    icon: string;
+    icon: string | React.ReactNode;
   }[];
+}
+
+interface SidenavProps {
+  activeItem?: string;
+  isOpen?: boolean;
+  onClose?: () => void;
+  role?: string;
 }
 
 const navGroups: NavGroup[] = [
@@ -25,7 +35,11 @@ const navGroups: NavGroup[] = [
       { name: "Coupon Code", href: "/admin/coupons", icon: "ticket" },
       { name: "Categories", href: "/admin/categories", icon: "circle-square" },
       { name: "Transaction", href: "/admin/transactions", icon: "famicons_card-outline" },
+      { name: "Refund", href: "/admin/refunds", icon: "arrow-refresh-06" },
+      { name: "Support", href: "/admin/support", icon: "tabler_message" },
+      { name: "FAQ Management", href: "/admin/faq", icon: <HiOutlineQuestionMarkCircle size={18} /> },
       { name: "Brand", href: "/admin/brands", icon: "star" },
+      { name: "Deals and Offers", href: "/admin/deals", icon: <RiPercentLine size={18} /> },
       { name: "Notifications", href: "/admin/notifications", icon: "Bell outline" },
     ],
   },
@@ -47,13 +61,30 @@ const navGroups: NavGroup[] = [
   },
 ];
 
-export const AdminSidebar: React.FC = () => {
+export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard", isOpen, onClose, role: propRole }: SidenavProps) => {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = React.useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = React.useState(false);
 
+  // Initialize expanded groups - default to expanded for groups containing the active path
+  const [expandedGroups, setExpandedGroups] = React.useState<string[]>(() => {
+    return navGroups
+      .filter(group => group.items.some(item => pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href + "/"))))
+      .map(group => group.title);
+  });
+
+  const toggleGroup = (title: string) => {
+    setExpandedGroups(prev =>
+      prev.includes(title) ? prev.filter(t => t !== title) : [...prev, title]
+    );
+  };
+
   return (
-    <aside id="sidenav" className={`${isCollapsed ? "w-20" : "w-64"} bg-white border-r border-gray-100 h-screen sticky top-0 flex flex-col transition-all duration-300 ease-in-out`}>
+    <aside id="sidenav"
+      // className={`${isCollapsed ? "w-20" : "w-64"} bg-white border-r border-gray-100 h-screen sticky top-0 flex flex-col transition-all duration-300 ease-in-out`}
+      className={`${isCollapsed ? "w-20" : "w-64"} h-full shrink-0 flex-col justify-between bg-white transition-transform duration-300 ease-in-out sm:flex sm:translate-x-0 ${isOpen ? "fixed inset-y-0 left-0 z-50 flex translate-x-0" : "hidden -translate-x-full sm:flex"
+        }`}
+    >
       {/* Brand */}
       <div className={`p-8 flex items-center ${isCollapsed ? "justify-center px-4" : "justify-between"}`}>
         <div className="flex items-center gap-2">
@@ -80,49 +111,80 @@ export const AdminSidebar: React.FC = () => {
       </div>
 
       <nav className="flex-1 overflow-y-auto px-4 py-2 flex flex-col gap-6 custom-scrollbar pb-8">
-        {navGroups.map((group) => (
-          <div key={group.title} className="flex flex-col gap-1">
-            {!isCollapsed && (
-              <h4 className="px-4 text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">
-                {group.title}
-              </h4>
-            )}
-            {group.items.map((item) => {
-              // Exact match or sub-path match (e.g., /admin/orders/1 matches /admin/orders)
-              const isMatch = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href + "/"));
+        {navGroups.map((group) => {
+          const isExpanded = expandedGroups.includes(group.title) || !group.title;
+          const hasActiveChild = group.items.some(item => pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href + "/")));
 
-              // Ensure we don't highlight a base path if a more specific sibling path is also a match
-              const isMoreSpecificMatch = navGroups.flatMap(g => g.items).some(other =>
-                other.href !== item.href &&
-                other.href.startsWith(item.href + "/") &&
-                (pathname === other.href || pathname.startsWith(other.href + "/"))
-              );
-
-              const isActive = isMatch && !isMoreSpecificMatch;
-
-              return (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  title={isCollapsed ? item.name : ""}
-                  className={`flex items-center gap-3 px-4 py-2.5 rounded-md transition-all text-sm font-medium ${isCollapsed ? "justify-center px-2" : ""} ${isActive
-                    ? "bg-brand-blue text-white shadow-md shadow-blue-100"
-                    : "text-gray-500 hover:bg-brand-blue-light hover:text-brand-blue"
-                    }`}
+          return (
+            <div key={group.title} className="flex flex-col gap-1">
+              {!isCollapsed && group.title && (
+                <button
+                  onClick={() => toggleGroup(group.title)}
+                  className="px-4 py-2 flex items-center justify-between group/title w-full"
                 >
-                  <Icon name={item.icon} folder="dashboardIcon" size="sm" />
-                  {!isCollapsed && <span>{item.name}</span>}
-                </Link>
-              );
-            })}
-          </div>
-        ))}
+                  <h4 className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-hover/title:text-brand-blue transition-colors">
+                    {group.title}
+                  </h4>
+                  <HiChevronDown 
+                    size={14} 
+                    className={`text-gray-300 transition-transform duration-300 ${isExpanded ? "rotate-180" : ""} group-hover/title:text-brand-blue`} 
+                  />
+                </button>
+              )}
+              
+              <AnimatePresence initial={false}>
+                {(isExpanded || isCollapsed || !group.title) && (
+                  <motion.div
+                    initial={!group.title ? false : { height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    className="overflow-hidden flex flex-col gap-1"
+                  >
+                    {group.items.map((item) => {
+                      // Exact match or sub-path match (e.g., /admin/orders/1 matches /admin/orders)
+                      const isMatch = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href + "/"));
+
+                      // Ensure we don't highlight a base path if a more specific sibling path is also a match
+                      const isMoreSpecificMatch = navGroups.flatMap(g => g.items).some(other =>
+                        other.href !== item.href &&
+                        other.href.startsWith(item.href + "/") &&
+                        (pathname === other.href || pathname.startsWith(other.href + "/"))
+                      );
+
+                      const isActive = isMatch && !isMoreSpecificMatch;
+
+                      return (
+                        <Link
+                          key={item.name}
+                          href={item.href}
+                          title={isCollapsed ? item.name : ""}
+                          className={`flex items-center gap-3 px-4 py-2.5 rounded-md transition-all text-sm font-medium ${isCollapsed ? "justify-center px-2" : ""} ${isActive
+                            ? "bg-brand-blue text-white shadow-md shadow-blue-100"
+                            : "text-gray-500 hover:bg-brand-blue-light hover:text-brand-blue"
+                            }`}
+                        >
+                          {typeof item.icon === "string" ? (
+                             <Icon name={item.icon} folder="dashboardIcon" size="sm" />
+                          ) : (
+                             item.icon
+                          )}
+                          {!isCollapsed && <span>{item.name}</span>}
+                        </Link>
+                      );
+                    })}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          );
+        })}
       </nav>
 
       {/* Footer Profile & Shop */}
       <div className="p-4 flex flex-col gap-4 border-t border-gray-50">
         <div className={`flex items-center ${isCollapsed ? "justify-center px-0" : "justify-between px-2"}`}>
-          <div 
+          <div
             onClick={() => setIsLogoutModalOpen(true)}
             className="flex items-center gap-3 min-w-0 group cursor-pointer"
           >
@@ -137,7 +199,7 @@ export const AdminSidebar: React.FC = () => {
             )}
           </div>
           {!isCollapsed && (
-            <button 
+            <button
               className="text-gray-400 hover:text-red-500 transition-colors"
               onClick={() => setIsLogoutModalOpen(true)}
             >

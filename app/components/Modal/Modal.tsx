@@ -10,7 +10,7 @@ interface ModalProps {
   onClose: () => void;
   title?: string;
   children: React.ReactNode;
-  size?: "sm" | "md" | "lg" | "xl" | "normal" | "large";
+  size?: "sm" | "md" | "lg" | "xl" | "2xl" | "normal" | "large";
   footer?: React.ReactNode;
   className?: string;
   hideHeaderBorder?: boolean;
@@ -51,6 +51,7 @@ export default function Modal({
     md: "max-w-lg",
     lg: "max-w-2xl",
     xl: "max-w-4xl",
+    "2xl": "max-w-7xl",
     normal: "max-w-lg",
     large: "max-w-2xl",
   };
@@ -58,7 +59,7 @@ export default function Modal({
   const modalContent = (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-9999 flex items-center justify-center px-8">
+        <div className="fixed inset-0 z-9999 flex items-center justify-center px-4 sm:px-8">
           {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -75,7 +76,7 @@ export default function Modal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className={`relative bg-white rounded-2xl text-left overflow-hidden shadow-2xl ${sizeClasses[size]} w-full md:w-[60%] z-50 max-h-[85vh] flex flex-col`}
+            className={`relative bg-white rounded-2xl text-left overflow-hidden shadow-2xl ${sizeClasses[size]} w-[100%] md:w-full z-50 max-h-[85vh] flex flex-col`}
           >
             {header ? (
               header
@@ -88,10 +89,10 @@ export default function Modal({
               />
             )}
 
-            <div className="px-8 py-6 overflow-y-auto flex-1">{children}</div>
+            <div className="px-4 sm:px-8 py-6 overflow-y-auto flex-1">{children}</div>
 
             {footer && (
-              <div className="px-8 py-6 bg-white border-t border-gray-50">
+              <div className="px-4 sm:px-8 py-6 bg-white border-t border-gray-50">
                 {footer}
               </div>
             )}

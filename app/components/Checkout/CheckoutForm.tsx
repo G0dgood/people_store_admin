@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { Input } from "@/app/components/Form";
+import { Input, Radio } from "@/app/components/Form";
 import { Button } from "@/app/components/Button";
 import { Icon } from "@/app/components/Icon";
 
@@ -102,17 +102,18 @@ export const CheckoutForm: React.FC = () => {
                   ? "border-brand-blue bg-brand-blue-light/30 shadow-[0_4px_12px_rgb(0,181,23,0.05)]"
                   : "border-gray-50 bg-gray-50/30 hover:border-brand-blue/30 hover:bg-white"}`}
             >
-              <div className="flex items-center justify-between w-full">
-                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all
-                  ${paymentMethod === "card" ? "border-brand-blue" : "border-gray-300"}`}>
-                  {paymentMethod === "card" && <div className="w-2.5 h-2.5 bg-brand-blue rounded-full" />}
-                </div>
-                <div className="flex gap-2">
-                  <Image src="/payment/Payment=payment, Pay-type=visa.png" alt="Visa" width={32} height={20} className="object-contain" />
-                  <Image src="/payment/Payment=payment, Pay-type=mastercard.png" alt="Mastercard" width={32} height={20} className="object-contain" />
-                </div>
-              </div>
-              <div>
+              <Radio
+                name="paymentMethod"
+                checked={paymentMethod === "card"}
+                onChange={() => setPaymentMethod("card")}
+                rightElement={
+                  <div className="flex gap-2">
+                    <Image src="/payment/Payment=payment, Pay-type=visa.png" alt="Visa" width={32} height={20} className="object-contain" />
+                    <Image src="/payment/Payment=payment, Pay-type=mastercard.png" alt="Mastercard" width={32} height={20} className="object-contain" />
+                  </div>
+                }
+              />
+              <div className="relative z-10 pointer-events-none">
                 <span className={`font-bold text-[13px] block ${paymentMethod === "card" ? "text-gray-900" : "text-gray-500"}`}>Credit / Debit Card</span>
                 <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-0.5">Instant confirmation</span>
               </div>
@@ -125,14 +126,14 @@ export const CheckoutForm: React.FC = () => {
                   ? "border-[#0070BA] bg-brand-blue-light/30 shadow-[0_4px_12px_rgb(0,112,186,0.05)]"
                   : "border-gray-50 bg-gray-50/30 hover:border-[#0070BA]/30 hover:bg-white"}`}
             >
-              <div className="flex items-center justify-between w-full">
-                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all
-                  ${paymentMethod === "paypal" ? "border-[#0070BA]" : "border-gray-300"}`}>
-                  {paymentMethod === "paypal" && <div className="w-2.5 h-2.5 bg-[#0070BA] rounded-full" />}
-                </div>
-                <Icon name="paypal" size="sm" className="text-[#0070BA] opacity-80" />
-              </div>
-              <div>
+              <Radio
+                name="paymentMethod"
+                checked={paymentMethod === "paypal"}
+                onChange={() => setPaymentMethod("paypal")}
+                icon="paypal"
+                activeColor="#0070BA"
+              />
+              <div className="relative z-10 pointer-events-none">
                 <span className={`font-bold text-[13px] block ${paymentMethod === "paypal" ? "text-gray-900" : "text-gray-500"}`}>PayPal Express</span>
                 <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-0.5">Redirect to PayPal</span>
               </div>

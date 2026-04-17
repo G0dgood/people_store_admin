@@ -111,16 +111,16 @@ export function EditBrandDrawer({ isOpen, onClose, brand }: EditBrandDrawerProps
         <div className="mt-auto pt-8 border-t border-gray-50 flex flex-col gap-3">
           <Button 
             variant="primary" 
-            type="submit"
-            className="w-full h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
+            type="submit" 
+            className="w-full h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
           >
-            Save Changes
+            Update Brand
           </Button>
           <Button 
-            variant="ghost" 
+            variant="outline" 
             type="button" 
-            onClick={onClose}
-            className="w-full h-12 text-[11px] font-bold text-gray-400 hover:text-gray-900"
+            onClick={onClose} 
+            className="w-full h-10 sm:h-12 text-[11px] font-bold text-gray-400 hover:text-gray-900"
           >
             Cancel
           </Button>

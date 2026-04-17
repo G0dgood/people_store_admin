@@ -31,9 +31,9 @@ const Footer = () => {
     {
       title: "Information",
       links: [
-        { label: "Help Center", href: "#" },
+        { label: "Help Center", href: "/faq" },
         { label: "Money Refund", href: "#" },
-        { label: "Shipping", href: "#" },
+        { label: "Shipping", href: "/faq" },
         { label: "Contact us", href: "#" }
       ],
     },

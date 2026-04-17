@@ -37,7 +37,7 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
       <form onSubmit={handleSubmit}>
         <ModalBody className="flex flex-col gap-6">
           <div className="flex flex-col gap-2">
-            <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Category Name</label>
+            <label className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Category Name</label>
             <Input
               placeholder="e.g. Electronics, Fashion, etc."
               value={formData.name}
@@ -48,7 +48,7 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
           </div>
 
           <div className="flex flex-col gap-2">
-            <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Category Image Path</label>
+            <label className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Category Image Path</label>
             <div className="flex gap-4">
               <Input
                 placeholder="/dashboardImage/example.png"
@@ -70,7 +70,7 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
           </div>
 
           <div className="flex flex-col gap-2">
-            <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Description (Optional)</label>
+            <label className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Description (Optional)</label>
             <Textarea
               placeholder="Brief description of this category..."
               value={formData.description}
@@ -85,14 +85,14 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
             variant="outline" 
             type="button" 
             onClick={onClose} 
-            className="px-8 h-12 text-[11px] font-bold"
+            className="px-8 h-10 sm:h-12 text-[11px] font-bold"
           >
             Cancel
           </Button>
           <Button 
             variant="primary" 
             type="submit" 
-            className="px-8 h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
+            className="px-8 h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
           >
             Create Category
           </Button>

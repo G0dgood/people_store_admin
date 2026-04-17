@@ -25,14 +25,12 @@ const metrics: MetricItem[] = [
 
 export function CustomerMetrics({ activeMetric, onMetricClick }: CustomerMetricsProps) {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 items-start border-b border-gray-50 pb-4">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-y-8 gap-x-4 items-start border-b border-gray-50 pb-6 md:pb-4">
       {metrics.map((metric) => (
         <button
           key={metric.id}
           onClick={() => onMetricClick(metric.id)}
-          className={`flex flex-col gap-1 items-start text-left transition-all group relative pr-4 
-            ${metric.hasDivider ? "border-r border-gray-100" : ""}
-          `}
+          className="flex flex-col gap-1 items-start text-left transition-all group relative pr-4 md:border-r md:border-gray-100 last:border-r-0"
         >
           <span className={`text-2xl font-bold transition-colors ${
             activeMetric === metric.id ? "text-blue-600" : "text-[#1D3557] group-hover:text-blue-500"

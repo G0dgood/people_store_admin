@@ -1,6 +1,11 @@
 #sidenav {
   position: relative;
   grid-area: sidenav; 
+  display: block; 
+  overflow: hidden; 
+  /* padding: 20px 0px 10px 25px;  */
+  display: flex;
+  flex-direction: column;
   border-right: 1px solid rgba(28, 28, 28, 0.1);
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
@@ -19,10 +24,16 @@
 /* Media query for small screens */
 @media screen and (max-width: 768px) {
 
-  #side-nav {
+  #sidenav {
     /* display: none; */
-    overflow: hidden;
-    min-width: 16rem;
+     position: fixed !important;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 50;
+    background-color: white;
+    /* Ensure it doesn't mess with grid area since it's fixed */
+    grid-area: auto; 
   }
 
 }
