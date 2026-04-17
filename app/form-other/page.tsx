@@ -55,7 +55,7 @@ export default function FormOtherDemo() {
 
                 <InlineField label="Choose me">
                   <Select
-                    options={[{ id: "1", label: "Option 1" }]}
+                    options={[{ value: "1", label: "Option 1" }]}
                     value="1"
                     onChange={() => { }}
                     className="max-w-[200px]"
