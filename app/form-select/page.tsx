@@ -14,18 +14,18 @@ export default function FormSelectDemo() {
  const [dateValue2, setDateValue2] = useState<Date | undefined>(new Date(2022, 10, 16));
 
  const options = [
-  { id: "select", label: "Select" },
-  { id: "active", label: "Active selected" },
-  { id: "selected", label: "Selected" },
-  { id: "s1", label: "Select 1" },
-  { id: "s2", label: "Select 2" },
-  { id: "other", label: "Other select" },
+  { value: "select", label: "Select" },
+  { value: "active", label: "Active selected" },
+  { value: "selected", label: "Selected" },
+  { value: "s1", label: "Select 1" },
+  { value: "s2", label: "Select 2" },
+  { value: "other", label: "Other select" },
  ];
 
  const tagOptions = [
-  { id: "tag1", label: "Tag input" },
-  { id: "tag2", label: "Tag input" },
-  { id: "tag3", label: "Tag input" },
+  { value: "tag1", label: "Tag input" },
+  { value: "tag2", label: "Tag input" },
+  { value: "tag3", label: "Tag input" },
  ];
 
  return (
