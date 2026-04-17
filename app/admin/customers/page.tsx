@@ -298,11 +298,11 @@ export default function CustomersListing() {
            </div>
           </td>
           <td className="text-right">
-           <div className="flex justify-end gap-2 px-2 transition-opacity">
+           <div className="flex justify-end gap-2 px-2">
             <Button
              variant="outline"
              shape="rounded-sm"
-             className="!p-1.5 text-gray-400 hover:text-brand-blue hover:bg-brand-blue-light transition-all"
+             className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
              onClick={(e) => {
               e.stopPropagation();
               setCustomerToMessage(customer);
@@ -318,6 +318,7 @@ export default function CustomersListing() {
              onClick={(e) => {
               e.stopPropagation();
               setCustomerToDelete(customer);
+              setIsDeleteModalOpen(true);
              }}
             >
              <Icon name="Delete" folder="dashboardIcon" size="sm" />

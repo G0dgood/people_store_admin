@@ -199,28 +199,32 @@ export default function ProductListing() {
            {product.status}
           </span>
          </td>
-         <td className="text-right">
-          <div className="flex justify-end items-center gap-4 text-gray-300">
-           <button
-            className="hover:text-blue-500 transition-colors"
-            onClick={() => {
-             setProductToEdit(product);
-             setIsEditDrawerOpen(true);
-            }}
-           >
-            <Icon name="settings" folder="dashboardIcon" size="sm" />
-           </button>
-           <button
-            className="hover:text-rose-500 transition-colors"
-            onClick={() => {
-             setProductToDelete(product);
-             setIsDeleteModalOpen(true);
-            }}
-           >
-            <Icon name="Delete" folder="dashboardIcon" size="sm" />
-           </button>
-          </div>
-         </td>
+          <td className="text-right">
+           <div className="flex justify-end items-center gap-4">
+            <Button
+              variant="outline"
+              shape="rounded-sm"
+              className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
+              onClick={() => {
+               setProductToEdit(product);
+               setIsEditDrawerOpen(true);
+              }}
+            >
+             <Icon name="settings" folder="dashboardIcon" size="sm" />
+            </Button>
+            <Button
+              variant="outline"
+              shape="rounded-sm"
+              className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
+              onClick={() => {
+               setProductToDelete(product);
+               setIsDeleteModalOpen(true);
+              }}
+            >
+             <Icon name="Delete" folder="dashboardIcon" size="sm" />
+            </Button>
+           </div>
+          </td>
         </tr>
        ))}
       </tbody>

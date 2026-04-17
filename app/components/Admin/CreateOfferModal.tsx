@@ -149,8 +149,8 @@ export function CreateOfferModal({ isOpen, onClose, onSave, initialSelections }:
                 </div>
 
                 <div className="absolute top-4 right-4 z-10">
-                  <Checkbox 
-                    checked={selections[product.id] !== undefined} 
+                  <Checkbox
+                    checked={selections[product.id] !== undefined}
                     onChange={() => toggleProduct(product.id)}
                     size="lg"
                   />
@@ -215,7 +215,6 @@ export function CreateOfferModal({ isOpen, onClose, onSave, initialSelections }:
             </div>
             <Button
               variant="primary"
-              className="w-full h-12 uppercase text-[11px] font-black tracking-widest shadow-lg shadow-blue-100"
               disabled={selectedProductList.length === 0}
               onClick={handleSave}
             >

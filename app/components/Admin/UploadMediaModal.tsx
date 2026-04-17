@@ -85,7 +85,7 @@ export function UploadMediaModal({ isOpen, onClose, onUploadSuccess }: UploadMed
     <Modal isOpen={isOpen} onClose={onClose} title="Upload Product Assets" size="lg">
       <ModalBody className="flex flex-col gap-8 py-4">
         {/* Dropzone Area */}
-        <div 
+        <div
           onClick={() => fileInputRef.current?.click()}
           onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
           onDragLeave={() => setIsDragging(false)}
@@ -95,11 +95,11 @@ export function UploadMediaModal({ isOpen, onClose, onUploadSuccess }: UploadMed
             ${isDragging ? "border-brand-blue bg-blue-50/30" : "border-gray-200 bg-gray-50/50 hover:bg-white hover:border-brand-blue/30 hover:shadow-xl hover:shadow-blue-50/50"}
           `}
         >
-          <input 
-            type="file" 
-            ref={fileInputRef} 
-            className="hidden" 
-            multiple 
+          <input
+            type="file"
+            ref={fileInputRef}
+            className="hidden"
+            multiple
             accept=".jpg,.jpeg,.png,.mp4"
             onChange={handleFileSelect}
           />
@@ -131,7 +131,7 @@ export function UploadMediaModal({ isOpen, onClose, onUploadSuccess }: UploadMed
                       <span className="text-[10px] font-medium text-gray-400">{(file.size / (1024 * 1024)).toFixed(2)} MB</span>
                     </div>
                   </div>
-                  <button 
+                  <button
                     onClick={(e) => { e.stopPropagation(); removeFile(idx); }}
                     className="p-1.5 hover:bg-red-50 text-gray-400 hover:text-red-500 rounded-lg transition-colors"
                   >
@@ -145,34 +145,32 @@ export function UploadMediaModal({ isOpen, onClose, onUploadSuccess }: UploadMed
 
         {/* Requirements Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-           {[
+          {[
             { icon: "verified", label: "Aspect Ratio", text: "Square (1:1) is highly recommended for listing grids." },
             { icon: "verified", label: "Color Space", text: "Use sRGB for consistent color across all browsers." }
-           ].map((req, i) => (
-             <div key={i} className="flex items-start gap-3 p-4 bg-white border border-gray-50 rounded-xl">
-                <Icon name={req.icon} folder="icon" size="xs" className="text-brand-blue mt-0.5" />
-                <div className="flex flex-col gap-0.5">
-                   <span className="text-[11px] font-black text-[#1D3557]">{req.label}</span>
-                   <span className="text-[10px] font-bold text-gray-400 leading-tight">{req.text}</span>
-                </div>
-             </div>
-           ))}
+          ].map((req, i) => (
+            <div key={i} className="flex items-start gap-3 p-4 bg-white border border-gray-50 rounded-xl">
+              <Icon name={req.icon} folder="icon" size="xs" className="text-brand-blue mt-0.5" />
+              <div className="flex flex-col gap-0.5">
+                <span className="text-[11px] font-black text-[#1D3557]">{req.label}</span>
+                <span className="text-[10px] font-bold text-gray-400 leading-tight">{req.text}</span>
+              </div>
+            </div>
+          ))}
         </div>
       </ModalBody>
 
       <ModalFooter className="flex justify-end gap-3 border-t border-gray-50 pt-8 mt-4">
-        <Button 
-          variant="outline" 
-          onClick={onClose} 
-          className="px-8 h-10 sm:h-12 text-[11px] font-bold"
+        <Button
+          variant="outline"
+          onClick={onClose}
         >
           Cancel
         </Button>
-        <Button 
-          variant="primary" 
+        <Button
+          variant="primary"
           onClick={handleUpload}
           disabled={isUploading || stagedFiles.length === 0}
-          className="px-8 h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100 disabled:opacity-50 disabled:shadow-none transition-all"
         >
           {isUploading ? "Uploading..." : "Start Upload"}
         </Button>

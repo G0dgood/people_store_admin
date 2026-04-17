@@ -219,9 +219,9 @@ export default function CategoriesPage() {
                       <Button
                         variant="outline"
                         shape="rounded-sm"
-                        className="!p-1.5 text-gray-400 hover:text-brand-blue hover:bg-brand-blue-light transition-all"
+                        className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
                         onClick={() => {
-                          setCategoryToEdit(p); // Assuming products array used for demo, should be cat
+                          setCategoryToEdit(p); 
                           setIsEditDrawerOpen(true);
                         }}
                       >
@@ -236,7 +236,7 @@ export default function CategoriesPage() {
                           setIsDeleteModalOpen(true);
                         }}
                       >
-                        <Icon name="delete_outline" folder="icon" size="sm" />
+                        <Icon name="Delete" folder="dashboardIcon" size="sm" />
                       </Button>
                     </div>
                   </td>

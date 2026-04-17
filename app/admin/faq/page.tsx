@@ -7,7 +7,6 @@ import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import { StatCard } from "../../components/Admin/StatCard";
 import { TabFilter } from "../../components/Admin/TabFilter";
 import { Input } from "../../components/Form/Inputs";
-import { Checkbox } from "../../components/Form/Checkbox";
 import { Pagination } from "../../components/Admin/Pagination";
 import { RowsPerPage } from "@/app/components/rows-per-page";
 import { Icon } from "../../components/Icon";
@@ -18,6 +17,7 @@ import {
   HiOutlineTrash,
   HiOutlineQuestionMarkCircle,
 } from "react-icons/hi2";
+import Checkbox from "@/app/components/Checkbox";
 
 const initialFAQs = [
   { id: 1, category: "Orders & Tracking", question: "How can I track my order?", answer: "Once your order is shipped, you will receive an email with a tracking number...", lastUpdated: "2023-10-15", status: "Active" },
@@ -128,7 +128,7 @@ export default function FAQManagementPage() {
           <table>
             <thead>
               <tr>
-                <th className="w-10 pl-8">
+                <th className="w-10">
                   <Checkbox
                     checked={selectedIds.length === filteredFAQs.length && filteredFAQs.length > 0}
                     onChange={toggleAll}
@@ -171,24 +171,28 @@ export default function FAQManagementPage() {
                   </td>
                   <td className="pr-8 py-5 text-right">
                     <div className="flex justify-end items-center gap-2">
-                      <button
+                      <Button
+                        variant="outline"
+                        shape="rounded-sm"
+                        className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
                         onClick={() => {
                           setSelectedFAQ(faq);
                           setIsModalOpen(true);
                         }}
-                        className="w-8 h-8 rounded-lg bg-blue-50 text-brand-blue flex items-center justify-center hover:bg-blue-100 transition-colors"
                       >
-                        <HiOutlinePencil size={18} />
-                      </button>
-                      <button
+                        <HiOutlinePencil size={14} />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        shape="rounded-sm"
+                        className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
                         onClick={() => {
                           setSelectedFAQ(faq);
                           setIsDeleteModalOpen(true);
                         }}
-                        className="w-8 h-8 rounded-lg bg-rose-50 text-rose-500 flex items-center justify-center hover:bg-rose-100 transition-colors"
                       >
-                        <HiOutlineTrash size={18} />
-                      </button>
+                        <HiOutlineTrash size={14} />
+                      </Button>
                     </div>
                   </td>
                 </tr>

@@ -107,7 +107,7 @@ export default function DealsPage() {
   return (
     <div className="flex flex-col gap-8">
       {/* Header Area */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 border border-[#1C1C1C1A] rounded-[6px]">
         <div className="flex flex-col gap-1">
           <h2 className="text-xl font-black text-[#1D3557]">Offer Countdown Management</h2>
           <p className="text-xs text-gray-400 font-bold">Configure the global countdown timer for your active deals.</p>
@@ -123,13 +123,13 @@ export default function DealsPage() {
       </div>
 
       {/* Timer Display Card */}
-      <div className="w-full bg-white border border-gray-100 rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-8 shadow-sm relative overflow-hidden group">
+      <div className="w-full bg-white p-8 flex flex-col md:flex-row items-center justify-between gap-8 border border-[#1C1C1C1A] rounded-[6px] relative overflow-hidden group">
         {/* Decoration */}
         <div className="absolute top-0 right-0 w-32 h-32 bg-brand-blue-light/20 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-brand-blue-light/40 transition-colors" />
 
         <div className="flex flex-col gap-4 relative z-10">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-orange-500">
+            <div className="w-10 h-10 bg-orange-50 flex items-center justify-center text-orange-500 border border-[#1C1C1C1A] rounded-[6px]">
               <RiTimerLine size={24} />
             </div>
             <div className="flex flex-col">
@@ -180,7 +180,7 @@ export default function DealsPage() {
       {/* Stats Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
         {stats.map((stat, idx) => (
-          <div key={idx} className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-4 hover:shadow-md transition-shadow">
+          <div key={idx} className="bg-white p-6 rounded-2xl border border-[#1C1C1C1A] rounded-[6px] flex flex-col gap-4 hover:shadow-md transition-shadow">
             <div className={`w-12 h-12 rounded-xl flex items-center justify-center
               ${stat.color === 'blue' ? 'bg-blue-50 text-blue-500' :
                 stat.color === 'emerald' ? 'bg-emerald-50 text-emerald-500' :
@@ -198,7 +198,7 @@ export default function DealsPage() {
       </div>
 
       {/* Active Deals Table */}
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-8">
+      <div className="bg-white border border-[#1C1C1C1A] rounded-[6px] overflow-hidden mb-8">
         <div className="px-8 py-6 border-b border-gray-50 flex items-center justify-between">
           <div className="flex flex-col">
             <h3 className="text-sm font-black text-[#1D3557] uppercase tracking-wider">Active Deals Feed</h3>
@@ -269,25 +269,31 @@ export default function DealsPage() {
                       <td className="py-5">
                         <span className="text-sm font-black text-emerald-500">₦{dealPrice.toLocaleString()}</span>
                       </td>
-                      <td className="pr-8 py-5 text-right flex justify-end gap-2">
-                        <button
-                          onClick={() => {
-                            setOfferToEdit(offer);
-                            setIsOfferModalOpen(true);
-                          }}
-                          className="w-9 h-9 rounded-xl flex items-center justify-center text-gray-300 hover:text-brand-blue hover:bg-brand-blue-light transition-all border border-transparent hover:border-blue-100"
-                        >
-                          <HiOutlinePencil size={18} />
-                        </button>
-                        <button
-                          onClick={() => {
-                            setOfferToDelete(offer);
-                            setIsDeleteModalOpen(true);
-                          }}
-                          className="w-9 h-9 rounded-xl flex items-center justify-center text-gray-300 hover:text-rose-500 hover:bg-rose-50 transition-all border border-transparent hover:border-rose-100"
-                        >
-                          <HiOutlineTrash size={18} />
-                        </button>
+                      <td className="pr-8 py-5 text-right">
+                        <div className="flex justify-end gap-2">
+                          <Button
+                            variant="outline"
+                            shape="rounded-sm"
+                            className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
+                            onClick={() => {
+                              setOfferToEdit(offer);
+                              setIsOfferModalOpen(true);
+                            }}
+                          >
+                            <HiOutlinePencil className="w-4.5 h-4.5" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            shape="rounded-sm"
+                            className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
+                            onClick={() => {
+                              setOfferToDelete(offer);
+                              setIsDeleteModalOpen(true);
+                            }}
+                          >
+                            <HiOutlineTrash className="w-4.5 h-4.5" />
+                          </Button>
+                        </div>
                       </td>
                     </tr>
                   );

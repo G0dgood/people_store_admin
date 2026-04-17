@@ -10,6 +10,7 @@ import { Pagination } from "../../components/Admin/Pagination";
 import { TransactionDetailDrawer } from "../../components/Admin/TransactionDetailDrawer";
 import { RowsPerPage } from "@/app/components/rows-per-page";
 import Checkbox from "@/app/components/Checkbox";
+import { HiOutlineDocumentText } from "react-icons/hi2";
 
 const transactionsData = [
   { custId: "#CUST001", name: "John Doe", date: "01-01-2025", total: "₦2,904", method: "CC", status: "Complete" },
@@ -270,16 +271,19 @@ export default function TransactionsPage() {
                     </div>
                   </td>
                   <td className="text-right">
-                    <Button
-                      variant="ghost"
-                      className="text-[11px] font-black text-brand-blue uppercase hover:underline !px-0"
-                      onClick={() => {
-                        setSelectedTransaction(tx);
-                        setIsDetailDrawerOpen(true);
-                      }}
-                    >
-                      View Details
-                    </Button>
+                    <div className="flex justify-end gap-2 pr-4">
+                      <Button
+                        variant="outline"
+                        shape="rounded-sm"
+                        className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
+                        onClick={() => {
+                          setSelectedTransaction(tx);
+                          setIsDetailDrawerOpen(true);
+                        }}
+                      >
+                        <HiOutlineDocumentText size={14} />
+                      </Button>
+                    </div>
                   </td>
                 </tr>
               ))}

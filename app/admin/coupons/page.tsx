@@ -181,11 +181,11 @@ export default function CouponsListing() {
                     </span>
                   </td>
                   <td className="text-right">
-                    <div className="flex justify-end items-center gap-4 text-gray-400">
+                    <div className="flex justify-end items-center gap-4">
                       <Button
                         variant="outline"
                         shape="rounded-sm"
-                        className="!p-1.5 text-gray-400 hover:text-[#2196F3] transition-colors"
+                        className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
                         onClick={() => {
                           setCouponToEdit(coupon);
                           setIsEditDrawerOpen(true);
@@ -196,7 +196,7 @@ export default function CouponsListing() {
                       <Button
                         variant="outline"
                         shape="rounded-sm"
-                        className="!p-1.5 text-gray-400 hover:text-rose-500 transition-colors"
+                        className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
                         onClick={() => setCouponToDelete(coupon)}
                       >
                         <Icon name="Delete" folder="dashboardIcon" size="sm" />

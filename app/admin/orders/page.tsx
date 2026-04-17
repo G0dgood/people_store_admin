@@ -255,18 +255,24 @@ export default function OrderListing() {
                     </div>
                   </td>
                   <td className="text-right">
-                    <div className="flex justify-end items-center gap-4 text-gray-400">
+                    <div className="flex justify-end items-center gap-4">
                       <Link href={`/admin/orders/${order.id.replace("#", "")}`}>
-                        <button className="hover:text-blue-500 transition-colors">
+                        <Button
+                          variant="outline"
+                          shape="rounded-sm"
+                          className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
+                        >
                           <Icon name="view" folder="dashboardIcon" size="sm" />
-                        </button>
+                        </Button>
                       </Link>
-                      <button
-                        className="hover:text-rose-500 transition-colors"
+                      <Button
+                        variant="outline"
+                        shape="rounded-sm"
+                        className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
                         onClick={() => setOrderToDelete(order.id)}
                       >
                         <Icon name="Delete" folder="dashboardIcon" size="sm" />
-                      </button>
+                      </Button>
                     </div>
                   </td>
                 </tr>

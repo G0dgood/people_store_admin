@@ -147,24 +147,28 @@ export default function ProductMediaListing() {
                     )}
 
                     <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0">
-                      <button
-                        className=" w-8 h-8 text-gray-500 bg-white/95 rounded-[6px] shadow-sm hover:text-blue-500 transition-colors cursor-pointer"
+                      <Button
+                        variant="outline"
+                        shape="rounded-sm"
+                        className="w-8 h-8 text-gray-500 bg-white/95 shadow-sm hover:text-blue-500 hover:bg-white !p-0 transition-all cursor-pointer"
                         onClick={() => {
                           setMediaToEdit(item);
                           setIsEditDrawerOpen(true);
                         }}
                       >
                         <Icon name="settings" folder="dashboardIcon" size="xs" />
-                      </button>
-                      <button
-                        className="w-8 h-8 bg-white/95 rounded-[6px] shadow-sm text-gray-500 hover:text-rose-500 transition-colors cursor-pointer"
+                      </Button>
+                      <Button
+                        variant="outline"
+                        shape="rounded-sm"
+                        className="w-8 h-8 bg-white/95 shadow-sm text-gray-500 hover:text-rose-500 hover:bg-white !p-0 transition-all cursor-pointer"
                         onClick={() => {
                           setMediaToDelete(item);
                           setIsDeleteModalOpen(true);
                         }}
                       >
                         <Icon name="Delete" folder="dashboardIcon" size="xs" />
-                      </button>
+                      </Button>
                     </div>
                   </div>
 
@@ -229,25 +233,29 @@ export default function ProductMediaListing() {
                         <span className="text-xs font-medium text-gray-400">{item.date}</span>
                       </td>
                       <td className="text-right">
-                        <div className="flex justify-end items-center gap-4 text-gray-300">
-                          <button
-                            className="hover:text-blue-500 transition-colors"
+                        <div className="flex justify-end items-center gap-4">
+                          <Button
+                            variant="outline"
+                            shape="rounded-sm"
+                            className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
                             onClick={() => {
                               setMediaToEdit(item);
                               setIsEditDrawerOpen(true);
                             }}
                           >
                             <Icon name="settings" folder="dashboardIcon" size="sm" />
-                          </button>
-                          <button
-                            className="hover:text-rose-500 transition-colors"
+                          </Button>
+                          <Button
+                            variant="outline"
+                            shape="rounded-sm"
+                            className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
                             onClick={() => {
                               setMediaToDelete(item);
                               setIsDeleteModalOpen(true);
                             }}
                           >
                             <Icon name="Delete" folder="dashboardIcon" size="sm" />
-                          </button>
+                          </Button>
                         </div>
                       </td>
                     </tr>

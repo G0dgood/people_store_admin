@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon } from "../Icon";
@@ -37,9 +38,9 @@ const navGroups: NavGroup[] = [
       { name: "Transaction", href: "/admin/transactions", icon: "famicons_card-outline" },
       { name: "Refund", href: "/admin/refunds", icon: "arrow-refresh-06" },
       { name: "Support", href: "/admin/support", icon: "tabler_message" },
-      { name: "FAQ Management", href: "/admin/faq", icon: <HiOutlineQuestionMarkCircle size={18} /> },
+      { name: "FAQ Management", href: "/admin/faq", icon: <HiOutlineQuestionMarkCircle size={14} /> },
       { name: "Brand", href: "/admin/brands", icon: "star" },
-      { name: "Deals and Offers", href: "/admin/deals", icon: <RiPercentLine size={18} /> },
+      { name: "Deals and Offers", href: "/admin/deals", icon: <RiPercentLine size={14} /> },
       { name: "Notifications", href: "/admin/notifications", icon: "Bell outline" },
     ],
   },
@@ -61,10 +62,91 @@ const navGroups: NavGroup[] = [
   },
 ];
 
+interface NavItemProps {
+  item: {
+    name: string;
+    href: string;
+    icon: string | React.ReactNode;
+  };
+  isCollapsed: boolean;
+  pathname: string;
+  onHover: (name: string | null, rect: DOMRect | null) => void;
+}
+
+const NavItem: React.FC<NavItemProps> = ({ item, isCollapsed, pathname, onHover }) => {
+  // Exact match or sub-path match (e.g., /admin/orders/1 matches /admin/orders)
+  const isMatch = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href + "/"));
+
+  // Ensure we don't highlight a base path if a more specific sibling path is also a match
+  const isMoreSpecificMatch = navGroups.flatMap(g => g.items).some(other =>
+    other.href !== item.href &&
+    other.href.startsWith(item.href + "/") &&
+    (pathname === other.href || pathname.startsWith(other.href + "/"))
+  );
+
+  const isActive = isMatch && !isMoreSpecificMatch;
+
+  return (
+    <div className="relative flex items-center">
+      <Link
+        href={item.href}
+        onMouseEnter={(e) => {
+          if (isCollapsed) {
+            onHover(item.name, e.currentTarget.getBoundingClientRect());
+          }
+        }}
+        onMouseLeave={() => onHover(null, null)}
+        className={`flex items-center gap-3 px-4 py-2.5 rounded-[6px] transition-all text-sm font-medium w-full ${isCollapsed ? "justify-center px-2" : ""} ${isActive
+          ? "bg-brand-blue text-white shadow-md shadow-blue-100"
+          : "text-gray-500 hover:bg-brand-blue-light hover:text-brand-blue"
+          }`}
+      >
+        {typeof item.icon === "string" ? (
+          <Icon name={item.icon} folder="dashboardIcon" size="sm" />
+        ) : (
+          item.icon
+        )}
+        {!isCollapsed && <span>{item.name}</span>}
+      </Link>
+    </div>
+  );
+};
+
+const PortalTooltip = ({ label, rect }: { label: string; rect: DOMRect }) => {
+  return createPortal(
+    <div
+      className="fixed z-[9999] pointer-events-none"
+      style={{
+        top: rect.top + rect.height / 2,
+        left: rect.right + 10,
+        transform: 'translateY(-50%)',
+      }}
+    >
+      <motion.div
+        initial={{ opacity: 0, x: -10 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -10 }}
+        className="bg-[#1D3557] text-white text-[10px] font-bold px-3 py-2 rounded-[4px] shadow-xl whitespace-nowrap relative flex items-center"
+      >
+        {/* Arrow */}
+        <div className="absolute left-[-4px] top-1/2 -translate-y-1/2 w-2 h-2 bg-[#1D3557] rotate-45" />
+        <span className="relative z-10 uppercase tracking-widest">{label}</span>
+      </motion.div>
+    </div>,
+    document.body
+  );
+};
+
 export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard", isOpen, onClose, role: propRole }: SidenavProps) => {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = React.useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = React.useState(false);
+  const [hoveredItem, setHoveredItem] = useState<{ name: string; rect: DOMRect } | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Initialize expanded groups - default to expanded for groups containing the active path
   const [expandedGroups, setExpandedGroups] = React.useState<string[]>(() => {
@@ -113,7 +195,6 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
       <nav className="flex-1 overflow-y-auto px-4 py-2 flex flex-col gap-6 custom-scrollbar pb-8">
         {navGroups.map((group) => {
           const isExpanded = expandedGroups.includes(group.title) || !group.title;
-          const hasActiveChild = group.items.some(item => pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href + "/")));
 
           return (
             <div key={group.title} className="flex flex-col gap-1">
@@ -125,13 +206,13 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
                   <h4 className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-hover/title:text-brand-blue transition-colors">
                     {group.title}
                   </h4>
-                  <HiChevronDown 
-                    size={14} 
-                    className={`text-gray-300 transition-transform duration-300 ${isExpanded ? "rotate-180" : ""} group-hover/title:text-brand-blue`} 
+                  <HiChevronDown
+                    size={14}
+                    className={`text-gray-300 transition-transform duration-300 ${isExpanded ? "rotate-180" : ""} group-hover/title:text-brand-blue`}
                   />
                 </button>
               )}
-              
+
               <AnimatePresence initial={false}>
                 {(isExpanded || isCollapsed || !group.title) && (
                   <motion.div
@@ -141,38 +222,15 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
                     transition={{ duration: 0.3, ease: "easeInOut" }}
                     className="overflow-hidden flex flex-col gap-1"
                   >
-                    {group.items.map((item) => {
-                      // Exact match or sub-path match (e.g., /admin/orders/1 matches /admin/orders)
-                      const isMatch = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href + "/"));
-
-                      // Ensure we don't highlight a base path if a more specific sibling path is also a match
-                      const isMoreSpecificMatch = navGroups.flatMap(g => g.items).some(other =>
-                        other.href !== item.href &&
-                        other.href.startsWith(item.href + "/") &&
-                        (pathname === other.href || pathname.startsWith(other.href + "/"))
-                      );
-
-                      const isActive = isMatch && !isMoreSpecificMatch;
-
-                      return (
-                        <Link
-                          key={item.name}
-                          href={item.href}
-                          title={isCollapsed ? item.name : ""}
-                          className={`flex items-center gap-3 px-4 py-2.5 rounded-md transition-all text-sm font-medium ${isCollapsed ? "justify-center px-2" : ""} ${isActive
-                            ? "bg-brand-blue text-white shadow-md shadow-blue-100"
-                            : "text-gray-500 hover:bg-brand-blue-light hover:text-brand-blue"
-                            }`}
-                        >
-                          {typeof item.icon === "string" ? (
-                             <Icon name={item.icon} folder="dashboardIcon" size="sm" />
-                          ) : (
-                             item.icon
-                          )}
-                          {!isCollapsed && <span>{item.name}</span>}
-                        </Link>
-                      );
-                    })}
+                     {group.items.map((item) => (
+                      <NavItem
+                        key={item.href}
+                        item={item}
+                        isCollapsed={isCollapsed}
+                        pathname={pathname}
+                        onHover={(name, rect) => setHoveredItem(name && rect ? { name, rect } : null)}
+                      />
+                    ))}
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -186,7 +244,13 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
         <div className={`flex items-center ${isCollapsed ? "justify-center px-0" : "justify-between px-2"}`}>
           <div
             onClick={() => setIsLogoutModalOpen(true)}
-            className="flex items-center gap-3 min-w-0 group cursor-pointer"
+            className="flex items-center gap-3 min-w-0 group cursor-pointer relative"
+            onMouseEnter={(e) => {
+              if (isCollapsed) {
+                setHoveredItem({ name: "Logout / Profile", rect: e.currentTarget.getBoundingClientRect() });
+              }
+            }}
+            onMouseLeave={() => setHoveredItem(null)}
           >
             <div className="w-10 h-10 rounded-full border border-gray-100 overflow-hidden shadow-sm flex-shrink-0 group-hover:border-rose-500 group-hover:shadow-md transition-all">
               <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop" alt="User" />
@@ -220,15 +284,29 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
             <Icon name="link-external" folder="dashboardIcon" size="xs" className="text-gray-300 group-hover:text-brand-blue" />
           </Link>
         ) : (
-          <Link
-            href="/"
-            title="Your Shop"
-            className="flex items-center justify-center p-2.5 border border-gray-100 rounded-md hover:border-brand-blue/30 hover:shadow-lg hover:shadow-gray-100 transition-all group"
-          >
-            <Icon name="Cart" folder="dashboardIcon" size="sm" className="text-brand-blue" />
-          </Link>
+          <div className="relative flex items-center justify-center">
+            <Link
+              href="/"
+              onMouseEnter={(e) => {
+                if (isCollapsed) {
+                  setHoveredItem({ name: "Your Shop", rect: e.currentTarget.getBoundingClientRect() });
+                }
+              }}
+              onMouseLeave={() => setHoveredItem(null)}
+              className="flex items-center justify-center p-2.5 border border-gray-100 rounded-md hover:border-brand-blue/30 hover:shadow-lg hover:shadow-gray-100 transition-all group w-full"
+            >
+              <Icon name="Cart" folder="dashboardIcon" size="sm" className="text-brand-blue" />
+            </Link>
+          </div>
         )}
       </div>
+
+      {/* Tooltip Portal */}
+      {mounted && (
+        <AnimatePresence>
+          {hoveredItem && <PortalTooltip label={hoveredItem.name} rect={hoveredItem.rect} />}
+        </AnimatePresence>
+      )}
 
       <ConfirmationModal
         isOpen={isLogoutModalOpen}

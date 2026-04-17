@@ -173,26 +173,30 @@ export default function RefundsPage() {
                   </td>
                   <td className="text-right">
                     <div className="flex justify-end items-center gap-2">
-                       <button
-                          className="w-8 h-8 rounded-lg bg-blue-50 text-brand-blue flex items-center justify-center hover:bg-blue-100 transition-colors"
-                          title="Update Status"
-                          onClick={() => {
-                             setActionTarget(refund);
-                             setIsStatusModalOpen(true);
-                          }}
-                       >
-                          <Icon name="cached" folder="icon" size="xs" />
-                       </button>
-                       <button
-                         className="w-8 h-8 rounded-lg bg-gray-50 text-gray-400 flex items-center justify-center hover:bg-gray-100 transition-colors"
-                         title="View Details"
-                         onClick={() => {
-                           setSelectedRefund(refund);
-                           setIsDetailDrawerOpen(true);
-                         }}
-                       >
-                         <Icon name="description" folder="icon" size="xs" />
-                       </button>
+                      <Button
+                        variant="outline"
+                        shape="rounded-sm"
+                        className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
+                        onClick={() => {
+                          setActionTarget(refund);
+                          setIsStatusModalOpen(true);
+                        }}
+                        title="Update Status"
+                      >
+                        <Icon name="cached" folder="icon" size="xs" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        shape="rounded-sm"
+                        className="!p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-all"
+                        onClick={() => {
+                          setSelectedRefund(refund);
+                          setIsDetailDrawerOpen(true);
+                        }}
+                        title="View Details"
+                      >
+                        <Icon name="description" folder="icon" size="xs" />
+                      </Button>
                     </div>
                   </td>
                 </tr>

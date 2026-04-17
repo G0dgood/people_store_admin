@@ -202,24 +202,28 @@ export default function SupportPage() {
                   </td>
                   <td className="text-right pr-8">
                     <div className="flex justify-end items-center gap-2">
-                      <button
-                        className="w-8 h-8 rounded-lg bg-blue-50 text-brand-blue flex items-center justify-center hover:bg-blue-100 transition-colors"
+                      <Button
+                        variant="outline"
+                        shape="rounded-sm"
+                        className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
                         onClick={() => {
                           setSelectedTicket(ticket);
                           setIsChatDrawerOpen(true);
                         }}
                       >
-                        <BiMessageDetail size={18} />
-                      </button>
-                      <button
-                        className="w-8 h-8 rounded-lg bg-gray-50 text-gray-400 flex items-center justify-center hover:bg-gray-100 transition-colors"
+                        <BiMessageDetail size={14} />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        shape="rounded-sm"
+                        className="!p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-all"
                         onClick={() => {
                           setSelectedTicket(ticket);
                           setIsDetailDrawerOpen(true);
                         }}
                       >
-                        <HiOutlineDocumentText size={18} />
-                      </button>
+                        <HiOutlineDocumentText size={14} />
+                      </Button>
                     </div>
                   </td>
                 </tr>
