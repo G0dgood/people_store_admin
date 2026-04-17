@@ -146,7 +146,7 @@ export default function ModalDemo() {
       </div>
       <div className="flex-1">
        <span className="text-[10px] uppercase font-bold text-gray-500 mb-2 block">Location</span>
-       <Select options={[{ id: "us", label: "United States" }]} placeholder="Choose country" />
+       <Select options={[{ value: "us", label: "United States" }]} placeholder="Choose country" />
       </div>
      </div>
      <div className="mt-8">
