@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import { Icon } from "../Icon";
 import { ConfirmationModal } from "./ConfirmationModal";
 import { motion, AnimatePresence } from "framer-motion";
-import { HiChevronDown, HiOutlineQuestionMarkCircle } from "react-icons/hi2";
+import { HiChevronDown, HiOutlineQuestionMarkCircle, HiShieldCheck } from "react-icons/hi2";
 import { RiPercentLine } from "react-icons/ri";
 
 interface NavGroup {
@@ -56,8 +56,11 @@ const navGroups: NavGroup[] = [
   {
     title: "Admin",
     items: [
-      { name: "View Profile", href: "/admin/roles", icon: "user-profile-circle" },
-      { name: "Control Authority", href: "/admin/permissions", icon: "settings" },
+      { name: "Users", href: "/admin/users", icon: "users" },
+      { name: "View Profile", href: "/admin/profile", icon: "user-profile-circle" },
+      { name: "Administrative Roles", href: "/admin/roles", icon: "settings" },
+      { name: "Permissions", href: "/admin/permissions", icon: <HiShieldCheck size={14} /> },
+      { name: "Advert Manager", href: "/admin/advert", icon: "Frame" },
     ],
   },
 ];

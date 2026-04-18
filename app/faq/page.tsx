@@ -5,10 +5,9 @@ import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { FAQAccordion } from "../components/ui/FAQAccordion";
 import { TabFilter } from "../components/Admin/TabFilter";
-import { Input } from "../components/Form/Inputs";
-import { Icon } from "../components/Icon";
-import { HiMagnifyingGlass, HiOutlineChatBubbleLeftRight, HiOutlineEnvelope } from "react-icons/hi2";
+import { HiOutlineChatBubbleLeftRight, HiOutlineEnvelope } from "react-icons/hi2";
 import { motion } from "framer-motion";
+import { HiOutlineSearch } from "react-icons/hi";
 
 const faqData = [
   {
@@ -53,11 +52,11 @@ export default function FAQPage() {
 
   const filteredFAQs = useMemo(() => {
     const searchLower = searchQuery.toLowerCase();
-    
+
     // If searching, show all matching across categories
     if (searchQuery) {
-      return faqData.flatMap(cat => cat.items).filter(item => 
-        item.question.toLowerCase().includes(searchLower) || 
+      return faqData.flatMap(cat => cat.items).filter(item =>
+        item.question.toLowerCase().includes(searchLower) ||
         item.answer.toString().toLowerCase().includes(searchLower)
       );
     }
@@ -78,14 +77,14 @@ export default function FAQPage() {
         </div>
 
         <div className="max-w-[800px] mx-auto px-6 text-center relative z-10">
-          <motion.span 
+          <motion.span
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             className="inline-block text-brand-blue font-black text-[10px] uppercase tracking-[0.2em] mb-4 bg-blue-50 px-4 py-1.5 rounded-full"
           >
             Help Center
           </motion.span>
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
@@ -93,17 +92,17 @@ export default function FAQPage() {
           >
             How can we help you?
           </motion.h1>
-          
-          <motion.div 
+
+          <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
             className="relative max-w-xl mx-auto"
           >
             <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none text-gray-400">
-              <HiMagnifyingGlass size={22} />
+              <HiOutlineSearch size={22} />
             </div>
-            <input 
+            <input
               type="text"
               placeholder="Search common questions, articles..."
               value={searchQuery}
@@ -118,11 +117,10 @@ export default function FAQPage() {
       <section className="max-w-[1000px] mx-auto px-6 py-16 md:py-24">
         {!searchQuery && (
           <div className="flex justify-center mb-12">
-            <TabFilter 
+            <TabFilter
               tabs={categories}
               activeTab={activeTab}
               onChange={setActiveTab}
-              containerClassName="!p-1.5 shadow-sm !rounded-2xl"
             />
           </div>
         )}
@@ -131,7 +129,7 @@ export default function FAQPage() {
           {searchQuery && (
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-black text-[#1D3557]">Search Results</h2>
-              <button 
+              <button
                 onClick={() => setSearchQuery("")}
                 className="text-xs font-bold text-brand-blue hover:underline"
               >
@@ -145,10 +143,10 @@ export default function FAQPage() {
           ) : (
             <div className="py-20 text-center flex flex-col items-center gap-4">
               <div className="w-16 h-16 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-300">
-                <HiMagnifyingGlass size={32} />
+                <HiOutlineSearch size={32} />
               </div>
               <p className="text-gray-500 font-bold">No results found for "{searchQuery}"</p>
-              <button 
+              <button
                 onClick={() => setSearchQuery("")}
                 className="text-sm font-black text-brand-blue hover:underline"
               >
@@ -166,7 +164,7 @@ export default function FAQPage() {
           <p className="text-blue-200/70 text-base md:text-lg mb-10 max-w-xl font-medium">
             Contact our dedicated support team. We're here to help you solve any issues as quickly as possible.
           </p>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl">
             <div className="bg-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/10 flex flex-col items-center gap-4 hover:bg-white/10 transition-all cursor-pointer group">
               <div className="w-12 h-12 rounded-xl bg-brand-blue flex items-center justify-center text-white shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
@@ -177,7 +175,7 @@ export default function FAQPage() {
                 <span className="text-blue-200/50 text-xs font-bold uppercase tracking-widest mt-1">Average wait: 2 mins</span>
               </div>
             </div>
-            
+
             <div className="bg-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/10 flex flex-col items-center gap-4 hover:bg-white/10 transition-all cursor-pointer group">
               <div className="w-12 h-12 rounded-xl bg-emerald-500 flex items-center justify-center text-white shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
                 <HiOutlineEnvelope size={24} />

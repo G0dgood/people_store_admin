@@ -168,7 +168,7 @@ const Dropdown: React.FC<DropdownProps> = ({
         >
           <div className="flex items-center gap-2">
             <span
-              className={`font-work font-normal text-[12px] leading-[23px] tracking-[-0.02em] ${selectedOption ? "!text-[#1F1F1F]" : "text-[rgba(31,31,31,0.5)]"
+              className={`font-work font-normal text-[12px] leading-[23px]   ${selectedOption ? "!text-[#1F1F1F]" : "text-[rgba(31,31,31,0.5)]"
                 }`}
             >
               {selectedOption ? selectedOption.label : placeholder}

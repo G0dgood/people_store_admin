@@ -1,5 +1,6 @@
 import React from "react";
 import { Icon } from "../Icon";
+import { motion } from "framer-motion";
 
 type ButtonVariant = "primary" | "secondary" | "emerald" | "rose" | "outline" | "ghost";
 type ButtonSize = "sm" | "md" | "lg";
@@ -12,6 +13,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   iconLeft?: React.ReactNode;
   iconRight?: React.ReactNode;
   showChevron?: boolean;
+  isLoading?: boolean;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -24,6 +26,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       iconLeft,
       iconRight,
       showChevron,
+      isLoading,
       children,
       ...props
     },
@@ -61,12 +64,25 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       ${variants[variant as keyof typeof variants] || variants.primary}
       ${sizes[size as keyof typeof sizes] || sizes.md}
       ${shapes[shape as keyof typeof shapes] || shapes.rounded}
+      ${isLoading ? "opacity-70 cursor-not-allowed" : ""}
       ${className}
     `.trim().replace(/\s+/g, " ");
 
     return (
-      <button ref={ref} className={combinedClassName} {...props}>
-        {iconLeft && (
+      <button
+        ref={ref}
+        className={combinedClassName}
+        disabled={isLoading || props.disabled}
+        {...props}
+      >
+        {isLoading && (
+          <motion.span
+            animate={{ rotate: 360 }}
+            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+            className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full mr-2"
+          />
+        )}
+        {!isLoading && iconLeft && (
           <span className="flex justify-center items-center shrink-0">
             {iconLeft}
           </span>
@@ -76,12 +92,12 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
             {children}
           </span>
         )}
-        {iconRight && (
+        {!isLoading && iconRight && (
           <span className="flex justify-center items-center shrink-0">
             {iconRight}
           </span>
         )}
-        {showChevron && (
+        {!isLoading && showChevron && (
           <Icon
             name="expand_more"
             size={size === "sm" ? "xs" : "sm"}

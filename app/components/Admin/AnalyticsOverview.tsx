@@ -3,11 +3,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Icon } from "../Icon";
 import { AdminChart } from "./AdminChart";
+import { TabFilter } from "./TabFilter";
 import { DropdownMenu, DropdownItem } from "../Dropdown/DropdownMenu";
 import { HiPrinter, HiPhoto, HiCog6Tooth } from "react-icons/hi2";
 
 export const AnalyticsOverview: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [chartTab, setChartTab] = useState("This week");
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Handle click outside to close dropdown
@@ -29,10 +31,11 @@ export const AnalyticsOverview: React.FC = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
         <h3 className="text-[20px] font-black text-[#1D3557]">Report for this week</h3>
         <div className="flex items-center justify-between w-full sm:w-auto gap-4">
-          <div className="flex bg-[#F8F9FA] p-1 rounded-[6px] border border-gray-100 scale-90 sm:scale-100">
-            <button className="px-3 sm:px-5 py-2 rounded-[6px] bg-white text-[11px] font-black shadow-sm text-brand-blue">This week</button>
-            <button className="px-3 sm:px-5 py-2 rounded-[6px] text-[11px] font-black text-gray-400">Last week</button>
-          </div>
+          <TabFilter
+            tabs={["This week", "Last week"]}
+            activeTab={chartTab}
+            onChange={setChartTab}
+          />
           <div className="relative" ref={dropdownRef}>
             <button
               className={`p-1 rounded-[6px] transition-all ${isDropdownOpen ? "bg-brand-blue-light text-brand-blue shadow-sm" : "text-gray-400 hover:bg-gray-50"}`}

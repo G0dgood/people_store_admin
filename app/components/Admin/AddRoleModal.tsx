@@ -18,10 +18,18 @@ const statusOptions = [
   { value: "Inactive", label: "Inactive" },
 ];
 
+const departmentOptions = [
+  { value: "Management", label: "Management" },
+  { value: "Content", label: "Content" },
+  { value: "Logistics", label: "Logistics" },
+  { value: "Support", label: "Support" },
+];
+
 export function AddRoleModal({ isOpen, onClose }: AddRoleModalProps) {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
+    department: "Management",
     status: "Active",
   });
 
@@ -57,13 +65,24 @@ export function AddRoleModal({ isOpen, onClose }: AddRoleModalProps) {
             />
           </div>
 
-          <div className="flex flex-col gap-2 w-full md:w-1/2">
-            <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Initial Status</label>
-            <Select
-              options={statusOptions}
-              value={formData.status}
-              onChange={(val) => setFormData({ ...formData, status: val })}
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="flex flex-col gap-2 w-full">
+              <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Department</label>
+              <Select
+                options={departmentOptions}
+                value={formData.department}
+                onChange={(val) => setFormData({ ...formData, department: val })}
+              />
+            </div>
+
+            <div className="flex flex-col gap-2 w-full">
+              <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Initial Status</label>
+              <Select
+                options={statusOptions}
+                value={formData.status}
+                onChange={(val) => setFormData({ ...formData, status: val })}
+              />
+            </div>
           </div>
         </ModalBody>
 

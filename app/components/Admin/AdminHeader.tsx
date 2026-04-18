@@ -8,13 +8,13 @@ import { AdminNotificationDropdown } from "./AdminNotificationDropdown";
 import { AdminProfileDropdown } from "./AdminProfileDropdown";
 import { AdminSearchDropdown } from "./AdminSearchDropdown";
 import { useState, useRef, useEffect } from "react";
-
 import { useUser } from "../../context/UserContext";
 import { HiUser } from "react-icons/hi2";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoMdClose } from "react-icons/io";
 import Modal from "../Modal/Modal";
 import { NotificationList } from "./AdminNotificationDropdown";
+import { motion } from "framer-motion";
 
 type HeaderProps = {
   onOpenMenu?: () => void;
@@ -89,23 +89,26 @@ export const AdminHeader: React.FC<HeaderProps> = ({ onOpenMenu, className, isOp
   // Dynamic title based on pathname
   const getPageTitle = () => {
     if (pathname === "/admin") return "Dashboard Overview";
-    if (pathname.includes("/admin/orders")) return "Order List";
-    if (pathname === "/admin/products") return "Product List";
-    if (pathname.includes("/admin/products/media")) return "Product Media";
+    if (pathname.includes("/admin/orders")) return "Order Management";
+    if (pathname === "/admin/products") return "Product Inventory";
+    if (pathname.includes("/admin/products/media")) return "Media Library";
     if (pathname.includes("/admin/products/new")) return "Add New Product";
-    if (pathname.includes("/admin/customers")) return "Customer List";
-    if (pathname.includes("/admin/brands")) return "Brand List";
-    if (pathname.includes("/admin/transactions")) return "Transactions";
+    if (pathname.includes("/admin/customers")) return "Customer Directory";
+    if (pathname.includes("/admin/users")) return "Staff Management";
+    if (pathname.includes("/admin/brands")) return "Brand Management";
+    if (pathname.includes("/admin/transactions")) return "Transaction History";
     if (pathname.includes("/admin/refunds")) return "Refund Management";
     if (pathname.includes("/admin/support")) return "Support Tickets";
-    if (pathname.includes("/admin/coupons")) return "Coupon Code";
-    if (pathname.includes("/admin/deals")) return "Deals and Offers";
+    if (pathname.includes("/admin/coupons")) return "Marketing Coupons";
+    if (pathname.includes("/admin/deals")) return "Deals & Offers";
     if (pathname.includes("/admin/reviews")) return "Product Reviews";
+    if (pathname.includes("/admin/profile")) return "Personal Account";
+    if (pathname.includes("/admin/roles")) return "Governance & Roles";
     if (pathname.includes("/admin/permissions")) return "Permissions";
-    if (pathname.includes("/admin/categories")) return "Categories";
+    if (pathname.includes("/admin/categories")) return "Category Management";
     if (pathname.includes("/admin/notifications")) return "Notification Center";
-    if (pathname.includes("/admin/faq")) return "FAQ Management";
-    return "Admin Panel";
+    if (pathname.includes("/admin/faq")) return "FAQ Library";
+    return "Administrative Panel";
   };
 
   return (
@@ -125,10 +128,15 @@ export const AdminHeader: React.FC<HeaderProps> = ({ onOpenMenu, className, isOp
         </button>
 
       </div>
-      <div className="flex-shrink-0 mr-4 sm:mr-8">
-        <h1 className="text-[16px] sm:text-[20px] font-black text-[#1D3557] tracking-tight truncate max-w-[150px] sm:max-w-[200px] xl:max-w-none">
+      <div className="flex-shrink-0 mr-4 sm:mr-8 min-w-[140px] sm:min-w-[200px]">
+        <motion.h1
+          key={pathname}
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="text-[16px] sm:text-[20px] font-black text-[#1D3557] tracking-tight truncate xl:max-w-none"
+        >
           {getPageTitle()}
-        </h1>
+        </motion.h1>
       </div>
 
       {/* Right Actions Area */}

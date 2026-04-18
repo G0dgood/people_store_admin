@@ -4,312 +4,275 @@ import React, { useState } from "react";
 import { Icon } from "../../components/Icon";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Form/Inputs";
-import { TabFilter } from "../../components/Admin/TabFilter";
-import { Pagination } from "../../components/Admin/Pagination";
-import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
-import { AddRoleModal } from "../../components/Admin/AddRoleModal";
-import { RowsPerPage } from "@/app/components/rows-per-page";
 import Checkbox from "@/app/components/Checkbox";
-import { EditRoleDrawer } from "../../components/Admin/EditRoleDrawer";
-import { RolesMoreActionsDrawer } from "../../components/Admin/RolesMoreActionsDrawer";
-import { BulkActionsDrawer } from "../../components/Admin/BulkActionsDrawer";
+import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
+import { RowsPerPage } from "@/app/components/rows-per-page";
+import Dropdown from "../../components/Form/Dropdown";
+import { motion, AnimatePresence } from "framer-motion";
+import { HiChevronDown } from "react-icons/hi2";
 
-const rolesData = [
-  {
-    id: 1,
-    name: "Super Admin",
-    description: "Full access to all system modules and settings including financial data and user management.",
-    users: ["/dashboardImage/Fashion.png", "/dashboardImage/T-Shirt.png", "/dashboardImage/Cap.png"],
-    status: "Active"
-  },
-  {
-    id: 2,
-    name: "Editor",
-    description: "Can manage products, categories, and brands. Access to media gallery and reviews.",
-    users: ["/dashboardImage/Electronics.png", "/dashboardImage/Accessories.png"],
-    status: "Active"
-  },
-  {
-    id: 3,
-    name: "Order Manager",
-    description: "Handles order processing, shipping updates, and transaction monitoring.",
-    users: ["/dashboardImage/Cap.png", "/dashboardImage/Fashion.png"],
-    status: "Active"
-  },
-  {
-    id: 4,
-    name: "Support Staff",
-    description: "Access to customer reviews, support tickets, and basic user information.",
-    users: ["/dashboardImage/T-Shirt.png"],
-    status: "Inactive"
-  },
-  {
-    id: 5,
-    name: "Content Creator",
-    description: "Permission to upload media, write product descriptions, and manage blog content.",
-    users: ["/dashboardImage/Accessories.png", "/dashboardImage/Electronics.png", "/dashboardImage/Fashion.png"],
-    status: "Active"
-  },
+const modules = [
+ { id: "products", label: "Product Catalog", category: "Inventory" },
+ { id: "orders", label: "Order Management", category: "Commerce" },
+ { id: "customers", label: "Customer Data", category: "Users" },
+ { id: "transactions", label: "Payments & Refunds", category: "Finance" },
+ { id: "marketing", label: "Coupons & Deals", category: "Marketing" },
+ { id: "support", label: "Support Tickets", category: "System" },
+ { id: "settings", label: "Global Config", category: "System" },
 ];
 
-const statusStyles = {
-  Active: "text-blue-500 bg-brand-blue-light",
-  Inactive: "text-gray-400 bg-gray-50",
-};
+const roles = [
+ { id: "sa", name: "Super Admin", color: "bg-blue-500", users: 3 },
+ { id: "ed", name: "Editor", color: "bg-emerald-500", users: 8 },
+ { id: "om", name: "Order Mgr", color: "bg-amber-500", users: 5 },
+ { id: "st", name: "Support", color: "bg-rose-500", users: 12 },
+];
 
-export default function PermissionsListing() {
-  const [activeTab, setActiveTab] = useState("All roles");
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [roleToDelete, setRoleToDelete] = useState<any>(null);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+const privileges = [
+ { id: "view", label: "View" },
+ { id: "create", label: "Create" },
+ { id: "edit", label: "Edit" },
+ { id: "delete", label: "Delete" },
+];
 
-  const toggleAll = () => {
-    if (selectedIds.length === rolesData.length) {
-      setSelectedIds([]);
-    } else {
-      setSelectedIds(rolesData.map(r => r.id));
-    }
-  };
-
-  const toggleItem = (id: number) => {
-    setSelectedIds(prev =>
-      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
-    );
-  };
-
-  const [roleToEdit, setRoleToEdit] = useState<any>(null);
-  const [isMoreActionsOpen, setIsMoreActionsOpen] = useState(false);
-  const [isSyncConfirmOpen, setIsSyncConfirmOpen] = useState(false);
-
-  const filteredRoles = rolesData.filter(role => {
-    if (activeTab === "All roles") return true;
-    if (activeTab === "Admin") return role.name.includes("Admin");
-    if (activeTab === "Staff") return role.name.includes("Manager") || role.name.includes("Editor") || role.name.includes("Staff");
-    if (activeTab === "User") return !role.name.includes("Admin") && !role.name.includes("Staff") && !role.name.includes("Manager");
-    return true;
+export default function PermissionsAccordion() {
+ // matrixState[roleId][moduleId][privilegeId] = boolean
+ const [matrixState, setMatrixState] = useState<Record<string, Record<string, Record<string, boolean>>>>(() => {
+  const initial: Record<string, Record<string, Record<string, boolean>>> = {};
+  roles.forEach(r => {
+   initial[r.id] = {};
+   modules.forEach(m => {
+    initial[r.id][m.id] = {};
+    privileges.forEach(p => {
+     // SA gets all, others get view only by default
+     initial[r.id][m.id][p.id] = r.id === "sa" || p.id === "view";
+    });
+   });
   });
+  return initial;
+ });
 
-  return (
-    <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
-      {/* Header Area */}
-      <div className="flex justify-end items-center">
-        <div className="flex gap-3">
-          <Button
-            variant="primary"
-            shape="rounded-sm"
-            iconLeft={<Icon name="circle-plus" folder="dashboardIcon" size="sm" />}
-            onClick={() => setIsAddModalOpen(true)}
-          >
-            Add Role
-          </Button>
-          <Button
-            variant="outline"
-            shape="rounded-sm"
-            iconRight={<Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" className="text-gray-400" />}
-            onClick={() => setIsMoreActionsOpen(true)}
-          >
-            More Action
-          </Button>
+ const [expandedRoleId, setExpandedRoleId] = useState<string | null>("sa");
+ const [activeCategory, setActiveCategory] = useState("All sectors");
+ const [searchQuery, setSearchQuery] = useState("");
+ const [rowsPerPage, setRowsPerPage] = useState(10);
+ const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
+
+ const togglePermission = (roleId: string, moduleId: string, privId: string) => {
+  setMatrixState(prev => ({
+   ...prev,
+   [roleId]: {
+    ...prev[roleId],
+    [moduleId]: {
+     ...prev[roleId][moduleId],
+     [privId]: !prev[roleId][moduleId][privId]
+    }
+   }
+  }));
+ };
+
+ const toggleModuleRow = (roleId: string, moduleId: string) => {
+  const allOn = privileges.every(p => matrixState[roleId][moduleId][p.id]);
+  setMatrixState(prev => ({
+   ...prev,
+   [roleId]: {
+    ...prev[roleId],
+    [moduleId]: privileges.reduce((acc, p) => ({ ...acc, [p.id]: !allOn }), {} as any)
+   }
+  }));
+ };
+
+ const filteredModules = modules.filter(module => {
+  const matchesCategory = activeCategory === "All sectors" || module.category === activeCategory;
+  const matchesSearch = module.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+   module.category.toLowerCase().includes(searchQuery.toLowerCase());
+  return matchesCategory && matchesSearch;
+ });
+
+ return (
+  <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
+   {/* Action Bar */}
+   <div className="flex justify-between items-end gap-6 mb-2">
+    <div className="flex flex-col gap-1">
+     <h2 className="text-xl font-black text-[#1D3557]">Administrative Permissions</h2>
+     <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest leading-none">Role Based Governance</p>
+    </div>
+    <div className="flex gap-3">
+     <Button
+      variant="primary"
+      shape="rounded-sm"
+      iconLeft={<Icon name="verified" folder="icon" size="sm" />}
+      onClick={() => setIsSyncModalOpen(true)}
+     >
+      Deploy All Policies
+     </Button>
+    </div>
+   </div>
+
+   {/* Global Filter Bar */}
+   <div className="bg-white rounded-[6px] border border-[#1C1C1C1A] p-4 sm:p-6 flex flex-col lg:flex-row gap-6 items-center justify-between">
+    <div className="flex items-center gap-3 w-full lg:w-auto">
+     <Dropdown
+      options={[
+       { value: "All sectors", label: "All Administrative Sectors" },
+       { value: "Inventory", label: "Inventory Sector" },
+       { value: "Commerce", label: "Commerce Sector" },
+       { value: "Users", label: "Users Sector" },
+       { value: "Finance", label: "Finance Sector" },
+       { value: "Marketing", label: "Marketing Sector" },
+       { value: "System", label: "System Sector" },
+      ]}
+      value={activeCategory}
+      onChange={setActiveCategory}
+      className="w-full lg:w-[250px]"
+      size="md"
+      variant="minimal"
+     />
+     <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest whitespace-nowrap hidden xl:block">:Filter Sector</span>
+    </div>
+
+    <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
+     <div className="flex-1 xl:w-80 relative group">
+      <Input
+       type="text"
+       placeholder="Search modules or keywords..."
+       value={searchQuery}
+       onChange={(e) => setSearchQuery(e.target.value)}
+      />
+      <Icon name="search-01" folder="dashboardIcon" size="xs" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-brand-blue transition-colors" />
+     </div>
+     <RowsPerPage value={rowsPerPage} onChange={setRowsPerPage} />
+    </div>
+   </div>
+
+   {/* Role Accordion List */}
+   <div className="flex flex-col gap-4">
+    {roles.map((role) => {
+     const isExpanded = expandedRoleId === role.id;
+
+     return (
+      <div key={role.id} className="bg-white rounded-[6px] border border-[#1C1C1C1A] overflow-hidden flex flex-col transition-all duration-300 hover:shadow-md">
+       {/* Accordion Header */}
+       <button
+        onClick={() => setExpandedRoleId(isExpanded ? null : role.id)}
+        className={`w-full flex items-center justify-between p-5 text-left transition-colors ${isExpanded ? 'bg-gray-50/50 border-b border-gray-100' : 'hover:bg-gray-50/30'}`}
+       >
+        <div className="flex items-center gap-4">
+         <div className={`w-3 h-3 rounded-full ${role.color} shadow-sm`} />
+         <div className="flex flex-col gap-0.5">
+          <span className="text-base font-black text-[#1D3557]">{role.name}</span>
+          <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{role.users} Active Users Assigned</span>
+         </div>
         </div>
-      </div>
-
-      <div className="bg-white rounded-[6px] border border-gray-100 shadow-sm overflow-hidden flex flex-col">
-        {/* Filter Controls Bar */}
-        <div className="p-4 sm:p-6 flex flex-col lg:flex-row gap-6 items-center justify-between border-b border-gray-50">
-          <TabFilter
-            tabs={["All roles", "Admin", "Staff", "User"]}
-            activeTab={activeTab}
-            onChange={setActiveTab}
-          />
-
-          <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
-            <Input
-              type="text"
-              placeholder="Search role name..."
-              containerClassName="flex-1 xl:w-96"
-              className="bg-white border-gray-100 placeholder:text-gray-400 text-xs font-medium"
-              suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
-            />
-            <RowsPerPage value={rowsPerPage} onChange={setRowsPerPage} />
-
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                shape="rounded-sm"
-                className="!p-2.5 text-gray-400"
-              >
-                <Icon name="sort" folder="dashboardIcon" size="sm" />
-              </Button>
-              <Button
-                variant="outline"
-                shape="rounded-sm"
-                className="!p-2.5 text-gray-400"
-              >
-                <Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />
-              </Button>
-            </div>
-          </div>
+        <div className="flex items-center gap-4">
+         <div className="flex -space-x-2 mr-2">
+          {[1, 2, 3].map(i => (
+           <div key={i} className="w-6 h-6 rounded-full border-2 border-white bg-gray-100 flex items-center justify-center">
+            <Icon name="user-profile-circle" folder="dashboardIcon" size="sm" className="text-gray-300" />
+           </div>
+          ))}
+         </div>
+         <HiChevronDown
+          className={`text-gray-400 transition-transform duration-300 ${isExpanded ? "rotate-180" : ""}`}
+          size={20}
+         />
         </div>
+       </button>
 
-        {/* Roles Table */}
-        <div className="admin-table-container">
-          <table>
+       {/* Accordion Content */}
+       <AnimatePresence>
+        {isExpanded && (
+         <motion.div
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: "auto", opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="overflow-hidden"
+         >
+          <div className="p-0 sm:p-0 overflow-x-auto admin-table-container">
+           <table className="w-full">
             <thead>
-              <tr>
-                <th className="w-10">
-                  <Checkbox
-                    checked={selectedIds.length === rolesData.length && rolesData.length > 0}
-                    onChange={toggleAll}
-                  />
-                </th>
-                <th>Role Name</th>
-                <th>Description</th>
-                <th>Assigned Users</th>
-                <th>Status</th>
-                <th className="text-right">Action</th>
-              </tr>
+             <tr className="bg-gray-50/20 border-b border-gray-100">
+              <th className="py-4 pl-8 text-left">
+               <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">System Module</span>
+              </th>
+              {privileges.map(p => (
+               <th key={p.id} className="py-4 text-center">
+                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{p.label}</span>
+               </th>
+              ))}
+              <th className="py-4 pr-8 text-right w-24">
+               <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Toggle All</span>
+              </th>
+             </tr>
             </thead>
             <tbody>
-              {filteredRoles.map((role) => (
-                <tr key={role.id} className="group">
-                  <td>
-                    <Checkbox
-                      checked={selectedIds.includes(role.id)}
-                      onChange={() => toggleItem(role.id)}
-                    />
-                  </td>
-                  <td>
-                    <span className="text-sm font-bold text-[#1D3557] group-hover:text-blue-600 transition-colors">
-                      {role.name}
-                    </span>
-                  </td>
-                  <td className="max-w-[400px]">
-                    <p className="text-xs font-medium text-gray-500 leading-relaxed line-clamp-2">
-                      {role.description}
-                    </p>
-                  </td>
-                  <td>
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-50 border border-gray-100">
-                        <Icon name="user-profile-circle" folder="dashboardIcon" size="sm" className="text-gray-400" />
-                      </div>
-                      <span className="text-sm font-bold text-[#1D3557]">{role.users.length} Users</span>
-                    </div>
-                  </td>
-                  <td>
-                    <span className={`px-3 py-1.5 rounded-[6px] text-[10px] font-bold ${statusStyles[role.status as keyof typeof statusStyles]}`}>
-                      {role.status}
-                    </span>
-                  </td>
-                  <td className="text-right text-gray-300">
-                    <div className="flex justify-end gap-4 text-gray-400">
-                      <Button
-                        variant="outline"
-                        shape="rounded-sm"
-                        className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
-                        onClick={() => {
-                          setRoleToEdit(role);
-                          setIsEditDrawerOpen(true);
-                        }}
-                      >
-                        <Icon name="settings" folder="dashboardIcon" size="sm" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        shape="rounded-sm"
-                        className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
-                        onClick={() => setRoleToDelete(role)}
-                      >
-                        <Icon name="Delete" folder="dashboardIcon" size="sm" />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+             {filteredModules.map((module, mIdx) => (
+              <motion.tr
+               key={module.id}
+               initial={{ opacity: 0, x: -5 }}
+               animate={{ opacity: 1, x: 0 }}
+               transition={{ delay: mIdx * 0.02 }}
+               className="border-b border-gray-50 last:border-0 hover:bg-gray-50/30 transition-colors"
+              >
+               <td className="py-4 pl-8">
+                <div className="flex flex-col">
+                 <span className="text-[13px] font-black text-[#1D3557]">{module.label}</span>
+                 <span className="text-[9px] font-bold text-gray-300 uppercase tracking-widest">{module.category} Sector</span>
+                </div>
+               </td>
+               {privileges.map(p => (
+                <td key={p.id} className="py-4 text-center px-4">
+                 <div className="flex justify-center items-center">
+                  <div className={`p-1.5 rounded-lg transition-all ${matrixState[role.id][module.id][p.id] ? 'bg-emerald-50/40' : 'hover:bg-gray-50'}`}>
+                   <Checkbox
+                    checked={matrixState[role.id][module.id][p.id]}
+                    onChange={() => togglePermission(role.id, module.id, p.id)}
+                   />
+                  </div>
+                 </div>
+                </td>
+               ))}
+               <td className="py-4 pr-8 text-right">
+                <button
+                 onClick={() => toggleModuleRow(role.id, module.id)}
+                 className="w-7 h-7 rounded-lg bg-gray-50 flex items-center justify-center text-gray-300 hover:bg-brand-blue-light hover:text-brand-blue transition-all"
+                >
+                 <Icon name="verified" folder="icon" size="md" />
+                </button>
+               </td>
+              </motion.tr>
+             ))}
             </tbody>
-          </table>
-        </div>
+           </table>
 
-        {/* Pagination Footer */}
-        <Pagination
-          currentPage={currentPage}
-          totalPages={12}
-          onPageChange={setCurrentPage}
-        />
+           {filteredModules.length === 0 && (
+            <div className="flex flex-col items-center justify-center py-20">
+             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest italic opacity-60">No modules found for current filters</span>
+            </div>
+           )}
+          </div>
+         </motion.div>
+        )}
+       </AnimatePresence>
       </div>
+     );
+    })}
+   </div>
 
-      <ConfirmationModal
-        isOpen={!!roleToDelete}
-        onClose={() => setRoleToDelete(null)}
-        onConfirm={() => {
-          console.log(`Deleting role ${roleToDelete?.name}...`);
-          setRoleToDelete(null);
-        }}
-        title="Delete Administrative Role"
-        message={`Are you sure you want to delete the "${roleToDelete?.name}" role? This will affect all ${roleToDelete?.users.length} users assigned to it and cannot be undone.`}
-        confirmText="Yes, delete role"
-        type="danger"
-      />
-
-      <AddRoleModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-      />
-
-      <EditRoleDrawer
-        isOpen={isEditDrawerOpen}
-        onClose={() => setIsEditDrawerOpen(false)}
-        role={roleToEdit}
-      />
-
-      <RolesMoreActionsDrawer
-        isOpen={isMoreActionsOpen && selectedIds.length === 0}
-        onClose={() => setIsMoreActionsOpen(false)}
-        onSyncPermissions={() => setIsSyncConfirmOpen(true)}
-      />
-
-      <BulkActionsDrawer
-        isOpen={selectedIds.length > 0}
-        onClose={() => setSelectedIds([])}
-        selectedIds={selectedIds}
-        items={rolesData}
-        onClearSelection={() => setSelectedIds([])}
-        title="Roles Selected"
-        actions={[
-          {
-            id: "export",
-            title: "Export Selected",
-            icon: "cloud_download",
-            folder: "icon",
-            onClick: () => console.log("Exporting selected roles..."),
-          },
-          {
-            id: "delete",
-            title: "Delete All Selected",
-            icon: "Delete",
-            folder: "dashboardIcon",
-            variant: "danger",
-            onClick: () => setIsDeleteModalOpen(true),
-          },
-        ]}
-      />
-
-      <ConfirmationModal
-        isOpen={isSyncConfirmOpen}
-        onClose={() => setIsSyncConfirmOpen(false)}
-        onConfirm={() => {
-          console.log("Synchronizing global permissions...");
-          setIsSyncConfirmOpen(false);
-        }}
-        title="Sync Global Rules"
-        message="Are you sure you want to force synchronize administrative access rules across all server instances? this will temporarily override local configurations."
-        confirmText="Yes, sync now"
-        type="success"
-      />
-    </div>
-  );
+   {/* Global Sync Modal */}
+   <ConfirmationModal
+    isOpen={isSyncModalOpen}
+    onClose={() => setIsSyncModalOpen(false)}
+    onConfirm={() => {
+     console.log("Deploying role-based policies globally...");
+     setIsSyncModalOpen(false);
+    }}
+    title="Deploy Governance Policies"
+    message="Are you sure you want to force synchronize these role-based access rules across all server instances? This will override local permission sets for all active accounts immediately."
+    confirmText="Initialize Sync"
+    type="success"
+   />
+  </div>
+ );
 }

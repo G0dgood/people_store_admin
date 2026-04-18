@@ -286,9 +286,9 @@ export default function CustomersListing() {
           <td className="whitespace-nowrap">
            <span className="text-sm font-semibold text-gray-700">{customer.name}</span>
           </td>
-          <td className="text-sm font-medium text-gray-500 whitespace-nowrap">{customer.phone}</td>
-          <td className="text-sm font-bold text-gray-900 text-center">{customer.orderCount}</td>
-          <td className="text-sm font-bold text-gray-900">{customer.totalSpend}</td>
+          <td>{customer.phone}</td>
+          <td>{customer.orderCount}</td>
+          <td>{customer.totalSpend}</td>
           <td>
            <div className="flex items-center gap-2">
             <span className={`w-1.5 h-1.5 rounded-full ${statusDots[customer.status as keyof typeof statusDots]}`}></span>

@@ -39,7 +39,7 @@ export default function RefundsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [isDetailDrawerOpen, setIsDetailDrawerOpen] = useState(false);
   const [selectedRefund, setSelectedRefund] = useState<any>(null);
-  
+
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
   const [actionTarget, setActionTarget] = useState<any>(null);
 
@@ -99,8 +99,7 @@ export default function RefundsPage() {
           <TabFilter
             tabs={["All refunds", "Completed", "Pending", "Canceled"]}
             activeTab={activeTab}
-            onChange={setActiveTab}
-          />
+            onChange={setActiveTab} id={""} />
 
           <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
             <Input
@@ -142,9 +141,9 @@ export default function RefundsPage() {
                 </th>
                 <th>Refund Id</th>
                 <th>Customer</th>
-                <th className="text-center">Date</th>
+                <th>Date</th>
                 <th>Amount</th>
-                <th className="text-center">Method</th>
+                <th>Method</th>
                 <th>Status</th>
                 <th className="text-right">Action</th>
               </tr>
@@ -161,10 +160,10 @@ export default function RefundsPage() {
                   <td>
                     <span className="text-xs font-bold text-gray-900">{refund.refundId}</span>
                   </td>
-                  <td className="text-xs font-bold text-gray-700">{refund.name}</td>
-                  <td className="text-xs font-bold text-gray-400 text-center">{refund.date}</td>
-                  <td className="text-xs font-bold text-gray-900">{refund.total}</td>
-                  <td className="text-xs font-bold text-gray-700 text-center">{refund.method}</td>
+                  <td>{refund.name}</td>
+                  <td>{refund.date}</td>
+                  <td>{refund.total}</td>
+                  <td>{refund.method}</td>
                   <td>
                     <div className="flex items-center gap-2">
                       <span className={`w-1.5 h-1.5 rounded-full ${statusStyles[refund.status as keyof typeof statusStyles].bg}`}></span>
@@ -183,7 +182,7 @@ export default function RefundsPage() {
                         }}
                         title="Update Status"
                       >
-                        <Icon name="cached" folder="icon" size="xs" />
+                        <Icon name="cached" folder="icon" size="sm" />
                       </Button>
                       <Button
                         variant="outline"
@@ -195,7 +194,7 @@ export default function RefundsPage() {
                         }}
                         title="View Details"
                       >
-                        <Icon name="description" folder="icon" size="xs" />
+                        <Icon name="description" folder="icon" size="sm" />
                       </Button>
                     </div>
                   </td>
@@ -218,8 +217,8 @@ export default function RefundsPage() {
         onClose={() => setIsDetailDrawerOpen(false)}
         refund={selectedRefund}
         onUpdateStatus={() => {
-           setActionTarget(selectedRefund);
-           setIsStatusModalOpen(true);
+          setActionTarget(selectedRefund);
+          setIsStatusModalOpen(true);
         }}
       />
 
@@ -246,8 +245,8 @@ export default function RefundsPage() {
             icon: "cached",
             folder: "icon",
             onClick: () => {
-               setActionTarget({ count: selectedIds.length });
-               setIsStatusModalOpen(true);
+              setActionTarget({ count: selectedIds.length });
+              setIsStatusModalOpen(true);
             },
           },
         ]}
@@ -257,8 +256,8 @@ export default function RefundsPage() {
         isOpen={isStatusModalOpen}
         onClose={() => setIsStatusModalOpen(false)}
         onConfirm={(status, reason) => {
-           console.log(`Updating ${actionTarget?.count ? 'bulk' : 'single'} to ${status} with reason: ${reason}`);
-           setSelectedIds([]);
+          console.log(`Updating ${actionTarget?.count ? 'bulk' : 'single'} to ${status} with reason: ${reason}`);
+          setSelectedIds([]);
         }}
         target={actionTarget}
       />
