@@ -2,6 +2,7 @@
 
 import React from "react";
 import { motion, Variants } from "framer-motion";
+import Link from "next/link";
 import { Icon } from "../Icon";
 import { Checkbox } from "../Form";
 
@@ -16,6 +17,7 @@ interface DropdownItemProps {
   isDisabled?: boolean;
   hasSubmenu?: boolean;
   className?: string;
+  href?: string;
 }
 
 const DropdownItem: React.FC<DropdownItemProps> = ({
@@ -29,12 +31,13 @@ const DropdownItem: React.FC<DropdownItemProps> = ({
   isDisabled = false,
   hasSubmenu = false,
   className = "",
+  href,
 }) => {
-  return (
+  const content = (
     <div
-      onClick={!isDisabled ? onSelect : undefined}
+      onClick={!isDisabled && !href ? onSelect : undefined}
       className={`
-        flex items-center gap-3 px-4 py-2.5 transition-all cursor-pointer
+        flex items-center gap-3 px-4 py-2.5 transition-all cursor-pointer w-full
         ${isDisabled ? "opacity-40 cursor-not-allowed" : "hover:bg-gray-50"}
         ${isActive ? "bg-brand-blue-light text-brand-blue" : "text-gray-700"}
         ${className}
@@ -81,6 +84,16 @@ const DropdownItem: React.FC<DropdownItemProps> = ({
       )}
     </div>
   );
+
+  if (href && !isDisabled) {
+    return (
+      <Link href={href} onClick={onSelect} className="block w-full">
+        {content}
+      </Link>
+    );
+  }
+
+  return content;
 };
 
 interface DropdownMenuProps {

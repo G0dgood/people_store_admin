@@ -98,7 +98,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilters }) =>
       {/* Categories */}
       <FilterSection title="Category">
         <ul className="flex flex-col gap-2 text-sm">
-          {["Mobile accessory", "Electronics", "Smartphones", "Modern tech"].map((cat) => (
+          {["Signature Fragrance", "Luxury Skincare", "Boutique Gift Sets", "Body & Bath", "Home Fragrance"].map((cat) => (
             <li
               key={cat}
               onClick={() => handleCategoryClick(cat)}
@@ -107,13 +107,13 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilters }) =>
               {cat}
             </li>
           ))}
-          <li className="text-brand-blue font-medium mt-2 cursor-pointer">See all</li>
+          <li className="text-brand-blue font-medium mt-2 cursor-pointer">View all boutique</li>
         </ul>
       </FilterSection>
 
       {/* Brands */}
-      <FilterSection title="Brands">
-        {["Samsung", "Apple", "Huawei", "Pocco", "Lenovo"].map((brand) => (
+      <FilterSection title="Artisanal Houses">
+        {["Bloom & Mist", "Prada", "Versace", "Gucci", "Dior"].map((brand) => (
           <Checkbox
             key={brand}
             label={brand}
@@ -122,7 +122,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilters }) =>
             size="lg"
           />
         ))}
-        <span className="text-brand-blue text-sm font-medium mt-1 cursor-pointer">See all</span>
+        <span className="text-brand-blue text-sm font-medium mt-1 cursor-pointer">View all houses</span>
       </FilterSection>
 
       {/* Price Range */}
@@ -158,9 +158,9 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilters }) =>
         </div>
       </FilterSection>
 
-      {/* Condition */}
-      <FilterSection title="Condition">
-        {["Any", "Refurbished", "Brand new", "Old items"].map((cond) => (
+      {/* Collection */}
+      <FilterSection title="Collection Type">
+        {["Any", "Intense", "Discovery", "Essential", "Seasonal"].map((cond) => (
           <Radio
             key={cond}
             name="condition"

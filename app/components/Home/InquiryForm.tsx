@@ -10,20 +10,20 @@ const InquiryForm = () => {
   return (
     <section className="w-full relative rounded-lg min-h-[420px] shadow-sm flex bg-brand-blue/90 overflow-hidden">
       <Image
-        src="/web_images/Mask_group_two.png"
+        src="/brandImage/cat_fragrance.png"
         alt="Inquiry BG"
         fill
         className="object-cover absolute inset-0 z-0"
       />
-      <div className="absolute inset-0 z-0 bg-gradient-to-r from-brand-blue/0 via-brand-blue/0 to-transparent"></div>
+      <div className="absolute inset-0 z-0 bg-brand-blue/30 backdrop-blur-[2px]"></div>
 
       <div className="relative z-10 w-full p-6 md:p-10 flex flex-col lg:flex-row justify-between gap-10">
         <div className="max-w-md text-white flex flex-col gap-4 z-10">
           <h2 className="text-3xl md:text-[32px] font-bold leading-tight drop-shadow-sm pr-4 text-white">
             An easy way to send requests to all suppliers
           </h2>
-          <p className="text-base text-white hidden md:block leading-relaxed max-w-[390px]">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.
+          <p className="text-base text-white hidden md:block leading-relaxed max-w-[390px] drop-shadow-md">
+            Connect with our global network of artisanal perfumers and clinical lab directors to source the perfect ingredients for your boutique.
           </p>
         </div>
 

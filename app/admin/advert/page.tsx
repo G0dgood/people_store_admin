@@ -13,7 +13,7 @@ import Checkbox from "../../components/Checkbox";
 import { TabFilter } from "../../components/Admin/TabFilter";
 import Dropdown from "../../components/Form/Dropdown";
 import { AdvertSkeleton } from "../../components/Skeleton/AdvertSkeleton";
-import { LuPencilLine } from "react-icons/lu";
+import { LuPencilLine, LuArrowLeftRight } from "react-icons/lu";
 
 const availableBackgrounds = [
   "/images/login-hero.png",
@@ -41,6 +41,7 @@ export default function AdvertManagement() {
   const [isRefineModalOpen, setIsRefineModalOpen] = useState(false);
   const [isStoryModalOpen, setIsStoryModalOpen] = useState(false);
   const [refiningAssetIndex, setRefiningAssetIndex] = useState<number | null>(null);
+  const [replacingAssetIndex, setReplacingAssetIndex] = useState<number | null>(null);
   const [editingStoryIndex, setEditingStoryIndex] = useState<number | null>(null);
   const [activeVisualIndex, setActiveVisualIndex] = useState<number | null>(null); // null means Global Sequence
   const [backgroundModalTab, setBackgroundModalTab] = useState<"ambient" | "products" | "url" | "upload">("ambient");
@@ -100,6 +101,18 @@ export default function AdvertManagement() {
       }
     }
     setConfig({ ...config, backgroundImages: newBackgrounds });
+  };
+
+  const handleSelectBackground = (bgUrl: string) => {
+    if (replacingAssetIndex !== null && config) {
+      const newBackgrounds = [...config.backgroundImages];
+      newBackgrounds[replacingAssetIndex] = { ...newBackgrounds[replacingAssetIndex], url: bgUrl };
+      setConfig({ ...config, backgroundImages: newBackgrounds });
+      setReplacingAssetIndex(null);
+      setIsBackgroundModalOpen(false);
+    } else {
+      toggleBackgroundSelection(bgUrl);
+    }
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement> | FileList) => {
@@ -453,6 +466,16 @@ export default function AdvertManagement() {
                           </button>
                           <button
                             onClick={() => {
+                              setReplacingAssetIndex(i);
+                              setIsBackgroundModalOpen(true);
+                            }}
+                            className="w-9 h-9 bg-white rounded-full flex items-center justify-center text-[#1D3557] hover:bg-brand-blue hover:text-white transition-all shadow-lg text-lg"
+                            title="Replace Image"
+                          >
+                            <LuArrowLeftRight />
+                          </button>
+                          <button
+                            onClick={() => {
                               setRefiningAssetIndex(i);
                               setIsRefineModalOpen(true);
                             }}
@@ -666,8 +689,11 @@ export default function AdvertManagement() {
       {/* Background Library Modal */}
       <Modal
         isOpen={isBackgroundModalOpen}
-        onClose={() => setIsBackgroundModalOpen(false)}
-        title="Atmospheric Visual Library"
+        onClose={() => {
+          setIsBackgroundModalOpen(false);
+          setReplacingAssetIndex(null);
+        }}
+        title={replacingAssetIndex !== null ? "Replace Atmosphere Visual" : "Atmospheric Visual Library"}
         size="lg"
       >
         <div className="flex flex-col gap-6">
@@ -698,7 +724,7 @@ export default function AdvertManagement() {
                   return (
                     <button
                       key={i}
-                      onClick={() => toggleBackgroundSelection(bg)}
+                      onClick={() => handleSelectBackground(bg)}
                       className={`group relative aspect-[16/10] rounded-[6px] overflow-hidden border-4 transition-all
                           ${isSelected ? "border-brand-blue ring-8 ring-blue-50 scale-[1.02]" : "border-transparent opacity-70 hover:opacity-100 shadow-sm"}
                         `}
@@ -724,7 +750,7 @@ export default function AdvertManagement() {
                   return (
                     <button
                       key={product.id}
-                      onClick={() => toggleBackgroundSelection(product.image)}
+                      onClick={() => handleSelectBackground(product.image)}
                       className={`group relative aspect-square rounded-[6px] overflow-hidden border-2 transition-all p-2 flex flex-col gap-2
                           ${isSelected ? "border-brand-blue bg-blue-50/20 ring-4 ring-blue-50" : "border-gray-100 bg-white hover:border-blue-200 shadow-sm"}
                         `}
@@ -770,7 +796,7 @@ export default function AdvertManagement() {
                     shape="rounded-sm"
                     onClick={() => {
                       if (customUrl) {
-                        toggleBackgroundSelection(customUrl);
+                        handleSelectBackground(customUrl);
                         setCustomUrl("");
                       }
                     }}

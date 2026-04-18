@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "./Icon";
 import { StoreButtons } from "./Other/Misc";
+import { Newsletter } from "./Home/Newsletter";
 
 import { useAuthModal } from "@/app/context/AuthModalContext";
 
@@ -14,27 +15,27 @@ const Footer = () => {
     {
       title: "About",
       links: [
-        { label: "About Us", href: "#" },
-        { label: "Find store", href: "#" },
-        { label: "Categories", href: "#" },
-        { label: "Blogs", href: "#" }
+        { label: "About Us", href: "/about" },
+        // { label: "Find store", href: "#" },
+        { label: "Categories", href: "/categories" },
+        { label: "Blogs", href: "/blog" }
       ],
     },
-    {
-      title: "Partnership",
-      links: [
-        { label: "About Us", href: "#" },
-        { label: "Find store", href: "#" },
-        { label: "Categories", href: "#" },
-      ],
-    },
+    // {
+    //   title: "Partnership",
+    //   links: [
+    //     { label: "About Us", href: "#" },
+    //     { label: "Find store", href: "#" },
+    //     { label: "Categories", href: "#" },
+    //   ],
+    // },
     {
       title: "Information",
       links: [
         { label: "Help Center", href: "/faq" },
-        { label: "Money Refund", href: "#" },
-        { label: "Shipping", href: "/faq" },
-        { label: "Contact us", href: "#" }
+        { label: "Money Refund", href: "/refund" },
+        { label: "Shipping", href: "/shipping" },
+        { label: "Contact us", href: "/contact" }
       ],
     },
     {
@@ -49,19 +50,22 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="w-full bg-white border-t border-gray-200 pt-16 pb-8">
+    <>
+      <Newsletter />
+      <footer className="w-full bg-white border-t border-gray-200 pt-16 pb-8">
       <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-12 mb-16">
         {/* Brand Column */}
         <div className="lg:col-span-2">
-          <Image
-            src="/brand_logo/logo-colored.svg"
-            alt="Brand Logo"
-            width={150}
-            height={46}
-            className="h-10 w-auto mb-4"
-          />
+          <div className="flex items-center gap-2 mb-4">
+            <div className="h-8 overflow-hidden">
+              <img src="/brand_logo/logo-symbol.svg" alt="Bloom & Mist" className="h-full object-contain" />
+            </div>
+            <span className="font-black text-xl tracking-tighter text-[#8CB7F5] font-inter whitespace-nowrap">
+              Bloom & Mist
+            </span>
+          </div>
           <p className="text-gray-500 text-sm leading-relaxed max-w-[280px]">
-            Best information about the company gies here but now lorem ipsum is
+            The premier destination for Signature Fragrances, Luxury Skincare, and bespoke Boutique Gifts. Best experiences in every petal.
           </p>
           <div className="flex items-center gap-3 mt-4">
             <div className="w-8 h-8 rounded-full bg-[#BDC1C7] flex items-center justify-center text-white cursor-pointer hover:bg-brand-blue transition-colors">
@@ -108,7 +112,7 @@ const Footer = () => {
       {/* Footer Bottom */}
       <div className="w-full bg-gray-100 py-6 border-t border-gray-200">
         <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 flex items-center justify-between text-sm text-gray-500">
-          <p>© 2023 Ecommerce.</p>
+          <p>© {new Date().getFullYear()} Bloom & Mist. All rights reserved.</p>
           <div className="flex items-center gap-2 cursor-pointer">
             <div className="w-5 h-4 bg-gray-200 rounded-sm"></div>
             <span>English</span>
@@ -117,6 +121,7 @@ const Footer = () => {
         </div>
       </div>
     </footer>
+    </>
   );
 };
 

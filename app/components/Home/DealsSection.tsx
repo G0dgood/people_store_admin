@@ -21,9 +21,9 @@ const containerVariants: Variants = {
 
 const itemVariants: Variants = {
   hidden: { opacity: 0, y: 20, scale: 0.95 },
-  visible: { 
-    opacity: 1, 
-    y: 0, 
+  visible: {
+    opacity: 1,
+    y: 0,
     scale: 1,
     transition: {
       type: "spring",
@@ -34,11 +34,11 @@ const itemVariants: Variants = {
 };
 
 const dealProducts = [
-  { id: "d1", name: "Smart watches", discount: "-25%", image: "/images/watch.jpg", price: "₦100.00" },
-  { id: "d2", name: "Laptops", discount: "-15%", image: "/images/laptop.jpg", price: "₦800.00" },
-  { id: "d3", name: "GoPro cameras", discount: "-40%", image: "/images/camera.jpg", price: "₦250.00" },
-  { id: "d4", name: "Headphones", discount: "-25%", image: "/images/headphone.jpg", price: "₦150.00" },
-  { id: "d5", name: "Canon camaras", discount: "-25%", image: "/images/camera.jpg", price: "₦450.00" },
+  { id: "d1", name: "Prada Paradoxe", discount: "-25%", image: "/Dealsandoffers/deal_prada.png", price: "₦85.00" },
+  { id: "d2", name: "CK Everyone", discount: "-15%", image: "/Dealsandoffers/deal_ck.png", price: "₦55.00" },
+  { id: "d3", name: "Versace Eros Flame", discount: "-40%", image: "/Dealsandoffers/deal_versace_eros.jpg", price: "₦95.00" },
+  { id: "d4", name: "Polo Blue EDT", discount: "-25%", image: "/Dealsandoffers/deal_polo_blue.png", price: "₦75.00" },
+  { id: "d5", name: "Polo Green EDT", discount: "-25%", image: "/Dealsandoffers/deal_polo_green.jpg", price: "₦72.00" },
 ];
 
 const timerUnits = [
@@ -64,16 +64,16 @@ const DealsSection = () => {
   };
 
   return (
-    <section className="w-full bg-white border border-gray-200 md:rounded-lg flex flex-col md:flex-row shadow-sm overflow-hidden">
+    <section className="w-full bg-white border border-[#1C1C1C1A] rounded-[6px] md:rounded-lg flex flex-col md:flex-row overflow-hidden">
       <div className="w-full md:w-72 p-6 border-b md:border-b-0 md:border-r border-gray-100 flex md:flex-col justify-between md:justify-start items-center md:items-start gap-4 md:gap-6">
         <div className="flex flex-col">
           <h3 className="text-lg md:text-xl font-bold text-gray-900">Deals and offers</h3>
-          <p className="text-gray-400 text-xs md:text-sm">Hygiene equipments</p>
+          <p className="text-gray-400 text-xs md:text-sm">Luxury Fragrance</p>
         </div>
         <div className="flex gap-2">
           {timerUnits.map((t, idx) => (
-            <div 
-              key={idx} 
+            <div
+              key={idx}
               className="flex flex-col items-center justify-center w-11 h-11 md:w-12 md:h-12 bg-[#F7F7F7] md:bg-gray-600 rounded-md text-gray-900 md:text-white border border-gray-100 md:border-none shadow-sm"
             >
               <span className="text-sm font-bold">{t.v}</span>
@@ -82,7 +82,7 @@ const DealsSection = () => {
           ))}
         </div>
       </div>
-      <motion.div 
+      <motion.div
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
@@ -92,17 +92,17 @@ const DealsSection = () => {
         {dealProducts.map((prod, idx) => (
           <div key={idx} className="flex-shrink-0 relative group">
             <Link href="/products/detail">
-              <motion.div 
+              <motion.div
                 variants={itemVariants}
                 whileHover={{ y: -5, transition: { type: "spring", stiffness: 300, damping: 15 } }}
                 className="w-[140px] md:w-[200px] p-4 md:p-6 flex flex-col items-center gap-2 md:gap-3 hover:bg-gray-50 transition-colors cursor-pointer h-full"
               >
                 <div className="w-24 h-24 md:w-32 md:h-32 relative bg-white border border-gray-50 rounded-md p-2 flex items-center justify-center">
-                  <Image 
-                    src={prod.image} 
-                    alt={prod.name} 
-                    fill 
-                    className="object-contain group-hover:scale-105 transition-transform duration-300" 
+                  <Image
+                    src={prod.image}
+                    alt={prod.name}
+                    fill
+                    className="object-contain group-hover:scale-105 transition-transform duration-300"
                   />
                 </div>
                 <p className="text-xs md:text-sm text-center line-clamp-1 text-gray-600 group-hover:text-brand-blue transition-colors font-medium">
@@ -114,19 +114,19 @@ const DealsSection = () => {
 
                 {/* Hover Actions */}
                 <div className="mt-2 flex flex-col gap-2 w-full opacity-0 group-hover:opacity-100 transition-opacity">
-                   <div className="flex gap-1">
-                      <Button variant="ghost" size="sm" className="flex-1 text-[9px] h-7 font-bold border-gray-200">
-                         Details
-                      </Button>
-                      <Button 
-                        onClick={(e) => handleAddToCart(e, prod)}
-                        variant="primary" 
-                        size="sm" 
-                        className="flex-1 text-[9px] h-7 font-bold shadow-none"
-                      >
-                         + Cart
-                      </Button>
-                   </div>
+                  <div className="flex gap-1">
+                    <Button variant="ghost" size="sm" className="flex-1 text-[9px] h-7 font-bold border-gray-200">
+                      Details
+                    </Button>
+                    <Button
+                      onClick={(e) => handleAddToCart(e, prod)}
+                      variant="primary"
+                      size="sm"
+                      className="flex-1 text-[9px] h-7 font-bold shadow-none"
+                    >
+                      + Cart
+                    </Button>
+                  </div>
                 </div>
               </motion.div>
             </Link>

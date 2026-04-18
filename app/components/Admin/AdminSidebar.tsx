@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import { Icon } from "../Icon";
 import { ConfirmationModal } from "./ConfirmationModal";
 import { motion, AnimatePresence } from "framer-motion";
-import { HiChevronDown, HiOutlineQuestionMarkCircle, HiShieldCheck } from "react-icons/hi2";
+import { HiChevronDown, HiOutlineQuestionMarkCircle, HiShieldCheck, HiXMark, HiBars3BottomLeft } from "react-icons/hi2";
 import { RiPercentLine } from "react-icons/ri";
 
 interface NavGroup {
@@ -171,16 +171,21 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
         }`}
     >
       {/* Brand */}
-      <div className={`p-8 flex items-center ${isCollapsed ? "justify-center px-4" : "justify-between"}`}>
-        <div className="flex items-center gap-2">
-          <div className="h-6 overflow-hidden">
-            <img src="/dashboardIcon/dashboardLogo.svg" alt="DEALPORT" className="h-full object-contain" />
+      <div className={`p-6 flex items-center ${isCollapsed ? "justify-center px-4" : "justify-between"}`}>
+        <div className="flex items-center gap-1">
+          <div className="h-8 overflow-hidden">
+            <img src="/brand_logo/logo-symbol.svg" alt="Bloom & Mist" className="h-full object-contain" />
           </div>
+          {!isCollapsed && (
+            <span className="font-black text-xl tracking-tighter text-[#8CB7F5] font-inter whitespace-nowrap animate-in fade-in slide-in-from-left-2 duration-500">
+              Bloom & Mist
+            </span>
+          )}
         </div>
         {!isCollapsed && (
           <button
             onClick={() => setIsCollapsed(true)}
-            className="text-gray-400 hover:text-gray-900 transition-colors"
+            className="text-gray-400 hover:text-gray-900 transition-colors cursor-pointer"
           >
             <Icon name="menu-close" folder="dashboardIcon" size="md" />
           </button>
@@ -188,9 +193,9 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
         {isCollapsed && (
           <button
             onClick={() => setIsCollapsed(false)}
-            className="text-gray-400 hover:text-gray-900 transition-colors"
+            className="text-gray-400 hover:text-brand-blue transition-colors p-1 cursor-pointer"
           >
-            <Icon name="menu" folder="dashboardIcon" size="md" />
+            <HiXMark size={20} />
           </button>
         )}
       </div>
@@ -225,7 +230,7 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
                     transition={{ duration: 0.3, ease: "easeInOut" }}
                     className="overflow-hidden flex flex-col gap-1"
                   >
-                     {group.items.map((item) => (
+                    {group.items.map((item) => (
                       <NavItem
                         key={item.href}
                         item={item}
@@ -260,8 +265,8 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
             </div>
             {!isCollapsed && (
               <div className="flex flex-col min-w-0">
-                <span className="text-sm font-bold text-gray-900 truncate group-hover:text-rose-500 transition-colors">Dealport</span>
-                <span className="text-[10px] font-medium text-gray-400 truncate">Mark@thedesigner...</span>
+                <span className="text-sm font-bold text-gray-900 truncate group-hover:text-brand-blue transition-colors">Bloom & Mist</span>
+                <span className="text-[10px] font-medium text-gray-400 truncate">Store Management</span>
               </div>
             )}
           </div>

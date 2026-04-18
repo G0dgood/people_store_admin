@@ -38,42 +38,42 @@ const SupplierCard = () => {
             {/* Vendor Details */}
             <div className="flex flex-col gap-2">
                <div className="flex items-center gap-3">
-                  <div className="w-5 h-4 relative">
+                  {/* <div className="w-5 h-4 relative">
                      <Image src="/country/Property 1=DE.png" alt="Germany" fill className="object-cover" />
-                  </div>
-                  <span className="text-sm text-gray-400">Germany, Berlin</span>
+                  </div> */}
+                  {/* <span className="text-sm text-gray-400">Germany, Berlin</span> */}
                </div>
                <div className="flex items-center gap-3">
                   <Icon name="verified_user" size="sm" className="text-gray-400" />
                   <span className="text-sm text-gray-400">Verified Seller</span>
                </div>
-               <div className="flex items-center gap-3">
+               {/* <div className="flex items-center gap-3">
                   <Icon name="public" size="sm" className="text-gray-400" />
                   <span className="text-sm text-gray-400">Worldwide shipping</span>
-               </div>
+               </div> */}
             </div>
 
             {/* Actions */}
             <div className="flex flex-col gap-2">
-               <Button 
+               <Button
                   onClick={handleAddToCart}
                   className="w-full bg-brand-blue text-white h-10 hover:bg-brand-blue/90 shadow-none cursor-pointer"
                >
                   Add to cart
                </Button>
-               <Button variant="ghost" className="w-full bg-white text-brand-blue border border-gray-200 h-10 hover:bg-gray-50 shadow-none cursor-pointer">Seller's profile</Button>
+               {/* <Button variant="ghost" className="w-full bg-white text-brand-blue border border-gray-200 h-10 hover:bg-gray-50 shadow-none cursor-pointer">Seller's profile</Button> */}
             </div>
          </div>
 
          {/* Favorite Button Overlay (Design-specific placement) */}
-         <FavoriteButton 
+         <FavoriteButton
             item={{
                id: "detail-1",
                title: "Mens Long Sleeve T-shirt Cotton Base Layer Slim Muscle",
                price: "₦98.00",
                image: "/images/shirt.jpg",
             }}
-            variant="none" 
+            variant="none"
             className="flex items-center justify-center gap-2 py-4 text-brand-blue text-sm font-medium hover:underline cursor-pointer"
          >
             Save for later

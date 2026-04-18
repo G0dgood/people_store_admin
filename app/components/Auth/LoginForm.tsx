@@ -5,10 +5,12 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Input } from "../Form/Inputs";
 import { Button } from "../Button";
+import { Checkbox } from "../Form/Checkbox";
 
 export const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -69,6 +71,14 @@ export const LoginForm = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+            />
+          </div>
+
+          <div className="flex items-center justify-between mt-1 px-1">
+            <Checkbox
+              label={<span className="text-[9px] font-black text-gray-500 uppercase tracking-[0.1em]">Remember for 30 days</span>}
+              checked={rememberMe}
+              onChange={() => setRememberMe(!rememberMe)}
             />
           </div>
 

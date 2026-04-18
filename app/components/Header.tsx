@@ -47,26 +47,24 @@ const Header = () => {
           >
             <Icon name="menu" size="md" />
           </button>
-          <Link href="/" className="flex-shrink-0">
-            <Image
-              src="/brand_logo/logo-colored.svg"
-              alt="Brand Logo"
-              width={120}
-              height={36}
-              className="h-8 w-auto"
-            />
+          <Link href="/" className="flex-shrink-0 flex items-center gap-2">
+            <div className="h-8 overflow-hidden">
+              <img src="/brand_logo/logo-symbol.svg" alt="Bloom & Mist" className="h-full object-contain" />
+            </div>
+            <span className="font-black text-xl tracking-tighter text-[#8CB7F5] font-inter whitespace-nowrap animate-in fade-in slide-in-from-left-2 duration-500">
+              Bloom & Mist
+            </span>
           </Link>
         </div>
 
         {/* Desktop Logo */}
-        <Link href="/" className="flex-shrink-0 hidden lg:block">
-          <Image
-            src="/brand_logo/logo-colored.svg"
-            alt="Brand Logo"
-            width={150}
-            height={46}
-            className="h-10 w-auto"
-          />
+        <Link href="/" className="flex-shrink-0 hidden lg:flex items-center gap-2">
+          <div className="h-10 overflow-hidden">
+            <img src="/brand_logo/logo-symbol.svg" alt="Bloom & Mist" className="h-full object-contain" />
+          </div>
+          <span className="font-black text-2xl tracking-tighter text-[#8CB7F5] font-inter whitespace-nowrap animate-in fade-in slide-in-from-left-2 duration-500">
+            Bloom & Mist
+          </span>
         </Link>
 
         {/* Search Bar (Desktop: inline, Mobile: hidden or secondary) */}
@@ -101,11 +99,12 @@ const Header = () => {
                 <div className="absolute top-full left-0 pt-3 w-48 z-[100]" onClick={() => setIsCategoryOpen(false)}>
                   <DropdownMenu width="100%" className="shadow-lg border border-gray-100">
                     <DropdownItem label="All categories" isActive />
-                    <DropdownItem label="Electronics" />
-                    <DropdownItem label="Clothing & Apparel" />
-                    <DropdownItem label="Home & Garden" />
-                    <DropdownItem label="Sports & Outdoors" />
-                    <DropdownItem label="Health & Beauty" />
+                    <DropdownItem label="All categories" isActive />
+                    <DropdownItem label="Signature Fragrance" />
+                    <DropdownItem label="Luxury Skincare" />
+                    <DropdownItem label="Boutique Gift Sets" />
+                    <DropdownItem label="Body & Bath" />
+                    <DropdownItem label="Home Fragrance" />
                   </DropdownMenu>
                 </div>
               )}
@@ -137,7 +136,7 @@ const Header = () => {
 
       {/* Mobile Breadcrumb-like nav (Home page specifics etc.) */}
       <div className="w-full overflow-x-auto bg-white border-t border-gray-100 md:hidden flex items-center gap-4 px-4 h-11 scrollbar-none whitespace-nowrap">
-        {["All category", "Gadgets", "Cloathing", "Accessory", "Home"].map((item, idx) => (
+        {["All category", "Perfume", "Serum", "Cleansers", "Gift Box"].map((item, idx) => (
           <span key={idx} className="bg-gray-100 text-[#0D6EFD] text-sm px-3 py-1.5 rounded flex-shrink-0 font-medium">
             {item}
           </span>

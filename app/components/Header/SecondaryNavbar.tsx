@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { Icon } from "../Icon";
 import { Button } from "../Button/Button";
 import { DropdownMenu, DropdownItem } from "../Dropdown/DropdownMenu";
@@ -35,8 +35,7 @@ export const SecondaryNavbar: React.FC = () => {
   const navLinks = [
     { label: "Hot deals", href: "/products" },
     { label: "Gift boxes", href: "/gift-boxes" },
-    { label: "Projects", href: "/projects" },
-    { label: "Menu item", href: "/menu" },
+    { label: "Brands", href: "/brands" },
   ];
 
   const helpLinks = [
@@ -45,7 +44,7 @@ export const SecondaryNavbar: React.FC = () => {
     { label: "Payment options", href: "/help/payment" },
     { label: "Track an order", href: "/help/tracking" },
     { label: "Cancel an order", href: "/help/cancel" },
-    { label: "Returns & Refunds", href: "/help/returns" },
+    { label: "Returns & Refunds", href: "/refund" },
     { label: "Cookie Preferences", href: "/help/cookies" },
   ];
 
@@ -62,20 +61,20 @@ export const SecondaryNavbar: React.FC = () => {
               className="flex items-center gap-2 h-full font-bold text-sm text-gray-900 border-r border-gray-100 pr-6 hover:text-brand-blue transition-colors outline-none focus:outline-none"
               aria-expanded={isSecondaryCategoryOpen}
             >
-              <Icon name="menu" size="sm" />
               All categories
+              {/* <Icon name="menu" size="sm" /> */}
             </button>
 
             <AnimatePresence>
               {isSecondaryCategoryOpen && (
                 <div className="absolute top-full left-0 pt-2 w-56 z-[100]" onClick={() => setIsSecondaryCategoryOpen(false)}>
                   <DropdownMenu width="100%" className="shadow-lg">
-                    <DropdownItem label="Smartphones & Tablets" />
-                    <DropdownItem label="Computers & Laptops" />
-                    <DropdownItem label="Home Appliances" />
-                    <DropdownItem label="Furniture" />
-                    <DropdownItem label="Men's Fashion" />
-                    <DropdownItem label="Women's Fashion" />
+                    <DropdownItem label="Signature Fragrance" href="/products?category=Signature+Fragrance" />
+                    <DropdownItem label="Luxury Skincare" href="/products?category=Luxury+Skincare" />
+                    <DropdownItem label="Boutique Gift Sets" href="/gift-boxes" />
+                    <DropdownItem label="Body & Bath" href="/products?category=Body+%26+Bath" />
+                    <DropdownItem label="Home Fragrance" href="/products?category=Home+Fragrance" />
+                    <DropdownItem label="Men's Grooming" href="/products?category=Men's+Grooming" />
                   </DropdownMenu>
                 </div>
               )}
@@ -93,6 +92,8 @@ export const SecondaryNavbar: React.FC = () => {
                 {link.label}
               </Link>
             ))}
+
+
             <div className="relative h-full" ref={helpRef}>
               <div
                 className={`flex items-center gap-1 cursor-pointer transition-colors h-full ${isHelpOpen ? "text-brand-blue font-bold" : "text-gray-900 hover:text-brand-blue"}`}
@@ -111,6 +112,7 @@ export const SecondaryNavbar: React.FC = () => {
                           <DropdownItem
                             key={link.label}
                             label={link.label}
+                            href={link.href}
                             onSelect={() => setIsHelpOpen(false)}
                             className="text-gray-700 hover:text-brand-blue font-medium"
                           />
@@ -143,19 +145,19 @@ export const SecondaryNavbar: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-6 text-sm font-bold text-gray-900">
-          <div className="flex items-center gap-2 cursor-pointer">
-            <span>English, USD</span>
-            <Icon name="expand_more" size="xs" />
-          </div>
-          <div className="flex items-center gap-2 cursor-pointer">
-            <span>Ship to</span>
-            <div className="w-5 h-4 bg-gray-200 rounded-sm overflow-hidden border border-gray-300">
-              <Image src="/country/Property 1=AE.png" alt="Country" width={20} height={16} className="w-full h-full object-cover" />
-            </div>
-            <Icon name="expand_more" size="xs" />
-          </div>
-        </div>
+        {/* <div className="flex items-center gap-6 text-sm font-bold text-gray-900">
+     <div className="flex items-center gap-2 cursor-pointer">
+      <span>English, USD</span>
+      <Icon name="expand_more" size="xs" />
+     </div>
+     <div className="flex items-center gap-2 cursor-pointer">
+      <span>Ship to</span>
+      <div className="w-5 h-4 bg-gray-200 rounded-sm overflow-hidden border border-gray-300">
+       <Image src="/country/Property 1=AE.png" alt="Country" width={20} height={16} className="w-full h-full object-cover" />
+      </div>
+      <Icon name="expand_more" size="xs" />
+     </div>
+    </div> */}
       </div>
     </div>
   );

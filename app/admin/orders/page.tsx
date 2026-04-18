@@ -154,8 +154,7 @@ export default function OrderListing() {
      <TabFilter
       tabs={["All order (240)", "Completed", "Pending", "Canceled"]}
       activeTab={activeTab}
-      onChange={setActiveTab}
-     />
+      onChange={setActiveTab} id={""} />
 
      <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
       <Input

@@ -27,95 +27,95 @@ const ProductsPage = () => {
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
   const [filters, setFilters] = useState<FilterState>({
     category: null,
-    brands: ["Samsung"], // matching initial UI state
-    priceRange: [200, 800],
+    brands: ["Bloom & Mist"], 
+    priceRange: [150, 850],
     condition: "Any",
     ratings: [],
   });
 
-  const categories = ["Tablets", "Phones", "Ipads", "Ipod", "Accessories", "Laptops"];
+  const categories = ["Signature Fragrance", "Luxury Skincare", "Boutique Gift Sets", "Body & Bath", "Home Fragrance", "Men's Grooming"];
 
   const products = [
     {
       id: "1",
-      title: "Canon EOS R5 Mirrorless Camera with 24-105mm Lens Black, ultra high resolution",
-      price: "₦998.00",
-      originalPrice: "₦1,128.00",
-      rating: 4.8,
-      orders: 154,
-      shipping: "Free Shipping",
-      description: "Experience the ultimate in photography with the Canon EOS R5. featuring a 45MP full-frame CMOS sensor and 8K video recording capabilities. This bundle includes the versatile 24-105mm lens for all your professional needs.",
-      image: "/images/camera.jpg",
-      category: "Electronics",
-      brand: "Canon",
-      condition: "Brand new"
+      title: "Signature Oud Intense Discovery Set",
+      price: "₦285.00",
+      originalPrice: "₦320.00",
+      rating: 4.9,
+      orders: 842,
+      shipping: "Express Shipping",
+      description: "A profound journey through the heart of artisanal perfumery. This discovery set features our flagship intense Oud, masterfully balanced with midnight bloom and rare spices for an unforgettable sensory trajectory.",
+      image: "/brandImage/product_1.png",
+      category: "Signature Fragrance",
+      brand: "Bloom & Mist",
+      condition: "Intense"
     },
     {
       id: "2",
-      title: "Apple iPhone 14 Pro Max 128GB Deep Purple, unlocked and optimized for global speed",
-      price: "₦1,099.00",
-      rating: 4.9,
+      title: "Prada Paradoxe Eau de Parfum - Refillable",
+      price: "₦142.00",
+      rating: 4.8,
       orders: 2310,
-      shipping: "Fast Shipping",
-      description: "The latest flagship from Apple featuring the Dynamic Island, 48MP main camera, and the lightning-fast A16 Bionic chip. Experience the best in mobile technology and premium design.",
-      image: "/images/iphone.jpg",
-      category: "Smartphones",
-      brand: "Apple",
-      condition: "Brand new"
+      shipping: "Free Shipping",
+      description: "A floral ambery fragrance that embraces the paradoxes of iconic ingredients to reveal new scented sensations. Featuring notes of Neroli, Amber, and Musk for a timeless yet avant-garde signature.",
+      image: "/brandImage/product_2.png",
+      category: "Signature Fragrance",
+      brand: "Prada",
+      condition: "Essential"
     },
     {
       id: "3",
-      title: "Sony WH-1000XM5 Noise Canceling Headphones with Auto NC Optimizer",
-      price: "₦348.00",
-      originalPrice: "₦399.00",
+      title: "Radiant Skin Ritual - Hyaluronic & Vitamin C Duo",
+      price: "₦195.00",
+      originalPrice: "₦240.00",
       rating: 4.7,
-      orders: 890,
-      shipping: "Free Shipping",
-      description: "Industry-leading noise cancellation with two processors and eight microphones. Experience crystal clear sound and ultimate comfort with the newest Sony flagship headphones.",
-      image: "/images/headphone.jpg",
-      category: "Modern tech",
-      brand: "Sony",
-      condition: "Brand new"
+      orders: 1540,
+      shipping: "Fast Shipping",
+      description: "A high-fidelity skincare orchestration designed to materialize absolute radiance. This duo synchronizes the moisture-locking power of Hyaluronic Acid with the brightening intensity of stabilized Vitamin C.",
+      image: "/brandImage/product_3.png",
+      category: "Luxury Skincare",
+      brand: "Bloom & Mist",
+      condition: "Discovery"
     },
     {
       id: "4",
-      title: "Samsung Galaxy Watch5 Pro Bluetooth SM-R920NZKAXAA Gray Titanium",
-      price: "₦449.00",
-      rating: 4.5,
+      title: "Versace Eros Flame - Eau de Parfum Spray",
+      price: "₦110.00",
+      rating: 4.6,
       orders: 450,
       shipping: "Free Shipping",
-      description: "Advanced sleep coaching, improved battery life, and durability for your outdoor adventures. The perfect companion for your Samsung ecosystem.",
-      image: "/images/watch.jpg",
-      category: "Electronics",
-      brand: "Samsung",
-      condition: "Refurbished"
+      description: "A fragrance for a strong, passionate, self-confident man who is deeply in touch with his emotions. Characterized by strong contrasts in which the most noble and elegant ingredients enrich and enhance one another.",
+      image: "/brandImage/product_4.png",
+      category: "Men's Grooming",
+      brand: "Versace",
+      condition: "Essential"
     },
     {
       id: "5",
-      title: "Microsoft Surface Laptop 5 13.5\" Touchscreen with Intel Core i7",
-      price: "₦1,299.00",
-      originalPrice: "₦1,499.00",
-      rating: 4.6,
+      title: "Midnight Noir Body & Bath Collection",
+      price: "₦165.00",
+      originalPrice: "₦185.00",
+      rating: 4.8,
       orders: 210,
-      shipping: "Free Shipping",
-      description: "Blazing fast performance, sleek design, and a bright touchscreen for maximum productivity. Available in multiple premium finishes to fit your style.",
-      image: "/images/laptop.jpg",
-      category: "Modern tech",
-      brand: "Microsoft",
-      condition: "Brand new"
+      shipping: "Express Delivery",
+      description: "Transform your daily ritual into a spa-level experience. Infused with midnight noir essences, this collection features a silk-texture body wash and a deep-hydration luxury lotion.",
+      image: "/brandImage/product_5.png",
+      category: "Body & Bath",
+      brand: "Bloom & Mist",
+      condition: "Essential"
     },
     {
       id: "6",
-      title: "GoPro HERO11 Black Waterproof Action Camera with 5.3K Video",
-      price: "₦399.00",
-      rating: 4.8,
+      title: "Gucci Guilty Absolute Pour Homme",
+      price: "₦125.00",
+      rating: 4.7,
       orders: 1200,
-      shipping: "Free Shipping",
-      description: "Record your most extreme adventures in stunning detail with HyperSmooth 5.0 stabilization. Durable and waterproof to handle any environment.",
-      image: "/images/camera.jpg",
-      category: "Electronics",
-      brand: "GoPro",
-      condition: "Brand new"
+      shipping: "Fast Shipping",
+      description: "Created using a particular blend with a structure that remains unchanged from the first time it is applied to the skin. Leather accord and goldenwood are custom mixed with natural extract of the Nootka Cypress.",
+      image: "/brandImage/product_6.png",
+      category: "Signature Fragrance",
+      brand: "Gucci",
+      condition: "Intense"
     }
   ];
 

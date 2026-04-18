@@ -90,8 +90,7 @@ export default function CouponsListing() {
           <TabFilter
             tabs={["All coupons", "Active", "Inactive", "Expired"]}
             activeTab={activeTab}
-            onChange={setActiveTab}
-          />
+            onChange={setActiveTab} id={""} />
 
           <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
             <Input

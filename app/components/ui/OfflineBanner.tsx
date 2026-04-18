@@ -40,7 +40,7 @@ const OfflineBanner: React.FC = () => {
 		// Play reconnection sound (successful chime)
 		if (isReconnected && !hasPlayedReconnectSound.current) {
 			hasPlayedReconnectSound.current = true;
-			playNotificationSound('success', 'offlineBanner');
+			// playNotificationSound('success', 'offlineBanner');
 		}
 
 		// Reset reconnect sound flag when not reconnected

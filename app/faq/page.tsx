@@ -120,8 +120,7 @@ export default function FAQPage() {
             <TabFilter
               tabs={categories}
               activeTab={activeTab}
-              onChange={setActiveTab}
-            />
+              onChange={setActiveTab} id={""} />
           </div>
         )}
 

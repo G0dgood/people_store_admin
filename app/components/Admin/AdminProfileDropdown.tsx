@@ -21,7 +21,7 @@ export const AdminProfileDropdown: React.FC = () => {
                   )}
                </div>
                <div className="flex flex-col min-w-0">
-                  <span className="text-sm font-black text-[#1D3557] truncate leading-tight">Dealport Admin</span>
+                  <span className="text-sm font-black text-[#1D3557] truncate leading-tight">Bloom & Mist Admin</span>
                   <span className="text-[10px] font-bold text-gray-400 truncate uppercase tracking-widest mt-0.5">Super Administrator</span>
                </div>
             </div>
