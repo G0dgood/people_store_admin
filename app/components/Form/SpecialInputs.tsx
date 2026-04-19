@@ -81,7 +81,7 @@ const NumberInput: React.FC<NumberInputProps> = ({
     <div className={`flex items-center border border-gray-200 rounded-md bg-white overflow-hidden w-fit ${className}`}>
       <button
         onClick={() => onChange(Math.max(min, value - step))}
-        className="px-4 py-2 text-brand-blue hover:bg-gray-50 transition-colors border-r border-gray-100 disabled:opacity-30"
+        className="px-4 py-2 text-brand-blue hover:bg-gray-50 transition-colors border-r border-gray-200 disabled:opacity-30"
         disabled={value <= min}
       >
         <HiMinus className="w-3 h-3" />
@@ -94,7 +94,7 @@ const NumberInput: React.FC<NumberInputProps> = ({
       />
       <button
         onClick={() => onChange(Math.min(max, value + step))}
-        className="px-4 py-2 text-brand-blue hover:bg-gray-50 transition-colors border-l border-gray-100 disabled:opacity-30"
+        className="px-4 py-2 text-brand-blue hover:bg-gray-50 transition-colors border-l border-gray-200 disabled:opacity-30"
         disabled={value >= max}
       >
         <HiPlus className="w-3 h-3" />
@@ -121,7 +121,7 @@ const RichTextArea: React.FC<RichTextAreaProps> = ({ label, ...props }) => {
 
   return (
     <div className="flex flex-col border border-gray-200 rounded-lg overflow-hidden bg-white focus-within:ring-4 focus-within:ring-brand-blue/5 focus-within:border-brand-blue transition-all">
-      <div className="flex items-center gap-1 p-1.5 border-b border-gray-100 bg-gray-50/30">
+      <div className="flex items-center gap-1 p-1.5 border-b border-gray-200 bg-gray-50/30">
         {toolbarIcons.map((item, index) => (
           <button
             key={index}

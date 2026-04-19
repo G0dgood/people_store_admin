@@ -62,7 +62,7 @@ export function EditBrandDrawer({ isOpen, onClose, brand }: EditBrandDrawerProps
               placeholder="e.g. Apple"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="h-12 border-gray-100 font-bold"
+              className="h-12 border-gray-200 font-bold"
               required
             />
           </div>
@@ -74,7 +74,7 @@ export function EditBrandDrawer({ isOpen, onClose, brand }: EditBrandDrawerProps
                 placeholder="/dashboardImage/example.png"
                 value={formData.logo}
                 onChange={(e) => setFormData({ ...formData, logo: e.target.value })}
-                className="h-12 border-gray-100 font-bold flex-1"
+                className="h-12 border-gray-200 font-bold flex-1"
                 required
               />
               <Button 

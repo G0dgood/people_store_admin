@@ -41,7 +41,7 @@ export const RecommendedProducts: React.FC<RecommendedProductsProps> = ({ produc
         {products.map((product) => (
           <div 
             key={product.id}
-            className="flex-shrink-0 w-[160px] bg-white border border-gray-200 rounded-lg p-3 flex flex-col gap-2 hover:shadow-md transition-all relative group cursor-pointer active:scale-[0.98]"
+            className="flex-shrink-0 w-[160px] bg-white border border-gray-200 p-3 flex flex-col gap-2 transition-all relative group cursor-pointer active:scale-[0.98]"
           >
             <Link href={`/products/detail`} className="flex flex-col flex-1">
               <div className="w-full aspect-square relative mb-1">
@@ -62,7 +62,7 @@ export const RecommendedProducts: React.FC<RecommendedProductsProps> = ({ produc
             
             <div className="flex flex-col gap-2">
                <Link href="/products/detail" className="w-full">
-                  <Button variant="ghost" size="sm" className="w-full text-[10px] h-8 font-bold border border-gray-100 bg-gray-50/50 hover:bg-gray-100">
+                  <Button variant="ghost" size="sm" className="w-full text-[10px] h-8 font-bold border border-gray-200 bg-gray-50/50 hover:bg-gray-100">
                     View Details
                   </Button>
                </Link>

@@ -21,9 +21,9 @@ export const CheckoutForm: React.FC = () => {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
-        className="bg-white rounded-[20px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 overflow-hidden transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)]"
+        className="bg-white rounded-[20px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-200 overflow-hidden transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)]"
       >
-        <div className="p-6 md:p-8 bg-gray-50/50 border-b border-gray-100 flex items-center justify-between">
+        <div className="p-6 md:p-8 bg-gray-50/50 border-b border-gray-200 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-full bg-brand-blue text-white flex items-center justify-center font-black shadow-lg shadow-brand-blue/20">
               1
@@ -40,30 +40,30 @@ export const CheckoutForm: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">First Name</label>
-              <Input placeholder="John" className="h-[52px] bg-gray-50/50 border-gray-100 focus:border-brand-blue focus:bg-white transition-all shadow-none rounded-xl" />
+              <Input placeholder="John" className="h-[52px] bg-gray-50/50 border-gray-200 focus:border-brand-blue focus:bg-white transition-all shadow-none rounded-xl" />
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Last Name</label>
-              <Input placeholder="Doe" className="h-[52px] bg-gray-50/50 border-gray-100 focus:border-brand-blue focus:bg-white transition-all shadow-none rounded-xl" />
+              <Input placeholder="Doe" className="h-[52px] bg-gray-50/50 border-gray-200 focus:border-brand-blue focus:bg-white transition-all shadow-none rounded-xl" />
             </div>
             <div className="flex flex-col gap-2 md:col-span-2">
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Email Address</label>
-              <Input placeholder="john.doe@example.com" type="email" className="h-[52px] bg-gray-50/50 border-gray-100 focus:border-brand-blue focus:bg-white transition-all shadow-none rounded-xl" />
+              <Input placeholder="john.doe@example.com" type="email" className="h-[52px] bg-gray-50/50 border-gray-200 focus:border-brand-blue focus:bg-white transition-all shadow-none rounded-xl" />
             </div>
             <div className="flex flex-col gap-2 md:col-span-2">
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Street Address</label>
               <div className="relative flex items-center">
-                <Input placeholder="123 Shopping Avenue, Suite 456" className="h-[52px] bg-gray-50/50 border-gray-100 focus:border-brand-blue focus:bg-white transition-all shadow-none rounded-xl w-full" />
+                <Input placeholder="123 Shopping Avenue, Suite 456" className="h-[52px] bg-gray-50/50 border-gray-200 focus:border-brand-blue focus:bg-white transition-all shadow-none rounded-xl w-full" />
                 <Icon name="location_on" size="xs" className="absolute right-4 text-gray-300" />
               </div>
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">City</label>
-              <Input placeholder="San Francisco" className="h-[52px] bg-gray-50/50 border-gray-100 focus:border-brand-blue focus:bg-white transition-all shadow-none rounded-xl" />
+              <Input placeholder="San Francisco" className="h-[52px] bg-gray-50/50 border-gray-200 focus:border-brand-blue focus:bg-white transition-all shadow-none rounded-xl" />
             </div>
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Country</label>
-              <div className="flex items-center justify-between px-4 border border-gray-100 rounded-xl bg-gray-50/50 h-[52px] w-full cursor-pointer hover:border-brand-blue hover:bg-white transition-all group">
+              <div className="flex items-center justify-between px-4 border border-gray-200 rounded-xl bg-gray-50/50 h-[52px] w-full cursor-pointer hover:border-brand-blue hover:bg-white transition-all group">
                 <span className="text-sm text-gray-900 font-semibold">United States</span>
                 <Icon name="expand_more" size="xs" className="text-gray-400 group-hover:text-brand-blue transition-colors" />
               </div>
@@ -78,9 +78,9 @@ export const CheckoutForm: React.FC = () => {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
-        className="bg-white rounded-[20px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 overflow-hidden transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)]"
+        className="bg-white rounded-[20px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-200 overflow-hidden transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)]"
       >
-        <div className="p-6 md:p-8 bg-gray-50/50 border-b border-gray-100 flex items-center justify-between">
+        <div className="p-6 md:p-8 bg-gray-50/50 border-b border-gray-200 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="w-10 h-10 rounded-full bg-brand-blue text-white flex items-center justify-center font-black shadow-lg shadow-brand-blue/20">
               2
@@ -144,7 +144,7 @@ export const CheckoutForm: React.FC = () => {
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
-              className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 md:p-8 bg-gray-50/80 rounded-2xl border border-gray-100"
+              className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 md:p-8 bg-gray-50/80 rounded-2xl border border-gray-200"
             >
               <div className="flex flex-col gap-2 md:col-span-2">
                 <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Card Number</label>

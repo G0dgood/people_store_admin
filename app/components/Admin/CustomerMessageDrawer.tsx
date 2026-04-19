@@ -34,7 +34,7 @@ export function CustomerMessageDrawer({ isOpen, onClose, customer }: CustomerMes
     <Drawer isOpen={isOpen} onClose={onClose} title={`Message ${customer.name}`} width="max-w-md">
       <div className="flex flex-col h-full gap-6">
         {/* Customer Quick Header */}
-        <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-100">
+        <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
           <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 animate-in fade-in zoom-in duration-300">
              <img 
               src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=100&h=100&fit=crop" 
@@ -67,7 +67,7 @@ export function CustomerMessageDrawer({ isOpen, onClose, customer }: CustomerMes
                 className={`max-w-[85%] px-4 py-3 rounded-2xl text-[13px] font-medium leading-relaxed shadow-sm transition-all
                   ${msg.sender === "admin" 
                     ? "bg-[#1D3557] text-white rounded-tr-none" 
-                    : "bg-white border border-gray-100 text-gray-700 rounded-tl-none"}
+                    : "bg-white border border-gray-200 text-gray-700 rounded-tl-none"}
                 `}
               >
                 {msg.text}
@@ -85,7 +85,7 @@ export function CustomerMessageDrawer({ isOpen, onClose, customer }: CustomerMes
               <button 
                 key={template}
                 onClick={() => setMessageText(prev => prev + (prev ? " " : "") + template)}
-                className="px-3 py-1.5 rounded-full bg-white border border-gray-100 text-[11px] font-bold text-gray-500 hover:border-brand-blue hover:text-brand-blue transition-all"
+                className="px-3 py-1.5 rounded-full bg-white border border-gray-200 text-[11px] font-bold text-gray-500 hover:border-brand-blue hover:text-brand-blue transition-all"
               >
                 {template}
               </button>

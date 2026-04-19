@@ -36,9 +36,9 @@ export const ProductGridItem: React.FC<{ product: ProductProps }> = ({ product }
    };
 
    return (
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-shadow group flex flex-col h-full relative">
+      <div className="bg-white border border-gray-200 overflow-hidden transition-all group flex flex-col h-full relative">
          <Link href="/products/detail" className="flex flex-col flex-1">
-            <div className="relative w-full aspect-square p-5 border-b border-gray-100 flex items-center justify-center">
+            <div className="relative w-full aspect-square p-5 border-b border-gray-200 flex items-center justify-center">
                <div className="relative w-full h-full transition-transform duration-300 group-hover:scale-110">
                   <Image src={product.image} alt={product.title} fill className="object-contain" />
                </div>
@@ -105,9 +105,9 @@ export const ProductListItem: React.FC<{
    };
 
    return (
-      <div className="bg-white border border-gray-200 rounded-lg p-3 md:p-5 flex gap-3 md:gap-6 hover:shadow-md transition-shadow relative group">
+      <div className="bg-white border border-gray-200 p-3 md:p-5 flex gap-3 md:gap-6 transition-all relative group">
          {/* Product Image */}
-         <Link href="/products/detail" className="w-24 h-24 md:w-48 md:h-48 flex-shrink-0 border border-gray-100 rounded flex items-center justify-center p-2 md:p-4 bg-white cursor-pointer overflow-hidden">
+         <Link href="/products/detail" className="w-24 h-24 md:w-48 md:h-48 flex-shrink-0 border border-gray-200 flex items-center justify-center p-2 md:p-4 bg-white cursor-pointer overflow-hidden">
             <div className="relative w-full h-full transition-transform duration-300 hover:scale-110">
                <Image src={product.image} alt={product.title} fill className="object-contain" />
             </div>
@@ -136,12 +136,12 @@ export const ProductListItem: React.FC<{
                      <span className="text-orange-500 font-medium ml-0.5 md:ml-1">{product.rating}</span>
                   </div>
                   <div className="flex items-center gap-1.5 text-gray-400">
-                     <div className="w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-gray-300" />
+                     <div className="w-1 h-1 md:w-1.5 md:h-1.5 bg-gray-300" />
                      <span>{product.orders} orders</span>
                   </div>
                   {/* Shipping Info */}
                   <div className="flex items-center gap-1.5 text-brand-blue">
-                     <div className="w-1 h-1 md:w-1.5 md:h-1.5 rounded-full bg-brand-blue" />
+                     <div className="w-1 h-1 md:w-1.5 md:h-1.5 bg-brand-blue" />
                      <span className="font-medium">{product.shipping}</span>
                   </div>
                </div>

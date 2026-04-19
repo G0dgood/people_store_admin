@@ -18,17 +18,17 @@ export const ProductMobileHeader: React.FC<ProductMobileHeaderProps> = ({ title 
         <div className="flex items-center gap-4">
           <button
             onClick={() => router.back()}
-            className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-1 hover:bg-gray-100 transition-colors"
           >
             <Icon name="arrow_back" size="md" />
           </button>
           <h1 className="text-lg font-bold text-gray-900">{title}</h1>
         </div>
         <div className="flex items-center gap-4">
-          <button className="p-1 hover:bg-gray-100 rounded-full transition-colors">
+          <button className="p-1 hover:bg-gray-100 transition-colors">
             <Icon name="shopping_cart" size="md" />
           </button>
-          <button className="p-1 hover:bg-gray-100 rounded-full transition-colors">
+          <button className="p-1 hover:bg-gray-100 transition-colors">
             <Icon name="person" size="md" />
           </button>
         </div>
@@ -42,7 +42,7 @@ export const ProductMobileHeader: React.FC<ProductMobileHeaderProps> = ({ title 
         <input
           type="text"
           placeholder="Search"
-          className="w-full h-10 bg-gray-50 border border-gray-200 rounded-lg pl-10 pr-4 text-sm outline-none focus:border-brand-blue focus:bg-white transition-all"
+          className="w-full h-10 bg-white border border-gray-200 pl-10 pr-4 text-sm outline-none focus:border-brand-blue transition-all"
         />
       </div>
     </div>

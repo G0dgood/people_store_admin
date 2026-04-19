@@ -41,7 +41,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       secondary: "bg-white text-brand-blue border border-brand-blue hover:bg-brand-blue/5 active:bg-brand-blue/10 focus:ring-brand-blue/50 ",
       emerald: "bg-brand-blue text-white hover:bg-blue-600 active:bg-blue-700 focus:ring-brand-blue/50 border border-transparent shadow-sm",
       rose: "bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white active:bg-rose-600 focus:ring-rose-500/50 border border-transparent shadow-sm transition-all",
-      outline: "bg-white text-[#1D3557] border border-gray-100 hover:bg-gray-50 active:bg-gray-100 focus:ring-gray-100/50 shadow-sm",
+      outline: "bg-white text-[#1D3557] border border-gray-200 hover:bg-gray-50 active:bg-gray-100 focus:ring-gray-100/50 shadow-sm",
       ghost: "bg-transparent text-brand-blue hover:bg-brand-blue/10 active:bg-brand-blue/20 focus:ring-brand-blue/50",
     };
 
@@ -54,8 +54,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     // Shape styles
     const shapes = {
-      rounded: "rounded-lg",
-      "rounded-sm": "rounded-[6px]",
+      rounded: "rounded-none",
+      "rounded-sm": "rounded-none",
       pill: "rounded-full",
     };
 

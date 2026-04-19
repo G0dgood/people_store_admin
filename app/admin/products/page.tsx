@@ -116,7 +116,7 @@ export default function ProductListing() {
        type="text"
        placeholder="Search product name, SKU..."
        containerClassName="flex-1 xl:w-96"
-       className="bg-white border-gray-100 placeholder:text-gray-400 text-xs font-medium"
+       className="bg-white border-gray-200 placeholder:text-gray-400 text-xs font-medium"
        suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
       />
 
@@ -172,7 +172,7 @@ export default function ProductListing() {
          </td>
          <td>
           <div className="flex items-center gap-4">
-           <div className="w-12 h-12 rounded-[6px] border border-gray-100 overflow-hidden bg-white p-1 shadow-sm ring-1 ring-gray-100">
+           <div className="w-12 h-12 rounded-[6px] border border-gray-200 overflow-hidden bg-white p-1 shadow-sm ring-1 ring-gray-100">
             <img src={product.image} alt={product.name} className="w-full h-full object-contain" />
            </div>
            <div className="flex flex-col">

@@ -87,7 +87,7 @@ const ShippingPage = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="bg-white p-10 rounded-[40px] border border-gray-100 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all group flex flex-col h-full"
+                className="bg-white p-10 rounded-[40px] border border-gray-200 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all group flex flex-col h-full"
               >
                 <div className="w-16 h-16 bg-brand-blue-light rounded-3xl flex items-center justify-center text-brand-blue mb-8 group-hover:bg-brand-blue group-hover:text-white transition-colors duration-500">
                   {method.icon}
@@ -117,7 +117,7 @@ const ShippingPage = () => {
             ))}
           </div>
 
-          <div className="mt-20 flex flex-col lg:flex-row gap-12 items-center bg-gray-50 rounded-[40px] p-10 md:p-16 border border-gray-100">
+          <div className="mt-20 flex flex-col lg:flex-row gap-12 items-center bg-gray-50 rounded-[40px] p-10 md:p-16 border border-gray-200">
             <div className="flex-1 flex flex-col gap-6">
               <h2 className="text-3xl font-black text-[#1D3557] tracking-tight">Regional Estimates</h2>
               <p className="text-gray-500 leading-relaxed">
@@ -197,7 +197,7 @@ const ShippingPage = () => {
             <p className="text-gray-500 mb-10 max-w-xl mx-auto italic">Learn more about customs, local duties, and carrier-specific policies in our Help Center.</p>
             <button
               onClick={() => window.location.href = '/faq'}
-              className="px-10 py-4 bg-gray-50 border border-gray-100 rounded-xl text-[#1D3557] font-black uppercase tracking-widest text-xs hover:bg-white hover:border-brand-blue hover:text-brand-blue transition-all"
+              className="px-10 py-4 bg-gray-50 border border-gray-200 rounded-xl text-[#1D3557] font-black uppercase tracking-widest text-xs hover:bg-white hover:border-brand-blue hover:text-brand-blue transition-all"
             >
               Visit Help Center
             </button>

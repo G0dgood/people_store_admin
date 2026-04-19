@@ -121,7 +121,7 @@ export function UploadMediaModal({ isOpen, onClose, onUploadSuccess }: UploadMed
             </div>
             <div className="grid grid-cols-1 gap-2 max-h-[160px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-200">
               {stagedFiles.map((file, idx) => (
-                <div key={idx} className="flex items-center justify-between p-3 bg-white border border-gray-100 rounded-xl group/item">
+                <div key={idx} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-xl group/item">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400">
                       <Icon name={file.type.startsWith("video") ? "videocam" : "image"} folder="icon" size="xs" />

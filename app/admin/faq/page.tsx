@@ -113,7 +113,7 @@ export default function FAQManagementPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               containerClassName="w-full lg:w-80 xl:w-96"
-              className="bg-white border-gray-100 placeholder:text-gray-400 text-xs font-medium"
+              className="bg-white border-gray-200 placeholder:text-gray-400 text-xs font-medium"
               suffixElement={
                 <HiMagnifyingGlass size={18} className="text-gray-400" />
               }

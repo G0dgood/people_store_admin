@@ -58,7 +58,7 @@ const ProductReviews = () => {
       className="flex flex-col gap-10"
     >
       {/* Rating Summary Section */}
-      <div className="flex flex-col md:flex-row gap-8 md:items-center bg-gray-50/50 rounded-2xl p-6 md:p-8 border border-gray-100">
+      <div className="flex flex-col md:flex-row gap-8 md:items-center bg-white p-6 md:p-8 border border-gray-200">
         <div className="flex flex-col items-center text-center md:border-r border-gray-200 md:pr-12">
           <span className="text-5xl font-black text-gray-900 leading-none">4.8</span>
           <div className="flex gap-1 my-3">
@@ -76,7 +76,7 @@ const ProductReviews = () => {
              return (
                <div key={stars} className="flex items-center gap-4">
                   <span className="text-xs font-bold text-gray-500 w-12">{stars} Stars</span>
-                  <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
+                  <div className="flex-1 h-2 bg-gray-200 overflow-hidden">
                     <motion.div 
                       initial={{ width: 0 }}
                       animate={{ width: `${pct}%` }}
@@ -114,7 +114,7 @@ const ProductReviews = () => {
             <div key={review.id} className="pt-8 first:pt-0">
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-4">
-                  <div className="relative w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-sm ring-1 ring-gray-100">
+                  <div className="relative w-12 h-12 overflow-hidden border-2 border-white ring-1 ring-gray-100">
                     <Image src={review.avatar} alt={review.user} fill className="object-cover" />
                   </div>
                   <div>
@@ -131,7 +131,7 @@ const ProductReviews = () => {
                 </div>
 
                 {review.verified && (
-                  <div className="flex items-center gap-1.5 px-3 py-1 bg-brand-blue-light text-[10px] font-black text-blue-600 uppercase tracking-wider rounded-full border border-blue-100">
+                  <div className="flex items-center gap-1.5 px-3 py-1 bg-brand-blue-light text-[10px] font-black text-blue-600 uppercase tracking-wider border border-blue-100">
                     <Icon name="check" size="xs" />
                     Verified
                   </div>

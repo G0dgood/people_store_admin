@@ -51,7 +51,7 @@ const Header = () => {
             <div className="h-8 overflow-hidden">
               <img src="/brand_logo/logo-symbol.svg" alt="Bloom & Mist" className="h-full object-contain" />
             </div>
-            <span className="font-black text-xl tracking-tighter text-[#8CB7F5] font-inter whitespace-nowrap animate-in fade-in slide-in-from-left-2 duration-500">
+            <span className="font-black text-xl tracking-tighter text-neutral-900 font-inter whitespace-nowrap animate-in fade-in slide-in-from-left-2 duration-500">
               Bloom & Mist
             </span>
           </Link>
@@ -59,17 +59,17 @@ const Header = () => {
 
         {/* Desktop Logo */}
         <Link href="/" className="flex-shrink-0 hidden lg:flex items-center gap-2">
-          <div className="h-10 overflow-hidden">
+          <div className="h-10 overflow-hidden brightness-0">
             <img src="/brand_logo/logo-symbol.svg" alt="Bloom & Mist" className="h-full object-contain" />
           </div>
-          <span className="font-black text-2xl tracking-tighter text-[#8CB7F5] font-inter whitespace-nowrap animate-in fade-in slide-in-from-left-2 duration-500">
+          <span className="font-black text-2xl tracking-tighter text-neutral-900 font-inter whitespace-nowrap animate-in fade-in slide-in-from-left-2 duration-500">
             Bloom & Mist
           </span>
         </Link>
 
         {/* Search Bar (Desktop: inline, Mobile: hidden or secondary) */}
-        <div className="flex-1 max-w-[660px] h-11 border-2 border-brand-blue rounded-lg hidden md:flex relative z-50">
-          <div className="flex-1 flex items-center px-3 bg-white border-r border-brand-blue rounded-l-md relative" ref={searchRef}>
+        <div className="flex-1 max-w-[660px] h-11 border-2 border-neutral-900 hidden md:flex relative z-50">
+          <div className="flex-1 flex items-center px-3 bg-white border-r border-neutral-200 relative" ref={searchRef}>
             <input
               type="text"
               placeholder="Search"
@@ -87,7 +87,7 @@ const Header = () => {
                 e.stopPropagation();
                 setIsCategoryOpen(prev => !prev);
               }}
-              className="w-32 h-full flex items-center justify-between px-3 bg-white cursor-pointer border-r border-brand-blue hover:bg-gray-50 transition-colors"
+              className="w-32 h-full flex items-center justify-between px-3 bg-white cursor-pointer border-r border-neutral-200 hover:bg-gray-50 transition-colors"
             >
               <span className="text-sm text-gray-700 truncate pr-2">All category</span>
               <Icon name="expand_more" size="xs" className={`text-gray-400 flex-shrink-0 transition-transform ${isCategoryOpen ? 'rotate-180' : ''}`} />
@@ -97,7 +97,7 @@ const Header = () => {
             <AnimatePresence>
               {isCategoryOpen && (
                 <div className="absolute top-full left-0 pt-3 w-48 z-[100]" onClick={() => setIsCategoryOpen(false)}>
-                  <DropdownMenu width="100%" className="shadow-lg border border-gray-100">
+                  <DropdownMenu width="100%" className="shadow-lg border border-gray-200">
                     <DropdownItem label="All categories" isActive />
                     <DropdownItem label="All categories" isActive />
                     <DropdownItem label="Signature Fragrance" />
@@ -110,7 +110,7 @@ const Header = () => {
               )}
             </AnimatePresence>
           </div>
-          <Link href="/products" className="bg-brand-blue px-6 text-white text-sm font-bold hover:bg-brand-blue/90 transition-colors flex items-center justify-center rounded-r-[6px]">
+          <Link href="/products" className="bg-neutral-900 px-6 text-white text-sm font-bold hover:bg-black transition-colors flex items-center justify-center">
             Search
           </Link>
         </div>
@@ -121,7 +121,7 @@ const Header = () => {
 
       {/* Mobile Search Input (Visible only on mobile header row 2) */}
       <div className="md:hidden px-4 pb-4">
-        <div className="w-full h-10 bg-gray-100 rounded-lg flex items-center px-3 gap-2 border border-gray-200">
+        <div className="w-full h-10 bg-white flex items-center px-3 gap-2 border border-gray-200">
           <Icon name="search" size="sm" className="text-gray-400" />
           <input
             type="text"
@@ -135,9 +135,9 @@ const Header = () => {
       <SecondaryNavbar />
 
       {/* Mobile Breadcrumb-like nav (Home page specifics etc.) */}
-      <div className="w-full overflow-x-auto bg-white border-t border-gray-100 md:hidden flex items-center gap-4 px-4 h-11 scrollbar-none whitespace-nowrap">
+      <div className="w-full overflow-x-auto bg-white border-t border-gray-200 md:hidden flex items-center gap-4 px-4 h-11 scrollbar-none whitespace-nowrap">
         {["All category", "Perfume", "Serum", "Cleansers", "Gift Box"].map((item, idx) => (
-          <span key={idx} className="bg-gray-100 text-[#0D6EFD] text-sm px-3 py-1.5 rounded flex-shrink-0 font-medium">
+          <span key={idx} className="bg-white text-neutral-900 border border-gray-200 text-sm px-3 py-1.5 flex-shrink-0 font-bold uppercase text-[10px] tracking-wider">
             {item}
           </span>
         ))}

@@ -35,7 +35,7 @@ export const AdminSearchDropdown: React.FC<AdminSearchDropdownProps> = ({ query 
 
   return (
     <div className="absolute top-full left-0 pt-4 z-50 cursor-default">
-      <DropdownMenu width={480} className="shadow-2xl border-gray-100 p-0 overflow-hidden max-h-[600px] flex flex-col">
+      <DropdownMenu width={480} className="shadow-2xl border-gray-200 p-0 overflow-hidden max-h-[600px] flex flex-col">
         <div className="px-5 py-4 border-b border-gray-50 flex justify-between items-center bg-gray-50/50">
            <div className="flex flex-col gap-0.5">
               <span className="font-black text-[#1D3557] text-sm tracking-tight">
@@ -56,7 +56,7 @@ export const AdminSearchDropdown: React.FC<AdminSearchDropdownProps> = ({ query 
                   <div className="flex flex-col gap-0.5">
                      {filteredResults.filter(r => r.type === cat).map(item => (
                        <button key={item.id} className="flex items-center gap-4 px-3 py-3 rounded-lg hover:bg-brand-blue-light group transition-all text-left">
-                          <div className={`w-10 h-10 rounded-lg shrink-0 flex items-center justify-center border border-gray-100 shadow-sm overflow-hidden
+                          <div className={`w-10 h-10 rounded-lg shrink-0 flex items-center justify-center border border-gray-200 shadow-sm overflow-hidden
                              ${item.type === 'product' ? 'bg-white' : 'bg-gray-50'}
                           `}>
                              {item.image ? (
@@ -89,7 +89,7 @@ export const AdminSearchDropdown: React.FC<AdminSearchDropdownProps> = ({ query 
              ))
            ) : (
              <div className="py-12 flex flex-col items-center gap-4 text-center">
-                <div className="w-16 h-16 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 border border-gray-100 shadow-sm">
+                <div className="w-16 h-16 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 border border-gray-200 shadow-sm">
                    <Icon name="search-01" folder="dashboardIcon" size="lg" />
                 </div>
                 <div className="flex flex-col gap-1">

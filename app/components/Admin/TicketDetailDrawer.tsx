@@ -47,7 +47,7 @@ export function TicketDetailDrawer({ isOpen, onClose, ticket }: TicketDetailDraw
         {/* Customer Information */}
         <div className="flex flex-col gap-4">
            <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Customer Profile</h4>
-           <div className="bg-white border border-gray-100 rounded-xl p-4 flex items-center gap-4 shadow-sm">
+           <div className="bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-4 shadow-sm">
               <div className="w-12 h-12 rounded-full bg-blue-50 border-2 border-white shadow-sm flex items-center justify-center overflow-hidden">
                  <img src={"https://ui-avatars.com/api/?name=" + ticket.customer} alt="" className="w-full h-full object-cover" />
               </div>
@@ -66,7 +66,7 @@ export function TicketDetailDrawer({ isOpen, onClose, ticket }: TicketDetailDraw
            <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Ticket Conversation</h4>
            <div className="flex flex-col gap-6">
               <div className="flex flex-col gap-2">
-                 <div className="bg-gray-50 border border-gray-100 rounded-2xl rounded-tl-none p-4 shadow-sm">
+                 <div className="bg-gray-50 border border-gray-200 rounded-2xl rounded-tl-none p-4 shadow-sm">
                     <p className="text-xs font-bold text-[#1D3557] leading-relaxed">
                        Hello support team, I'm having issues with my latest order. The status hasn't updated in three days though I've been charged. Please assist.
                     </p>

@@ -24,7 +24,7 @@ export const CategoryChips: React.FC<CategoryChipsProps> = ({
             key={cat}
             onClick={() => onSelect(cat)}
             className={`
-              px-4 py-1.5 rounded-[6px] text-sm font-medium whitespace-nowrap transition-colors
+              px-4 py-1.5 text-sm font-medium whitespace-nowrap transition-colors
               ${isSelected 
                 ? "bg-[#E5F1FF] text-[#0D6EFD]" 
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200"}

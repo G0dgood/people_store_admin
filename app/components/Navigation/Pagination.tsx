@@ -26,7 +26,7 @@ const Pagination: React.FC<PaginationProps> = ({
 
   return (
     <div className={`flex items-center gap-4 ${className}`}>
-      <div className="flex border border-gray-200 rounded-md overflow-hidden bg-white">
+      <div className="flex border border-gray-200 overflow-hidden bg-white">
         <button
           onClick={() => onPageChange(Math.max(1, currentPage - 1))}
           disabled={currentPage === 1}
@@ -66,7 +66,7 @@ const Pagination: React.FC<PaginationProps> = ({
           <select
             value={pageSize}
             onChange={(e) => onPageSizeChange?.(Number(e.target.value))}
-            className="appearance-none bg-white border border-gray-200 rounded-md pl-4 pr-10 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-brand-blue/20"
+            className="appearance-none bg-white border border-gray-200 pl-4 pr-10 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-brand-blue/20"
           >
             {pageSizeOptions.map((option) => (
               <option key={option} value={option}>

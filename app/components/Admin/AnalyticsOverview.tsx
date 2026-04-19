@@ -27,7 +27,7 @@ export const AnalyticsOverview: React.FC = () => {
   }, [isDropdownOpen]);
 
   return (
-    <div className="bg-white p-6 sm:p-8 rounded-[6px] border border-gray-100 shadow-sm flex flex-col gap-8">
+    <div className="bg-white p-6 sm:p-8 rounded-[6px] border border-gray-200 shadow-sm flex flex-col gap-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
         <h3 className="text-[20px] font-black text-[#1D3557]">Report for this week</h3>
         <div className="flex items-center justify-between w-full sm:w-auto gap-4">
@@ -46,7 +46,7 @@ export const AnalyticsOverview: React.FC = () => {
 
             {isDropdownOpen && (
               <div className="absolute top-full right-0 mt-2 z-50">
-                <DropdownMenu width={240} className="shadow-2xl border-gray-100">
+                <DropdownMenu width={240} className="shadow-2xl border-gray-200">
                   <DropdownItem
                     label="Print Detailed Report"
                     subtext="Generate printer-friendly PDF"
@@ -80,7 +80,7 @@ export const AnalyticsOverview: React.FC = () => {
           { label: "Out of Stock", val: "0.5k" },
           { label: "Revenue", val: "250k" },
         ].map((stat) => (
-          <div key={stat.label} className="flex flex-col gap-1 lg:border-gray-100 lg:border-l lg:pl-4 first:border-l-0 first:pl-0">
+          <div key={stat.label} className="flex flex-col gap-1 lg:border-gray-200 lg:border-l lg:pl-4 first:border-l-0 first:pl-0">
             <span className="text-[22px] font-black text-[#1D3557] leading-none">{stat.val}</span>
             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{stat.label}</span>
           </div>

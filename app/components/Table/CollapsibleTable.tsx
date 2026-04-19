@@ -50,7 +50,7 @@ const CollapsibleTable: React.FC<CollapsibleTableProps> = ({
           <React.Fragment key={group.id}>
             {/* Group Header */}
             <TableRow 
-              className="bg-brand-blue-light/10 cursor-pointer select-none border-b border-gray-100"
+              className="bg-brand-blue-light/10 cursor-pointer select-none border-b border-gray-200"
               onClick={() => toggleGroup(group.id)}
             >
               <TableCell colSpan={columns ? columns.length - 1 : 1} className="py-3">

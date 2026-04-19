@@ -29,7 +29,7 @@ const ServiceBadges = () => {
     <div className="flex flex-col md:flex-row items-center gap-10">
       {badges.map((badge, idx) => (
         <div key={idx} className="flex items-start gap-4 max-w-[250px]">
-           <div className={`w-12 h-12 ${badge.color} rounded-full flex-shrink-0 flex items-center justify-center text-gray-400`}>
+           <div className={`w-12 h-12 ${badge.color} flex-shrink-0 flex items-center justify-center text-gray-400`}>
               <Icon name={badge.icon} size="md" />
            </div>
            <div className="flex flex-col">

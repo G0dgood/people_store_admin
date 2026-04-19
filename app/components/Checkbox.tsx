@@ -41,7 +41,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
 
 	const baseClasses = `
 		inline-flex items-center justify-center
-		rounded
+		rounded-none
 		transition-all duration-200 ease-in-out
 		cursor-pointer
 		focus:outline-none

@@ -66,7 +66,7 @@ export function EditCouponDrawer({ isOpen, onClose, coupon }: EditCouponDrawerPr
               placeholder="e.g. SUMMER25"
               value={formData.code}
               onChange={(e) => setFormData({ ...formData, code: e.target.value })}
-              className="h-12 border-gray-100 focus:border-brand-blue/50 transition-all font-bold"
+              className="h-12 border-gray-200 focus:border-brand-blue/50 transition-all font-bold"
               required
             />
           </div>
@@ -78,7 +78,7 @@ export function EditCouponDrawer({ isOpen, onClose, coupon }: EditCouponDrawerPr
                 placeholder="20% or 10.00"
                 value={formData.discount}
                 onChange={(e) => setFormData({ ...formData, discount: e.target.value })}
-                className="h-12 border-gray-100 font-bold"
+                className="h-12 border-gray-200 font-bold"
                 required
               />
             </div>
@@ -100,7 +100,7 @@ export function EditCouponDrawer({ isOpen, onClose, coupon }: EditCouponDrawerPr
                 placeholder="01-01-2025"
                 value={formData.startDate}
                 onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                className="h-12 border-gray-100 font-bold"
+                className="h-12 border-gray-200 font-bold"
                 required
               />
             </div>
@@ -111,7 +111,7 @@ export function EditCouponDrawer({ isOpen, onClose, coupon }: EditCouponDrawerPr
                 placeholder="31-12-2025"
                 value={formData.endDate}
                 onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                className="h-12 border-gray-100 font-bold"
+                className="h-12 border-gray-200 font-bold"
                 required
               />
             </div>

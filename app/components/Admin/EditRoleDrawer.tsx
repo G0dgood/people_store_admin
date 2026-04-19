@@ -100,7 +100,7 @@ export function EditRoleDrawer({ isOpen, onClose, role }: EditRoleDrawerProps) {
               {modules.map((module) => (
                 <div 
                   key={module.id} 
-                  className="grid grid-cols-12 gap-2 items-center p-3 sm:p-4 bg-white border border-gray-100 rounded-2xl hover:border-blue-100 hover:shadow-md transition-all group"
+                  className="grid grid-cols-12 gap-2 items-center p-3 sm:p-4 bg-white border border-gray-200 rounded-2xl hover:border-blue-100 hover:shadow-md transition-all group"
                 >
                   <div className="col-span-5 flex flex-col gap-0.5">
                     <span className="text-[13px] font-black text-[#1D3557] group-hover:text-brand-blue transition-colors">{module.label}</span>
@@ -155,7 +155,7 @@ export function EditRoleDrawer({ isOpen, onClose, role }: EditRoleDrawerProps) {
             variant="outline" 
             type="button" 
             onClick={onClose}
-            className="w-full h-12 text-[11px] font-bold text-gray-400 group hover:text-gray-900 border-gray-100 transition-all"
+            className="w-full h-12 text-[11px] font-bold text-gray-400 group hover:text-gray-900 border-gray-200 transition-all"
           >
             Discard Changes
           </Button>

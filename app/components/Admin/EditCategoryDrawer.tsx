@@ -47,7 +47,7 @@ export function EditCategoryDrawer({ isOpen, onClose, category }: EditCategoryDr
               placeholder="e.g. Electronics"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="h-12 border-gray-100 font-bold"
+              className="h-12 border-gray-200 font-bold"
               required
             />
           </div>
@@ -59,7 +59,7 @@ export function EditCategoryDrawer({ isOpen, onClose, category }: EditCategoryDr
                 placeholder="/dashboardImage/example.png"
                 value={formData.image}
                 onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                className="h-12 border-gray-100 font-bold flex-1"
+                className="h-12 border-gray-200 font-bold flex-1"
                 required
               />
               <Button 

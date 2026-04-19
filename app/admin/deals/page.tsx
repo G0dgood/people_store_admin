@@ -167,7 +167,7 @@ export default function DealsPage() {
             <div
               key={idx}
               className={`flex flex-col items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-[#F7F7F7] rounded-2xl border transition-all duration-300
-                ${!isRunning ? "border-rose-100 grayscale-[0.5]" : "border-gray-100"}
+                ${!isRunning ? "border-rose-100 grayscale-[0.5]" : "border-gray-200"}
               shadow-sm`}
             >
               <span className={`text-xl md:text-2xl font-black transition-colors ${!isRunning ? "text-rose-400" : "text-[#1D3557]"}`}>{t.value}</span>
@@ -249,7 +249,7 @@ export default function DealsPage() {
                     <tr key={idx} className="group hover:bg-blue-50/30 transition-colors">
                       <td className="pl-8 py-5">
                         <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-xl border border-gray-100 overflow-hidden bg-white p-1 shrink-0 shadow-sm group-hover:border-brand-blue/30 transition-colors">
+                          <div className="w-12 h-12 rounded-xl border border-gray-200 overflow-hidden bg-white p-1 shrink-0 shadow-sm group-hover:border-brand-blue/30 transition-colors">
                             <img src={offer.image} alt="" className="w-full h-full object-contain" />
                           </div>
                           <div className="flex flex-col">

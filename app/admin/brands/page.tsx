@@ -97,7 +97,7 @@ export default function BrandsListing() {
               type="text"
               placeholder="Search brand name"
               containerClassName="w-full lg:w-80 xl:w-96"
-              className="bg-white border-gray-100 placeholder:text-gray-400 text-xs font-medium"
+              className="bg-white border-gray-200 placeholder:text-gray-400 text-xs font-medium"
               suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
             />
             <div className="flex items-center gap-3 w-full sm:w-auto">
@@ -161,7 +161,7 @@ export default function BrandsListing() {
                   <td className="text-sm font-medium text-gray-900">{index + 1}</td>
                   <td>
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-[6px] border border-gray-100 overflow-hidden bg-white p-1 ring-1 ring-gray-100 flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-[6px] border border-gray-200 overflow-hidden bg-white p-1 ring-1 ring-gray-100 flex items-center justify-center">
                         <img src={brand.logo} alt={brand.name} className="w-full h-full object-contain" />
                       </div>
                       <span className="text-sm font-bold text-[#1D3557] group-hover:text-blue-600 transition-colors">

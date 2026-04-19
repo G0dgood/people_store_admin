@@ -97,7 +97,7 @@ export default function OrderDetails() {
     {/* Main Details Area */}
     <div className="lg:col-span-2 flex flex-col gap-8">
      {/* Order Items Table */}
-     <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+     <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
       <div className="p-8 border-b border-gray-50 flex items-center justify-between">
        <h3 className="text-xl font-black text-gray-900">Purchased Items</h3>
        <span className="text-sm font-bold text-gray-400">{order.items.length} Items</span>
@@ -118,7 +118,7 @@ export default function OrderDetails() {
           <tr key={item.id}>
            <td className="pl-8">
             <div className="flex items-center gap-4">
-             <div className="w-12 h-12 rounded-xl bg-gray-100 overflow-hidden border border-gray-100 flex-shrink-0">
+             <div className="w-12 h-12 rounded-xl bg-gray-100 overflow-hidden border border-gray-200 flex-shrink-0">
               <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
              </div>
              <span className="text-sm font-black text-gray-900 leading-tight">{item.name}</span>
@@ -159,7 +159,7 @@ export default function OrderDetails() {
      </div>
 
      {/* Activity Logs */}
-     <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-6">
+     <div className="bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col gap-6">
       <h3 className="text-xl font-black text-gray-900">Operational Timeline</h3>
       <div className="flex flex-col gap-6 relative">
        <div className="absolute left-4 top-4 bottom-4 w-0.5 bg-gray-50"></div>
@@ -187,7 +187,7 @@ export default function OrderDetails() {
     {/* Sidebar Info */}
     <div className="flex flex-col gap-8">
      {/* Customer Card */}
-     <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-6">
+     <div className="bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col gap-6">
       <h3 className="text-lg font-black text-gray-900">Customer Profiles</h3>
       <div className="flex items-center gap-4">
        <img src={order.customer.avatar} alt={order.customer.name} className="w-14 h-14 rounded-2xl object-cover shadow-lg shadow-blue-50 border-2 border-white" />
@@ -214,7 +214,7 @@ export default function OrderDetails() {
      </div>
 
      {/* Shipping Address */}
-     <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-6">
+     <div className="bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col gap-6">
       <div className="flex justify-between items-center">
        <h3 className="text-lg font-black text-gray-900">Shipping Info</h3>
        <Icon name="create" size="xs" className="text-gray-300 cursor-pointer hover:text-brand-blue" />

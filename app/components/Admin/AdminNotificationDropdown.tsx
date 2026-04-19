@@ -61,7 +61,7 @@ export const NotificationList: React.FC<{ onAction?: () => void }> = ({ onAction
 
   return (
     <div className="flex flex-col">
-      <div className="px-5 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/30">
+      <div className="px-5 py-4 border-b border-gray-200 flex justify-between items-center bg-gray-50/30">
         <div className="flex flex-col gap-0.5">
           <span className="font-black text-[#1D3557] text-sm tracking-tight">System Notifications</span>
           <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Platform Events</span>
@@ -83,7 +83,7 @@ export const NotificationList: React.FC<{ onAction?: () => void }> = ({ onAction
               ${!item.isRead ? "bg-blue-50/10" : ""}
             `}
           >
-            <div className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 border border-gray-100/50 ${typeStyles[item.type].bg}`}>
+            <div className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 border border-gray-200/50 ${typeStyles[item.type].bg}`}>
               <Icon name={typeStyles[item.type].icon} folder={item.type === "order" ? "dashboardIcon" : "icon"} size="sm" />
             </div>
             
@@ -113,7 +113,7 @@ export const NotificationList: React.FC<{ onAction?: () => void }> = ({ onAction
           router.push('/admin/notifications');
         }} 
         icon="arrow_forward" 
-        className="h-14 py-0 border-t border-gray-100"
+        className="h-14 py-0 border-t border-gray-200"
       />
     </div>
   );

@@ -143,7 +143,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilters }) =>
               type="number"
               value={filters.priceRange[0]}
               onChange={handleMinPriceChange}
-              className="w-full border border-gray-200 rounded px-2 py-1.5 text-sm outline-none focus:border-brand-blue"
+              className="w-full border border-gray-200 px-2 py-1.5 text-sm outline-none focus:border-brand-blue"
             />
           </div>
           <div className="flex flex-col gap-1 flex-1">
@@ -152,7 +152,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilters }) =>
               type="number"
               value={filters.priceRange[1]}
               onChange={handleMaxPriceChange}
-              className="w-full border border-gray-200 rounded px-2 py-1.5 text-sm outline-none focus:border-brand-blue"
+              className="w-full border border-gray-200 px-2 py-1.5 text-sm outline-none focus:border-brand-blue"
             />
           </div>
         </div>

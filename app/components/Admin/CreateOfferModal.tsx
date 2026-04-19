@@ -93,7 +93,7 @@ export function CreateOfferModal({ isOpen, onClose, onSave, initialSelections }:
     >
       <div className="flex h-[700px] overflow-hidden">
         {/* Left: Categories */}
-        <div className="w-64 border-r border-gray-100 flex flex-col pt-2 bg-gray-50/30">
+        <div className="w-64 border-r border-gray-200 flex flex-col pt-2 bg-gray-50/30">
           <div className="px-5 py-4 flex flex-col gap-1">
             <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Filter Categories</h4>
           </div>
@@ -137,7 +137,7 @@ export function CreateOfferModal({ isOpen, onClose, onSave, initialSelections }:
                 className={`relative flex flex-col gap-3 p-4 rounded-2xl border-2 transition-all cursor-pointer group
                   ${selections[product.id] !== undefined
                     ? "border-brand-blue bg-blue-50/30"
-                    : "border-gray-100 hover:border-brand-blue/30 bg-white"}
+                    : "border-gray-200 hover:border-brand-blue/30 bg-white"}
                 `}
               >
                 <div className="w-full aspect-square bg-white rounded-xl border border-gray-50 p-2 flex items-center justify-center overflow-hidden">
@@ -161,7 +161,7 @@ export function CreateOfferModal({ isOpen, onClose, onSave, initialSelections }:
         </div>
 
         {/* Right: Summary & Discounts */}
-        <div className="w-80 border-l border-gray-100 flex flex-col bg-gray-50/30">
+        <div className="w-80 border-l border-gray-200 flex flex-col bg-gray-50/30">
           <div className="p-6 border-b border-gray-50">
             <h3 className="text-sm font-black text-[#1D3557] uppercase tracking-wider">Summary List</h3>
             <p className="text-[10px] text-gray-400 font-bold mt-1 uppercase leading-tight">Apply specific discounts for selected items</p>
@@ -175,7 +175,7 @@ export function CreateOfferModal({ isOpen, onClose, onSave, initialSelections }:
               </div>
             ) : (
               selectedProductList.map(p => (
-                <div key={p.id} className="bg-white p-4 rounded-2xl border border-gray-100 shadow-sm flex flex-col gap-3">
+                <div key={p.id} className="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm flex flex-col gap-3">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-gray-50 rounded-lg p-1 shrink-0">
                       <img src={p.image} alt="" className="w-full h-full object-contain" />
@@ -208,7 +208,7 @@ export function CreateOfferModal({ isOpen, onClose, onSave, initialSelections }:
             )}
           </div>
 
-          <div className="p-6 border-t border-gray-100 bg-white flex flex-col gap-4">
+          <div className="p-6 border-t border-gray-200 bg-white flex flex-col gap-4">
             <div className="flex justify-between items-center text-xs font-bold text-gray-500">
               <span>Selected Items:</span>
               <span className="text-brand-blue">{selectedProductList.length}</span>

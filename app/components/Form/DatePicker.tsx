@@ -108,7 +108,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
       </button>
 
       {isOpen && (
-        <div className="absolute z-20 w-[280px] mt-1.5 bg-white border border-gray-100 rounded-md shadow-xl p-4 animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="absolute z-20 w-[280px] mt-1.5 bg-white border border-gray-200 rounded-md shadow-xl p-4 animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="flex items-center justify-between mb-4">
              <button onClick={handlePrevMonth} className="p-1 hover:bg-gray-100 rounded text-gray-400">
                 <Icon name="chevron_left" size="sm" />
@@ -131,7 +131,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
             {days}
           </div>
 
-          <div className="flex gap-2 mt-6 pt-4 border-t border-gray-100">
+          <div className="flex gap-2 mt-6 pt-4 border-t border-gray-200">
             <Button variant="ghost" size="sm" className="flex-1 text-brand-blue border border-gray-200" onClick={handleClear}>Clear</Button>
             <Button variant="ghost" size="sm" className="flex-1 text-brand-blue border border-gray-200" onClick={handleToday}>Today</Button>
           </div>

@@ -73,7 +73,7 @@ const CancelOrderPage = () => {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: i * 0.1 }}
-                                className="bg-white p-10 rounded-[40px] border border-gray-100 shadow-sm hover:shadow-2xl transition-all group"
+                                className="bg-white p-10 rounded-[40px] border border-gray-200 shadow-sm hover:shadow-2xl transition-all group"
                             >
                                 <div className="w-16 h-16 bg-brand-blue-light rounded-3xl flex items-center justify-center text-brand-blue mb-8 group-hover:bg-brand-blue group-hover:text-white transition-colors duration-500">
                                     {policy.icon}
@@ -121,7 +121,7 @@ const CancelOrderPage = () => {
                                 </div>
                             </div>
 
-                            <div className="flex flex-col gap-8 bg-white p-10 md:p-12 rounded-[48px] shadow-sm border border-gray-100">
+                            <div className="flex flex-col gap-8 bg-white p-10 md:p-12 rounded-[48px] shadow-sm border border-gray-200">
                                 <div className="flex items-center gap-4 text-brand-blue">
                                     <HiShieldCheck size={32} />
                                     <h4 className="text-xl font-black text-[#1D3557]">Our Guarantee</h4>

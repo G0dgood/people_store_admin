@@ -66,7 +66,7 @@ export default function CreateProduct() {
       type="text"
       placeholder="Search product for add"
       containerClassName="flex-1 xl:w-96"
-      className="bg-white border-gray-100 placeholder:text-gray-400 text-xs font-medium"
+      className="bg-white border-gray-200 placeholder:text-gray-400 text-xs font-medium"
       suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
      />
 
@@ -105,7 +105,7 @@ export default function CreateProduct() {
     {/* Left Column (Main Details) */}
     <div className="xl:col-span-2 flex flex-col gap-6">
      {/* Basic Details */}
-     <div className="bg-white rounded-[6px] border border-gray-100 shadow-sm p-8 flex flex-col gap-6">
+     <div className="bg-white rounded-[6px] border border-gray-200 shadow-sm p-8 flex flex-col gap-6">
       <h3 className="text-base font-bold text-[#1D3557]">Basic Details</h3>
 
       <div className="flex flex-col gap-2.5">
@@ -134,7 +134,7 @@ export default function CreateProduct() {
      </div>
 
      {/* Pricing Section */}
-     <div className="bg-white rounded-[6px] border border-gray-100 shadow-sm p-8 flex flex-col gap-6">
+     <div className="bg-white rounded-[6px] border border-gray-200 shadow-sm p-8 flex flex-col gap-6">
       <h3 className="text-base font-bold text-[#1D3557]">Pricing</h3>
 
       <div className="flex flex-col gap-2.5">
@@ -144,7 +144,7 @@ export default function CreateProduct() {
         defaultValue="$999.89"
         className="bg-gray-50/80 border-gray-50 text-sm font-bold text-gray-900"
         suffixElement={
-         <div className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-100 rounded-[6px] cursor-pointer shadow-sm">
+         <div className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-[6px] cursor-pointer shadow-sm">
           <img src="/dashboardIcon/usa.svg" alt="USA" className="w-5 h-3 object-cover rounded-[1px]" />
           <Icon name="material-symbols_arrow-downward-rounded" folder="dashboardIcon" size="xs" className="text-gray-400" />
          </div>
@@ -201,7 +201,7 @@ export default function CreateProduct() {
      </div>
 
      {/* Inventory Section */}
-     <div className="bg-white rounded-[6px] border border-gray-100 shadow-sm p-8 flex flex-col gap-6">
+     <div className="bg-white rounded-[6px] border border-gray-200 shadow-sm p-8 flex flex-col gap-6">
       <h3 className="text-sm font-bold text-[#1D3557]">Inventory</h3>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -244,7 +244,7 @@ export default function CreateProduct() {
       <div className="flex gap-3 justify-end mt-4 pt-6 border-t border-gray-50">
        <button
         type="button"
-        className="bg-white border border-gray-100 text-[#1D3557] px-6 py-2.5 rounded-[6px] text-xs font-bold hover:bg-gray-50 transition-all flex items-center gap-2"
+        className="bg-white border border-gray-200 text-[#1D3557] px-6 py-2.5 rounded-[6px] text-xs font-bold hover:bg-gray-50 transition-all flex items-center gap-2"
         onClick={() => setIsDraftConfirmOpen(true)}
        >
         <Icon name="ticket" folder="dashboardIcon" size="xs" className="opacity-70" />
@@ -265,7 +265,7 @@ export default function CreateProduct() {
     {/* Right Column (Media & Meta) */}
     <div className="flex flex-col gap-6">
      {/* Upload Media */}
-     <div className="bg-white rounded-[6px] border border-gray-100 shadow-sm p-8 flex flex-col gap-6">
+     <div className="bg-white rounded-[6px] border border-gray-200 shadow-sm p-8 flex flex-col gap-6">
       <h3 className="text-base font-bold text-[#1D3557]">Upload Product Image</h3>
 
       <div className="flex flex-col gap-4">
@@ -280,7 +280,7 @@ export default function CreateProduct() {
          </button>
         )}
        </div>
-       <div className="relative aspect-square w-full rounded-[6px] bg-gray-50/50 border border-gray-100 overflow-hidden group">
+       <div className="relative aspect-square w-full rounded-[6px] bg-gray-50/50 border border-gray-200 overflow-hidden group">
         {stagedMedia.length > 0 ? (
          stagedMedia[0].file.type.startsWith("video") ? (
           <video
@@ -329,7 +329,7 @@ export default function CreateProduct() {
 
       <div className="grid grid-cols-3 gap-3">
        {stagedMedia.slice(1).map((media, idx) => (
-        <div key={idx + 1} className="relative aspect-square rounded-[6px] border border-gray-100 overflow-hidden bg-white shadow-sm ring-1 ring-gray-100 group/thumb">
+        <div key={idx + 1} className="relative aspect-square rounded-[6px] border border-gray-200 overflow-hidden bg-white shadow-sm ring-1 ring-gray-100 group/thumb">
          {media.file.type.startsWith("video") ? (
           <video src={media.url} className="w-full h-full object-cover" />
          ) : (
@@ -454,7 +454,7 @@ export default function CreateProduct() {
              type="text"
              value={editingColorIndex !== null ? productColors[editingColorIndex] : ""}
              placeholder="#000000"
-             className="flex-1 h-8 bg-white border border-gray-100 rounded-[4px] px-2 text-[10px] font-mono text-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-100"
+             className="flex-1 h-8 bg-white border border-gray-200 rounded-[4px] px-2 text-[10px] font-mono text-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-100"
              onChange={(e) => {
               const val = e.target.value;
               if (val.match(/^#[0-9A-F]{6}$/i)) {

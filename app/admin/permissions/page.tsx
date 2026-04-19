@@ -155,7 +155,7 @@ export default function PermissionsAccordion() {
        {/* Accordion Header */}
        <button
         onClick={() => setExpandedRoleId(isExpanded ? null : role.id)}
-        className={`w-full flex items-center justify-between p-5 text-left transition-colors ${isExpanded ? 'bg-gray-50/50 border-b border-gray-100' : 'hover:bg-gray-50/30'}`}
+        className={`w-full flex items-center justify-between p-5 text-left transition-colors ${isExpanded ? 'bg-gray-50/50 border-b border-gray-200' : 'hover:bg-gray-50/30'}`}
        >
         <div className="flex items-center gap-4">
          <div className={`w-3 h-3 rounded-full ${role.color} shadow-sm`} />
@@ -192,7 +192,7 @@ export default function PermissionsAccordion() {
           <div className="p-0 sm:p-0 overflow-x-auto admin-table-container">
            <table className="w-full">
             <thead>
-             <tr className="bg-gray-50/20 border-b border-gray-100">
+             <tr className="bg-gray-50/20 border-b border-gray-200">
               <th className="py-4 pl-8 text-left">
                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">System Module</span>
               </th>

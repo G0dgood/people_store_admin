@@ -51,7 +51,7 @@ const categories = [
 
 const HeroSection = () => {
   return (
-    <section className="w-full bg-white border border-[#1C1C1C1A] rounded-[6px] p-0 md:p-5 flex flex-col lg:flex-row gap-5 overflow-hidden">
+    <section className="w-full bg-white border border-gray-200 p-0 md:p-5 flex flex-col lg:flex-row gap-5 overflow-hidden">
       {/* Sidebar - Desktop Only */}
       {/* <motion.div
         variants={containerVariants}
@@ -77,7 +77,7 @@ const HeroSection = () => {
         initial="hidden"
         animate="visible"
         variants={bannerVariants}
-        className="flex-1 relative md:rounded-md overflow-hidden min-h-[250px] md:min-h-[400px]"
+        className="flex-1 relative overflow-hidden min-h-[250px] md:min-h-[400px]"
       >
         <Image
           src="/brandImage/brand_banner.png"
@@ -86,21 +86,21 @@ const HeroSection = () => {
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 p-6 md:p-12 flex flex-col justify-center gap-4 md:gap-6 bg-black/5">
+        <div className="absolute inset-0 p-6 md:p-12 lg:p-20 flex flex-col justify-center gap-6 md:gap-10 bg-black/10">
           <motion.div
             initial="hidden"
             animate="visible"
             transition={{ staggerChildren: 0.1, delayChildren: 0.4 }}
-            className="flex flex-col"
+            className="flex flex-col gap-2"
           >
-            <motion.h2 variants={textVariants} className="text-xl md:text-3xl font-normal text-gray-900">Latest trending</motion.h2>
-            <motion.h1 variants={textVariants} className="text-2xl md:text-4xl font-bold text-gray-900">Boutique Collections</motion.h1>
+            <motion.h2 variants={textVariants} className="text-xl md:text-2xl font-medium text-white uppercase tracking-[0.3em] opacity-90">Latest trending</motion.h2>
+            <motion.h1 variants={textVariants} className="text-3xl md:text-6xl font-black text-white uppercase tracking-tighter leading-none">Boutique<br/>Collections</motion.h1>
           </motion.div>
           <motion.div variants={textVariants} initial="hidden" animate="visible" transition={{ delay: 0.7 }}>
             <Link href="/products">
               <Button
                 variant="ghost"
-                className="w-fit bg-white text-gray-900 hover:bg-gray-100 font-bold border-none shadow-md px-6 h-10 md:h-11"
+                className="w-fit bg-white text-black hover:bg-brand-red hover:text-white font-black border-none px-10 h-12 md:h-14 uppercase text-[12px] tracking-widest transition-all duration-300 active:scale-95"
               >
                 Learn more
               </Button>

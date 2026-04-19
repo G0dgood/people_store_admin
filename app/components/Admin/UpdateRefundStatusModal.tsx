@@ -36,7 +36,7 @@ export const UpdateRefundStatusModal: React.FC<UpdateStatusModalProps> = ({
     >
       <div className="flex flex-col gap-8 py-4">
         {/* Target Info */}
-        <div className="bg-gray-50 border border-gray-100 rounded-2xl p-5 flex items-center gap-4">
+        <div className="bg-gray-50 border border-gray-200 rounded-2xl p-5 flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-brand-blue shadow-sm">
             <Icon name={isBulk ? "users" : "cached"} folder={isBulk ? "dashboardIcon" : "icon"} size="md" />
           </div>
@@ -55,7 +55,7 @@ export const UpdateRefundStatusModal: React.FC<UpdateStatusModalProps> = ({
             <div
               onClick={() => setSelectedStatus("Completed")}
               className={`w-full p-4 rounded-2xl border-2 transition-all cursor-pointer flex flex-col gap-3
-                 ${selectedStatus === "Completed" ? "border-emerald-500 bg-emerald-50/30" : "border-gray-100 bg-white hover:border-gray-200"}
+                 ${selectedStatus === "Completed" ? "border-emerald-500 bg-emerald-50/30" : "border-gray-200 bg-white hover:border-gray-200"}
                `}
             >
               <div className="w-full flex  items-center justify-between">
@@ -78,7 +78,7 @@ export const UpdateRefundStatusModal: React.FC<UpdateStatusModalProps> = ({
             <div
               onClick={() => setSelectedStatus("Canceled")}
               className={`w-full p-4 rounded-2xl border-2 transition-all cursor-pointer flex flex-col gap-3
-                 ${selectedStatus === "Canceled" ? "border-rose-500 bg-rose-50/30" : "border-gray-100 bg-white hover:border-gray-200"}
+                 ${selectedStatus === "Canceled" ? "border-rose-500 bg-rose-50/30" : "border-gray-200 bg-white hover:border-gray-200"}
                `}
             >
               <div className="w-full flex items-center justify-between">
@@ -107,7 +107,7 @@ export const UpdateRefundStatusModal: React.FC<UpdateStatusModalProps> = ({
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             placeholder="Provide a reason for this status update..."
-            className="!rounded-2xl !bg-gray-50 !border-gray-100 placeholder:text-gray-400 text-sm font-medium"
+            className="!rounded-2xl !bg-gray-50 !border-gray-200 placeholder:text-gray-400 text-sm font-medium"
             style={{ minHeight: '96px' }}
           />
         </div>

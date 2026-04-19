@@ -209,7 +209,7 @@ export default function AdvertManagement() {
         <div className="lg:col-span-12 flex flex-col gap-8">
 
           {/* Section 1: Copywriting & Timing */}
-          <section className="bg-white p-8 rounded-[6px] border border-gray-100 shadow-sm flex flex-col gap-8">
+          <section className="bg-white p-8 rounded-[6px] border border-gray-200 shadow-sm flex flex-col gap-8">
             <div className="flex justify-between items-center">
               <h3 className="text-lg font-black text-[#1D3557] flex items-center gap-2">
                 <span className="w-8 h-8 rounded-[6px] bg-blue-50 text-blue-500 flex items-center justify-center text-xs">01</span>
@@ -359,7 +359,7 @@ export default function AdvertManagement() {
                 </div>
               </div>
 
-              <div className="bg-gray-50 p-6 rounded-[6px] border border-gray-100 flex flex-col gap-6 justify-center">
+              <div className="bg-gray-50 p-6 rounded-[6px] border border-gray-200 flex flex-col gap-6 justify-center">
                 <div className="flex flex-col gap-2">
                   <label className="text-xs font-black text-[#1D3557] uppercase tracking-widest">
                     {activeVisualIndex === null ? "Global Cycle Duration" : `Atmosphere ${activeVisualIndex + 1} Timing Override`}
@@ -397,7 +397,7 @@ export default function AdvertManagement() {
           </section>
 
           {/* Section 2: Background Orchestration */}
-          <section className="bg-white p-8 rounded-[6px] border border-gray-100 shadow-sm flex flex-col gap-6">
+          <section className="bg-white p-8 rounded-[6px] border border-gray-200 shadow-sm flex flex-col gap-6">
             <div className="flex justify-between items-center">
               <h3 className="text-lg font-black text-[#1D3557] flex items-center gap-2">
                 <span className="w-8 h-8 rounded-[6px] bg-indigo-50 text-indigo-500 flex items-center justify-center text-xs">02</span>
@@ -429,7 +429,7 @@ export default function AdvertManagement() {
                     value={bg}
                     className="flex flex-col gap-3 min-w-[240px] cursor-grab active:cursor-grabbing"
                   >
-                    <div className="relative aspect-[16/10] rounded-[6px] overflow-hidden border border-gray-100 shadow-sm group">
+                    <div className="relative aspect-[16/10] rounded-[6px] overflow-hidden border border-gray-200 shadow-sm group">
                       <img
                         src={bg.url}
                         alt="Visual"
@@ -516,7 +516,7 @@ export default function AdvertManagement() {
             </Reorder.Group>
               <button
                 onClick={() => setIsBackgroundModalOpen(true)}
-                className="min-w-[240px] h-[150px] aspect-[16/10] rounded-[6px] border-2 border-dashed border-gray-100 flex flex-col items-center justify-center gap-2 hover:border-indigo-200 transition-colors bg-indigo-50/10 group mt-0"
+                className="min-w-[240px] h-[150px] aspect-[16/10] rounded-[6px] border-2 border-dashed border-gray-200 flex flex-col items-center justify-center gap-2 hover:border-indigo-200 transition-colors bg-indigo-50/10 group mt-0"
               >
                 <Icon name="circle-plus" folder="dashboardIcon" size="md" className="text-gray-300 group-hover:text-indigo-400 transition-colors" />
                 <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest group-hover:text-indigo-500 transition-colors">Add Visual</span>
@@ -526,7 +526,7 @@ export default function AdvertManagement() {
 
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
             {/* Section 3: Featured Items Picker */}
-            <section className="bg-white p-8 rounded-[6px] border border-gray-100 shadow-sm flex flex-col gap-6 xl:col-span-2">
+            <section className="bg-white p-8 rounded-[6px] border border-gray-200 shadow-sm flex flex-col gap-6 xl:col-span-2">
               <h3 className="text-lg font-black text-[#1D3557] flex flex-col gap-6">
                 <div className="flex items-center justify-between w-full">
                   <div className="flex items-center gap-2 text-emerald-500">
@@ -614,7 +614,7 @@ export default function AdvertManagement() {
             </section>
 
             {/* Section 4: Item Arrangement */}
-            <section className="bg-white p-8 rounded-[6px] border border-gray-100 shadow-sm flex flex-col gap-6 xl:col-span-1">
+            <section className="bg-white p-8 rounded-[6px] border border-gray-200 shadow-sm flex flex-col gap-6 xl:col-span-1">
               <h3 className="text-lg font-black text-[#1D3557] flex items-center gap-2">
                 <span className="w-8 h-8 rounded-[6px] bg-orange-50 text-orange-500 flex items-center justify-center text-xs">04</span>
                 Marketing Arrangement
@@ -624,7 +624,7 @@ export default function AdvertManagement() {
                   {config.showTitle && (
                     <div className="flex flex-col gap-1">
                       <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Main Header</span>
-                      <div className="p-3 bg-gray-50 border border-gray-100 rounded-[4px] text-xs font-bold text-brand-blue">
+                      <div className="p-3 bg-gray-50 border border-gray-200 rounded-[4px] text-xs font-bold text-brand-blue">
                         {config.title} <span className="text-emerald-500">{config.titleHighlight}</span>
                       </div>
                     </div>
@@ -633,7 +633,7 @@ export default function AdvertManagement() {
                   {config.showStats && (
                     <div className="flex flex-col gap-1">
                       <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Global Impact Stats</span>
-                      <div className="flex bg-gray-50 border border-gray-100 p-4 rounded-[6px] items-center gap-4">
+                      <div className="flex bg-gray-50 border border-gray-200 p-4 rounded-[6px] items-center gap-4">
                         <Icon name="verified" folder="icon" size="sm" className="text-emerald-500" />
                         <span className="text-[10px] font-bold text-gray-500 leading-relaxed uppercase tracking-widest">
                           {config.stats}
@@ -665,7 +665,7 @@ export default function AdvertManagement() {
                       <Reorder.Item
                         key={item.id}
                         value={item}
-                        className="p-4 bg-white rounded-[6px] border border-gray-100 shadow-sm cursor-grab active:cursor-grabbing flex items-center justify-between group hover:border-brand-blue transition-colors"
+                        className="p-4 bg-white rounded-[6px] border border-gray-200 shadow-sm cursor-grab active:cursor-grabbing flex items-center justify-between group hover:border-brand-blue transition-colors"
                       >
                         <div className="flex items-center gap-4">
                           <div className="w-10 h-10 rounded-[6px] bg-gray-50 p-1">
@@ -752,7 +752,7 @@ export default function AdvertManagement() {
                       key={product.id}
                       onClick={() => handleSelectBackground(product.image)}
                       className={`group relative aspect-square rounded-[6px] overflow-hidden border-2 transition-all p-2 flex flex-col gap-2
-                          ${isSelected ? "border-brand-blue bg-blue-50/20 ring-4 ring-blue-50" : "border-gray-100 bg-white hover:border-blue-200 shadow-sm"}
+                          ${isSelected ? "border-brand-blue bg-blue-50/20 ring-4 ring-blue-50" : "border-gray-200 bg-white hover:border-blue-200 shadow-sm"}
                         `}
                     >
                       <div className="relative flex-1 bg-white rounded-[4px] overflow-hidden flex items-center justify-center p-2">
@@ -789,7 +789,7 @@ export default function AdvertManagement() {
                     value={customUrl}
                     onChange={(e) => setCustomUrl(e.target.value)}
                     containerClassName="flex-1"
-                    className="bg-gray-50 border-gray-100"
+                    className="bg-gray-50 border-gray-200"
                   />
                   <Button
                     variant="primary"
@@ -811,7 +811,7 @@ export default function AdvertManagement() {
                   <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Active URL Sources</span>
                   <div className="grid grid-cols-2 gap-4">
                     {config.backgroundImages.filter(bg => bg.url.startsWith("http")).map((asset, i) => (
-                      <div key={i} className="relative aspect-[16/6] rounded-[6px] overflow-hidden border border-gray-100 shadow-sm group">
+                      <div key={i} className="relative aspect-[16/6] rounded-[6px] overflow-hidden border border-gray-200 shadow-sm group">
                         <img src={asset.url} alt="Custom" className="w-full h-full object-cover" />
                         <button
                           onClick={() => toggleBackgroundSelection(asset.url)}
@@ -878,7 +878,7 @@ export default function AdvertManagement() {
                   </div>
                   <div className="grid grid-cols-4 gap-4">
                     {config.backgroundImages.filter(bg => bg.url.startsWith("data:")).map((asset, i) => (
-                      <div key={i} className="relative aspect-square rounded-[6px] overflow-hidden border border-gray-100 group">
+                      <div key={i} className="relative aspect-square rounded-[6px] overflow-hidden border border-gray-200 group">
                         <img src={asset.url} alt="Upload" className="w-full h-full object-cover" />
                         <button
                           onClick={() => toggleBackgroundSelection(asset.url)}

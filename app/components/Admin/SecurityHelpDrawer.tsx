@@ -54,7 +54,7 @@ export function SecurityHelpDrawer({ isOpen, onClose }: SecurityHelpDrawerProps)
            <div className="flex flex-col gap-3">
               {helpItems.map((item, i) => (
                 <div key={i} className="flex items-start gap-4 p-4 rounded-xl hover:bg-gray-50 transition-all group">
-                   <div className="mt-1 w-8 h-8 rounded-lg bg-white border border-gray-100 flex items-center justify-center text-gray-400 group-hover:text-brand-blue group-hover:border-brand-blue/20 transition-all shadow-sm shrink-0">
+                   <div className="mt-1 w-8 h-8 rounded-lg bg-white border border-gray-200 flex items-center justify-center text-gray-400 group-hover:text-brand-blue group-hover:border-brand-blue/20 transition-all shadow-sm shrink-0">
                       <Icon name={item.icon} folder="icon" size="xs" />
                    </div>
                    <div className="flex flex-col gap-1">

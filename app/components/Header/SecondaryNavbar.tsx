@@ -49,7 +49,7 @@ export const SecondaryNavbar: React.FC = () => {
   ];
 
   return (
-    <div className="w-full bg-white border-t border-gray-100 hidden lg:block">
+    <div className="w-full bg-white border-t border-gray-200 hidden lg:block">
       <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 h-10 flex items-center justify-between">
         <div className="flex items-center gap-6 h-full">
           <div className="relative h-full z-40" ref={secondaryCategoryRef}>
@@ -58,7 +58,7 @@ export const SecondaryNavbar: React.FC = () => {
                 e.stopPropagation();
                 setIsSecondaryCategoryOpen(prev => !prev);
               }}
-              className="flex items-center gap-2 h-full font-bold text-sm text-gray-900 border-r border-gray-100 pr-6 hover:text-brand-blue transition-colors outline-none focus:outline-none"
+              className="flex items-center gap-2 h-full font-bold text-sm text-gray-900 border-r border-gray-200 pr-6 hover:text-brand-blue transition-colors outline-none focus:outline-none"
               aria-expanded={isSecondaryCategoryOpen}
             >
               All categories
@@ -68,7 +68,7 @@ export const SecondaryNavbar: React.FC = () => {
             <AnimatePresence>
               {isSecondaryCategoryOpen && (
                 <div className="absolute top-full left-0 pt-2 w-56 z-[100]" onClick={() => setIsSecondaryCategoryOpen(false)}>
-                  <DropdownMenu width="100%" className="shadow-lg">
+                  <DropdownMenu width="100%" className="border border-gray-200">
                     <DropdownItem label="Signature Fragrance" href="/products?category=Signature+Fragrance" />
                     <DropdownItem label="Luxury Skincare" href="/products?category=Luxury+Skincare" />
                     <DropdownItem label="Boutique Gift Sets" href="/gift-boxes" />
@@ -81,12 +81,12 @@ export const SecondaryNavbar: React.FC = () => {
             </AnimatePresence>
           </div>
 
-          <div className="flex items-center gap-6 text-sm font-medium">
+          <div className="flex items-center gap-6 text-[12px] font-bold uppercase tracking-widest">
             {navLinks.map((link) => (
               <Link
                 key={link.label}
                 href={link.href}
-                className={`transition-colors ${isActive(link.href) ? "text-brand-blue font-bold" : "text-gray-900 hover:text-brand-blue"
+                className={`transition-colors ${isActive(link.href) ? "text-brand-red font-bold" : "text-neutral-900 hover:text-brand-red"
                   }`}
               >
                 {link.label}
@@ -96,7 +96,7 @@ export const SecondaryNavbar: React.FC = () => {
 
             <div className="relative h-full" ref={helpRef}>
               <div
-                className={`flex items-center gap-1 cursor-pointer transition-colors h-full ${isHelpOpen ? "text-brand-blue font-bold" : "text-gray-900 hover:text-brand-blue"}`}
+                className={`flex items-center gap-1 cursor-pointer transition-colors h-full ${isHelpOpen ? "text-brand-red font-bold" : "text-neutral-900 hover:text-brand-red"}`}
                 onClick={() => setIsHelpOpen(prev => !prev)}
               >
                 Help
@@ -106,7 +106,7 @@ export const SecondaryNavbar: React.FC = () => {
               <AnimatePresence>
                 {isHelpOpen && (
                   <div className="absolute top-full right-0 pt-2 w-64 z-[100]">
-                    <DropdownMenu width="100%" className="shadow-2xl border-gray-200 rounded-xl overflow-hidden">
+                    <DropdownMenu width="100%" className="border border-gray-200 overflow-hidden">
                       <div className="flex flex-col py-2">
                         {helpLinks.map((link) => (
                           <DropdownItem
@@ -114,23 +114,23 @@ export const SecondaryNavbar: React.FC = () => {
                             label={link.label}
                             href={link.href}
                             onSelect={() => setIsHelpOpen(false)}
-                            className="text-gray-700 hover:text-brand-blue font-medium"
+                            className="text-gray-700 hover:text-brand-red font-semibold text-[11px] uppercase tracking-wide"
                           />
                         ))}
                       </div>
 
                       {/* Contact Section */}
-                      <div className="p-4 border-t border-gray-100 bg-gray-50/30 flex flex-col gap-3">
+                      <div className="p-4 border-t border-gray-200 bg-gray-50/30 flex flex-col gap-3">
                         <Button
-                          className="w-full text-white h-11 shadow-lg active:scale-95 transition-all hover:opacity-90"
-                          style={{ backgroundColor: "#2196F3" }}
+                          className="w-full text-white h-11 active:scale-95 transition-all hover:opacity-90 font-bold uppercase text-[11px]"
+                          style={{ backgroundColor: "#A10101" }}
                           iconLeft={<Icon name="chat" size="sm" />}
                         >
                           Live Chat
                         </Button>
                         <Button
                           variant="secondary"
-                          className="w-full h-11 border-2 font-bold active:scale-95 transition-all"
+                          className="w-full h-11 border-2 font-bold active:scale-95 transition-all uppercase text-[11px]"
                           style={{ borderColor: "#00B517", color: "#00B517" }}
                           iconLeft={<Icon name="social/whatsapp" size="sm" />}
                         >

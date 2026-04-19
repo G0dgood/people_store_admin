@@ -49,7 +49,7 @@ export function AddRoleModal({ isOpen, onClose }: AddRoleModalProps) {
               placeholder="e.g. Content Manager"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="h-12 border-gray-100 font-bold"
+              className="h-12 border-gray-200 font-bold"
               required
             />
           </div>

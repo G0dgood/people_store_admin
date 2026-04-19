@@ -61,7 +61,7 @@ const ContactPage = () => {
                   <Input
                     type="text"
                     placeholder="John Doe"
-                    className="h-12 border-gray-100 focus:border-brand-blue bg-gray-50/30"
+                    className="h-12 border-gray-200 focus:border-brand-blue bg-gray-50/30"
                   />
                 </div>
                 <div className="flex flex-col gap-2">
@@ -69,7 +69,7 @@ const ContactPage = () => {
                   <Input
                     type="email"
                     placeholder="john@example.com"
-                    className="h-12 border-gray-100 focus:border-brand-blue bg-gray-50/30"
+                    className="h-12 border-gray-200 focus:border-brand-blue bg-gray-50/30"
                   />
                 </div>
                 <div className="flex flex-col gap-2 md:col-span-2">
@@ -77,13 +77,13 @@ const ContactPage = () => {
                   <Input
                     type="text"
                     placeholder="Inquiry about Bloom & Mist services"
-                    className="h-12 border-gray-100 focus:border-brand-blue bg-gray-50/30"
+                    className="h-12 border-gray-200 focus:border-brand-blue bg-gray-50/30"
                   />
                 </div>
                 <div className="flex flex-col gap-2 md:col-span-2">
                   <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Message</label>
                   <Textarea
-                    className="min-h-[160px] border-gray-100 focus:border-brand-blue bg-gray-50/30 shadow-none"
+                    className="min-h-[160px] border-gray-200 focus:border-brand-blue bg-gray-50/30 shadow-none"
                     placeholder="Write your message here..."
                   />
                 </div>
@@ -160,7 +160,7 @@ const ContactPage = () => {
                   className="grayscale hover:grayscale-0 transition-all duration-700 opacity-80 group-hover:opacity-100"
                 ></iframe>
                 <div className="absolute top-4 left-4 pointer-events-none">
-                  <div className="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-[10px] font-black uppercase tracking-tighter text-[#1D3557] shadow-sm border border-gray-100">
+                  <div className="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-[10px] font-black uppercase tracking-tighter text-[#1D3557] shadow-sm border border-gray-200">
                     Bloom & Mist HQ
                   </div>
                 </div>

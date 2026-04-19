@@ -69,7 +69,7 @@ const MobileMenuSidebar = () => {
       {/* Navigation Groups */}
       <div className="flex-1 overflow-y-auto py-4">
          {menuGroups.map((group, gIdx) => (
-           <div key={gIdx} className="border-b border-gray-100 last:border-0 py-2">
+           <div key={gIdx} className="border-b border-gray-200 last:border-0 py-2">
               {group.items.map((item, iIdx) => (
                 <Link 
                   key={iIdx} 

@@ -105,7 +105,7 @@ export default function CategoriesPage() {
       {/* Categories Horizontal Scroll */}
       <div className="relative group">
         <button
-          className="absolute left-[-20px] top-1/2 -translate-y-1/2 w-10 h-10 bg-white border border-gray-100 rounded-full flex items-center justify-center shadow-lg text-gray-400 hover:text-gray-900 z-10 opacity-0 group-hover:opacity-100 transition-opacity hover:border-brand-blue/30"
+          className="absolute left-[-20px] top-1/2 -translate-y-1/2 w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center shadow-lg text-gray-400 hover:text-gray-900 z-10 opacity-0 group-hover:opacity-100 transition-opacity hover:border-brand-blue/30"
           onClick={() => scroll("left")}
         >
           <Icon name="chevron_left" folder="icon" size="sm" />
@@ -126,7 +126,7 @@ export default function CategoriesPage() {
         </div>
 
         <button
-          className="absolute right-[-20px] top-1/2 -translate-y-1/2 w-10 h-10 bg-white border border-gray-100 rounded-full flex items-center justify-center shadow-lg text-gray-400 hover:text-gray-900 z-10 opacity-0 group-hover:opacity-100 transition-opacity hover:border-brand-blue/30"
+          className="absolute right-[-20px] top-1/2 -translate-y-1/2 w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center shadow-lg text-gray-400 hover:text-gray-900 z-10 opacity-0 group-hover:opacity-100 transition-opacity hover:border-brand-blue/30"
           onClick={() => scroll("right")}
         >
           <Icon name="chevron_right" folder="icon" size="sm" />
@@ -148,7 +148,7 @@ export default function CategoriesPage() {
               type="text"
               placeholder="Search your product"
               containerClassName="flex-1 md:w-96"
-              className="bg-white border-gray-100 placeholder:text-gray-400 text-xs font-medium"
+              className="bg-white border-gray-200 placeholder:text-gray-400 text-xs font-medium"
               suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
             />
             <RowsPerPage value={rowsPerPage} onChange={setRowsPerPage} />
@@ -207,7 +207,7 @@ export default function CategoriesPage() {
                     <span className="text-sm font-bold text-gray-900">1</span>
                   </td>
                   <td className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-[6px] overflow-hidden bg-gray-50 border border-gray-100 p-1">
+                    <div className="w-10 h-10 rounded-[6px] overflow-hidden bg-gray-50 border border-gray-200 p-1">
                       <img src={p.image} alt="" className="w-full h-full object-contain" />
                     </div>
                     <span className="text-sm font-bold text-gray-900 leading-tight block truncate max-w-[200px]">{p.name}</span>

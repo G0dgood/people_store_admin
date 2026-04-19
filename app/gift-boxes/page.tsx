@@ -120,7 +120,7 @@ const GiftBoxesPage = () => {
                                 transition={{ delay: i * 0.1 }}
                                 className="group cursor-pointer"
                             >
-                                <div className="relative aspect-square rounded-[48px] overflow-hidden bg-gray-50 mb-8 border border-gray-100 shadow-sm transition-all duration-500 group-hover:shadow-2xl group-hover:shadow-blue-900/10">
+                                <div className="relative aspect-square rounded-[48px] overflow-hidden bg-gray-50 mb-8 border border-gray-200 shadow-sm transition-all duration-500 group-hover:shadow-2xl group-hover:shadow-blue-900/10">
                                     <Image
                                         src={set.image}
                                         alt={set.title}

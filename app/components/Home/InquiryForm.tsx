@@ -8,7 +8,7 @@ import { Icon } from "@/app/components/Icon";
 
 const InquiryForm = () => {
   return (
-    <section className="w-full relative rounded-lg min-h-[420px] shadow-sm flex bg-brand-blue/90 overflow-hidden">
+    <section className="w-full relative min-h-[420px] flex bg-brand-blue/90 overflow-hidden">
       <Image
         src="/brandImage/cat_fragrance.png"
         alt="Inquiry BG"
@@ -27,18 +27,18 @@ const InquiryForm = () => {
           </p>
         </div>
 
-        <div className="w-full max-w-[490px] bg-white p-6 md:p-8 rounded-lg shadow-2xl flex flex-col gap-5 z-10 border border-brand-blue-light">
+        <div className="w-full max-w-[490px] bg-white p-6 md:p-8 flex flex-col gap-5 z-10 border border-brand-blue-light">
           <h3 className="text-xl font-bold text-gray-900">Send quote to suppliers</h3>
           <Input placeholder="What item you need?" className="h-10" />
           <Textarea placeholder="Type more details" rows={3} />
           <div className="flex gap-4">
             <Input placeholder="Quantity" className="w-full md:flex-1 h-10" />
-            <div className="w-full md:w-[140px] flex items-center justify-between px-3 border border-gray-300 rounded-lg bg-white cursor-pointer h-10 hover:border-brand-blue transition-colors">
+            <div className="w-full md:w-[140px] flex items-center justify-between px-3 border border-gray-300 bg-white cursor-pointer h-10 hover:border-brand-blue transition-colors">
               <span className="text-sm text-gray-900">Pcs</span>
               <Icon name="expand_more" size="xs" className="text-gray-400" />
             </div>
           </div>
-          <Button className="w-fit bg-brand-blue text-white px-8 h-10 hover:bg-brand-blue/90 shadow-lg active:scale-95 transition-all">
+          <Button className="w-fit bg-brand-blue text-white px-8 h-10 hover:bg-brand-blue/90 active:scale-95 transition-all">
             Send inquiry
           </Button>
         </div>

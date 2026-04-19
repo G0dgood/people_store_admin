@@ -97,7 +97,7 @@ export function UpdateDealsTimerModal({ isOpen, onClose, initialValues, onUpdate
         </div>
 
         {/* Summary Preview */}
-        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-100">
+        <div className="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-200">
           <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Preview Display:</span>
           <div className="flex gap-2">
             <div className="flex flex-col items-center justify-center w-10 h-10 bg-white rounded-lg border border-gray-200">

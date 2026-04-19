@@ -36,7 +36,7 @@ const WishlistPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F7FAFC] flex flex-col font-sans text-black">
+    <div className="min-h-screen bg-white flex flex-col font-sans text-black">
       <Header />
 
       <div className="flex-1 max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 py-4 md:py-8 flex flex-col gap-4 md:gap-8 w-full">
@@ -80,8 +80,8 @@ const WishlistPage = () => {
               ))}
             </div>
           ) : (
-            <div className="bg-white rounded-2xl border border-gray-100 p-12 md:p-20 flex flex-col items-center text-center gap-6 shadow-sm">
-              <div className="w-24 h-24 bg-blue-50 rounded-full flex items-center justify-center text-brand-blue animate-pulse">
+            <div className="bg-white border border-gray-200 p-12 md:p-20 flex flex-col items-center text-center gap-6">
+              <div className="w-24 h-24 bg-blue-50 flex items-center justify-center text-brand-blue animate-pulse">
                 <Icon name="favorite" size="lg" />
               </div>
               <div className="flex flex-col gap-2 max-w-sm">
@@ -95,7 +95,7 @@ const WishlistPage = () => {
               </div>
               <Link
                 href="/products"
-                className="mt-2 bg-brand-blue text-white px-10 py-3.5 rounded-xl font-bold hover:bg-brand-blue/90 transition-all shadow-lg hover:shadow-brand-blue/20 active:scale-95 flex items-center gap-2"
+                className="mt-2 bg-brand-blue text-white px-10 py-3.5 font-bold hover:bg-brand-blue/90 transition-all active:scale-95 flex items-center gap-2"
               >
                 <Icon name="shopping_basket" size="sm" />
                 Start shopping
@@ -105,7 +105,7 @@ const WishlistPage = () => {
         </div>
 
         {/* Recently Viewed */}
-        <div className="mt-8 border-t border-gray-100 pt-10 pb-12">
+        <div className="mt-8 border-t border-gray-200 pt-10 pb-12">
           <h2 className="text-xl font-bold text-gray-900 mb-6 tracking-tight">
             Recently viewed
           </h2>
@@ -151,9 +151,9 @@ const WishlistPage = () => {
               <Link
                 href="/products/detail"
                 key={item.id}
-                className="bg-white border border-gray-200 rounded-lg p-3 flex flex-col gap-3 hover:shadow-md transition-all group"
+                className="bg-white border border-gray-200 p-3 flex flex-col gap-3 transition-all group"
               >
-                <div className="aspect-square relative flex items-center justify-center p-2 bg-gray-50 rounded-md overflow-hidden">
+                <div className="aspect-square relative flex items-center justify-center p-2 bg-gray-50 overflow-hidden">
                   <div className="relative w-full h-full transition-transform duration-300 group-hover:scale-110">
                     <Image
                       src={item.image}

@@ -6,7 +6,7 @@ import { Button } from "../Button";
 
 const DiscountBanner = () => {
   return (
-    <div className="w-full h-28 rounded-lg flex items-center justify-between overflow-hidden relative px-8">
+    <div className="w-full h-28 border border-gray-200 flex items-center justify-between overflow-hidden relative px-8">
        <Image 
          src="/web_images/twocolor_background.png" 
          alt="Discount Background" 

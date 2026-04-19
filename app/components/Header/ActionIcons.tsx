@@ -21,13 +21,13 @@ export const ActionIcons: React.FC = () => {
     <div className="flex items-center gap-4 md:gap-6">
       <div 
         onClick={openLogin}
-        className="flex flex-col items-center cursor-pointer group text-gray-500 hover:text-brand-blue transition-colors"
+        className="flex flex-col items-center cursor-pointer group text-gray-500 hover:text-brand-red transition-colors"
       >
         <Icon name="profile" size="md" />
         <span className="text-[10px] font-medium mt-1 hidden md:block">Profile</span>
       </div>
       <div 
-        className="relative flex flex-col items-center cursor-pointer group text-gray-500 hover:text-brand-blue transition-colors hidden md:flex"
+        className="relative flex flex-col items-center cursor-pointer group text-gray-500 hover:text-brand-red transition-colors hidden md:flex"
         onMouseEnter={() => setIsMessagesOpen(true)}
         onMouseLeave={() => setIsMessagesOpen(false)}
       >
@@ -40,7 +40,7 @@ export const ActionIcons: React.FC = () => {
       <Link 
         href="/wishlist" 
         className={`flex flex-col items-center group transition-colors hidden md:flex ${
-          isActive("/wishlist") ? "text-brand-blue font-bold" : "text-gray-500 hover:text-brand-blue"
+          isActive("/wishlist") ? "text-brand-red font-bold" : "text-gray-500 hover:text-brand-red"
         }`}
       >
         <Icon name="favorite" size="md" />
@@ -49,7 +49,7 @@ export const ActionIcons: React.FC = () => {
       <Link 
         href="/orders" 
         className={`flex flex-col items-center group transition-colors hidden md:flex ${
-          isActive("/orders") ? "text-brand-blue font-bold" : "text-gray-500 hover:text-brand-blue"
+          isActive("/orders") ? "text-brand-red font-bold" : "text-gray-500 hover:text-brand-red"
         }`}
       >
         <Icon name="inventory_2" size="md" />
@@ -58,7 +58,7 @@ export const ActionIcons: React.FC = () => {
       <Link 
         href="/cart" 
         className={`relative flex flex-col items-center group transition-colors ${
-          isActive("/cart") ? "text-brand-blue font-bold" : "text-gray-500 hover:text-brand-blue"
+          isActive("/cart") ? "text-brand-red font-bold" : "text-gray-500 hover:text-brand-red"
         }`}
       >
         <div className="relative">

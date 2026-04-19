@@ -66,7 +66,7 @@ export const RealtimeUsers: React.FC<RealtimeUsersProps> = ({ onViewInsight }) =
 
         <div className="relative" ref={dropdownRef}>
           <button
-            className={`p-2 rounded-xl transition-all duration-300 ${isDropdownOpen ? "bg-[#1D3557] text-white shadow-lg" : "text-gray-400 hover:bg-gray-50 border border-transparent hover:border-gray-100"}`}
+            className={`p-2 rounded-xl transition-all duration-300 ${isDropdownOpen ? "bg-[#1D3557] text-white shadow-lg" : "text-gray-400 hover:bg-gray-50 border border-transparent hover:border-gray-200"}`}
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             <Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />
@@ -80,7 +80,7 @@ export const RealtimeUsers: React.FC<RealtimeUsersProps> = ({ onViewInsight }) =
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
                 className="absolute top-full right-0 mt-3 z-50 origin-top-right"
               >
-                <DropdownMenu width={220} className="shadow-2xl border border-gray-100 rounded-2xl overflow-hidden backdrop-blur-xl bg-white/90">
+                <DropdownMenu width={220} className="shadow-2xl border border-gray-200 rounded-2xl overflow-hidden backdrop-blur-xl bg-white/90">
                   <DropdownItem
                     label="Force Refresh"
                     subtext="Manual data pull"
@@ -142,9 +142,9 @@ export const RealtimeUsers: React.FC<RealtimeUsersProps> = ({ onViewInsight }) =
       </div>
 
       <div className="flex flex-col gap-6 pt-6 mt-2 relative z-10">
-        <div className="flex justify-between items-center bg-gray-50/50 p-2 rounded-lg border border-gray-100/50">
+        <div className="flex justify-between items-center bg-gray-50/50 p-2 rounded-lg border border-gray-200/50">
           <h4 className="text-[12px] font-black text-[#1D3557] uppercase tracking-widest pl-1">Global Distribution</h4>
-          <span className="text-[10px] font-black text-brand-blue bg-white px-2 py-0.5 rounded border border-gray-100 shadow-sm">ACTIVE</span>
+          <span className="text-[10px] font-black text-brand-blue bg-white px-2 py-0.5 rounded border border-gray-200 shadow-sm">ACTIVE</span>
         </div>
 
         {[
@@ -155,7 +155,7 @@ export const RealtimeUsers: React.FC<RealtimeUsersProps> = ({ onViewInsight }) =
           <div key={c.country} className="flex flex-col gap-3">
             <div className="flex justify-between items-center group/row">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-white border border-gray-100 shadow-sm flex items-center justify-center text-xl grayscale group-hover/row:grayscale-0 transition-all duration-500 group-hover/row:scale-110 group-hover/row:rotate-3">
+                <div className="w-10 h-10 rounded-xl bg-white border border-gray-200 shadow-sm flex items-center justify-center text-xl grayscale group-hover/row:grayscale-0 transition-all duration-500 group-hover/row:scale-110 group-hover/row:rotate-3">
                   {c.flag}
                 </div>
                 <div className="flex flex-col gap-0.5">
@@ -170,7 +170,7 @@ export const RealtimeUsers: React.FC<RealtimeUsersProps> = ({ onViewInsight }) =
             </div>
 
             {/* Segmented Glowing Progress Bar */}
-            <div className="h-2 w-full bg-gray-50/80 rounded-full overflow-hidden flex gap-0.5 p-[1px] border border-gray-100">
+            <div className="h-2 w-full bg-gray-50/80 rounded-full overflow-hidden flex gap-0.5 p-[1px] border border-gray-200">
               {Array.from({ length: 20 }).map((_, idx) => {
                 const isActive = (idx / 20) * 100 < c.perc;
                 return (

@@ -25,7 +25,7 @@ export default function ProductDetailPage() {
    ];
 
    return (
-      <div className="flex flex-col min-h-screen bg-[#F7FAFC]">
+      <div className="flex flex-col min-h-screen bg-white">
          <Header />
 
          <div className="flex-1 max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 py-4 md:py-6 flex flex-col gap-6 md:gap-8 w-full">
@@ -41,7 +41,7 @@ export default function ProductDetailPage() {
             </div>
 
             {/* Top Product Section */}
-            <div className="bg-white border border-gray-200 md:rounded-lg p-4 md:p-6 flex flex-col lg:flex-row gap-6 md:gap-8">
+            <div className="bg-white border border-gray-200 p-4 md:p-6 flex flex-col lg:flex-row gap-6 md:gap-8">
                <ProductGallery />
                <ProductDetailsInfo />
                <div className="w-px bg-gray-100 hidden lg:block"></div>

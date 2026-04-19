@@ -39,7 +39,7 @@ const skincareProducts = [
 
 const Home = () => {
  return (
-  <div className="min-h-screen bg-[#F7FAFC] flex flex-col font-sans text-black">
+  <div className="min-h-screen bg-white flex flex-col font-sans text-black">
    <Header />
 
    <div className="flex-1 w-full max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 py-4 md:py-8 flex flex-col gap-8">

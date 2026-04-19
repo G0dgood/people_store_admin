@@ -65,7 +65,7 @@ const ListingControlBar: React.FC<ListingControlBarProps> = ({
   return (
     <div className="w-full flex flex-col gap-4">
       {/* Top Bar Desktop */}
-      <div className="hidden md:flex w-full bg-white border border-gray-200 rounded-lg h-16 items-center justify-between px-5">
+      <div className="hidden md:flex w-full bg-white border border-gray-200 h-16 items-center justify-between px-5">
         <div className="flex items-center gap-4">
           <span className="text-sm text-gray-700">
             <span className="font-bold">{count.toLocaleString()}</span> products found
@@ -75,13 +75,13 @@ const ListingControlBar: React.FC<ListingControlBarProps> = ({
 
         <div className="flex items-center gap-4">
           {/* Sort Dropdown */}
-          <div className="flex items-center border border-gray-200 rounded px-3 py-1.5 bg-white cursor-pointer hover:bg-gray-50 transition-colors">
+          <div className="flex items-center border border-gray-200 px-3 py-1.5 bg-white cursor-pointer hover:bg-gray-50 transition-colors">
             <span className="text-sm text-gray-700 font-medium">Featured</span>
             <Icon name="expand_more" size="xs" className="text-gray-400 ml-6" />
           </div>
 
           {/* View Switcher */}
-          <div className="flex items-center border border-gray-200 rounded overflow-hidden">
+          <div className="flex items-center border border-gray-200 overflow-hidden">
             <button
               onClick={() => onViewModeChange("grid")}
               className={`w-9 h-9 flex items-center justify-center transition-colors cursor-pointer ${viewMode === "grid" ? "bg-gray-100" : "bg-white hover:bg-gray-50"}`}
@@ -102,7 +102,7 @@ const ListingControlBar: React.FC<ListingControlBarProps> = ({
       <div className="flex md:hidden items-center justify-between gap-2 px-1">
         <div className="flex items-center gap-2 flex-1">
           {/* Sort Button */}
-          <button className="flex-1 flex items-center justify-between px-3 py-2 bg-white border border-gray-200 rounded-[6px] text-sm font-medium">
+          <button className="flex-1 flex items-center justify-between px-3 py-2 bg-white border border-gray-200 text-sm font-medium">
             <span>Sort: Newest</span>
             <Icon name="sort" size="xs" className="text-gray-400 ml-2" />
           </button>
@@ -110,12 +110,12 @@ const ListingControlBar: React.FC<ListingControlBarProps> = ({
           {/* Filter Button */}
           <button
             onClick={onFilterClick}
-            className="flex-1 flex items-center justify-between px-3 py-2 bg-white border border-gray-200 rounded-[6px] text-sm font-medium"
+            className="flex-1 flex items-center justify-between px-3 py-2 bg-white border border-gray-200 text-sm font-medium"
           >
             <div className="flex items-center gap-2">
               <span>Filter</span>
               {activeFilterTags.length > 0 && (
-                <span className="bg-brand-blue text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
+                <span className="bg-brand-blue text-white text-[10px] w-4 h-4 flex items-center justify-center">
                   {activeFilterTags.length}
                 </span>
               )}
@@ -125,7 +125,7 @@ const ListingControlBar: React.FC<ListingControlBarProps> = ({
         </div>
 
         {/* Mobile View Toggles */}
-        <div className="flex items-center bg-white border border-gray-200 rounded-[6px] overflow-hidden">
+        <div className="flex items-center bg-white border border-gray-200 overflow-hidden">
           <button
             onClick={() => onViewModeChange("grid")}
             className={`w-10 h-10 flex items-center justify-center transition-colors ${viewMode === "grid" ? "bg-gray-100" : "bg-white"}`}
@@ -148,7 +148,7 @@ const ListingControlBar: React.FC<ListingControlBarProps> = ({
             <div
               key={tag.id}
               onClick={() => handleRemoveTag(tag)}
-              className="flex items-center gap-2 px-3 py-1.5 border border-brand-blue rounded h-8 bg-white cursor-pointer hover:bg-brand-blue-light transition-colors group"
+              className="flex items-center gap-2 px-3 py-1.5 border border-brand-blue h-8 bg-white cursor-pointer hover:bg-brand-blue-light transition-colors group"
             >
               <span className="text-sm text-gray-700">{tag.label}</span>
               <Icon name="clear" size="xs" className="text-gray-400 group-hover:text-brand-blue transition-colors" />

@@ -33,7 +33,7 @@ export default function ProfilePage() {
     {/* Left Column (33%) */}
     <div className="xl:col-span-4 flex flex-col gap-6">
      {/* Profile Summary Card */}
-     <div className="bg-white rounded-[6px] border border-gray-100 shadow-sm p-8 flex flex-col items-center text-center relative">
+     <div className="bg-white rounded-[6px] border border-gray-200 shadow-sm p-8 flex flex-col items-center text-center relative">
       <div className="absolute top-6 right-6 flex gap-3 text-gray-400">
        <Button variant="outline" shape="rounded-sm" className="!p-1.5 text-gray-400">
         <Icon name="settings" folder="dashboardIcon" size="sm" />
@@ -75,7 +75,7 @@ export default function ProfilePage() {
          <span className="text-[10px] text-gray-400 font-bold decoration-gray-200 underline underline-offset-2">Linked</span>
         </div>
        </div>
-       <button className="mt-2 w-fit mx-auto flex items-center gap-2 px-4 py-2 border border-gray-100 rounded-[6px] text-[10px] font-bold text-[#1D3557] hover:bg-gray-50 transition-all shadow-sm">
+       <button className="mt-2 w-fit mx-auto flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-[6px] text-[10px] font-bold text-[#1D3557] hover:bg-gray-50 transition-all shadow-sm">
         <Icon name="circle-plus" folder="dashboardIcon" size="xs" />
         Social media
        </button>
@@ -83,7 +83,7 @@ export default function ProfilePage() {
      </div>
 
      {/* Change Password Card */}
-     <div className="bg-white rounded-[6px] border border-gray-100 shadow-sm p-8 flex flex-col gap-6 transition-all hover:shadow-md">
+     <div className="bg-white rounded-[6px] border border-gray-200 shadow-sm p-8 flex flex-col gap-6 transition-all hover:shadow-md">
       <div className="flex items-center justify-between">
        <div className="flex items-center gap-3">
         <div className="w-8 h-8 rounded-[6px] bg-brand-blue-light flex items-center justify-center">
@@ -172,14 +172,14 @@ export default function ProfilePage() {
 
     {/* Right Column (66%) */}
     <div className="xl:col-span-8">
-     <div className="bg-white rounded-[6px] border border-gray-100 shadow-sm p-8 flex flex-col gap-8 relative">
+     <div className="bg-white rounded-[6px] border border-gray-200 shadow-sm p-8 flex flex-col gap-8 relative">
       <div className="flex items-center justify-between mb-2">
        <h3 className="text-sm font-bold text-[#1D3557]">Profile Update</h3>
        <button
         className={`flex items-center gap-2 px-4 py-2 border rounded-[6px] text-xs font-bold transition-all shadow-sm
                            ${isEditMode
           ? "bg-brand-blue border-brand-blue text-white hover:bg-blue-600"
-          : "bg-white border-gray-100 text-gray-500 hover:bg-gray-50"}
+          : "bg-white border-gray-200 text-gray-500 hover:bg-gray-50"}
                         `}
         onClick={() => {
          if (isEditMode) {
@@ -195,7 +195,7 @@ export default function ProfilePage() {
 
       {/* Avatar Management */}
       <div className="flex items-center gap-4">
-       <div className="w-16 h-16 rounded-full overflow-hidden shadow-inner border border-gray-100 bg-brand-blue-light flex items-center justify-center">
+       <div className="w-16 h-16 rounded-full overflow-hidden shadow-inner border border-gray-200 bg-brand-blue-light flex items-center justify-center">
         {userImage ? (
          <img src={userImage} alt="Avatar" className="w-full h-full object-cover" />
         ) : (

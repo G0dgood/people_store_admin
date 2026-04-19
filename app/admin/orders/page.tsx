@@ -148,7 +148,7 @@ export default function OrderListing() {
     <StatCard title="Canceled Orders" value="87" trendValue="5%" trendIsUp={false} />
    </div>
 
-   <div className="bg-white rounded-[6px] border border-gray-100 shadow-sm overflow-hidden flex flex-col">
+   <div className="bg-white rounded-[6px] border border-gray-200 shadow-sm overflow-hidden flex flex-col">
     {/* Filter Controls Row */}
     <div className="p-4 sm:p-6 flex flex-col lg:flex-row gap-6 items-center justify-between border-b border-gray-50">
      <TabFilter
@@ -161,7 +161,7 @@ export default function OrderListing() {
        type="text"
        placeholder="Search order report"
        containerClassName="w-full lg:w-80 xl:w-96"
-       className="bg-white border-gray-100 placeholder:text-gray-400 text-xs font-medium"
+       className="bg-white border-gray-200 placeholder:text-gray-400 text-xs font-medium"
        suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
       />
 

@@ -51,7 +51,7 @@ export default function ProfilePage() {
             className="flex-1 w-full flex flex-col gap-6 md:gap-8"
           >
             {/* Page Header */}
-            {/* <motion.div variants={itemVariants} className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 md:p-8 rounded-2xl border border-gray-100 shadow-sm">
+            {/* <motion.div variants={itemVariants} className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-sm">
               <div>
                 <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-1">My Dashboard</h1>
                 <p className="text-sm font-medium text-gray-400">Manage your profile, orders, and account settings from one place.</p>
@@ -72,7 +72,7 @@ export default function ProfilePage() {
             </motion.div> */}
 
             {/* Forms Section */}
-            <motion.div variants={itemVariants} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <motion.div variants={itemVariants} className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
               <div className="p-6 md:p-8 border-b border-gray-50">
                 <h2 className="text-xl font-bold text-gray-900">Personal Information</h2>
                 <p className="text-sm text-gray-400 mt-1">Update your basic account details and contact information.</p>

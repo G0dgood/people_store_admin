@@ -19,7 +19,7 @@ export default function CartPage() {
   const [isClearModalOpen, setIsClearModalOpen] = React.useState(false);
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#F7FAFC]">
+    <div className="flex flex-col min-h-screen bg-white">
       <Header />
 
       <div className="flex-1 max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 py-4 md:py-6 flex flex-col gap-6 md:gap-8 w-full">
@@ -27,14 +27,14 @@ export default function CartPage() {
 
         <div className="flex flex-col lg:flex-row gap-6 md:gap-8 items-start">
           {/* Cart List Container */}
-          <div className="flex-1 bg-white border border-gray-200 md:rounded-lg p-4 md:p-6 flex flex-col w-full">
+          <div className="flex-1 bg-white border border-gray-200 p-4 md:p-6 flex flex-col w-full">
             {cartItems.length > 0 ? (
               cartItems.map((item) => (
                 <CartItem key={item.id} {...item} />
               ))
             ) : (
               <div className="py-12 flex flex-col items-center gap-4 text-center">
-                <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center text-gray-400">
+                <div className="w-16 h-16 bg-gray-50 flex items-center justify-center text-gray-400">
                   <Icon name="shopping_cart" size="md" />
                 </div>
                 <div className="flex flex-col gap-1">

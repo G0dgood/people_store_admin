@@ -44,7 +44,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
         </div>
 
         {/* Star Rating Selector */}
-        <div className="flex flex-col gap-3 p-6 bg-gray-50 rounded-2xl border border-gray-100 items-center justify-center">
+        <div className="flex flex-col gap-3 p-6 bg-gray-50 rounded-2xl border border-gray-200 items-center justify-center">
           <div className="flex gap-2">
             {[1, 2, 3, 4, 5].map((star) => (
               <button
@@ -90,7 +90,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
         </div>
 
         {/* Image Upload Placeholder */}
-        <div className="border-2 border-dashed border-gray-100 rounded-2xl p-6 flex flex-col items-center justify-center gap-2 group hover:border-brand-blue/30 transition-colors cursor-pointer">
+        <div className="border-2 border-dashed border-gray-200 rounded-2xl p-6 flex flex-col items-center justify-center gap-2 group hover:border-brand-blue/30 transition-colors cursor-pointer">
           <div className="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center text-gray-400 group-hover:text-brand-blue group-hover:bg-brand-blue/5 transition-colors">
             <Icon name="photo_camera" size="sm" />
           </div>

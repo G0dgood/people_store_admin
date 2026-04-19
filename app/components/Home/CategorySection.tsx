@@ -67,7 +67,7 @@ const CategorySection: React.FC<CategorySectionProps> = ({
   };
 
   return (
-    <section className={`w-full bg-white border border-[#1C1C1C1A] rounded-[6px] flex flex-col md:flex-row overflow-hidden ${reverse ? "md:flex-row-reverse" : ""}`}>
+    <section className={`w-full bg-white border border-gray-200 flex flex-col md:flex-row overflow-hidden ${reverse ? "md:flex-row-reverse" : ""}`}>
       {/* Category Banner */}
       <div className="w-full md:w-72 relative min-h-[150px] md:min-h-0 group overflow-hidden">
         <Image
@@ -84,7 +84,7 @@ const CategorySection: React.FC<CategorySectionProps> = ({
           <Link href="/products">
             <Button
               variant="ghost"
-              className="bg-white !text-gray-900 hover:bg-gray-100 font-bold w-fit py-1.5 px-3 md:py-2 md:px-5 h-auto text-xs md:text-sm border-none shadow-md transition-all active:scale-95"
+              className="bg-white !text-gray-900 hover:bg-gray-100 font-bold w-fit py-1.5 px-3 md:py-2 md:px-5 h-auto text-xs md:text-sm border-none transition-all active:scale-95"
             >
               Source now
             </Button>
@@ -132,7 +132,7 @@ const CategorySection: React.FC<CategorySectionProps> = ({
             {/* Overlay Actions */}
             <div className="absolute bottom-3 left-3 right-3 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity translate-y-1 group-hover:translate-y-0 duration-200">
               <Link href="/products/detail" className="flex-1">
-                <Button variant="ghost" size="sm" className="w-full text-[9px] h-7 font-bold border border-gray-100 px-0">
+                <Button variant="ghost" size="sm" className="w-full text-[9px] h-7 font-bold border border-gray-200 px-0">
                   View
                 </Button>
               </Link>

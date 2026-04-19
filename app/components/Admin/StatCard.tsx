@@ -88,7 +88,7 @@ export const StatCard: React.FC<StatCardProps> = ({
 
           {isDropdownOpen && (
             <div className="absolute top-full right-0 mt-1 z-50">
-              <DropdownMenu width={220} className="shadow-2xl border-gray-100">
+              <DropdownMenu width={220} className="shadow-2xl border-gray-200">
                 {actions.map((action, i) => (
                   <DropdownItem
                     key={i}

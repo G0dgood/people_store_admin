@@ -20,7 +20,7 @@ export function TransactionTable() {
   const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
 
   return (
-    <div className="bg-white p-8 rounded-[6px] border border-gray-100 shadow-sm flex flex-col gap-6">
+    <div className="bg-white p-8 rounded-[6px] border border-gray-200 shadow-sm flex flex-col gap-6">
       <TransactionDetailDrawer 
         isOpen={isDetailDrawerOpen}
         onClose={() => setIsDetailDrawerOpen(false)}

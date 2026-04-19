@@ -99,7 +99,7 @@ const HelpCenterPage = () => {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="bg-white p-8 rounded-[32px] border border-gray-100 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all group lg:aspect-square flex flex-col justify-between"
+                className="bg-white p-8 rounded-[32px] border border-gray-200 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all group lg:aspect-square flex flex-col justify-between"
               >
                 <div>
                   <div className={`w-14 h-14 ${cat.color} rounded-2xl flex items-center justify-center mb-6`}>

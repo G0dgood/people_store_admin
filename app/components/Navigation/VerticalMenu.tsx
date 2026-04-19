@@ -22,7 +22,7 @@ const VerticalMenu: React.FC<VerticalMenuProps> = ({
   className = "",
 }) => {
   return (
-    <nav className={`w-full max-w-xs bg-white rounded-lg border border-gray-100  overflow-hidden ${className}`}>
+    <nav className={`w-full max-w-xs bg-white rounded-lg border border-gray-200  overflow-hidden ${className}`}>
       <ul className="flex flex-col">
         {items.map((item) => {
           const isActive = item.id === activeId;

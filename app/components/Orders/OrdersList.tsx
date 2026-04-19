@@ -190,7 +190,7 @@ export const OrdersList: React.FC = () => {
               </div>
 
               {/* Actions */}
-              <div className="flex gap-3 md:flex-col mt-4 md:mt-0 pt-4 md:pt-0 border-t border-gray-50 md:border-t-0 md:border-l border-gray-100 md:pl-6 w-full md:w-auto flex-shrink-0">
+              <div className="flex gap-3 md:flex-col mt-4 md:mt-0 pt-4 md:pt-0 border-t border-gray-50 md:border-t-0 md:border-l border-gray-200 md:pl-6 w-full md:w-auto flex-shrink-0">
                 <Button 
                   onClick={() => handleReorder(order)}
                   variant="primary" 

@@ -41,7 +41,7 @@ export function EditMediaDrawer({ isOpen, onClose, media }: EditMediaDrawerProps
         <div className="flex flex-col gap-8">
           {/* Asset Preview Header */}
           <div className="flex flex-col gap-4">
-             <div className="relative aspect-video rounded-2xl overflow-hidden bg-gray-50 border border-gray-100 shadow-sm flex items-center justify-center p-6 group">
+             <div className="relative aspect-video rounded-2xl overflow-hidden bg-gray-50 border border-gray-200 shadow-sm flex items-center justify-center p-6 group">
                 <img src={media.url} alt="" className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110" />
                 {media.type === "video" && (
                    <div className="absolute inset-0 flex items-center justify-center bg-black/5">
@@ -50,7 +50,7 @@ export function EditMediaDrawer({ isOpen, onClose, media }: EditMediaDrawerProps
                       </div>
                    </div>
                 )}
-                <div className="absolute bottom-4 right-4 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-[6px] text-[10px] font-black text-[#1D3557] shadow-sm uppercase tracking-widest border border-gray-100/50">
+                <div className="absolute bottom-4 right-4 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-[6px] text-[10px] font-black text-[#1D3557] shadow-sm uppercase tracking-widest border border-gray-200/50">
                    {media.type}
                 </div>
              </div>
@@ -61,7 +61,7 @@ export function EditMediaDrawer({ isOpen, onClose, media }: EditMediaDrawerProps
                 </div>
                 <button 
                    type="button"
-                   className="p-2 rounded-[6px] border border-gray-100 text-gray-400 hover:text-brand-blue hover:border-brand-blue/30 transition-all"
+                   className="p-2 rounded-[6px] border border-gray-200 text-gray-400 hover:text-brand-blue hover:border-brand-blue/30 transition-all"
                    onClick={() => window.open(media.url, '_blank')}
                    title="View Full Asset"
                 >
@@ -78,7 +78,7 @@ export function EditMediaDrawer({ isOpen, onClose, media }: EditMediaDrawerProps
                 placeholder="e.g. product_hero_main"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="h-12 border-gray-100 font-bold text-[#1D3557]"
+                className="h-12 border-gray-200 font-bold text-[#1D3557]"
                 required
               />
             </div>
@@ -89,7 +89,7 @@ export function EditMediaDrawer({ isOpen, onClose, media }: EditMediaDrawerProps
                 placeholder="Describe the asset for screen readers and search engines..."
                 value={formData.altText}
                 onChange={(e) => setFormData({ ...formData, altText: e.target.value })}
-                className="min-h-[120px] border-gray-100 text-xs font-medium text-gray-700 leading-relaxed"
+                className="min-h-[120px] border-gray-200 text-xs font-medium text-gray-700 leading-relaxed"
               />
               <p className="text-[10px] font-bold text-gray-400 mt-1 pl-1">
                  Optimization Tip: Use descriptive keywords that relate to the associated product.
@@ -98,7 +98,7 @@ export function EditMediaDrawer({ isOpen, onClose, media }: EditMediaDrawerProps
           </div>
 
           {/* Technical Metadata (Read-only) */}
-          <div className="bg-[#F8F9FA] rounded-2xl border border-gray-100 p-6 flex flex-col gap-4">
+          <div className="bg-[#F8F9FA] rounded-2xl border border-gray-200 p-6 flex flex-col gap-4">
              <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Technical Details</span>
              <div className="grid grid-cols-2 gap-y-4 gap-x-8">
                 <div className="flex flex-col gap-1">

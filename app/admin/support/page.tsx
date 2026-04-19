@@ -128,7 +128,7 @@ export default function SupportPage() {
               type="text"
               placeholder="Search tickets by ID or Subject"
               containerClassName="w-full lg:w-80 xl:w-96"
-              className="bg-white border-gray-100 placeholder:text-gray-400 text-xs font-medium"
+              className="bg-white border-gray-200 placeholder:text-gray-400 text-xs font-medium"
               suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
             />
 

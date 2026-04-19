@@ -31,7 +31,7 @@ export function StaffDetailDrawer({ isOpen, onClose, staff }: StaffDetailDrawerP
     <Drawer isOpen={isOpen} onClose={onClose} title="Staff Member Profile">
       <div className="flex flex-col gap-8 pb-12">
         {/* Profile Header Card */}
-        <div className="bg-white rounded-2xl border border-gray-100 p-6 flex flex-col items-center text-center gap-4 relative overflow-hidden group shadow-sm">
+        <div className="bg-white rounded-2xl border border-gray-200 p-6 flex flex-col items-center text-center gap-4 relative overflow-hidden group shadow-sm">
           <div className="absolute top-0 inset-x-0 h-20 bg-[#1D3557] opacity-[0.03] group-hover:opacity-[0.05] transition-opacity duration-500" />
           
           <div className="w-24 h-24 rounded-full border-4 border-white shadow-xl overflow-hidden relative z-10 -mt-2 group-hover:scale-105 transition-transform duration-500">
@@ -55,11 +55,11 @@ export function StaffDetailDrawer({ isOpen, onClose, staff }: StaffDetailDrawerP
 
         {/* Organization Info */}
         <div className="grid grid-cols-2 gap-4">
-           <div className="p-4 rounded-2xl bg-gray-50/50 border border-gray-100 flex flex-col gap-1">
+           <div className="p-4 rounded-2xl bg-gray-50/50 border border-gray-200 flex flex-col gap-1">
               <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Department</span>
               <span className="text-sm font-black text-[#1D3557]">{staff.department}</span>
            </div>
-           <div className="p-4 rounded-2xl bg-gray-50/50 border border-gray-100 flex flex-col gap-1">
+           <div className="p-4 rounded-2xl bg-gray-50/50 border border-gray-200 flex flex-col gap-1">
               <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Employee ID</span>
               <span className="text-sm font-black text-[#1D3557]">STF-{staff.id?.toString().padStart(4, '0')}</span>
            </div>
@@ -67,11 +67,11 @@ export function StaffDetailDrawer({ isOpen, onClose, staff }: StaffDetailDrawerP
 
         {/* Personal Info */}
         <div className="grid grid-cols-2 gap-4">
-           <div className="p-4 rounded-2xl bg-gray-50/50 border border-gray-100 flex flex-col gap-1">
+           <div className="p-4 rounded-2xl bg-gray-50/50 border border-gray-200 flex flex-col gap-1">
               <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Gender</span>
               <span className="text-sm font-black text-[#1D3557]">{staff.gender || "Not Specified"}</span>
            </div>
-           <div className="p-4 rounded-2xl bg-gray-50/50 border border-gray-100 flex flex-col gap-1">
+           <div className="p-4 rounded-2xl bg-gray-50/50 border border-gray-200 flex flex-col gap-1">
               <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Date of Birth</span>
               <span className="text-sm font-black text-[#1D3557]">{staff.dob || "Not Specified"}</span>
            </div>
@@ -85,7 +85,7 @@ export function StaffDetailDrawer({ isOpen, onClose, staff }: StaffDetailDrawerP
            </div>
            <div className="flex flex-col gap-2">
               {permissions.map((perm, i) => (
-                <div key={i} className="flex items-center justify-between p-4 bg-white border border-gray-100 rounded-2xl hover:border-brand-blue/20 hover:shadow-md transition-all group">
+                <div key={i} className="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-2xl hover:border-brand-blue/20 hover:shadow-md transition-all group">
                    <div className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-brand-blue-light group-hover:text-brand-blue transition-colors">
                          <Icon name={perm.icon} folder={perm.icon === 'Cart' ? 'dashboardIcon' : 'icon'} size="xs" />

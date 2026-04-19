@@ -13,7 +13,7 @@ interface FAQItemProps {
 
 export const FAQItem = ({ question, answer, isOpen, onToggle }: FAQItemProps) => {
   return (
-    <div className="border border-gray-100 rounded-2xl bg-white overflow-hidden transition-all hover:border-blue-100 hover:shadow-sm">
+    <div className="border border-gray-200 rounded-2xl bg-white overflow-hidden transition-all hover:border-blue-100 hover:shadow-sm">
       <button
         onClick={onToggle}
         className="w-full flex items-center justify-between p-5 text-left transition-colors"

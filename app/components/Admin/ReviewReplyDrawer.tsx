@@ -28,7 +28,7 @@ export function ReviewReplyDrawer({ isOpen, onClose, review }: ReviewReplyDrawer
     <Drawer isOpen={isOpen} onClose={onClose} title="Reply to Review">
       <div className="flex flex-col h-full gap-8">
         {/* Review Context */}
-        <div className="flex flex-col gap-4 p-5 bg-gray-50 rounded-2xl border border-gray-100">
+        <div className="flex flex-col gap-4 p-5 bg-gray-50 rounded-2xl border border-gray-200">
            <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white shadow-sm">
                  <img src={review.customer.avatar} alt="" className="w-full h-full object-cover" />

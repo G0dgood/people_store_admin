@@ -98,7 +98,7 @@ export function OrdersMoreActionsDrawer({ isOpen, onClose, onBulkPrint }: Orders
           ))}
         </div>
 
-        <div className="mt-8 pt-8 border-t border-gray-100">
+        <div className="mt-8 pt-8 border-t border-gray-200">
           <Button 
             className="w-full h-12 text-[11px] font-black uppercase tracking-widest border border-gray-200 text-gray-500 hover:bg-gray-50 transition-all rounded-[6px]"
             onClick={onClose}

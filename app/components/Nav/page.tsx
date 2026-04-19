@@ -57,7 +57,7 @@ export default function NavDemo() {
           {/* Tab Pills Section */}
           <section>
             <h2 className="text-2xl font-bold mb-8 text-black">Tab pills</h2>
-            <div className="border border-gray-100 rounded-lg p-8 min-h-[250px] bg-white">
+            <div className="border border-gray-200 rounded-lg p-8 min-h-[250px] bg-white">
               <Tabs
                 variant="pill"
                 items={tabItems}
@@ -70,7 +70,7 @@ export default function NavDemo() {
           {/* Tabs Section */}
           <section>
             <h2 className="text-2xl font-bold mb-8 text-black">Tabs</h2>
-            <div className="border border-gray-100 rounded-lg p-0 min-h-[250px] bg-white overflow-hidden">
+            <div className="border border-gray-200 rounded-lg p-0 min-h-[250px] bg-white overflow-hidden">
               <Tabs
                 variant="underline"
                 items={underlineTabItems}

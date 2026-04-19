@@ -65,7 +65,7 @@ const BlogPage = () => {
 
       <main className="flex-1 w-full bg-white">
         {/* Step 80: Implement Editorial Hero section */}
-        <section className="bg-gray-50 py-20 md:py-32 border-b border-gray-100 relative overflow-hidden">
+        <section className="bg-gray-50 py-20 md:py-32 border-b border-gray-200 relative overflow-hidden">
           <div className="absolute top-0 left-0 w-96 h-96 bg-brand-blue rounded-full filter blur-[120px] opacity-5 -translate-x-1/2 -translate-y-1/2" />
           <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 relative z-10 text-center">
             <motion.div
@@ -176,7 +176,7 @@ const BlogPage = () => {
             </div>
 
             <div className="mt-16 flex justify-center">
-               <button className="px-12 py-4 border-2 border-gray-100 rounded-2xl text-[#1D3557] font-black uppercase tracking-widest text-xs hover:border-brand-blue hover:text-brand-blue transition-all">
+               <button className="px-12 py-4 border-2 border-gray-200 rounded-2xl text-[#1D3557] font-black uppercase tracking-widest text-xs hover:border-brand-blue hover:text-brand-blue transition-all">
                   Load Older Stories
                </button>
             </div>

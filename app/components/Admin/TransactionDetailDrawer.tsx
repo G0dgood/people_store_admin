@@ -45,8 +45,8 @@ export function TransactionDetailDrawer({ isOpen, onClose, transaction }: Transa
         {/* Payment Method Detailed */}
         <div className="flex flex-col gap-4">
            <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Payment Information</h4>
-           <div className="bg-white border border-gray-100 rounded-xl p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center p-2">
+           <div className="bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-4">
+              <div className="w-12 h-12 rounded-lg bg-gray-50 border border-gray-200 flex items-center justify-center p-2">
                  <Icon name="Payment Card" folder="dashboardIcon" size="md" />
               </div>
               <div className="flex-1 flex flex-col gap-0.5">
@@ -62,7 +62,7 @@ export function TransactionDetailDrawer({ isOpen, onClose, transaction }: Transa
         {/* Customer Breakdown */}
         <div className="flex flex-col gap-4">
            <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Customer Details</h4>
-           <div className="bg-white border border-gray-100 rounded-xl p-4 flex items-center gap-4">
+           <div className="bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-4">
               <div className="w-12 h-12 rounded-full bg-blue-50 border-2 border-white shadow-sm flex items-center justify-center overflow-hidden">
                  <img src={transaction.image || "https://ui-avatars.com/api/?name=" + transaction.name} alt="" className="w-full h-full object-cover" />
               </div>

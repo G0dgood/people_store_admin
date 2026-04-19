@@ -94,7 +94,7 @@ export const QuickAddProduct: React.FC<QuickAddProductProps> = ({
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.1 * i }}
-              className={`flex items-center justify-between p-4 rounded-xl border border-gray-100 hover:border-transparent ${cat.bgColor} hover:shadow-lg hover:shadow-gray-100 transition-all duration-300 cursor-pointer group`}
+              className={`flex items-center justify-between p-4 rounded-xl border border-gray-200 hover:border-transparent ${cat.bgColor} hover:shadow-lg hover:shadow-gray-100 transition-all duration-300 cursor-pointer group`}
             >
               <div className="flex items-center gap-4 flex-1">
                 <div className="w-10 h-10 rounded-xl bg-white border border-white shadow-sm flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
@@ -119,7 +119,7 @@ export const QuickAddProduct: React.FC<QuickAddProductProps> = ({
         </button>
       </div>
 
-      <div className="flex flex-col gap-6 pt-6 border-t border-gray-100 mt-2 relative z-10">
+      <div className="flex flex-col gap-6 pt-6 border-t border-gray-200 mt-2 relative z-10">
         <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1 opacity-70 font-black">Frequent Drafts</p>
         <div className="flex flex-col gap-4">
           {defaultProducts.map((p, i) => (
@@ -132,7 +132,7 @@ export const QuickAddProduct: React.FC<QuickAddProductProps> = ({
             >
               <div className="flex items-center gap-4 flex-1">
                 <div className="relative">
-                  <div className="w-12 h-10 bg-gray-50 rounded-lg border border-gray-100 overflow-hidden group-hover/row:border-brand-blue/20 transition-colors">
+                  <div className="w-12 h-10 bg-gray-50 rounded-lg border border-gray-200 overflow-hidden group-hover/row:border-brand-blue/20 transition-colors">
                     <MiniChart type="sparkline" data={p.data} color={p.color} height={40} />
                   </div>
                 </div>

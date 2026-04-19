@@ -151,20 +151,20 @@ export default function UsersManagement() {
        type="text"
        placeholder="Search by name, email or role..."
        containerClassName="flex-1 xl:w-80"
-       className="bg-gray-50/50 border-gray-100 placeholder:text-gray-400 text-xs font-medium"
+       className="bg-gray-50/50 border-gray-200 placeholder:text-gray-400 text-xs font-medium"
        suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
       />
       <RowsPerPage value={rowsPerPage} onChange={setRowsPerPage} />
 
       <div className="flex gap-2">
 
-       <Button variant="outline" shape="rounded-sm" className="!p-2.5 text-gray-400 hover:text-brand-blue hover:bg-brand-blue-light border-gray-100 transition-all">
+       <Button variant="outline" shape="rounded-sm" className="!p-2.5 text-gray-400 hover:text-brand-blue hover:bg-brand-blue-light border-gray-200 transition-all">
         <Icon name="filter" folder="dashboardIcon" size="sm" />
        </Button>
        <Button
         variant="outline"
         shape="rounded-sm"
-        className="!p-2.5 text-gray-400 hover:text-brand-blue hover:bg-brand-blue-light border-gray-100 transition-all"
+        className="!p-2.5 text-gray-400 hover:text-brand-blue hover:bg-brand-blue-light border-gray-200 transition-all"
         onClick={() => setIsMoreActionsOpen(true)}
        >
         <Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />
@@ -239,7 +239,7 @@ export default function UsersManagement() {
            <Button
             variant="outline"
             shape="rounded-sm"
-            className="!p-1.5 text-gray-400 hover:text-brand-blue hover:bg-brand-blue-light border-gray-100 transition-all"
+            className="!p-1.5 text-gray-400 hover:text-brand-blue hover:bg-brand-blue-light border-gray-200 transition-all"
             onClick={() => {
              setSelectedStaff(user);
              setIsStaffDetailOpen(true);
@@ -250,7 +250,7 @@ export default function UsersManagement() {
            <Button
             variant="outline"
             shape="rounded-sm"
-            className="!p-1.5 text-gray-400 hover:text-brand-blue hover:bg-brand-blue-light border-gray-100 transition-all"
+            className="!p-1.5 text-gray-400 hover:text-brand-blue hover:bg-brand-blue-light border-gray-200 transition-all"
             onClick={() => {
              setUserToEdit(user);
              setIsEditModalOpen(true);
@@ -261,7 +261,7 @@ export default function UsersManagement() {
            <Button
             variant="outline"
             shape="rounded-sm"
-            className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 border-gray-100 transition-all"
+            className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 border-gray-200 transition-all"
             onClick={() => {
              setUserToDelete(user);
              setIsDeleteModalOpen(true);

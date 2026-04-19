@@ -60,7 +60,7 @@ export function AddCouponModal({ isOpen, onClose }: AddCouponModalProps) {
               placeholder="e.g. FLASH50"
               value={formData.code}
               onChange={(e) => setFormData({ ...formData, code: e.target.value })}
-              className="h-12 border-gray-100 font-bold"
+              className="h-12 border-gray-200 font-bold"
               required
             />
           </div>
@@ -72,7 +72,7 @@ export function AddCouponModal({ isOpen, onClose }: AddCouponModalProps) {
                 placeholder="e.g. 50% or 20.00"
                 value={formData.discount}
                 onChange={(e) => setFormData({ ...formData, discount: e.target.value })}
-                className="h-12 border-gray-100 font-bold"
+                className="h-12 border-gray-200 font-bold"
                 required
               />
             </div>
@@ -94,7 +94,7 @@ export function AddCouponModal({ isOpen, onClose }: AddCouponModalProps) {
                 placeholder="DD-MM-YYYY"
                 value={formData.startDate}
                 onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
-                className="h-12 border-gray-100 font-bold"
+                className="h-12 border-gray-200 font-bold"
                 required
               />
             </div>
@@ -105,7 +105,7 @@ export function AddCouponModal({ isOpen, onClose }: AddCouponModalProps) {
                 placeholder="DD-MM-YYYY"
                 value={formData.endDate}
                 onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
-                className="h-12 border-gray-100 font-bold"
+                className="h-12 border-gray-200 font-bold"
                 required
               />
             </div>

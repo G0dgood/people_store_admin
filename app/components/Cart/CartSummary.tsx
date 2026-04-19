@@ -26,23 +26,23 @@ const CartSummary = () => {
    return (
       <div className="w-full lg:w-[350px] flex flex-col gap-4">
          {/* Coupon Section */}
-         <div className="bg-white border border-gray-200 rounded-lg p-5 flex flex-col gap-4 ">
+         <div className="bg-white border border-gray-200 p-5 flex flex-col gap-4 ">
             <span className="text-sm text-gray-400">Have a coupon?</span>
             <div className="flex">
                <input
                   type="text"
                   placeholder="Add coupon"
-                  className="flex-1 h-10 px-3 border border-gray-300 rounded-l-lg outline-none focus:border-brand-blue transition-colors text-sm text-gray-900 placeholder-gray-400"
+                  className="flex-1 h-10 px-3 border border-gray-300 outline-none focus:border-brand-blue transition-colors text-sm text-gray-900 placeholder-gray-400"
                />
-               <Button variant="primary" className="h-10 px-4 border border-l-0 border-brand-blue bg-brand-blue text-white font-bold rounded-l-none rounded-r-lg hover:bg-brand-blue/90 transition-colors text-sm shadow-none cursor-pointer">
+               <Button variant="primary" className="h-10 px-4 border border-l-0 border-brand-blue bg-brand-blue text-white font-bold hover:bg-brand-blue/90 transition-colors text-sm shadow-none cursor-pointer">
                   Apply
                </Button>
             </div>
          </div>
 
          {/* Summary Section */}
-         <div className="bg-white border border-gray-200 rounded-lg p-5 flex flex-col gap-4 ">
-            <div className="flex flex-col gap-2 pb-4 border-b border-gray-100">
+         <div className="bg-white border border-gray-200 p-5 flex flex-col gap-4 ">
+            <div className="flex flex-col gap-2 pb-4 border-b border-gray-200">
                <div className="flex justify-between text-gray-400 text-sm">
                   <span>Subtotal:</span>
                   <span className="text-gray-600 font-medium">₦{subtotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>

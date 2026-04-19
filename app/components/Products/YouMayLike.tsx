@@ -31,12 +31,12 @@ const YouMayLike = () => {
   };
 
   return (
-    <div className="w-full lg:w-72 flex-shrink-0 bg-white border border-gray-200 rounded-lg p-5 flex flex-col gap-5">
+    <div className="w-full lg:w-72 flex-shrink-0 bg-white border border-gray-200 p-5 flex flex-col gap-5">
       <h3 className="font-bold text-gray-900">You may like</h3>
       <div className="flex flex-col gap-6">
          {items.map((item, idx) => (
             <div key={idx} className="flex items-center gap-3 group relative cursor-pointer active:scale-95 transition-all">
-              <Link href="/products/detail" className="w-14 h-14 relative flex-shrink-0 border border-gray-100 rounded p-1 group-hover:border-brand-blue transition-colors overflow-hidden bg-gray-50/50">
+              <Link href="/products/detail" className="w-14 h-14 relative flex-shrink-0 border border-gray-200 p-1 group-hover:border-brand-blue transition-colors overflow-hidden bg-gray-50/50">
                  <Image src={item.image} alt={item.name} fill className="object-contain transition-transform group-hover:scale-110" />
               </Link>
               <div className="flex-1 flex flex-col gap-1 overflow-hidden">

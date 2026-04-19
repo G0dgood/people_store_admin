@@ -167,7 +167,7 @@ export default function CustomersListing() {
      <div className="flex justify-between items-center">
       <h3 className="text-lg font-bold text-[#1D3557]">Customer Overview</h3>
       <div className="flex items-center gap-2">
-       <span className="text-xs font-bold text-gray-400 uppercase tracking-widest px-4 border border-gray-100 rounded-[6px] h-10 flex items-center bg-gray-50/30">
+       <span className="text-xs font-bold text-gray-400 uppercase tracking-widest px-4 border border-gray-200 rounded-[6px] h-10 flex items-center bg-gray-50/30">
         {chartTab}
        </span>
       </div>
@@ -221,7 +221,7 @@ export default function CustomersListing() {
      transition={{ type: "spring", stiffness: 300, damping: 30 }}
      className={`bg-white   overflow-hidden flex flex-col ${selectedCustomer ? "flex-1" : "w-full"}`}
     >
-     <div className="p-4 sm:p-6 border-b border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+     <div className="p-4 sm:p-6 border-b border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div className=" w-full flex flex-col md:flex-row justify-between items-center gap-2">
        <TabFilter
         tabs={["This week", "Last week"]}
@@ -234,7 +234,7 @@ export default function CustomersListing() {
          type="text"
          placeholder="Search customer..."
          containerClassName="flex-1 lg:w-72"
-         className="bg-white border-gray-100 placeholder:text-gray-400 text-xs font-medium"
+         className="bg-white border-gray-200 placeholder:text-gray-400 text-xs font-medium"
          suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
         />
         <RowsPerPage value={rowsPerPage} onChange={setRowsPerPage} />

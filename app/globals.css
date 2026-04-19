@@ -13,25 +13,25 @@
   --neutral-700: #404040;
   --neutral-500: #8D99AE;
   --neutral-300: #B0B9C1;
-  --neutral-200: #D8E2DC;
-  --neutral-100: #F4F7F6;
+  --neutral-200: #E5E7EB;
+  --neutral-100: #F3F4F6;
   --neutral-50: #FFFFFF;
 
 
   /* Light Colors */
-  --off-white: #F8F9FA;
-  --off-white-2: #F5F6F7;
-  --light-gray: #E9ECEF;
-  --medium-gray: #DEE2E6;
-  --off-white-3: #F8F9FA;
+  --off-white: #FFFFFF;
+  --off-white-2: #FFFFFF;
+  --light-gray: #F5F5F5;
+  --medium-gray: #EEEEEE;
+  --off-white-3: #FFFFFF;
   
 
     /* Semantic Colors */
-  --bg-primary: var(--off-white);
-  --bg-secondary: var(--light-gray);
-  --bg-tertiary: var(--medium-gray);
-  --bg-main: var(--off-white);
-  --bg-hover: #F1F3F5;
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F3F4F6;
+  --bg-tertiary: #E5E7EB;
+  --bg-main: #FFFFFF;
+  --bg-hover: #F9FAFB;
 
   --text-primary: var(--primary);
   --text-secondary: var(--dark-slate-gray);
@@ -41,19 +41,21 @@
    /* Primary Color for Light Mode */
   --primary: oklch(0.205 0 0);
   --text-primary: var(--primary); 
-  /* Brand Colors */
-  --brand-blue-light: #E1EFFE;
-  --brand-blue: #2196F3;
-  --brand-green-light: #E1EFFE; /* Replaced with blue light */
-  --brand-green: #2196F3;       /* Replaced with blue */
-  --brand-orange-light: #FFF3E0;
-  --brand-orange: #FF9800;
-  --brand-red: #F44336;
-
+  /* Brand Colors - Essenza Inspired */
+  --brand-red: #A10101;
+  --brand-red-dark: #800000;
+  --brand-black: #1A1A1A;
+  --brand-charcoal: #333333;
+  --brand-gold: #D4AF37;
+  
   /* Status Colors (for OfflineBanner and alerts) */
   --status-success: #10B981;
   --status-warning: #F59E0B;
   --status-error: #EF4444;
+
+  /* Override existing brand blue with black/red for immediate global impact */
+  --brand-blue: var(--brand-black);
+  --brand-blue-light: #F5F5F5;
 }
 
 @theme inline {

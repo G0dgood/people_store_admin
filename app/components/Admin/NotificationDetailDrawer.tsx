@@ -50,7 +50,7 @@ export function NotificationDetailDrawer({ isOpen, onClose, notification }: Noti
            <div className="flex flex-col gap-6">
               <div className="flex flex-col gap-2">
                  <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Detailed Log Message</h4>
-                 <div className="bg-gray-50/50 rounded-xl border border-gray-100 p-5">
+                 <div className="bg-gray-50/50 rounded-xl border border-gray-200 p-5">
                     <p className="text-sm font-bold text-[#1D3557] leading-relaxed">
                        {notification.description}
                     </p>
@@ -60,7 +60,7 @@ export function NotificationDetailDrawer({ isOpen, onClose, notification }: Noti
               <div className="grid grid-cols-2 gap-4">
                  <div className="flex flex-col gap-2">
                     <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Audited Actor</h4>
-                    <div className="bg-white border border-gray-100 rounded-xl p-3 flex items-center gap-2">
+                    <div className="bg-white border border-gray-200 rounded-xl p-3 flex items-center gap-2">
                        <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center">
                           <Icon name="user-profile-circle" folder="dashboardIcon" size="xs" className="text-brand-blue" />
                        </div>
@@ -69,7 +69,7 @@ export function NotificationDetailDrawer({ isOpen, onClose, notification }: Noti
                  </div>
                  <div className="flex flex-col gap-2">
                     <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Timestamp</h4>
-                    <div className="bg-white border border-gray-100 rounded-xl p-3 flex items-center gap-2 text-gray-400">
+                    <div className="bg-white border border-gray-200 rounded-xl p-3 flex items-center gap-2 text-gray-400">
                        <Icon name="info-circle" folder="dashboardIcon" size="xs" />
                        <span className="text-[11px] font-black">{notification.time}</span>
                     </div>
@@ -79,7 +79,7 @@ export function NotificationDetailDrawer({ isOpen, onClose, notification }: Noti
               {/* Resolution Status */}
               <div className="flex flex-col gap-2">
                  <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Management Status</h4>
-                 <div className="bg-white border border-gray-100 rounded-xl p-4 flex items-center justify-between">
+                 <div className="bg-white border border-gray-200 rounded-xl p-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                        <div className={`w-2 h-2 rounded-full ${notification.isRead ? 'bg-gray-300' : 'bg-brand-blue animate-pulse'}`}></div>
                        <span className="text-xs font-bold text-gray-600">{notification.isRead ? 'Archived / Read' : 'Unresolved Event'}</span>

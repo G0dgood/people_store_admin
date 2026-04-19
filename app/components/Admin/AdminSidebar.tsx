@@ -166,7 +166,7 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
 
   return (
     <aside id="sidenav"
-      // className={`${isCollapsed ? "w-20" : "w-64"} bg-white border-r border-gray-100 h-screen sticky top-0 flex flex-col transition-all duration-300 ease-in-out`}
+      // className={`${isCollapsed ? "w-20" : "w-64"} bg-white border-r border-gray-200 h-screen sticky top-0 flex flex-col transition-all duration-300 ease-in-out`}
       className={`${isCollapsed ? "w-20" : "w-64"} h-full shrink-0 flex-col justify-between bg-white transition-transform duration-300 ease-in-out sm:flex sm:translate-x-0 ${isOpen ? "fixed inset-y-0 left-0 z-50 flex translate-x-0" : "hidden -translate-x-full sm:flex"
         }`}
     >
@@ -260,7 +260,7 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
             }}
             onMouseLeave={() => setHoveredItem(null)}
           >
-            <div className="w-10 h-10 rounded-full border border-gray-100 overflow-hidden shadow-sm flex-shrink-0 group-hover:border-rose-500 group-hover:shadow-md transition-all">
+            <div className="w-10 h-10 rounded-full border border-gray-200 overflow-hidden shadow-sm flex-shrink-0 group-hover:border-rose-500 group-hover:shadow-md transition-all">
               <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop" alt="User" />
             </div>
             {!isCollapsed && (
@@ -283,7 +283,7 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
         {!isCollapsed ? (
           <Link
             href="/"
-            className="flex items-center justify-between px-4 py-2.5 border border-gray-100 rounded-md hover:border-brand-blue/30 hover:bg-brand-blue-light hover:shadow-lg hover:shadow-gray-100 transition-all group"
+            className="flex items-center justify-between px-4 py-2.5 border border-gray-200 rounded-md hover:border-brand-blue/30 hover:bg-brand-blue-light hover:shadow-lg hover:shadow-gray-100 transition-all group"
           >
             <div className="flex items-center gap-3 text-gray-600 font-bold">
               <Icon name="Cart" folder="dashboardIcon" size="sm" className="text-brand-blue" />
@@ -301,7 +301,7 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
                 }
               }}
               onMouseLeave={() => setHoveredItem(null)}
-              className="flex items-center justify-center p-2.5 border border-gray-100 rounded-md hover:border-brand-blue/30 hover:shadow-lg hover:shadow-gray-100 transition-all group w-full"
+              className="flex items-center justify-center p-2.5 border border-gray-200 rounded-md hover:border-brand-blue/30 hover:shadow-lg hover:shadow-gray-100 transition-all group w-full"
             >
               <Icon name="Cart" folder="dashboardIcon" size="sm" className="text-brand-blue" />
             </Link>

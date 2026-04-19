@@ -24,19 +24,19 @@ const RecommendedItems = () => {
           <Link
             key={idx}
             href="/products/detail"
-            className="bg-white border border-[#1C1C1C1A] rounded-[6px] p-4 flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer group"
+            className="bg-white border border-gray-200 p-5 flex flex-col gap-4 hover:border-brand-red/20 transition-all duration-300 cursor-pointer group"
           >
-            <div className="w-full aspect-square relative mb-2">
+            <div className="w-full aspect-square relative mb-2 overflow-hidden">
               <Image
                 src={item.image}
                 alt={item.title}
                 fill
-                className="object-contain group-hover:scale-105 transition-transform"
+                className="object-contain group-hover:scale-110 transition-transform duration-500"
               />
             </div>
-            <div className="flex flex-col gap-1">
-              <span className="font-bold text-gray-900">{item.price}</span>
-              <p className="text-sm text-gray-500 line-clamp-2 leading-tight group-hover:text-brand-blue transition-colors">
+            <div className="flex flex-col gap-2">
+              <span className="font-black text-neutral-900 text-lg tracking-tight">{item.price}</span>
+              <p className="text-[13px] text-gray-500 font-medium line-clamp-2 leading-snug group-hover:text-brand-red transition-colors">
                 {item.title}
               </p>
             </div>

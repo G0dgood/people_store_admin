@@ -40,8 +40,8 @@ export const UpdateTicketStatusModal: React.FC<UpdateTicketStatusModalProps> = (
       >
          <div className="flex flex-col gap-8 py-2">
             {/* Ticket Context */}
-            <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-2xl border border-gray-100">
-               <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-brand-blue shadow-sm border border-gray-100">
+            <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-2xl border border-gray-200">
+               <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-brand-blue shadow-sm border border-gray-200">
                   <Icon name="ticket" folder="dashboardIcon" size="sm" />
                </div>
                <div className="flex flex-col">

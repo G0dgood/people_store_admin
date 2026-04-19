@@ -149,7 +149,7 @@ export default function RolesManagement() {
               <Button
                 variant="outline"
                 shape="rounded-sm"
-                className="!p-2.5 text-gray-400 border-gray-100"
+                className="!p-2.5 text-gray-400 border-gray-200"
               >
                 <Icon name="sort" folder="dashboardIcon" size="sm" />
               </Button>
@@ -207,7 +207,7 @@ export default function RolesManagement() {
                       </p>
                     </td>
                     <td className="py-6 text-center">
-                      <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-50 rounded-full border border-gray-100 group-hover:bg-white group-hover:border-blue-100 transition-all cursor-default">
+                      <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-50 rounded-full border border-gray-200 group-hover:bg-white group-hover:border-blue-100 transition-all cursor-default">
                         <Icon name="users" folder="icon" size="xs" className="text-gray-400 group-hover:text-brand-blue" />
                         <span className="text-[11px] font-black text-[#1D3557]">{role.users} Active</span>
                       </div>
@@ -225,7 +225,7 @@ export default function RolesManagement() {
                         <Button
                           variant="outline"
                           shape="rounded-sm"
-                          className="!p-1.5 text-gray-400 hover:text-brand-blue hover:bg-brand-blue-light border-gray-100 transition-all font-bold"
+                          className="!p-1.5 text-gray-400 hover:text-brand-blue hover:bg-brand-blue-light border-gray-200 transition-all font-bold"
                           onClick={() => {
                             setRoleToEdit(role);
                             setIsEditDrawerOpen(true);
@@ -236,7 +236,7 @@ export default function RolesManagement() {
                         <Button
                           variant="outline"
                           shape="rounded-sm"
-                          className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 border-gray-100 transition-all"
+                          className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 border-gray-200 transition-all"
                           onClick={() => setRoleToDelete(role)}
                         >
                           <Icon name="Delete" folder="dashboardIcon" size="sm" />
@@ -251,7 +251,7 @@ export default function RolesManagement() {
 
           {filteredRoles.length === 0 && (
             <div className="flex flex-col items-center justify-center py-32 bg-gray-50/20">
-              <div className="w-16 h-16 rounded-2xl bg-white border border-gray-100 flex items-center justify-center text-gray-200 mb-4 shadow-sm">
+              <div className="w-16 h-16 rounded-2xl bg-white border border-gray-200 flex items-center justify-center text-gray-200 mb-4 shadow-sm">
                 <Icon name="star" folder="dashboardIcon" size="lg" />
               </div>
               <span className="text-xs font-black text-gray-400 uppercase tracking-widest">No roles found in this sector</span>

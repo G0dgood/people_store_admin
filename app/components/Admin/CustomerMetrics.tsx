@@ -30,7 +30,7 @@ export function CustomerMetrics({ activeMetric, onMetricClick }: CustomerMetrics
         <button
           key={metric.id}
           onClick={() => onMetricClick(metric.id)}
-          className="flex flex-col gap-1 items-start text-left transition-all group relative pr-4 md:border-r md:border-gray-100 last:border-r-0"
+          className="flex flex-col gap-1 items-start text-left transition-all group relative pr-4 md:border-r md:border-gray-200 last:border-r-0"
         >
           <span className={`text-2xl font-bold transition-colors ${
             activeMetric === metric.id ? "text-blue-600" : "text-[#1D3557] group-hover:text-blue-500"

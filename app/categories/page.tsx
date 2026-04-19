@@ -60,13 +60,13 @@ const CategoriesPage = () => {
    ];
 
    return (
-      <div className="min-h-screen bg-[#F7FAFC] flex flex-col font-sans text-black">
+      <div className="min-h-screen bg-white flex flex-col font-sans text-black">
          <Header />
 
          <main className="flex-1 w-full bg-white">
             {/* Step 86: Implement Minimalist Collections Hero section */}
-            <section className="bg-gray-50 py-20 md:py-28 relative overflow-hidden">
-               <div className="absolute top-0 right-0 w-96 h-96 bg-brand-blue rounded-full filter blur-[120px] opacity-5 translate-x-1/2 -translate-y-1/2" />
+            <section className="bg-white py-20 md:py-28 relative overflow-hidden border-b border-gray-200">
+               <div className="absolute top-0 right-0 w-96 h-96 bg-brand-blue rounded-none filter blur-[120px] opacity-5 translate-x-1/2 -translate-y-1/2" />
                <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 text-center relative z-10">
                   <motion.div
                      initial={{ opacity: 0, y: 20 }}
@@ -95,7 +95,7 @@ const CategoriesPage = () => {
                         whileInView={{ opacity: 1, scale: 1 }}
                         viewport={{ once: true }}
                         transition={{ delay: i * 0.1 }}
-                        className="relative aspect-[4/5] rounded-[40px] overflow-hidden cursor-pointer group shadow-sm hover:shadow-2xl transition-all duration-500"
+                        className="relative aspect-[4/5] overflow-hidden cursor-pointer group border border-gray-200 transition-all duration-500"
                      >
                         <Image
                            src={col.image}
@@ -108,9 +108,9 @@ const CategoriesPage = () => {
                         <div className="absolute inset-0 bg-black/5 group-hover:bg-black/20 transition-colors duration-500" />
 
                         <div className="absolute bottom-6 left-6 right-6">
-                           <div className="bg-white/70 backdrop-blur-xl p-8 rounded-[32px] border border-white/40 flex flex-col gap-4 group-hover:-translate-y-2 transition-transform duration-500">
+                           <div className="bg-white/80 backdrop-blur-xl p-8 border border-gray-200 flex flex-col gap-4 group-hover:-translate-y-2 transition-transform duration-500">
                               <div className="flex items-center justify-between">
-                                 <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-sm">
+                                 <div className="w-12 h-12 bg-white flex items-center justify-center border border-gray-200">
                                     {col.icon}
                                  </div>
                                  <span className="text-[10px] font-black uppercase tracking-widest text-[#1D3557] opacity-60">Verified Collection</span>
@@ -151,7 +151,7 @@ const CategoriesPage = () => {
                            whileInView={{ opacity: 1, x: 0 }}
                            viewport={{ once: true }}
                            transition={{ delay: i * 0.05 }}
-                           className="px-8 py-4 bg-gray-50 border border-gray-100 rounded-2xl hover:border-brand-blue hover:bg-white hover:text-brand-blue hover:shadow-xl hover:shadow-blue-900/5 transition-all text-sm font-black uppercase tracking-widest text-[#1D3557] cursor-pointer"
+                           className="px-8 py-4 bg-white border border-gray-200 hover:border-brand-blue hover:text-brand-blue transition-all text-sm font-black uppercase tracking-widest text-[#1D3557] cursor-pointer"
                         >
                            {sub}
                         </motion.div>
@@ -167,7 +167,7 @@ const CategoriesPage = () => {
                   <p className="text-blue-100/40 text-sm md:text-base max-w-xl">
                      Our concierge sourcing team is always adding new collections to the catalog. Connect with our curators if you're looking for something specific.
                   </p>
-                  <Link href="/contact" className="mt-4 px-12 py-5 bg-brand-blue text-white rounded-2xl font-black uppercase tracking-widest text-sm shadow-2xl shadow-blue-500/20 hover:scale-105 transition-all">
+                  <Link href="/contact" className="mt-4 px-12 py-5 bg-brand-blue text-white font-black uppercase tracking-widest text-sm hover:scale-105 transition-all">
                      Request Curator Support
                   </Link>
                </div>

@@ -76,7 +76,7 @@ export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
                 placeholder="e.g. Eleanor Pena"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="h-12 border-gray-100 font-bold bg-gray-50/30 focus:bg-white transition-all"
+                className="h-12 border-gray-200 font-bold bg-gray-50/30 focus:bg-white transition-all"
                 required
               />
             </div>
@@ -88,7 +88,7 @@ export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
                 placeholder="e.g. penna@dealport.com"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="h-12 border-gray-100 font-bold bg-gray-50/30 focus:bg-white transition-all"
+                className="h-12 border-gray-200 font-bold bg-gray-50/30 focus:bg-white transition-all"
                 required
               />
             </div>
@@ -111,7 +111,7 @@ export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
                 type="date"
                 value={formData.dob}
                 onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
-                className="h-12 border-gray-100 font-bold bg-gray-50/30 focus:bg-white transition-all"
+                className="h-12 border-gray-200 font-bold bg-gray-50/30 focus:bg-white transition-all"
                 required
               />
             </div>

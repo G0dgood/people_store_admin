@@ -13,7 +13,7 @@ export const MessageDropdown: React.FC = () => {
       onClick={e => e.preventDefault()}
     >
       <DropdownMenu width={320} className="shadow-2xl border-gray-200 p-0">
-        <div className="px-4 py-3 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+        <div className="px-4 py-3 border-b border-gray-200 flex justify-between items-center bg-gray-50/50">
           <span className="font-bold text-gray-900 text-sm">Messages</span>
           <span className="text-[10px] text-brand-blue bg-brand-blue-light px-2 py-0.5 rounded-full font-bold">2 New</span>
         </div>
@@ -21,7 +21,7 @@ export const MessageDropdown: React.FC = () => {
         <div className="flex flex-col max-h-[320px] overflow-y-auto">
           {/* Notification 1 (Unread) */}
           <div className="px-4 py-3 hover:bg-gray-50 flex gap-3 cursor-pointer transition-colors border-b border-gray-50 last:border-0 relative">
-            <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border border-gray-100 bg-white">
+            <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border border-gray-200 bg-white">
               <Image src="/avatars/avatar=pic1.jpg" alt="Avatar" width={40} height={40} className="w-full h-full object-cover" />
             </div>
             <div className="flex-1 flex flex-col min-w-0 pr-4">
@@ -36,7 +36,7 @@ export const MessageDropdown: React.FC = () => {
 
           {/* Notification 2 (Unread) */}
           <div className="px-4 py-3 hover:bg-gray-50 flex gap-3 cursor-pointer transition-colors border-b border-gray-50 last:border-0 relative">
-            <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border border-gray-100 bg-white">
+            <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 border border-gray-200 bg-white">
               <Image src="/avatars/avatar=pic2.png" alt="Avatar" width={40} height={40} className="w-full h-full object-cover" />
             </div>
             <div className="flex-1 flex flex-col min-w-0 pr-4">

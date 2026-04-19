@@ -145,7 +145,7 @@ const ProductsPage = () => {
   }, [filters, products]);
 
   return (
-    <div className="min-h-screen bg-[#F7FAFC] flex flex-col font-sans text-black">
+    <div className="min-h-screen bg-white flex flex-col font-sans text-black">
       {/* Desktop Header */}
       <div className="hidden md:block">
         <Header />
@@ -260,13 +260,13 @@ const ProductsPage = () => {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 right-0 w-[85%] max-w-sm bg-white z-[110] lg:hidden flex flex-col shadow-2xl"
+              className="fixed inset-y-0 right-0 w-[85%] max-w-sm bg-white z-[110] lg:hidden flex flex-col border-l border-gray-200"
             >
-              <div className="flex items-center justify-between p-4 border-b border-gray-100">
+              <div className="flex items-center justify-between p-4 border-b border-gray-200">
                 <h2 className="text-lg font-bold">Filters</h2>
                 <button
                   onClick={() => setIsFilterDrawerOpen(false)}
-                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  className="p-2 hover:bg-gray-100 transition-colors"
                 >
                   <Icon name="close" size="md" />
                 </button>
@@ -274,10 +274,10 @@ const ProductsPage = () => {
               <div className="flex-1 overflow-y-auto p-4">
                 <FilterSidebar filters={filters} setFilters={setFilters} />
               </div>
-              <div className="p-4 border-t border-gray-100 flex gap-3">
+              <div className="p-4 border-t border-gray-200 flex gap-3">
                 <button
                   onClick={() => setIsFilterDrawerOpen(false)}
-                  className="flex-1 py-3 bg-brand-blue text-white font-bold rounded-lg hover:bg-brand-blue/90"
+                  className="flex-1 py-3 bg-brand-blue text-white font-bold hover:bg-brand-blue/90"
                 >
                   Show Results
                 </button>

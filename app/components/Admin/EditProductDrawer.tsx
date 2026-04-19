@@ -50,8 +50,8 @@ export function EditProductDrawer({ isOpen, onClose, product }: EditProductDrawe
       <form onSubmit={handleSubmit} className="flex flex-col h-full gap-8">
         <div className="flex flex-col gap-6">
           {/* Header Info */}
-          <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-100">
-             <div className="w-12 h-12 rounded-lg bg-white border border-gray-100 p-1">
+          <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
+             <div className="w-12 h-12 rounded-lg bg-white border border-gray-200 p-1">
                 <img src={product.image} alt="" className="w-full h-full object-contain" />
              </div>
              <div className="flex flex-col gap-0.5">
@@ -67,7 +67,7 @@ export function EditProductDrawer({ isOpen, onClose, product }: EditProductDrawe
               placeholder="e.g. 25000"
               value={formData.price}
               onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-              className="h-12 border-gray-100 font-bold"
+              className="h-12 border-gray-200 font-bold"
               required
             />
           </div>
@@ -79,7 +79,7 @@ export function EditProductDrawer({ isOpen, onClose, product }: EditProductDrawe
               placeholder="e.g. 50"
               value={formData.stock}
               onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
-              className="h-12 border-gray-100 font-bold"
+              className="h-12 border-gray-200 font-bold"
               required
             />
           </div>

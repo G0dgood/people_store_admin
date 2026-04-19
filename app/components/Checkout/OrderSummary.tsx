@@ -28,7 +28,7 @@ export const OrderSummary: React.FC = () => {
   return (
     <div className="w-full lg:w-[400px] xl:w-[450px] shrink-0 sticky top-28">
       <section className="bg-white border border-[#1C1C1C1A] rounded-[6px] overflow-hidden transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)]">
-        <div className="p-6 md:p-8 bg-gray-50/50 border-b border-gray-100 flex items-center justify-between">
+        <div className="p-6 md:p-8 bg-gray-50/50 border-b border-gray-200 flex items-center justify-between">
           <div>
             <h2 className="text-xl font-bold text-gray-900 tracking-tight">Order Summary</h2>
             <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mt-0.5">Review items</p>
@@ -46,7 +46,7 @@ export const OrderSummary: React.FC = () => {
             {cartItems.length > 0 ? (
               cartItems.map((item) => (
                 <motion.div key={item.id} variants={itemVariants} className="flex gap-4 group">
-                  <div className="w-20 h-20 bg-white rounded-2xl border border-gray-100 flex-shrink-0 relative overflow-hidden shadow-sm group-hover:shadow-md transition-all duration-300">
+                  <div className="w-20 h-20 bg-white rounded-2xl border border-gray-200 flex-shrink-0 relative overflow-hidden shadow-sm group-hover:shadow-md transition-all duration-300">
                     <Image src={item.image} alt={item.title} fill className="object-contain p-2 group-hover:scale-110 transition-transform duration-500" />
                   </div>
                   <div className="flex-1 flex flex-col justify-between py-1">
@@ -70,7 +70,7 @@ export const OrderSummary: React.FC = () => {
             )}
           </motion.div>
 
-          <div className="space-y-4 mb-8 bg-gray-50/50 p-6 rounded-2xl border border-gray-100/50">
+          <div className="space-y-4 mb-8 bg-gray-50/50 p-6 rounded-2xl border border-gray-200/50">
             <div className="flex justify-between text-[13px]">
               <span className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">Subtotal</span>
               <span className="text-gray-900 font-bold">₦{subtotal.toFixed(2)}</span>

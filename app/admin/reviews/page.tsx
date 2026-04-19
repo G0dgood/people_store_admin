@@ -151,7 +151,7 @@ export default function ReviewListing() {
               type="text"
               placeholder="Search reviewer, comment..."
               containerClassName="flex-1 xl:w-96"
-              className="bg-white border-gray-100 placeholder:text-gray-400 text-xs font-medium"
+              className="bg-white border-gray-200 placeholder:text-gray-400 text-xs font-medium"
               suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
             />
 
@@ -199,7 +199,7 @@ export default function ReviewListing() {
                   </td>
                   <td>
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full overflow-hidden bg-gray-100 border border-gray-100">
+                      <div className="w-9 h-9 rounded-full overflow-hidden bg-gray-100 border border-gray-200">
                         <img src={review.customer.avatar} alt={review.customer.name} className="w-full h-full object-cover" />
                       </div>
                       <div className="flex flex-col">
@@ -228,7 +228,7 @@ export default function ReviewListing() {
                   </td>
                   <td>
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-[6px] border border-gray-100 overflow-hidden bg-white p-1 shadow-sm">
+                      <div className="w-10 h-10 rounded-[6px] border border-gray-200 overflow-hidden bg-white p-1 shadow-sm">
                         <img src={review.product.image} alt={review.product.name} className="w-full h-full object-contain" />
                       </div>
                       <span className="text-xs font-bold text-gray-500 max-w-[120px] truncate">{review.product.name}</span>

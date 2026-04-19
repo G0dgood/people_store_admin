@@ -71,7 +71,7 @@ export default function ProductMediaListing() {
         </div>
       </div>
 
-      <div className="bg-white rounded-[6px] border border-gray-100 shadow-sm overflow-hidden flex flex-col">
+      <div className="bg-white rounded-[6px] border border-gray-200 shadow-sm overflow-hidden flex flex-col">
         {/* Filter & Control Bar */}
         <div className="p-4 sm:p-6 flex flex-col lg:flex-row gap-6 items-center justify-between border-b border-gray-50">
           <TabFilter
@@ -87,7 +87,7 @@ export default function ProductMediaListing() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               containerClassName="flex-1 xl:w-96"
-              className="bg-white border-gray-100 placeholder:text-gray-400 text-xs font-medium"
+              className="bg-white border-gray-200 placeholder:text-gray-400 text-xs font-medium"
               suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
             />
 
@@ -134,7 +134,7 @@ export default function ProductMediaListing() {
           {viewType === "grid" ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredMedia.map((item) => (
-                <div key={item.id} className="group relative bg-white border border-gray-100 rounded-[6px] overflow-hidden hover:shadow-md hover:border-blue-100 transition-all">
+                <div key={item.id} className="group relative bg-white border border-gray-200 rounded-[6px] overflow-hidden hover:shadow-md hover:border-blue-100 transition-all">
                   <div className="relative aspect-video bg-gray-50 flex items-center justify-center p-4">
                     <img src={item.url} alt={item.name} className="w-full h-full object-contain transition-transform group-hover:scale-105" />
 
@@ -201,7 +201,7 @@ export default function ProductMediaListing() {
                   {filteredMedia.map((item) => (
                     <tr key={item.id} className="group">
                       <td>
-                        <div className="w-16 h-10 rounded-[4px] border border-gray-100 overflow-hidden bg-white p-0.5 shadow-sm relative shrink-0">
+                        <div className="w-16 h-10 rounded-[4px] border border-gray-200 overflow-hidden bg-white p-0.5 shadow-sm relative shrink-0">
                           <img src={item.url} alt={item.name} className="w-full h-full object-contain" />
                           {item.type === "video" && (
                             <div className="absolute inset-0 flex items-center justify-center bg-black/5">

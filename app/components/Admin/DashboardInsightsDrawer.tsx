@@ -42,7 +42,7 @@ export function DashboardInsightsDrawer({ isOpen, onClose, activeSection }: Dash
                   </div>
                </div>
 
-               <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+               <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm">
                   <div className="h-48 w-full">
                      <AdminChart
                         type="line"
@@ -95,7 +95,7 @@ export function DashboardInsightsDrawer({ isOpen, onClose, activeSection }: Dash
                      { label: "Successful Orders", value: "12.4k", perc: 5, color: "bg-blue-300" },
                   ].map((step, i) => (
                      <div key={i} className="group flex items-center gap-4">
-                        <div className="flex-1 h-12 bg-gray-50 rounded-xl border border-transparent group-hover:border-gray-100 transition-all flex items-center px-4 gap-4 relative overflow-hidden">
+                        <div className="flex-1 h-12 bg-gray-50 rounded-xl border border-transparent group-hover:border-gray-200 transition-all flex items-center px-4 gap-4 relative overflow-hidden">
                            <div className={`absolute left-0 top-0 bottom-0 ${step.color} transition-all duration-1000 origin-left`} style={{ width: `${step.perc}%`, opacity: 0.1 }}></div>
                            <span className="text-[13px] font-black text-[#1D3557] z-10">{step.label}</span>
                            <div className="ml-auto flex items-center gap-2 z-10">
@@ -117,7 +117,7 @@ export function DashboardInsightsDrawer({ isOpen, onClose, activeSection }: Dash
             <div className={`grid grid-cols-2 gap-6 p-2 rounded-2xl transition-all duration-500 ${activeSection === 'traffic' ? 'ring-2 ring-brand-blue/20 bg-brand-blue/[0.02]' : ''}`}>
                <div className="flex flex-col gap-4">
                   <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Traffic Sources</h4>
-                  <div className="bg-white border border-gray-100 rounded-2xl p-6 flex flex-col gap-6 shadow-sm">
+                  <div className="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col gap-6 shadow-sm">
                      <div className="relative w-32 h-32 mx-auto">
                         <AdminChart
                            type="doughnut"
@@ -162,7 +162,7 @@ export function DashboardInsightsDrawer({ isOpen, onClose, activeSection }: Dash
 
                <div className="flex flex-col gap-4">
                   <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Top Regions</h4>
-                  <div className="bg-white border border-gray-100 rounded-2xl p-6 flex flex-col gap-4 shadow-sm h-[230px]">
+                  <div className="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col gap-4 shadow-sm h-[230px]">
                      <AdminChart
                         type="bar"
                         data={{

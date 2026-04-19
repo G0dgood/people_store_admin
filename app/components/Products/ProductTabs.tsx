@@ -7,7 +7,7 @@ const ProductTabs = () => {
   const tabs = ["Description", "Reviews"];
 
   return (
-    <div className="flex-1 bg-white border border-gray-200 rounded-lg overflow-hidden flex flex-col min-h-[600px]">
+    <div className="flex-1 bg-white border border-gray-200 overflow-hidden flex flex-col min-h-[600px]">
       {/* Tab Headers */}
       <div className="flex border-b border-gray-200 bg-white">
         {tabs.map((tab) => (

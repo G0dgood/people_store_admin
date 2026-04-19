@@ -97,7 +97,7 @@ export default function CouponsListing() {
               type="text"
               placeholder="Search coupon code"
               containerClassName="w-full lg:w-80 xl:w-72"
-              className="bg-white border-gray-100 placeholder:text-gray-400 text-sm font-medium"
+              className="bg-white border-gray-200 placeholder:text-gray-400 text-sm font-medium"
               suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
             />
 

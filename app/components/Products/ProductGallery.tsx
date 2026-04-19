@@ -19,7 +19,7 @@ const ProductGallery = () => {
   return (
     <div className="flex flex-col gap-5 w-full max-w-[560px]">
       {/* Main Image */}
-      <div className="relative w-full aspect-square bg-white border border-gray-200 rounded-lg overflow-hidden flex items-center justify-center p-4">
+      <div className="relative w-full aspect-square bg-white border border-gray-200 overflow-hidden flex items-center justify-center p-4">
         <Image
           src={activeImage}
           alt="Product View"
@@ -35,7 +35,7 @@ const ProductGallery = () => {
             key={idx}
             onClick={() => setActiveImage(img)}
             className={`
-               relative w-14 h-14 flex-shrink-0 border rounded-md overflow-hidden bg-white p-1 transition-all
+               relative w-14 h-14 flex-shrink-0 border overflow-hidden bg-white p-1 transition-all
                ${activeImage === img ? "border-brand-blue" : "border-gray-200 hover:border-gray-300"}
              `}
           >

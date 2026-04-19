@@ -138,7 +138,7 @@ export const MessageFeed: React.FC = () => {
          <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-blue rounded-r"></div>
         )}
 
-        <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 border border-gray-100 bg-white">
+        <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 border border-gray-200 bg-white">
          {message.avatar.startsWith("icon:") ? (
           <div className="w-full h-full bg-brand-blue-light flex items-center justify-center text-brand-blue">
            <Icon name={message.avatar.replace("icon:", "")} size="md" />

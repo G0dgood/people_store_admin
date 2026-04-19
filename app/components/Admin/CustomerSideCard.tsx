@@ -19,7 +19,7 @@ export function CustomerSideCard({ customer, onClose }: CustomerSideCardProps) {
       animate={{ x: 0, opacity: 1 }}
       exit={{ x: "100%", opacity: 0 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className="w-full lg:w-[380px] bg-white rounded-[6px] border border-gray-100 shadow-xl p-6 flex flex-col gap-8 sticky top-6 z-10"
+      className="w-full lg:w-[380px] bg-white rounded-[6px] border border-gray-200 shadow-xl p-6 flex flex-col gap-8 sticky top-6 z-10"
     >
       <div className="flex flex-col items-start gap-4">
         <div className="flex justify-between items-center w-full">

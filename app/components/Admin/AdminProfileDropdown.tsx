@@ -10,7 +10,7 @@ export const AdminProfileDropdown: React.FC = () => {
    const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
    return (
       <div className="absolute top-full right-0 pt-4 z-50 cursor-default">
-         <DropdownMenu width={280} className="shadow-2xl border-gray-100 p-0 overflow-hidden">
+         <DropdownMenu width={280} className="shadow-2xl border-gray-200 p-0 overflow-hidden">
             {/* User Summary */}
             <div className="px-6 py-5 bg-gray-50/50 border-b border-gray-50 flex items-center gap-3">
                <div className="w-12 h-12 rounded-full border-2 border-white shadow-sm overflow-hidden shrink-0 bg-white flex items-center justify-center">

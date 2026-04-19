@@ -109,7 +109,7 @@ const CookiePreferencesPage = () => {
                         </div>
 
                         {/* Interactive Preference Control */}
-                        <div className="lg:col-span-7 bg-white border border-gray-100 rounded-[48px] shadow-sm overflow-hidden">
+                        <div className="lg:col-span-7 bg-white border border-gray-200 rounded-[48px] shadow-sm overflow-hidden">
                             <div className="p-8 md:p-12 flex flex-col gap-10">
                                 {cookieTypes.map((cookie, i) => (
                                     <div key={cookie.id} className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 pb-10 border-b border-gray-50 last:border-0 last:pb-0">
@@ -141,7 +141,7 @@ const CookiePreferencesPage = () => {
                                 ))}
                             </div>
 
-                            <div className="bg-gray-100/50 p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-6 border-t border-gray-100">
+                            <div className="bg-gray-100/50 p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-6 border-t border-gray-200">
                                 <p className="text-xs text-gray-400 font-medium">Your preferences are synchronized in real-time.</p>
                                 <div className="flex gap-4 w-full md:w-auto">
                                     <Button variant="ghost" className="flex-1 md:flex-none border-gray-200 text-[#1D3557] px-10 h-14 font-black uppercase tracking-widest text-sm">

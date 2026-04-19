@@ -65,13 +65,13 @@ const TrackingPage = () => {
      <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 xl:gap-24 items-start">
       {/* Tracking Input Form */}
       <div className="lg:col-span-4 flex flex-col gap-10">
-       <form onSubmit={handleTrack} className="flex flex-col gap-8 bg-gray-50 border border-gray-100 p-8 rounded-[6px] shadow-sm">
+       <form onSubmit={handleTrack} className="flex flex-col gap-8 bg-gray-50 border border-gray-200 p-8 rounded-[6px] shadow-sm">
         <div className="flex flex-col gap-2">
          <label className="text-[10px] font-black uppercase tracking-widest text-[#1D3557] opacity-60">Order ID</label>
          <Input
           type="text"
           placeholder="e.g. #BM-123456"
-          className="h-14 bg-white border-gray-100"
+          className="h-14 bg-white border-gray-200"
           value={orderId}
           onChange={(e) => setOrderId(e.target.value)}
           required
@@ -82,7 +82,7 @@ const TrackingPage = () => {
          <Input
           type="email"
           placeholder="john@example.com"
-          className="h-14 bg-white border-gray-100"
+          className="h-14 bg-white border-gray-200"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
@@ -128,7 +128,7 @@ const TrackingPage = () => {
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col gap-12"
          >
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-gray-100 pb-10">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-gray-200 pb-10">
            <div className="flex flex-col gap-1">
             <h3 className="text-3xl font-black text-[#1D3557] tracking-tight">Status: Shipped</h3>
             <p className="text-gray-400 font-medium">Estimated arrival: <span className="text-brand-blue">October 28, 2026</span></p>
@@ -151,7 +151,7 @@ const TrackingPage = () => {
 
            {trackingSteps.map((step, i) => (
             <div key={i} className={`flex md:flex-col items-center gap-4 md:gap-6 relative z-10 ${!step.active ? 'opacity-30' : ''}`}>
-             <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg transition-colors overflow-hidden ${step.done ? 'bg-brand-blue text-white' : 'bg-white text-gray-300 border border-gray-100'}`}>
+             <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg transition-colors overflow-hidden ${step.done ? 'bg-brand-blue text-white' : 'bg-white text-gray-300 border border-gray-200'}`}>
               {step.done ? <HiCheckCircle size={24} /> : i + 1}
              </div>
              <div className="flex flex-col md:items-center md:text-center gap-1">
@@ -177,7 +177,7 @@ const TrackingPage = () => {
           key="tracking-empty"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="h-[500px] border-2 border-dashed border-gray-100 rounded-[48px] flex flex-col items-center justify-center text-center p-12 gap-6"
+          className="h-[500px] border-2 border-dashed border-gray-200 rounded-[48px] flex flex-col items-center justify-center text-center p-12 gap-6"
          >
           <div className="w-24 h-24 rounded-full bg-gray-50 flex items-center justify-center text-gray-300">
            <HiMagnifyingGlass size={48} />

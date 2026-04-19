@@ -46,8 +46,8 @@ export function RefundDetailDrawer({ isOpen, onClose, refund, onUpdateStatus }: 
         {/* Original Transaction */}
         <div className="flex flex-col gap-4">
            <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Original Transaction</h4>
-           <div className="bg-white border border-gray-100 rounded-xl p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center p-2">
+           <div className="bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-4">
+              <div className="w-12 h-12 rounded-lg bg-gray-50 border border-gray-200 flex items-center justify-center p-2">
                  <Icon name="Payment Card" folder="dashboardIcon" size="md" />
               </div>
               <div className="flex-1 flex flex-col gap-0.5">
@@ -60,7 +60,7 @@ export function RefundDetailDrawer({ isOpen, onClose, refund, onUpdateStatus }: 
         {/* Customer Breakdown */}
         <div className="flex flex-col gap-4">
            <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Customer Details</h4>
-           <div className="bg-white border border-gray-100 rounded-xl p-4 flex items-center gap-4">
+           <div className="bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-4">
               <div className="w-12 h-12 rounded-full bg-blue-50 border-2 border-white shadow-sm flex items-center justify-center overflow-hidden">
                  <img src={refund.image || "https://ui-avatars.com/api/?name=" + refund.name} alt="" className="w-full h-full object-cover" />
               </div>
@@ -77,7 +77,7 @@ export function RefundDetailDrawer({ isOpen, onClose, refund, onUpdateStatus }: 
         {/* Reason */}
         <div className="flex flex-col gap-4">
            <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Refund Reason</h4>
-           <div className="bg-gray-50 border border-gray-100 rounded-xl p-4">
+           <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
               <p className="text-xs font-bold text-[#1D3557] leading-relaxed">
                  {refund.reason || "Customer requested cancellation due to delayed shipping."}
               </p>

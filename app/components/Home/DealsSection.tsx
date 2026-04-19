@@ -64,8 +64,8 @@ const DealsSection = () => {
   };
 
   return (
-    <section className="w-full bg-white border border-[#1C1C1C1A] rounded-[6px] md:rounded-lg flex flex-col md:flex-row overflow-hidden">
-      <div className="w-full md:w-72 p-6 border-b md:border-b-0 md:border-r border-gray-100 flex md:flex-col justify-between md:justify-start items-center md:items-start gap-4 md:gap-6">
+    <section className="w-full bg-white border border-gray-200 flex flex-col md:flex-row overflow-hidden">
+      <div className="w-full md:w-72 p-6 border-b md:border-b-0 md:border-r border-gray-200 flex md:flex-col justify-between md:justify-start items-center md:items-start gap-4 md:gap-6">
         <div className="flex flex-col">
           <h3 className="text-lg md:text-xl font-bold text-gray-900">Deals and offers</h3>
           <p className="text-gray-400 text-xs md:text-sm">Luxury Fragrance</p>
@@ -74,7 +74,7 @@ const DealsSection = () => {
           {timerUnits.map((t, idx) => (
             <div
               key={idx}
-              className="flex flex-col items-center justify-center w-11 h-11 md:w-12 md:h-12 bg-[#F7F7F7] md:bg-gray-600 rounded-md text-gray-900 md:text-white border border-gray-100 md:border-none shadow-sm"
+              className="flex flex-col items-center justify-center w-11 h-11 md:w-12 md:h-12 bg-[#F7F7F7] md:bg-gray-600 text-gray-900 md:text-white border border-gray-200 md:border-none"
             >
               <span className="text-sm font-bold">{t.v}</span>
               <span className="text-[9px] md:text-[10px] opacity-60 font-medium">{t.l}</span>
@@ -97,7 +97,7 @@ const DealsSection = () => {
                 whileHover={{ y: -5, transition: { type: "spring", stiffness: 300, damping: 15 } }}
                 className="w-[140px] md:w-[200px] p-4 md:p-6 flex flex-col items-center gap-2 md:gap-3 hover:bg-gray-50 transition-colors cursor-pointer h-full"
               >
-                <div className="w-24 h-24 md:w-32 md:h-32 relative bg-white border border-gray-50 rounded-md p-2 flex items-center justify-center">
+                <div className="w-24 h-24 md:w-32 md:h-32 relative bg-white border border-gray-50 p-2 flex items-center justify-center">
                   <Image
                     src={prod.image}
                     alt={prod.name}
@@ -108,7 +108,7 @@ const DealsSection = () => {
                 <p className="text-xs md:text-sm text-center line-clamp-1 text-gray-600 group-hover:text-brand-blue transition-colors font-medium">
                   {prod.name}
                 </p>
-                <span className="px-3 py-1 bg-[#FFE3E3] text-[#EB001B] text-[10px] md:text-xs font-bold rounded-full shadow-sm">
+                <span className="px-3 py-1 bg-[#FFE3E3] text-[#EB001B] text-[10px] md:text-xs font-bold">
                   {prod.discount}
                 </span>
 

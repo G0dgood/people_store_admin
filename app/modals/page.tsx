@@ -25,7 +25,7 @@ export default function ModalDemo() {
 
      {/* Normal Modal Mockup */}
      <div className="bg-gray-50/50 p-12 rounded-xl flex items-center justify-center">
-      <div className="w-full max-w-sm bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+      <div className="w-full max-w-sm bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
        <ModalHeader title="Normal modal" onClose={() => { }} />
        <ModalBody>
         <p className="text-gray-500 text-sm leading-relaxed">Lorem ipsum dolor sit amet</p>
@@ -39,7 +39,7 @@ export default function ModalDemo() {
 
      {/* Large Modal Mockup */}
      <div className="bg-gray-50/50 p-12 rounded-xl flex items-center justify-center">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+      <div className="w-full max-w-md bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
        <ModalHeader title="Large modal" onClose={() => { }} />
        <ModalBody>
         <div className="flex gap-4 mb-6">
@@ -65,7 +65,7 @@ export default function ModalDemo() {
 
      {/* Delete Modal Mockup */}
      <div className="bg-gray-50/50 p-12 rounded-xl flex items-center justify-center">
-      <div className="w-full max-w-sm bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+      <div className="w-full max-w-sm bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
        <ModalHeader title="Delete 4 files?" onClose={() => { }} />
        <ModalBody>
         <p className="text-gray-500 text-sm leading-relaxed">Really want to delete all items.</p>
@@ -79,7 +79,7 @@ export default function ModalDemo() {
 
      {/* Error Dialog Mockup */}
      <div className="bg-gray-50/50 p-12 rounded-xl flex items-center justify-center">
-      <div className="w-full max-w-sm bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+      <div className="w-full max-w-sm bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
        <ModalHeader title="Error dialog" onClose={() => { }} icon="warning" />
        <ModalBody>
         <p className="text-gray-500 text-sm leading-relaxed">Some error 422 happened because of something you made</p>
@@ -106,15 +106,15 @@ export default function ModalDemo() {
 
      <div className="flex flex-col gap-12 p-12 border border-dashed border-purple-200 rounded-xl">
       <div className="flex items-center gap-24">
-       <div className="w-[320px] bg-white border border-gray-100 rounded-t-xl">
+       <div className="w-[320px] bg-white border border-gray-200 rounded-t-xl">
         <ModalHeader title="Informative modal" icon="check_circle" onClose={() => { }} />
        </div>
-       <div className="w-[320px] bg-white border border-gray-100 rounded-t-xl">
+       <div className="w-[320px] bg-white border border-gray-200 rounded-t-xl">
         <ModalHeader title="Medium modal" onClose={() => { }} />
        </div>
       </div>
 
-      <div className="w-[320px] bg-white border border-gray-100 rounded-xl overflow-hidden ">
+      <div className="w-[320px] bg-white border border-gray-200 rounded-xl overflow-hidden ">
        <ModalFooter>
         <Button variant="ghost" size="sm">Button</Button>
         <Button size="sm">Button</Button>

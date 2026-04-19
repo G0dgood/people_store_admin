@@ -87,7 +87,7 @@ export default function FormSelectDemo() {
         />
 
         {/* Visual Calendar Mockup to match Design */}
-        <div className="w-[280px] bg-white border border-gray-100 rounded-md shadow-xl p-4">
+        <div className="w-[280px] bg-white border border-gray-200 rounded-md shadow-xl p-4">
          <div className="flex items-center justify-between mb-4">
           <button className="p-1 text-gray-400">
            <Icon name="chevron_left" size="sm" />
@@ -109,9 +109,9 @@ export default function FormSelectDemo() {
            </div>
           ))}
          </div>
-         <div className="flex gap-2 mt-6 pt-4 border-t border-gray-100">
-          <button className="flex-1 py-2 text-xs font-bold text-brand-blue border border-gray-100 rounded-md">Clear</button>
-          <button className="flex-1 py-2 text-xs font-bold text-brand-blue border border-gray-100 rounded-md">Today</button>
+         <div className="flex gap-2 mt-6 pt-4 border-t border-gray-200">
+          <button className="flex-1 py-2 text-xs font-bold text-brand-blue border border-gray-200 rounded-md">Clear</button>
+          <button className="flex-1 py-2 text-xs font-bold text-brand-blue border border-gray-200 rounded-md">Today</button>
          </div>
         </div>
        </div>

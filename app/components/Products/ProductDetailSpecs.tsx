@@ -10,7 +10,7 @@ interface PriceTier {
 
 export const PriceTiers: React.FC<{ tiers: PriceTier[] }> = ({ tiers }) => {
   return (
-    <div className="bg-[#FFF0DF] p-4 rounded-lg grid grid-cols-3 divide-x divide-gray-200">
+    <div className="bg-[#FFF0DF] p-4 border border-gray-200 grid grid-cols-3 divide-x divide-gray-200">
       {tiers.map((tier, idx) => (
         <div key={idx} className="flex flex-col gap-1 px-4 first:pl-0 last:pr-0">
           <span className={`text-xl font-bold ${tier.isActive ? "text-[#EB001B]" : "text-[#1C1C1C]"}`}>
@@ -30,7 +30,7 @@ interface SpecItem {
 
 export const SpecsTable: React.FC<{ specs: SpecItem[] }> = ({ specs }) => {
   return (
-    <div className="flex flex-col gap-4 py-4 border-b border-gray-100">
+    <div className="flex flex-col gap-4 py-4 border-b border-gray-200">
       {specs.map((spec, idx) => (
         <div key={idx} className="flex text-sm">
           <span className="w-24 text-gray-400 flex-shrink-0">{spec.label}</span>
@@ -43,7 +43,7 @@ export const SpecsTable: React.FC<{ specs: SpecItem[] }> = ({ specs }) => {
 
 export const ProtectionWarranty: React.FC = () => {
   return (
-    <div className="flex flex-col gap-4 py-4 border-b border-gray-100 text-sm text-gray-400">
+    <div className="flex flex-col gap-4 py-4 border-b border-gray-200 text-sm text-gray-400">
       <div className="flex">
         <span className="w-24 flex-shrink-0">Customization:</span>
         <span className="text-gray-600">Customized logo and design custom packages</span>

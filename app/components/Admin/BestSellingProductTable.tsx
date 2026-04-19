@@ -41,7 +41,7 @@ const bestSellingData = [
 
 export function BestSellingProductTable() {
  return (
-  <div className="bg-white p-8 rounded-[6px] border border-gray-100 shadow-sm flex flex-col gap-6">
+  <div className="bg-white p-8 rounded-[6px] border border-gray-200 shadow-sm flex flex-col gap-6">
    <div className="flex justify-between items-center">
     <h3 className="text-[18px] font-black text-[#1D3557]">Best selling product</h3>
     <Button
@@ -69,7 +69,7 @@ export function BestSellingProductTable() {
          <div className="flex items-center gap-4">
           <img
            src={p.image}
-           className="w-10 h-10 rounded-[6px] object-contain bg-gray-50 border border-gray-100 p-1"
+           className="w-10 h-10 rounded-[6px] object-contain bg-gray-50 border border-gray-200 p-1"
           />
           <span className="text-[12px] font-black text-[#1D3557]">{p.name}</span>
          </div>

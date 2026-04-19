@@ -40,7 +40,7 @@ export function SupportChatDrawer({ isOpen, onClose, ticket }: SupportChatDrawer
         <Button
           variant="outline"
           shape="rounded-sm"
-          className="!py-1.5 !px-3 text-[10px] font-black uppercase tracking-wider border-gray-100 text-[#1D3557] gap-2 hover:bg-gray-50 transition-colors"
+          className="!py-1.5 !px-3 text-[10px] font-black uppercase tracking-wider border-gray-200 text-[#1D3557] gap-2 hover:bg-gray-50 transition-colors"
           onClick={() => setIsStatusModalOpen(true)}
         >
           <BiSliderAlt size={14} className="text-brand-blue" />
@@ -50,7 +50,7 @@ export function SupportChatDrawer({ isOpen, onClose, ticket }: SupportChatDrawer
     >
       <div className="flex flex-col h-[calc(100vh-120px)]">
         {/* Chat Header */}
-        <div className="flex items-center gap-4 pb-6 border-b border-gray-100">
+        <div className="flex items-center gap-4 pb-6 border-b border-gray-200">
            <div className="relative">
               <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-sm">
                  <img src={"https://ui-avatars.com/api/?name=" + ticket.customer} alt="" className="w-full h-full object-cover" />
@@ -88,15 +88,15 @@ export function SupportChatDrawer({ isOpen, onClose, ticket }: SupportChatDrawer
            ))}
            
            <div className="flex justify-center">
-              <span className="px-3 py-1 bg-gray-50 rounded-full text-[9px] font-black text-gray-400 uppercase tracking-widest border border-gray-100">
+              <span className="px-3 py-1 bg-gray-50 rounded-full text-[9px] font-black text-gray-400 uppercase tracking-widest border border-gray-200">
                  Today
               </span>
            </div>
         </div>
 
         {/* Input Area */}
-        <div className="pt-6 border-t border-gray-100 mt-auto">
-           <div className="flex items-center gap-3 bg-gray-50 p-2 rounded-2xl border border-gray-100 focus-within:border-brand-blue/30 focus-within:bg-white transition-all">
+        <div className="pt-6 border-t border-gray-200 mt-auto">
+           <div className="flex items-center gap-3 bg-gray-50 p-2 rounded-2xl border border-gray-200 focus-within:border-brand-blue/30 focus-within:bg-white transition-all">
               <button className="p-2 text-gray-400 hover:text-brand-blue transition-colors">
                  <PiPaperclipBold size={20} />
               </button>

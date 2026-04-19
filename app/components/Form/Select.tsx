@@ -101,7 +101,7 @@ export const Select = <T extends boolean = false>({
       </div>
 
       {isOpen && (
-        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-100 rounded-[6px] shadow-xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-[6px] shadow-xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
           <ul className="max-h-60 overflow-y-auto">
             {options.map((option) => {
               const isSelected = isMulti

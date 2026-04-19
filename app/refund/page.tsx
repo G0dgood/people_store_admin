@@ -73,7 +73,7 @@ const RefundPage = () => {
             </div>
             <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
               {eligibility.map((item, i) => (
-                <div key={i} className="bg-gray-50 p-8 rounded-3xl border border-gray-100 hover:border-brand-blue/30 transition-all group">
+                <div key={i} className="bg-gray-50 p-8 rounded-3xl border border-gray-200 hover:border-brand-blue/30 transition-all group">
                   <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-brand-blue shadow-sm mb-6 group-hover:scale-110 transition-transform">
                     {item.icon}
                   </div>

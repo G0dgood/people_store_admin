@@ -39,7 +39,7 @@ export function QuickActionsDrawer({
                 action.onClick();
                 onClose();
               }}
-              className={`flex items-center gap-4 p-4 rounded-xl transition-all group hover:bg-gray-50 text-left border border-transparent hover:border-gray-100 ${
+              className={`flex items-center gap-4 p-4 rounded-xl transition-all group hover:bg-gray-50 text-left border border-transparent hover:border-gray-200 ${
                 action.variant === "danger" ? "hover:bg-rose-50/50 hover:border-rose-100" : ""
               }`}
             >
@@ -78,7 +78,7 @@ export function QuickActionsDrawer({
         {/* Help Tip */}
         <div className="mt-6 p-4 rounded-xl bg-gray-50/50 border border-dashed border-gray-200">
           <div className="flex gap-3">
-             <div className="w-8 h-8 rounded-full bg-white border border-gray-100 flex items-center justify-center text-gray-400">
+             <div className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-400">
                 <Icon name="help_outline" size="xs" />
              </div>
              <p className="text-[11px] font-bold text-gray-500 leading-relaxed italic">
