@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { Icon } from "../Icon";
 
 interface PriceTier {
   price: string;
@@ -30,11 +31,11 @@ interface SpecItem {
 
 export const SpecsTable: React.FC<{ specs: SpecItem[] }> = ({ specs }) => {
   return (
-    <div className="flex flex-col gap-4 py-4 border-b border-gray-200">
+    <div className="flex flex-col gap-4 py-6 border-b border-gray-100">
       {specs.map((spec, idx) => (
-        <div key={idx} className="flex text-sm">
-          <span className="w-24 text-gray-400 flex-shrink-0">{spec.label}</span>
-          <span className="text-gray-600">{spec.value}</span>
+        <div key={idx} className="flex text-[11px] uppercase tracking-widest">
+          <span className="w-32 text-gray-400 flex-shrink-0 font-bold">{spec.label}</span>
+          <span className="text-gray-900 font-bold">{spec.value}</span>
         </div>
       ))}
     </div>
@@ -43,18 +44,20 @@ export const SpecsTable: React.FC<{ specs: SpecItem[] }> = ({ specs }) => {
 
 export const ProtectionWarranty: React.FC = () => {
   return (
-    <div className="flex flex-col gap-4 py-4 border-b border-gray-200 text-sm text-gray-400">
-      <div className="flex">
-        <span className="w-24 flex-shrink-0">Customization:</span>
-        <span className="text-gray-600">Customized logo and design custom packages</span>
+    <div className="flex flex-col gap-5 py-8 border-b border-gray-100 text-[10px] uppercase tracking-widest font-bold">
+      <div className="flex items-center gap-4 text-gray-400">
+        <Icon name="security" size="sm" className="text-brand-gold" />
+        <div className="flex flex-col gap-1">
+          <span className="text-gray-900">Authenticity Guaranteed</span>
+          <span className="font-medium text-gray-400 normal-case tracking-normal">100% genuine luxury products sourced directly.</span>
+        </div>
       </div>
-      <div className="flex">
-        <span className="w-24 flex-shrink-0">Protection:</span>
-        <span className="text-gray-600">Refund Policy</span>
-      </div>
-      <div className="flex">
-        <span className="w-24 flex-shrink-0">Warranty:</span>
-        <span className="text-gray-600">2 years full warranty</span>
+      <div className="flex items-center gap-4 text-gray-400">
+        <Icon name="cached" size="sm" className="text-brand-gold" />
+        <div className="flex flex-col gap-1">
+          <span className="text-gray-900">Luxury Returns</span>
+          <span className="font-medium text-gray-400 normal-case tracking-normal">Easy returns within 7 days of delivery.</span>
+        </div>
       </div>
     </div>
   );

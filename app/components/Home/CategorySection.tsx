@@ -67,26 +67,26 @@ const CategorySection: React.FC<CategorySectionProps> = ({
   };
 
   return (
-    <section className={`w-full bg-white border border-gray-200 flex flex-col md:flex-row overflow-hidden ${reverse ? "md:flex-row-reverse" : ""}`}>
+    <section className={`w-full bg-white flex flex-col md:flex-row overflow-hidden ${reverse ? "md:flex-row-reverse" : ""}`}>
       {/* Category Banner */}
-      <div className="w-full md:w-72 relative min-h-[150px] md:min-h-0 group overflow-hidden">
+      <div className="w-full md:w-80 relative min-h-[200px] md:min-h-0 group overflow-hidden">
         <Image
           src={bannerImage}
           alt={title}
           fill
-          className="object-cover group-hover:scale-105 transition-transform duration-700"
+          className="object-cover group-hover:scale-110 transition-transform duration-1000"
         />
-        <div className="absolute inset-0 bg-black/5 group-hover:bg-black/10 transition-colors"></div>
-        <div className="absolute top-4 left-4 md:top-6 md:left-6 max-w-[200px] flex flex-col gap-3 md:gap-4 z-10">
-          <h3 className="text-lg md:text-xl font-bold leading-tight text-gray-900 drop-shadow-sm">
+        <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors"></div>
+        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-10">
+          <h3 className="text-xl md:text-2xl font-outfit font-light text-white uppercase tracking-[0.2em] mb-4 drop-shadow-lg">
             {title}
           </h3>
           <Link href="/products">
             <Button
               variant="ghost"
-              className="bg-white !text-gray-900 hover:bg-gray-100 font-bold w-fit py-1.5 px-3 md:py-2 md:px-5 h-auto text-xs md:text-sm border-none transition-all active:scale-95"
+              className="bg-white text-black hover:bg-brand-gold hover:text-white font-bold w-fit py-2.5 px-6 h-auto text-[10px] uppercase tracking-[0.2em] border-none transition-all active:scale-95 shadow-lg"
             >
-              Source now
+              Shop Collection
             </Button>
           </Link>
         </div>
@@ -98,51 +98,43 @@ const CategorySection: React.FC<CategorySectionProps> = ({
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
-        className="flex-1 grid grid-cols-2 md:grid-cols-4 divide-x divide-y divide-gray-100"
+        className="flex-1 grid grid-cols-2 md:grid-cols-4"
       >
         {products.map((item, idx) => (
           <div key={idx} className="flex h-full relative group">
             <Link
               href="/products/detail"
-              className="flex flex-col p-4 md:p-5 gap-2 hover:bg-gray-50 transition-colors cursor-pointer w-full h-full pb-14"
+              className="flex flex-col p-4 md:p-6 gap-3 hover:bg-gray-50 transition-all duration-500 cursor-pointer w-full h-full pb-16 border-r border-b border-gray-100"
             >
-              <motion.div variants={itemVariants} className="flex justify-between gap-3 h-full">
-                <div className="flex flex-col">
-                  <h4 className="text-xs md:text-sm font-medium text-gray-700 group-hover:text-brand-blue transition-colors leading-tight">
-                    {item.name}
-                  </h4>
-                  <p className="text-[10px] md:text-xs text-gray-400 mt-1">
-                    From <br className="hidden md:block" />
-                    <span className="font-bold text-gray-900">₦{item.price}</span>
-                  </p>
-                </div>
-                <div className="w-16 h-16 md:w-20 md:h-20 relative flex-shrink-0">
+              <motion.div variants={itemVariants} className="flex flex-col gap-4 h-full">
+                <div className="w-full aspect-square relative flex-shrink-0 bg-gray-50/50 rounded-xl overflow-hidden">
                   {item.image && (
                     <Image
                       src={item.image}
                       alt={item.name}
                       fill
-                      className="object-contain group-hover:translate-y-[-2px] transition-transform duration-300"
+                      className="object-contain p-4 group-hover:scale-110 transition-transform duration-700"
                     />
                   )}
+                </div>
+                <div className="flex flex-col gap-1">
+                  <h4 className="text-[11px] md:text-[13px] font-bold uppercase tracking-wider text-gray-900 group-hover:text-brand-gold transition-colors leading-tight">
+                    {item.name}
+                  </h4>
+                  <p className="text-[10px] md:text-xs text-gray-500 font-medium tracking-wide">
+                    ₦{item.price}
+                  </p>
                 </div>
               </motion.div>
             </Link>
 
             {/* Overlay Actions */}
-            <div className="absolute bottom-3 left-3 right-3 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity translate-y-1 group-hover:translate-y-0 duration-200">
-              <Link href="/products/detail" className="flex-1">
-                <Button variant="ghost" size="sm" className="w-full text-[9px] h-7 font-bold border border-gray-200 px-0">
-                  View
-                </Button>
-              </Link>
+            <div className="absolute bottom-4 left-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0 duration-300">
               <Button
                 onClick={(e) => handleAddToCart(e, item)}
-                variant="primary"
-                size="sm"
-                className="flex-1 text-[9px] h-7 font-bold shadow-none px-0"
+                className="flex-1 bg-black text-white hover:bg-brand-gold text-[9px] h-8 font-bold uppercase tracking-widest transition-all rounded-none"
               >
-                + Cart
+                Add to Cart
               </Button>
             </div>
           </div>

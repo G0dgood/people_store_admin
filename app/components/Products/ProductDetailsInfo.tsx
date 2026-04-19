@@ -7,48 +7,80 @@ import { Rating } from "../Other/Rating";
 import { PriceTiers, SpecsTable, ProtectionWarranty } from "./ProductDetailSpecs";
 
 const ProductDetailsInfo = () => {
-  const priceTiers = [
-    { price: "₦98.00", range: "50-100 pcs", isActive: true },
-    { price: "₦90.00", range: "100-700 pcs" },
-    { price: "₦78.00", range: "700+ pcs" },
+  const sizes = [
+    { label: "50ml", price: "₦98,000.00", isActive: false },
+    { label: "100ml", price: "₦155,000.00", isActive: true },
+    { label: "200ml", price: "₦210,000.00", isActive: false },
   ];
 
   const specs = [
-    { label: "Price:", value: "Negotiable" },
-    { label: "Type:", value: "Classic shoes" },
-    { label: "Material:", value: "Plastic material" },
-    { label: "Design:", value: "Modern nice" },
+    { label: "Brand:", value: "Gucci" },
+    { label: "Type:", value: "Eau de Parfum" },
+    { label: "Category:", value: "Signature Fragrance" },
+    { label: "Scent:", value: "Floral & Oriental" },
   ];
 
   return (
-    <div className="flex-1 flex flex-col gap-6">
+    <div className="flex-1 flex flex-col gap-8">
       {/* Header Info */}
-      <div className="flex flex-col gap-3">
-         <div className="flex items-center gap-2 text-[#00B517]">
+      <div className="flex flex-col gap-4">
+         <div className="flex items-center gap-2 text-brand-gold">
             <Icon name="check" size="sm" />
-            <span className="text-sm font-medium">In stock</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest">In Stock & Ready to Ship</span>
          </div>
-         <h1 className="text-2xl font-bold text-gray-900 leading-tight">
-            Mens Long Sleeve T-shirt Cotton Base Layer Slim Muscle
+         <h1 className="text-3xl md:text-5xl font-outfit font-light text-gray-900 leading-tight uppercase tracking-tight">
+            Gucci <span className="font-bold">Guilty</span> Intense Pour Femme
          </h1>
-         <div className="flex items-center gap-6 text-sm text-gray-400">
+         <div className="flex items-center gap-8 text-[11px] font-bold uppercase tracking-widest text-gray-400">
             <div className="flex items-center gap-2">
-               <Rating value={4} />
-               <span className="text-orange-500 font-medium">4.0</span>
+               <Rating value={4.5} />
+               <span className="text-brand-gold">4.5 Rating</span>
             </div>
             <div className="flex items-center gap-2">
                <Icon name="chat" size="xs" />
-               <span>88 reviews</span>
+               <span>124 reviews</span>
             </div>
             <div className="flex items-center gap-2">
                <Icon name="shopping_basket" size="xs" />
-               <span>154 orders</span>
+               <span>Authentic Product</span>
             </div>
          </div>
       </div>
 
-      <PriceTiers tiers={priceTiers} />
+      <div className="flex flex-col gap-6">
+        <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400 border-b border-gray-100 pb-2">Select Size</h3>
+        <div className="flex flex-wrap gap-4">
+          {sizes.map((size, idx) => (
+            <button
+              key={idx}
+              className={`px-8 py-4 border transition-all duration-300 flex flex-col items-center gap-1 rounded-none
+                ${size.isActive 
+                  ? "border-brand-gold bg-black text-white shadow-xl scale-105" 
+                  : "border-gray-100 hover:border-brand-gold text-gray-500 hover:text-gray-900"}`}
+            >
+              <span className="text-xs font-bold uppercase tracking-widest">{size.label}</span>
+              <span className={`text-[10px] font-medium ${size.isActive ? "text-brand-gold" : "text-gray-400"}`}>{size.price}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
       <SpecsTable specs={specs} />
+      
+      <div className="flex flex-col gap-4">
+        <div className="flex gap-4">
+          <button className="flex-1 bg-black text-white h-14 font-bold uppercase tracking-[0.2em] text-[11px] hover:bg-brand-gold transition-all shadow-xl active:scale-95">
+            Add to Bag
+          </button>
+          <button className="w-14 h-14 border border-gray-100 flex items-center justify-center hover:border-brand-gold hover:text-brand-gold transition-all group">
+            <Icon name="favorite_border" size="sm" className="group-hover:scale-110 transition-transform" />
+          </button>
+        </div>
+        <button className="w-full border-2 border-brand-gold text-brand-gold h-14 font-bold uppercase tracking-[0.2em] text-[11px] hover:bg-brand-gold hover:text-white transition-all active:scale-95">
+          Buy Now
+        </button>
+      </div>
+
       <ProtectionWarranty />
     </div>
   );

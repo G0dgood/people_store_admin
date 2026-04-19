@@ -66,7 +66,7 @@ const Home = () => {
      products={skincareProducts}
     />
 
-    <InquiryForm />
+    {/* <InquiryForm /> */}
 
     <RecommendedItems />
 

@@ -24,64 +24,64 @@ const CartSummary = () => {
    const total = Math.max(0, subtotal - discount + tax);
 
    return (
-      <div className="w-full lg:w-[350px] flex flex-col gap-4">
+      <div className="w-full lg:w-[380px] flex flex-col gap-6">
          {/* Coupon Section */}
-         <div className="bg-white border border-gray-200 p-5 flex flex-col gap-4 ">
-            <span className="text-sm text-gray-400">Have a coupon?</span>
-            <div className="flex">
+         <div className="bg-white border border-gray-100 p-6 flex flex-col gap-4 rounded-2xl shadow-sm">
+            <span className="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Promotion Code</span>
+            <div className="flex border border-gray-100 rounded-full overflow-hidden bg-gray-50/50">
                <input
                   type="text"
-                  placeholder="Add coupon"
-                  className="flex-1 h-10 px-3 border border-gray-300 outline-none focus:border-brand-blue transition-colors text-sm text-gray-900 placeholder-gray-400"
+                  placeholder="Enter code"
+                  className="flex-1 h-12 px-5 bg-transparent outline-none focus:bg-white transition-all text-[11px] font-bold uppercase tracking-widest text-gray-900 placeholder-gray-300"
                />
-               <Button variant="primary" className="h-10 px-4 border border-l-0 border-brand-blue bg-brand-blue text-white font-bold hover:bg-brand-blue/90 transition-colors text-sm shadow-none cursor-pointer">
+               <Button className="h-12 px-6 bg-black text-white font-bold hover:bg-brand-gold transition-all text-[10px] uppercase tracking-widest shadow-none cursor-pointer rounded-none">
                   Apply
                </Button>
             </div>
          </div>
 
          {/* Summary Section */}
-         <div className="bg-white border border-gray-200 p-5 flex flex-col gap-4 ">
-            <div className="flex flex-col gap-2 pb-4 border-b border-gray-200">
-               <div className="flex justify-between text-gray-400 text-sm">
-                  <span>Subtotal:</span>
-                  <span className="text-gray-600 font-medium">₦{subtotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+         <div className="bg-white border border-gray-100 p-8 flex flex-col gap-6 rounded-2xl shadow-sm">
+            <h3 className="font-outfit font-light text-xl uppercase tracking-widest border-b border-gray-100 pb-4">Order <span className="font-bold">Summary</span></h3>
+            
+            <div className="flex flex-col gap-3 pb-6 border-b border-gray-100">
+               <div className="flex justify-between text-[11px] uppercase tracking-widest font-bold">
+                  <span className="text-gray-400">Subtotal</span>
+                  <span className="text-gray-900 font-outfit">₦{subtotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                </div>
-               <div className="flex justify-between text-gray-400 text-sm">
-                  <span>Discount:</span>
-                  <span className="text-[#EB001B] font-medium">- ₦{discount.toFixed(2)}</span>
+               <div className="flex justify-between text-[11px] uppercase tracking-widest font-bold">
+                  <span className="text-gray-400">Discount</span>
+                  <span className="text-brand-gold font-outfit">- ₦{discount.toFixed(2)}</span>
                </div>
-               <div className="flex justify-between text-gray-400 text-sm">
-                  <span>Tax:</span>
-                  <span className="text-[#00B517] font-medium">+ ₦{tax.toFixed(2)}</span>
+               <div className="flex justify-between text-[11px] uppercase tracking-widest font-bold">
+                  <span className="text-gray-400">Estimated Tax</span>
+                  <span className="text-gray-900 font-outfit">+ ₦{tax.toFixed(2)}</span>
                </div>
             </div>
 
             <div className="flex justify-between items-center py-2">
-               <span className="font-bold text-gray-900">Total:</span>
-               <span className="font-bold text-xl text-gray-900">₦{total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+               <span className="font-outfit font-bold text-gray-900 uppercase tracking-widest">Total</span>
+               <span className="font-outfit font-bold text-2xl text-gray-900">₦{total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
             </div>
 
-            <div className="w-full">
+            <div className="w-full pt-2">
                <Button
-                  variant="ghost"
                   disabled={cartItems.length === 0}
-                  className={`w-full text-white font-bold h-12 text-base transition-all ${cartItems.length === 0 ? "opacity-50 cursor-not-allowed bg-gray-400" : "hover:opacity-90 cursor-pointer"}`}
-                  style={{ backgroundColor: cartItems.length > 0 ? "#00B517" : undefined }}
+                  className={`w-full text-white font-bold h-14 text-[11px] uppercase tracking-[0.2em] transition-all rounded-none shadow-xl ${cartItems.length === 0 ? "bg-gray-200 cursor-not-allowed" : "bg-black hover:bg-brand-gold cursor-pointer"}`}
                >
                   {cartItems.length > 0 ? (
                     <Link href="/checkout" className="w-full h-full flex items-center justify-center">
-                      Checkout
+                      Proceed to Checkout
                     </Link>
                   ) : (
-                    <span>Checkout</span>
+                    <span>Proceed to Checkout</span>
                   )}
                </Button>
             </div>
 
-            <div className="flex items-center justify-center gap-3 pt-2">
+            <div className="flex items-center justify-center gap-4 pt-4 border-t border-gray-100">
                {["amex", "mastercard", "applepay", "visa", "pp"].map((pay, idx) => (
-                  <div key={idx} className="w-9 h-6 relative grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all cursor-pointer">
+                  <div key={idx} className="w-10 h-7 relative opacity-40 hover:opacity-100 transition-all cursor-pointer">
                      <Image src={`/payment/Payment=payment, Pay-type=${pay}.png`} alt={pay} fill className="object-contain" />
                   </div>
                ))}

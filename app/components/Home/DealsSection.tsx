@@ -64,20 +64,20 @@ const DealsSection = () => {
   };
 
   return (
-    <section className="w-full bg-white border border-gray-200 flex flex-col md:flex-row overflow-hidden">
-      <div className="w-full md:w-72 p-6 border-b md:border-b-0 md:border-r border-gray-200 flex md:flex-col justify-between md:justify-start items-center md:items-start gap-4 md:gap-6">
-        <div className="flex flex-col">
-          <h3 className="text-lg md:text-xl font-bold text-gray-900">Deals and offers</h3>
-          <p className="text-gray-400 text-xs md:text-sm">Luxury Fragrance</p>
+    <section className="w-full bg-white flex flex-col md:flex-row overflow-hidden rounded-2xl shadow-sm border border-gray-100">
+      <div className="w-full md:w-80 p-8 border-b md:border-b-0 md:border-r border-gray-100 flex md:flex-col justify-between md:justify-center items-center md:items-start gap-6 bg-gray-50/50">
+        <div className="flex flex-col gap-1">
+          <h3 className="text-xl md:text-2xl font-outfit font-bold text-gray-900 uppercase tracking-wider">Limited <span className="text-brand-gold">Offers</span></h3>
+          <p className="text-gray-500 text-xs md:text-sm font-medium tracking-wide">Curated Luxury Fragrances</p>
         </div>
         <div className="flex gap-2">
           {timerUnits.map((t, idx) => (
             <div
               key={idx}
-              className="flex flex-col items-center justify-center w-11 h-11 md:w-12 md:h-12 bg-[#F7F7F7] md:bg-gray-600 text-gray-900 md:text-white border border-gray-200 md:border-none"
+              className="flex flex-col items-center justify-center w-12 h-12 md:w-14 md:h-14 bg-black text-white rounded-lg shadow-lg"
             >
-              <span className="text-sm font-bold">{t.v}</span>
-              <span className="text-[9px] md:text-[10px] opacity-60 font-medium">{t.l}</span>
+              <span className="text-sm md:text-base font-bold text-brand-gold">{t.v}</span>
+              <span className="text-[8px] md:text-[9px] uppercase tracking-widest font-bold opacity-60">{t.l}</span>
             </div>
           ))}
         </div>
@@ -95,9 +95,12 @@ const DealsSection = () => {
               <motion.div
                 variants={itemVariants}
                 whileHover={{ y: -5, transition: { type: "spring", stiffness: 300, damping: 15 } }}
-                className="w-[140px] md:w-[200px] p-4 md:p-6 flex flex-col items-center gap-2 md:gap-3 hover:bg-gray-50 transition-colors cursor-pointer h-full"
+                className="w-[160px] md:w-[220px] p-6 md:p-8 flex flex-col items-center gap-4 hover:bg-gray-50/80 transition-all duration-500 cursor-pointer h-full"
               >
-                <div className="w-24 h-24 md:w-32 md:h-32 relative bg-white border border-gray-50 p-2 flex items-center justify-center">
+                <div className="w-28 h-28 md:w-40 md:h-40 relative bg-white rounded-xl shadow-sm p-4 flex items-center justify-center group-hover:shadow-md transition-shadow">
+                  <div className="absolute top-2 right-2 z-10 bg-brand-gold text-white text-[9px] font-black px-2 py-1 rounded-full uppercase tracking-widest">
+                    {prod.discount}
+                  </div>
                   <Image
                     src={prod.image}
                     alt={prod.name}
@@ -108,25 +111,15 @@ const DealsSection = () => {
                 <p className="text-xs md:text-sm text-center line-clamp-1 text-gray-600 group-hover:text-brand-blue transition-colors font-medium">
                   {prod.name}
                 </p>
-                <span className="px-3 py-1 bg-[#FFE3E3] text-[#EB001B] text-[10px] md:text-xs font-bold">
-                  {prod.discount}
-                </span>
 
                 {/* Hover Actions */}
-                <div className="mt-2 flex flex-col gap-2 w-full opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div className="flex gap-1">
-                    <Button variant="ghost" size="sm" className="flex-1 text-[9px] h-7 font-bold border-gray-200">
-                      Details
-                    </Button>
-                    <Button
-                      onClick={(e) => handleAddToCart(e, prod)}
-                      variant="primary"
-                      size="sm"
-                      className="flex-1 text-[9px] h-7 font-bold shadow-none"
-                    >
-                      + Cart
-                    </Button>
-                  </div>
+                <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <Button
+                    onClick={(e) => handleAddToCart(e, prod)}
+                    className="bg-black text-white hover:bg-brand-gold text-[10px] font-bold uppercase tracking-widest px-6 py-2 rounded-none transform translate-y-4 group-hover:translate-y-0 transition-all duration-300"
+                  >
+                    Quick Add
+                  </Button>
                 </div>
               </motion.div>
             </Link>

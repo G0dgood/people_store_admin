@@ -100,8 +100,8 @@ const NavItem: React.FC<NavItemProps> = ({ item, isCollapsed, pathname, onHover 
         }}
         onMouseLeave={() => onHover(null, null)}
         className={`flex items-center gap-3 px-4 py-2.5 rounded-[6px] transition-all text-sm font-medium w-full ${isCollapsed ? "justify-center px-2" : ""} ${isActive
-          ? "bg-brand-blue text-white shadow-md shadow-blue-100"
-          : "text-gray-500 hover:bg-brand-blue-light hover:text-brand-blue"
+          ? "bg-brand-gold text-white shadow-md shadow-brand-gold/20"
+          : "text-gray-500 hover:bg-brand-gold/10 hover:text-brand-gold"
           }`}
       >
         {typeof item.icon === "string" ? (
@@ -129,10 +129,10 @@ const PortalTooltip = ({ label, rect }: { label: string; rect: DOMRect }) => {
         initial={{ opacity: 0, x: -10 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: -10 }}
-        className="bg-[#1D3557] text-white text-[10px] font-bold px-3 py-2 rounded-[4px] shadow-xl whitespace-nowrap relative flex items-center"
+        className="bg-black text-white text-[10px] font-bold px-3 py-2 rounded-[4px] shadow-xl whitespace-nowrap relative flex items-center"
       >
         {/* Arrow */}
-        <div className="absolute left-[-4px] top-1/2 -translate-y-1/2 w-2 h-2 bg-[#1D3557] rotate-45" />
+        <div className="absolute left-[-4px] top-1/2 -translate-y-1/2 w-2 h-2 bg-black rotate-45" />
         <span className="relative z-10 uppercase tracking-widest">{label}</span>
       </motion.div>
     </div>,
@@ -177,8 +177,8 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
             <img src="/brand_logo/logo-symbol.svg" alt="Bloom & Mist" className="h-full object-contain" />
           </div>
           {!isCollapsed && (
-            <span className="font-black text-xl tracking-tighter text-[#8CB7F5] font-inter whitespace-nowrap animate-in fade-in slide-in-from-left-2 duration-500">
-              Bloom & Mist
+            <span className="font-outfit font-light text-xl tracking-[0.1em] text-brand-gold uppercase whitespace-nowrap animate-in fade-in slide-in-from-left-2 duration-500">
+              Bloom <span className="font-bold">Mist</span>
             </span>
           )}
         </div>

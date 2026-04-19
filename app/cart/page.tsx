@@ -22,47 +22,53 @@ export default function CartPage() {
     <div className="flex flex-col min-h-screen bg-white">
       <Header />
 
-      <div className="flex-1 max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 py-4 md:py-6 flex flex-col gap-6 md:gap-8 w-full">
-        <h2 className="text-xl md:text-2xl font-bold text-gray-900"> My cart ({cartItems.length})</h2>
+      <div className="flex-1 max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 py-4 md:py-8 flex flex-col gap-6 md:gap-10 w-full">
+        <h2 className="text-2xl md:text-4xl font-outfit font-light text-gray-900 uppercase tracking-[0.1em]"> My <span className="font-bold">cart</span> <span className="text-sm md:text-lg text-gray-400 normal-case tracking-normal ml-2">({cartItems.length} items)</span></h2>
 
-        <div className="flex flex-col lg:flex-row gap-6 md:gap-8 items-start">
+        <div className="flex flex-col lg:flex-row gap-8 items-start">
           {/* Cart List Container */}
-          <div className="flex-1 bg-white border border-gray-200 p-4 md:p-6 flex flex-col w-full">
+          <div className="flex-1 bg-white flex flex-col w-full">
             {cartItems.length > 0 ? (
-              cartItems.map((item) => (
-                <CartItem key={item.id} {...item} />
-              ))
+              <div className="flex flex-col border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
+                {cartItems.map((item) => (
+                  <CartItem key={item.id} {...item} />
+                ))}
+              </div>
             ) : (
-              <div className="py-12 flex flex-col items-center gap-4 text-center">
-                <div className="w-16 h-16 bg-gray-50 flex items-center justify-center text-gray-400">
+              <div className="py-20 flex flex-col items-center gap-8 text-center bg-gray-50/50 rounded-2xl border border-dashed border-gray-200">
+                <div className="w-24 h-24 bg-white shadow-xl rounded-full flex items-center justify-center text-brand-gold">
                   <Icon name="shopping_cart" size="md" />
                 </div>
-                <div className="flex flex-col gap-1">
-                  <p className="text-gray-900 font-bold">Your cart is empty</p>
-                  <p className="text-gray-500 text-sm">Looks like you haven't added anything to your cart yet.</p>
+                <div className="flex flex-col gap-3">
+                  <p className="text-xl md:text-2xl font-outfit font-light text-gray-900 uppercase tracking-widest">Your cart is <span className="font-bold">empty</span></p>
+                  <p className="text-gray-500 text-xs uppercase tracking-wider font-medium">Looks like you haven't added anything to your cart yet.</p>
                 </div>
+                <Link href="/products">
+                  <Button className="bg-black text-white px-12 py-4 font-bold uppercase tracking-[0.2em] text-[10px] hover:bg-brand-gold transition-all shadow-lg rounded-none">
+                    Start Shopping
+                  </Button>
+                </Link>
               </div>
             )}
 
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4 pt-8">
-              <Link href="/products" className="w-full md:w-auto">
-                <Button
-                  className="w-full md:w-fit bg-brand-blue text-white px-8 h-10"
-                  iconLeft={<Icon name="arrow_back white" size="xs" />}
-                >
-                  Back to shop
-                </Button>
-              </Link>
-              {cartItems.length > 0 && (
+            {cartItems.length > 0 && (
+              <div className="flex flex-col md:flex-row justify-between items-center gap-4 pt-10">
+                <Link href="/products" className="w-full md:w-auto">
+                  <Button
+                    className="w-full md:w-fit bg-transparent text-black border border-black px-10 h-12 font-bold uppercase tracking-widest text-[10px] hover:bg-black hover:text-white transition-all rounded-none"
+                    iconLeft={<Icon name="arrow_back" size="xs" />}
+                  >
+                    Continue Shopping
+                  </Button>
+                </Link>
                 <Button
                   onClick={() => setIsClearModalOpen(true)}
-                  variant="ghost"
-                  className="w-full md:w-auto text-brand-blue bg-white border border-gray-200 px-6 h-10 hover:bg-gray-50 transition-colors"
+                  className="w-full md:w-auto text-red-500 bg-transparent border border-red-200 px-8 h-12 font-bold uppercase tracking-widest text-[10px] hover:bg-red-50 transition-all rounded-none"
                 >
-                  Remove all
+                  Clear All Items
                 </Button>
-              )}
-            </div>
+              </div>
+            )}
           </div>
 
           {/* Summary Sidebar */}

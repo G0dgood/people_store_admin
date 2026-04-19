@@ -17,26 +17,27 @@ const ProductGallery = () => {
   const [activeImage, setActiveImage] = useState(images[0]);
 
   return (
-    <div className="flex flex-col gap-5 w-full max-w-[560px]">
+    <div className="flex flex-col gap-6 w-full">
       {/* Main Image */}
-      <div className="relative w-full aspect-square bg-white border border-gray-200 overflow-hidden flex items-center justify-center p-4">
+      <div className="relative w-full aspect-square bg-white border border-gray-100 overflow-hidden flex items-center justify-center p-8 rounded-2xl shadow-sm group">
         <Image
           src={activeImage}
           alt="Product View"
           fill
-          className="object-contain p-2"
+          className="object-contain p-4 transition-transform duration-700 group-hover:scale-110"
+          priority
         />
       </div>
 
       {/* Thumbnails */}
-      <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-none">
+      <div className="flex items-center gap-4 overflow-x-auto pb-4 scrollbar-none">
         {images.map((img, idx) => (
           <button
             key={idx}
             onClick={() => setActiveImage(img)}
             className={`
-               relative w-14 h-14 flex-shrink-0 border overflow-hidden bg-white p-1 transition-all
-               ${activeImage === img ? "border-brand-blue" : "border-gray-200 hover:border-gray-300"}
+               relative w-20 h-20 flex-shrink-0 border overflow-hidden bg-white p-2 transition-all duration-300 rounded-xl
+               ${activeImage === img ? "border-brand-gold shadow-md" : "border-gray-100 hover:border-brand-gold/30"}
              `}
           >
             <div className="relative w-full h-full">

@@ -164,14 +164,12 @@ const ProductsPage = () => {
         />
 
         {/* Breadcrumbs */}
-        <div className="hidden md:flex items-center gap-2 text-sm text-gray-400 overflow-x-auto whitespace-nowrap scrollbar-none pb-2 px-4 md:px-0">
-          <Link href="/" className="hover:text-brand-blue">Home</Link>
+        <div className="hidden md:flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-400 overflow-x-auto whitespace-nowrap scrollbar-none pb-2 px-4 md:px-0 border-b border-gray-100">
+          <Link href="/" className="hover:text-brand-gold transition-colors font-bold">Home</Link>
           <Icon name="chevron_right" size="xs" />
-          <Link href="#" className="hover:text-brand-blue">Clothings</Link>
+          <Link href="/products" className="hover:text-brand-gold transition-colors font-bold">Fragrances</Link>
           <Icon name="chevron_right" size="xs" />
-          <Link href="#" className="hover:text-brand-blue">Men's wear</Link>
-          <Icon name="chevron_right" size="xs" />
-          <span className="text-gray-600 font-medium">Summer clothing</span>
+          <span className="text-gray-900 font-bold">All Collections</span>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-6 items-start px-4 md:px-0 mt-3 md:mt-0">

@@ -56,18 +56,18 @@ const Footer = () => {
       <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-12 mb-20">
         {/* Brand Column */}
         <div className="lg:col-span-2">
-          <div className="flex items-center gap-2 mb-6">
-            <div className="h-8 overflow-hidden brightness-0 invert">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="h-10 overflow-hidden invert">
               <img src="/brand_logo/logo-symbol.svg" alt="Bloom & Mist" className="h-full object-contain" />
             </div>
-            <span className="font-black text-2xl tracking-tighter text-white font-inter whitespace-nowrap">
-              Bloom & Mist
+            <span className="font-outfit font-light text-2xl tracking-[0.2em] text-white uppercase whitespace-nowrap">
+              Bloom <span className="text-brand-gold">&</span> Mist
             </span>
           </div>
-          <p className="text-gray-400 text-sm leading-relaxed max-w-[280px]">
+          <p className="text-gray-400 text-[13px] leading-relaxed max-w-[280px] font-light tracking-wide">
             The premier destination for Signature Fragrances, Luxury Skincare, and bespoke Boutique Gifts. Experience elegance in every detail.
           </p>
-          <div className="flex items-center gap-4 mt-8">
+          <div className="flex items-center gap-4 mt-10">
             {[
               { name: "facebook", icon: "social/facebook" },
               { name: "twitter", icon: "social/twitter" },
@@ -75,7 +75,7 @@ const Footer = () => {
               { name: "instagram", icon: "social/instagram" },
               { name: "youtube", icon: "social/youtube" }
             ].map((social) => (
-              <div key={social.name} className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center text-white cursor-pointer hover:bg-brand-red transition-all duration-300">
+              <div key={social.name} className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white cursor-pointer hover:border-brand-gold hover:text-brand-gold transition-all duration-500">
                 <Icon name={social.icon} size="sm" />
               </div>
             ))}

@@ -81,12 +81,12 @@ export const SecondaryNavbar: React.FC = () => {
             </AnimatePresence>
           </div>
 
-          <div className="flex items-center gap-6 text-[12px] font-bold uppercase tracking-widest">
+          <div className="flex items-center gap-8 text-[11px] font-bold uppercase tracking-[0.2em]">
             {navLinks.map((link) => (
               <Link
                 key={link.label}
                 href={link.href}
-                className={`transition-colors ${isActive(link.href) ? "text-brand-red font-bold" : "text-neutral-900 hover:text-brand-red"
+                className={`transition-all duration-300 hover:tracking-[0.3em] ${isActive(link.href) ? "text-brand-gold font-bold" : "text-neutral-900 hover:text-brand-gold"
                   }`}
               >
                 {link.label}
@@ -96,7 +96,7 @@ export const SecondaryNavbar: React.FC = () => {
 
             <div className="relative h-full" ref={helpRef}>
               <div
-                className={`flex items-center gap-1 cursor-pointer transition-colors h-full ${isHelpOpen ? "text-brand-red font-bold" : "text-neutral-900 hover:text-brand-red"}`}
+                className={`flex items-center gap-1 cursor-pointer transition-all duration-300 hover:tracking-[0.3em] h-full ${isHelpOpen ? "text-brand-gold font-bold" : "text-neutral-900 hover:text-brand-gold"}`}
                 onClick={() => setIsHelpOpen(prev => !prev)}
               >
                 Help
@@ -122,16 +122,16 @@ export const SecondaryNavbar: React.FC = () => {
                       {/* Contact Section */}
                       <div className="p-4 border-t border-gray-200 bg-gray-50/30 flex flex-col gap-3">
                         <Button
-                          className="w-full text-white h-11 active:scale-95 transition-all hover:opacity-90 font-bold uppercase text-[11px]"
-                          style={{ backgroundColor: "#A10101" }}
+                          className="w-full text-white h-11 active:scale-95 transition-all hover:opacity-90 font-bold uppercase text-[11px] tracking-widest"
+                          style={{ backgroundColor: "#111111" }}
                           iconLeft={<Icon name="chat" size="sm" />}
                         >
                           Live Chat
                         </Button>
                         <Button
                           variant="secondary"
-                          className="w-full h-11 border-2 font-bold active:scale-95 transition-all uppercase text-[11px]"
-                          style={{ borderColor: "#00B517", color: "#00B517" }}
+                          className="w-full h-11 border-2 font-bold active:scale-95 transition-all uppercase text-[11px] tracking-widest"
+                          style={{ borderColor: "#C5A028", color: "#C5A028" }}
                           iconLeft={<Icon name="social/whatsapp" size="sm" />}
                         >
                           WhatsApp

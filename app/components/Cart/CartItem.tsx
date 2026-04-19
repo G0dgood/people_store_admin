@@ -40,40 +40,38 @@ const CartItem: React.FC<CartItemProps> = ({ id, title, price, image, quantity, 
    };
 
    return (
-      <div className="flex flex-col md:flex-row gap-4 py-6 border-b border-gray-200 last:border-0">
+      <div className="flex flex-col md:flex-row gap-6 p-6 border-b border-gray-100 last:border-0 hover:bg-gray-50/30 transition-colors">
          {/* Item Image */}
-         <div className="w-20 h-20 flex-shrink-0 border border-gray-200 p-2 flex items-center justify-center bg-white">
+         <div className="w-24 h-24 flex-shrink-0 border border-gray-100 p-3 flex items-center justify-center bg-white rounded-xl shadow-sm">
             <div className="relative w-full h-full">
                <Image src={image} alt={title} fill className="object-contain" />
             </div>
          </div>
 
          {/* Item Details */}
-         <div className="flex-1 flex flex-col gap-1.5">
-            <h3 className="text-gray-900 font-medium text-sm leading-tight hover:text-brand-blue cursor-pointer transition-colors max-w-md">
+         <div className="flex-1 flex flex-col gap-2">
+            <h3 className="text-gray-900 font-bold text-[13px] md:text-base uppercase tracking-wider leading-tight hover:text-brand-gold cursor-pointer transition-colors max-w-md">
                {title}
             </h3>
-            <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-400">
+            <div className="flex flex-wrap gap-x-4 gap-y-1 text-[10px] uppercase tracking-widest text-gray-400 font-bold">
                {meta.size && <span>Size: {meta.size}</span>}
                {meta.color && <span>Color: {meta.color}</span>}
                {meta.material && <span>Material: {meta.material}</span>}
                {meta.seller && <span>Seller: {meta.seller}</span>}
             </div>
             <div className="flex items-center gap-4 mt-2">
-               <Button
+               <button
                   onClick={() => removeFromCart(id)}
-                  variant="ghost"
-                  className="!text-[#EB001B] text-xs font-bold px-3 py-1.5 border border-gray-200 hover:bg-red-50 shadow-none h-auto"
+                  className="text-red-500 text-[10px] uppercase tracking-widest font-bold hover:underline transition-all"
                >
                   Remove
-               </Button>
-               <Button
+               </button>
+               <button
                   onClick={handleSaveForLater}
-                  variant="ghost"
-                  className="text-brand-blue text-xs font-bold px-3 py-1.5 border border-gray-200 hover:bg-brand-blue-light shadow-none h-auto"
+                  className="text-brand-gold text-[10px] uppercase tracking-widest font-bold hover:underline transition-all"
                >
                   Save for later
-               </Button>
+               </button>
             </div>
          </div>
 

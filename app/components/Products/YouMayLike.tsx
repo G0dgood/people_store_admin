@@ -31,27 +31,24 @@ const YouMayLike = () => {
   };
 
   return (
-    <div className="w-full lg:w-72 flex-shrink-0 bg-white border border-gray-200 p-5 flex flex-col gap-5">
-      <h3 className="font-bold text-gray-900">You may like</h3>
-      <div className="flex flex-col gap-6">
+    <div className="w-full lg:w-80 flex-shrink-0 bg-white border border-gray-100 p-8 flex flex-col gap-8 rounded-2xl shadow-sm">
+      <h3 className="font-outfit font-light text-xl uppercase tracking-widest border-b border-gray-100 pb-4">You may <span className="font-bold">like</span></h3>
+      <div className="flex flex-col gap-8">
          {items.map((item, idx) => (
-            <div key={idx} className="flex items-center gap-3 group relative cursor-pointer active:scale-95 transition-all">
-              <Link href="/products/detail" className="w-14 h-14 relative flex-shrink-0 border border-gray-200 p-1 group-hover:border-brand-blue transition-colors overflow-hidden bg-gray-50/50">
+            <div key={idx} className="flex items-center gap-4 group relative cursor-pointer active:scale-95 transition-all">
+              <Link href="/products/detail" className="w-16 h-16 relative flex-shrink-0 border border-gray-100 p-2 group-hover:border-brand-gold transition-colors overflow-hidden bg-white rounded-lg shadow-sm">
                  <Image src={item.image} alt={item.name} fill className="object-contain transition-transform group-hover:scale-110" />
               </Link>
               <div className="flex-1 flex flex-col gap-1 overflow-hidden">
-                 <Link href="/products/detail" className="text-sm font-medium text-gray-900 line-clamp-2 leading-tight hover:text-brand-blue transition-colors">
+                 <Link href="/products/detail" className="text-[11px] font-bold uppercase tracking-wider text-gray-900 line-clamp-2 leading-tight hover:text-brand-gold transition-colors">
                     {item.name}
                  </Link>
                  <div className="flex items-center justify-between">
-                    <span className="text-xs text-gray-400 font-normal">{item.price}</span>
-                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                       <Link href="/products/detail" title="View details" className="text-brand-blue hover:scale-110 transition-transform">
-                          <Icon name="visibility" size="xs" />
-                       </Link>
+                    <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">{item.price}</span>
+                    <div className="flex items-center gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
                        <button 
                          onClick={(e) => handleAddToCart(e, item)}
-                         className="text-brand-blue hover:scale-110 transition-transform p-1 hover:bg-brand-blue/5 rounded-full"
+                         className="text-brand-gold hover:scale-110 transition-transform p-1.5 bg-gray-50 rounded-full"
                          title="Add to cart"
                        >
                           <Icon name="shopping_cart" size="xs" />

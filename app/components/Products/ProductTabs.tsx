@@ -7,16 +7,18 @@ const ProductTabs = () => {
   const tabs = ["Description", "Reviews"];
 
   return (
-    <div className="flex-1 bg-white border border-gray-200 overflow-hidden flex flex-col min-h-[600px]">
+    <div className="flex-1 bg-white flex flex-col min-h-[500px]">
       {/* Tab Headers */}
-      <div className="flex border-b border-gray-200 bg-white">
+      <div className="flex gap-12 border-b border-gray-100 bg-white mb-8">
         {tabs.map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`
-              px-8 py-4 text-sm font-bold transition-colors relative
-              ${activeTab === tab ? "text-brand-blue border-b-2 border-brand-blue" : "text-gray-400 hover:text-gray-600"}
+              pb-4 text-[11px] uppercase tracking-[0.2em] font-bold transition-all duration-300 relative
+              ${activeTab === tab 
+                ? "text-black border-b-2 border-brand-gold" 
+                : "text-gray-400 hover:text-black"}
             `}
           >
             {tab}
@@ -24,7 +26,7 @@ const ProductTabs = () => {
         ))}
       </div>
 
-      <div className="p-8">
+      <div className="py-2">
         {activeTab === "Description" && <ProductDescription />}
         {activeTab === "Reviews" && <ProductReviews />}
       </div>

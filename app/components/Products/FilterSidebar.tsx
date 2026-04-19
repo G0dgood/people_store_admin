@@ -17,19 +17,19 @@ const FilterSection: React.FC<FilterSectionProps> = ({ title, children, defaultO
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <div className="border-t border-gray-200 py-4 first:border-t-0">
+    <div className="border-t border-gray-100 py-6 first:border-t-0">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between mb-4 group"
+        className="w-full flex items-center justify-between mb-5 group"
       >
-        <h4 className="font-bold text-gray-900 text-sm group-hover:text-brand-blue transition-colors">{title}</h4>
+        <h4 className="font-outfit font-bold text-gray-900 text-xs uppercase tracking-widest group-hover:text-brand-gold transition-colors">{title}</h4>
         <Icon
           name="expand_more"
           size="xs"
-          className={`text-gray-400 transform transition-transform ${isOpen ? "rotate-180" : ""}`}
+          className={`text-gray-300 transform transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
         />
       </button>
-      {isOpen && <div className="flex flex-col gap-2">{children}</div>}
+      {isOpen && <div className="flex flex-col gap-3">{children}</div>}
     </div>
   );
 };
@@ -97,17 +97,17 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilters }) =>
     <aside className="w-64 flex-shrink-0 flex flex-col gap-4">
       {/* Categories */}
       <FilterSection title="Category">
-        <ul className="flex flex-col gap-2 text-sm">
+        <ul className="flex flex-col gap-3 text-[11px] uppercase tracking-widest font-bold">
           {["Signature Fragrance", "Luxury Skincare", "Boutique Gift Sets", "Body & Bath", "Home Fragrance"].map((cat) => (
             <li
               key={cat}
               onClick={() => handleCategoryClick(cat)}
-              className={`cursor-pointer transition-colors ${filters.category === cat ? "text-brand-blue font-bold" : "text-gray-600 hover:text-brand-blue"}`}
+              className={`cursor-pointer transition-all duration-300 hover:tracking-[0.15em] ${filters.category === cat ? "text-brand-gold" : "text-gray-500 hover:text-brand-gold"}`}
             >
               {cat}
             </li>
           ))}
-          <li className="text-brand-blue font-medium mt-2 cursor-pointer">View all boutique</li>
+          <li className="text-brand-gold font-bold mt-2 cursor-pointer hover:tracking-[0.15em] transition-all duration-300">View all boutique</li>
         </ul>
       </FilterSection>
 
@@ -120,9 +120,10 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilters }) =>
             checked={filters.brands.includes(brand)}
             onChange={() => handleBrandToggle(brand)}
             size="lg"
+            className="text-[11px] font-bold uppercase tracking-widest text-gray-600"
           />
         ))}
-        <span className="text-brand-blue text-sm font-medium mt-1 cursor-pointer">View all houses</span>
+        <span className="text-brand-gold text-[10px] font-bold uppercase tracking-widest mt-2 cursor-pointer hover:tracking-[0.15em] transition-all duration-300">View all houses</span>
       </FilterSection>
 
       {/* Price Range */}
@@ -143,16 +144,16 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilters }) =>
               type="number"
               value={filters.priceRange[0]}
               onChange={handleMinPriceChange}
-              className="w-full border border-gray-200 px-2 py-1.5 text-sm outline-none focus:border-brand-blue"
+              className="w-full border border-gray-100 px-3 py-2 text-[10px] font-bold uppercase tracking-widest outline-none focus:border-brand-gold bg-gray-50/50"
             />
           </div>
           <div className="flex flex-col gap-1 flex-1">
-            <span className="text-xs text-gray-400">Max</span>
+            <span className="text-[10px] uppercase tracking-widest font-bold text-gray-400">Max</span>
             <input
               type="number"
               value={filters.priceRange[1]}
               onChange={handleMaxPriceChange}
-              className="w-full border border-gray-200 px-2 py-1.5 text-sm outline-none focus:border-brand-blue"
+              className="w-full border border-gray-100 px-3 py-2 text-[10px] font-bold uppercase tracking-widest outline-none focus:border-brand-gold bg-gray-50/50"
             />
           </div>
         </div>

@@ -58,47 +58,47 @@ const Header = () => {
         </div>
 
         {/* Desktop Logo */}
-        <Link href="/" className="flex-shrink-0 hidden lg:flex items-center gap-2">
-          <div className="h-10 overflow-hidden brightness-0">
-            <img src="/brand_logo/logo-symbol.svg" alt="Bloom & Mist" className="h-full object-contain" />
+        <Link href="/" className="flex-shrink-0 hidden lg:flex items-center gap-3">
+          <div className="h-10 overflow-hidden">
+            <img src="/brand_logo/logo-symbol.svg" alt="Bloom & Mist" className="h-full object-contain brightness-0" />
           </div>
-          <span className="font-black text-2xl tracking-tighter text-neutral-900 font-inter whitespace-nowrap animate-in fade-in slide-in-from-left-2 duration-500">
-            Bloom & Mist
+          <span className="font-outfit font-light text-2xl tracking-[0.2em] text-neutral-900 uppercase whitespace-nowrap animate-in fade-in slide-in-from-left-2 duration-500">
+            Bloom <span className="text-brand-gold">&</span> Mist
           </span>
         </Link>
 
         {/* Search Bar (Desktop: inline, Mobile: hidden or secondary) */}
-        <div className="flex-1 max-w-[660px] h-11 border-2 border-neutral-900 hidden md:flex relative z-50">
-          <div className="flex-1 flex items-center px-3 bg-white border-r border-neutral-200 relative" ref={searchRef}>
+        <div className="flex-1 max-w-[660px] h-11 border border-neutral-200 hidden md:flex relative z-50 rounded-full overflow-hidden bg-gray-50/50">
+          <div className="flex-1 flex items-center px-5 relative" ref={searchRef}>
+            <Icon name="search" size="sm" className="text-gray-400 mr-3" />
             <input
               type="text"
-              placeholder="Search"
+              placeholder="Search fragrances, skincare, brands..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => setIsSearchFocused(true)}
-              className="w-full text-sm outline-none text-gray-700 bg-transparent focus:outline-none"
+              className="w-full text-sm outline-none text-gray-700 bg-transparent focus:outline-none placeholder:text-gray-400 font-medium"
             />
             {/* Search Autocomplete Dropdown */}
             <SearchAutocomplete searchQuery={searchQuery} isVisible={isSearchFocused} />
           </div>
-          <div className="relative z-50 flex items-stretch" ref={categoryRef}>
+          <div className="relative z-50 flex items-stretch border-l border-neutral-200" ref={categoryRef}>
             <div
               onClick={(e) => {
                 e.stopPropagation();
                 setIsCategoryOpen(prev => !prev);
               }}
-              className="w-32 h-full flex items-center justify-between px-3 bg-white cursor-pointer border-r border-neutral-200 hover:bg-gray-50 transition-colors"
+              className="w-40 h-full flex items-center justify-between px-4 bg-transparent cursor-pointer hover:bg-gray-100 transition-colors"
             >
-              <span className="text-sm text-gray-700 truncate pr-2">All category</span>
+              <span className="text-xs font-bold uppercase tracking-wider text-gray-600 truncate pr-2">Categories</span>
               <Icon name="expand_more" size="xs" className={`text-gray-400 flex-shrink-0 transition-transform ${isCategoryOpen ? 'rotate-180' : ''}`} />
             </div>
 
             {/* Category Dropdown */}
             <AnimatePresence>
               {isCategoryOpen && (
-                <div className="absolute top-full left-0 pt-3 w-48 z-[100]" onClick={() => setIsCategoryOpen(false)}>
-                  <DropdownMenu width="100%" className="shadow-lg border border-gray-200">
-                    <DropdownItem label="All categories" isActive />
+                <div className="absolute top-full right-0 pt-3 w-56 z-[100]" onClick={() => setIsCategoryOpen(false)}>
+                  <DropdownMenu width="100%" className="shadow-2xl border border-gray-100 rounded-xl">
                     <DropdownItem label="All categories" isActive />
                     <DropdownItem label="Signature Fragrance" />
                     <DropdownItem label="Luxury Skincare" />
@@ -110,9 +110,6 @@ const Header = () => {
               )}
             </AnimatePresence>
           </div>
-          <Link href="/products" className="bg-neutral-900 px-6 text-white text-sm font-bold hover:bg-black transition-colors flex items-center justify-center">
-            Search
-          </Link>
         </div>
 
         {/* Action Icons */}
