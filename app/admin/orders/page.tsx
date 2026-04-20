@@ -15,26 +15,33 @@ import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import { BulkActionsDrawer } from "../../components/Admin/BulkActionsDrawer";
 import Checkbox from "@/app/components/Checkbox";
 import { HiOutlineEye } from "react-icons/hi2";
+import { Tooltip } from "../../components/Tooltip";
+
 
 const ordersData = [
  {
   id: "#ORD0001",
+  customer: "James Wilson",
   product: "Wireless Bluetooth Headphones", image: "/dashboardImage/Headphones.png", date: "01-01-2025", price: "49.99", payment: "Paid", status: "Delivered"
  },
  {
   id: "#ORD0002",
+  customer: "Sarah Jenkins",
   product: "Men's T-Shirt", image: "/dashboardImage/T-Shirt.png", date: "01-01-2025", price: "14.99", payment: "Unpaid", status: "Pending"
  },
  {
   id: "#ORD0003",
+  customer: "Michael Chen",
   product: "Men's Leather Wallet", image: "/dashboardImage/Wallet.png", date: "01-01-2025", price: "49.99", payment: "Paid", status: "Delivered"
  },
  {
   id: "#ORD0004",
+  customer: "Emily Davis",
   product: "Memory Foam Pillow", image: "/dashboardImage/Pillow.png", date: "01-01-2025", price: "39.99", payment: "Paid", status: "Shipped"
  },
  {
   id: "#ORD0005",
+  customer: "Robert Brown",
   product: "Adjustable Dumbbells",
   image: "/dashboardImage/Dumbbells.png",
   date: "01-01-2025",
@@ -44,6 +51,7 @@ const ordersData = [
  },
  {
   id: "#ORD0006",
+  customer: "Lisa Thompson",
   product: "Coffee Maker",
   image: "/dashboardImage/Coffee Maker.png",
   date: "01-01-2025",
@@ -53,6 +61,7 @@ const ordersData = [
  },
  {
   id: "#ORD0007",
+  customer: "David Miller",
   product: "Casual Baseball Cap",
   image: "/dashboardImage/Cap.png",
   date: "01-01-2025",
@@ -62,6 +71,7 @@ const ordersData = [
  },
  {
   id: "#ORD0008",
+  customer: "Sophia Garcia",
   product: "Full HD Webcam",
   image: "/dashboardImage/Webcam.png",
   date: "01-01-2025",
@@ -71,6 +81,7 @@ const ordersData = [
  },
  {
   id: "#ORD0009",
+  customer: "Andrew Taylor",
   product: "Smart LED Color Bulb",
   image: "/dashboardImage/Bulb.png",
   date: "01-01-2025",
@@ -80,12 +91,13 @@ const ordersData = [
  },
  {
   id: "#ORD0010",
+  customer: "Olivia Martin",
   product: "Men's T-Shirt", image: "/dashboardImage/T-Shirt.png", date: "01-01-2025", price: "14.99", payment: "Unpaid", status: "Delivered"
  },
 ];
 
 const statusConfig = {
- Delivered: { color: "text-blue-500", icon: "Delivered" },
+ Delivered: { color: "text-brand-gold", icon: "Delivered" },
  Shipped: { color: "text-gray-500", icon: "Shipped" },
  Pending: { color: "text-orange-400", icon: "Pending" },
  Cancelled: { color: "text-rose-500", icon: "Cancelled" },
@@ -120,13 +132,13 @@ export default function OrderListing() {
    {/* Header Area */}
    <div className="flex flex-col sm:flex-row justify-end items-center gap-3">
     <div className="flex gap-3 w-full sm:w-auto">
-     <Button shape="rounded-sm" variant="primary"
+     {/* <Button shape="rounded-sm" variant="primary"
       className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold flex-1 sm:flex-initial"
       iconLeft={<Icon name="circle-plus" folder="dashboardIcon" size="sm" />}
       onClick={() => setIsAddOrderModalOpen(true)}
      >
       Add Order
-     </Button>
+     </Button> */}
      <Button shape="rounded-sm" variant="outline"
       className="flex-1 sm:flex-initial"
       iconRight={<Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" className="text-gray-400" />}
@@ -174,10 +186,6 @@ export default function OrderListing() {
          className="!p-2.5 text-gray-400">
          <Icon name="flowbite_arrow-up-down-outline" folder="dashboardIcon" size="sm" />
         </Button>
-        <Button shape="rounded-sm" variant="outline"
-         className="!p-2.5 text-gray-400">
-         <Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />
-        </Button>
        </div>
       </div>
      </div>
@@ -195,6 +203,7 @@ export default function OrderListing() {
          />
         </th>
         <th>Order Id</th>
+        <th>Customer</th>
         <th >Product</th>
         <th>Date</th>
         <th>Price</th>
@@ -216,6 +225,9 @@ export default function OrderListing() {
           <span className="text-sm font-semibold text-gray-900">{order.id}</span>
          </td>
          <td>
+          <span className="text-sm font-bold text-gray-900">{(order as any).customer}</span>
+         </td>
+         <td>
           <div className="flex items-center gap-3 min-w-[200px]">
            <div className="w-10 h-10 rounded-[6px] overflow-hidden border border-gray-50 bg-gray-50 flex-shrink-0">
             <img src={order.image} alt={order.product} className="w-full h-full object-cover" />
@@ -223,11 +235,12 @@ export default function OrderListing() {
            <span className="text-sm font-semibold text-gray-700 leading-tight">{order.product}</span>
           </div>
          </td>
+
          <td className="admin-table-td text-sm font-medium text-gray-500">{order.date}</td>
          <td className="admin-table-td text-sm font-bold text-gray-900">{order.price}</td>
          <td>
           <div className="flex items-center gap-2">
-           <span className={`w-1.5 h-1.5 rounded-full ${order.payment === "Paid" ? "bg-blue-500" : "bg-rose-500"}`}></span>
+           <span className={`w-1.5 h-1.5 rounded-full ${order.payment === "Paid" ? "bg-brand-gold" : "bg-rose-500"}`}></span>
            <span className="text-sm font-medium text-gray-700">{order.payment}</span>
           </div>
          </td>
@@ -243,19 +256,24 @@ export default function OrderListing() {
          </td>
          <td className="text-right">
           <div className="flex justify-end items-center gap-4">
-           <Link href={`/admin/orders/${order.id.replace("#", "")}`}>
+           <Tooltip text="View Details" position="top">
+            <Link href={`/admin/orders/${order.id.replace("#", "")}`}>
+             <Button shape="rounded-sm" variant="outline"
+              className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all">
+              <HiOutlineEye className="text-lg" />
+             </Button>
+            </Link>
+           </Tooltip>
+           <Tooltip text="Delete Order" position="top">
             <Button shape="rounded-sm" variant="outline"
-             className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all">
-             <HiOutlineEye className="text-lg" />
+             className="!p-1.5 text-gray-400 hover:text-white hover:bg-rose-500 hover:border-rose-500 transition-all"
+             onClick={() => setOrderToDelete(order.id)}
+            >
+             <Icon name="Delete" folder="dashboardIcon" size="sm" />
             </Button>
-           </Link>
-           <Button shape="rounded-sm" variant="outline"
-            className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
-            onClick={() => setOrderToDelete(order.id)}
-           >
-            <Icon name="Delete" folder="dashboardIcon" size="sm" />
-           </Button>
+           </Tooltip>
           </div>
+
          </td>
         </tr>
        ))}
@@ -269,10 +287,10 @@ export default function OrderListing() {
      totalPages={24}
      onPageChange={setCurrentPage}
     />
-    <AddOrderModal
+    {/* <AddOrderModal
      isOpen={isAddOrderModalOpen}
      onClose={() => setIsAddOrderModalOpen(false)}
-    />
+    /> */}
 
     <OrdersMoreActionsDrawer
      isOpen={isMoreActionDrawerOpen && selectedOrders.length === 0}

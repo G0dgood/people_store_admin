@@ -296,7 +296,7 @@ export default function CustomersListing() {
           <td className="text-right">
            <div className="flex justify-end gap-2 px-2">
             <Button shape="rounded-sm" variant="outline"
-             className="!p-1.5 text-gray-400 hover:text-brand-gold hover:bg-gray-50 transition-all"
+             className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
              onClick={(e) => {
               e.stopPropagation();
               setCustomerToMessage(customer);
@@ -306,7 +306,7 @@ export default function CustomersListing() {
              <Icon name="tabler_message" folder="dashboardIcon" size="sm" />
             </Button>
             <Button shape="rounded-sm" variant="outline"
-             className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
+             className="!p-1.5 text-gray-400 hover:text-white hover:bg-rose-500 hover:border-rose-500 transition-all"
              onClick={(e) => {
               e.stopPropagation();
               setCustomerToDelete(customer);

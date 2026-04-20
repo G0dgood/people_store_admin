@@ -13,6 +13,9 @@ import Checkbox from "@/app/components/Checkbox";
 import { AddCouponModal } from "../../components/Admin/AddCouponModal";
 import { CouponsMoreActionsDrawer } from "../../components/Admin/CouponsMoreActionsDrawer";
 import { BulkActionsDrawer } from "../../components/Admin/BulkActionsDrawer";
+import { LuPencilLine } from "react-icons/lu";
+import { Tooltip } from "../../components/Tooltip";
+
 
 const couponsData = [
   { code: "SUMMER SALE", discount: "15%", type: "Percentage", startDate: "01-06-2025", endDate: "30-08-2025", status: "Active" },
@@ -26,9 +29,9 @@ const couponsData = [
 ];
 
 const statusConfig = {
-  Active: "text-blue-500 bg-brand-blue-light",
+  Active: "text-brand-gold bg-brand-gold/10",
   Expired: "text-rose-500 bg-rose-50/50",
-  Scheduled: "text-brand-blue bg-brand-blue-light",
+  Scheduled: "text-brand-gold bg-brand-gold/10",
 };
 
 export default function CouponsListing() {
@@ -89,12 +92,12 @@ export default function CouponsListing() {
             onChange={setActiveTab} id={""} />
 
           <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
-            <Input shape="rounded-sm" 
+            <Input shape="rounded-sm"
               type="text"
               placeholder="Search coupon code"
-              containerClassName="w-full lg:w-80 xl:w-72"
-              className="bg-white border-gray-200 placeholder:text-gray-400 text-sm font-medium"
-              suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
+              containerClassName="w-full lg:w-80 xl:w-72 group"
+              className="bg-white border-gray-200 placeholder:text-gray-400 text-sm font-medium focus:border-brand-gold focus:ring-1 focus:ring-brand-gold"
+              suffixElement={<Icon name="search-01" folder="dashboardIcon" size="xs" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-brand-gold transition-colors" />}
             />
 
             <div className="flex items-center gap-3 w-full sm:w-auto">
@@ -102,16 +105,12 @@ export default function CouponsListing() {
 
               <div className="flex gap-2 ml-auto sm:ml-0">
                 <Button shape="rounded-sm" variant="outline"
-                  className="!p-2.5 text-gray-400">
+                  className="!p-2.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold border-gray-200 transition-all">
                   <Icon name="sort" folder="dashboardIcon" size="sm" />
                 </Button>
                 <Button shape="rounded-sm" variant="outline"
-                  className="!p-2.5 text-gray-400">
+                  className="!p-2.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold border-gray-200 transition-all">
                   <Icon name="flowbite_arrow-up-down-outline" folder="dashboardIcon" size="sm" />
-                </Button>
-                <Button shape="rounded-sm" variant="outline"
-                  className="!p-2.5 text-gray-400">
-                  <Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />
                 </Button>
               </div>
             </div>
@@ -149,10 +148,10 @@ export default function CouponsListing() {
                   </td>
                   <td>
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-[4px] bg-brand-blue-light flex items-center justify-center">
-                        <Icon name="local_offer" folder="icon" size="sm" className="text-brand-blue" />
+                      <div className="w-8 h-8 rounded-[4px] bg-brand-gold/10 flex items-center justify-center">
+                        <Icon name="local_offer" folder="icon" size="sm" className="text-brand-gold" />
                       </div>
-                      <span className="text-xs font-bold text-[#1D3557] group-hover:text-blue-600 transition-colors">
+                      <span className="text-xs font-bold text-[#1D3557] group-hover:text-brand-gold transition-colors">
                         {coupon.code}
                       </span>
                     </div>
@@ -168,22 +167,27 @@ export default function CouponsListing() {
                   </td>
                   <td className="text-right">
                     <div className="flex justify-end items-center gap-4">
-                      <Button shape="rounded-sm" variant="outline"
-                        className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
-                        onClick={() => {
-                          setCouponToEdit(coupon);
-                          setIsEditDrawerOpen(true);
-                        }}
-                      >
-                        <Icon name="settings" folder="dashboardIcon" size="sm" />
-                      </Button>
-                      <Button shape="rounded-sm" variant="outline"
-                        className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
-                        onClick={() => setCouponToDelete(coupon)}
-                      >
-                        <Icon name="Delete" folder="dashboardIcon" size="sm" />
-                      </Button>
+                      <Tooltip text="Edit Coupon" position="top">
+                        <Button shape="rounded-sm" variant="outline"
+                          className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
+                          onClick={() => {
+                            setCouponToEdit(coupon);
+                            setIsEditDrawerOpen(true);
+                          }}
+                        >
+                          <Icon name="settings" folder="dashboardIcon" size="sm" />
+                        </Button>
+                      </Tooltip>
+                      <Tooltip text="Delete Coupon" position="top">
+                        <Button shape="rounded-sm" variant="outline"
+                          className="!p-1.5 text-gray-400 hover:text-white hover:bg-rose-500 hover:border-rose-500 transition-all"
+                          onClick={() => setCouponToDelete(coupon)}
+                        >
+                          <Icon name="Delete" folder="dashboardIcon" size="sm" />
+                        </Button>
+                      </Tooltip>
                     </div>
+
                   </td>
                 </tr>
               ))}

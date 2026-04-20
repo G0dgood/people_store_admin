@@ -226,7 +226,7 @@ export default function RolesManagement() {
                           <Icon name="settings" folder="dashboardIcon" size="sm" />
                         </Button>
                         <Button shape="rounded-sm" variant="outline"
-                          className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 border-gray-200 transition-all"
+                          className="!p-1.5 text-gray-400 hover:text-white hover:bg-rose-500 hover:border-rose-500 border-gray-200 transition-all"
                           onClick={() => setRoleToDelete(role)}
                         >
                           <Icon name="Delete" folder="dashboardIcon" size="sm" />

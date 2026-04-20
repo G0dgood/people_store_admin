@@ -13,16 +13,18 @@ import { EditBrandDrawer } from "../../components/Admin/EditBrandDrawer";
 import { BulkActionsDrawer } from "../../components/Admin/BulkActionsDrawer";
 import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import { BrandsMoreActionsDrawer } from "../../components/Admin/BrandsMoreActionsDrawer";
+import { Tooltip } from "../../components/Tooltip";
+
 
 const brandsData = [
-  { id: 1, name: "Apple", logo: "/dashboardImage/Electronics.png", category: "Electronics", rating: 4.8, status: "Active" },
-  { id: 2, name: "Nike", logo: "/dashboardImage/Fashion.png", category: "Fashion", rating: 4.5, status: "Active" },
-  { id: 3, name: "Samsung", logo: "/dashboardImage/Frame 4259 copy.png", category: "Electronics", rating: 4.6, status: "Active" },
-  { id: 4, name: "Adidas", logo: "/dashboardImage/T-Shirt.png", category: "Fashion", rating: 4.4, status: "Inactive" },
-  { id: 5, name: "Sony", logo: "/dashboardImage/Accessories.png", category: "Electronics", rating: 4.7, status: "Active" },
-  { id: 6, name: "Logitech", logo: "/dashboardImage/Webcam.png", category: "Accessories", rating: 4.3, status: "Active" },
-  { id: 7, name: "Beats", logo: "/dashboardImage/Headphones.png", category: "Electronics", rating: 4.5, status: "Active" },
-  { id: 8, name: "Dyson", logo: "/dashboardImage/Home & Kitchen.png", category: "Home Appliance", rating: 4.9, status: "Inactive" },
+  { id: 1, name: "Apple", logo: "/dashboardImage/Electronics.png", category: "Electronics", rating: 4.8, status: "Active", inventoryCount: 1420 },
+  { id: 2, name: "Nike", logo: "/dashboardImage/Fashion.png", category: "Fashion", rating: 4.5, status: "Active", inventoryCount: 856 },
+  { id: 3, name: "Samsung", logo: "/dashboardImage/Frame 4259 copy.png", category: "Electronics", rating: 4.6, status: "Active", inventoryCount: 1105 },
+  { id: 4, name: "Adidas", logo: "/dashboardImage/T-Shirt.png", category: "Fashion", rating: 4.4, status: "Inactive", inventoryCount: 642 },
+  { id: 5, name: "Sony", logo: "/dashboardImage/Accessories.png", category: "Electronics", rating: 4.7, status: "Active", inventoryCount: 423 },
+  { id: 6, name: "Logitech", logo: "/dashboardImage/Webcam.png", category: "Accessories", rating: 4.3, status: "Active", inventoryCount: 312 },
+  { id: 7, name: "Beats", logo: "/dashboardImage/Headphones.png", category: "Electronics", rating: 4.5, status: "Active", inventoryCount: 156 },
+  { id: 8, name: "Dyson", logo: "/dashboardImage/Home & Kitchen.png", category: "Home Appliance", rating: 4.9, status: "Inactive", inventoryCount: 89 },
 ];
 
 const statusConfig = {
@@ -107,10 +109,6 @@ export default function BrandsListing() {
                   className="!p-2.5 text-gray-400">
                   <Icon name="flowbite_arrow-up-down-outline" folder="dashboardIcon" size="sm" />
                 </Button>
-                <Button shape="rounded-sm" variant="outline"
-                  className="!p-2.5 text-gray-400">
-                  <Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />
-                </Button>
               </div>
             </div>
           </div>
@@ -127,9 +125,9 @@ export default function BrandsListing() {
                     onChange={toggleAll}
                   />
                 </th>
-                <th>No.</th>
                 <th>Brand</th>
                 <th>Category</th>
+                <th>Inventory No</th>
                 <th>Rating</th>
                 <th>Status</th>
                 <th className="text-right">Action</th>
@@ -144,7 +142,6 @@ export default function BrandsListing() {
                       onChange={() => toggleItem(brand.id)}
                     />
                   </td>
-                  <td className="text-sm font-medium text-gray-900">{index + 1}</td>
                   <td>
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-[6px] border border-gray-200 overflow-hidden bg-white p-1 ring-1 ring-gray-100 flex items-center justify-center">
@@ -156,6 +153,11 @@ export default function BrandsListing() {
                     </div>
                   </td>
                   <td className="text-sm font-bold text-gray-500">{brand.category}</td>
+                  <td>
+                    <span className="text-xs font-black text-brand-gold bg-brand-gold/5 px-2.5 py-1 rounded-[4px] uppercase tracking-wider">
+                      {brand.inventoryCount} items
+                    </span>
+                  </td>
                   <td>
                     <div className="flex items-center gap-1.5">
                       <Icon name="star" folder="dashboardIcon" size="xs" className="text-amber-400" />
@@ -169,25 +171,30 @@ export default function BrandsListing() {
                   </td>
                   <td className="text-right">
                     <div className="flex justify-end items-center gap-4">
-                      <Button shape="rounded-sm" variant="outline"
-                        className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
-                        onClick={() => {
-                          setBrandToEdit(brand);
-                          setIsEditDrawerOpen(true);
-                        }}
-                      >
-                        <Icon name="settings" folder="dashboardIcon" size="sm" />
-                      </Button>
-                      <Button shape="rounded-sm" variant="outline"
-                        className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
-                        onClick={() => {
-                          setBrandToDelete(brand);
-                          setIsDeleteModalOpen(true);
-                        }}
-                      >
-                        <Icon name="Delete" folder="dashboardIcon" size="sm" />
-                      </Button>
+                      <Tooltip text="Edit Brand" position="top">
+                        <Button shape="rounded-sm" variant="outline"
+                          className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
+                          onClick={() => {
+                            setBrandToEdit(brand);
+                            setIsEditDrawerOpen(true);
+                          }}
+                        >
+                          <Icon name="settings" folder="dashboardIcon" size="sm" />
+                        </Button>
+                      </Tooltip>
+                      <Tooltip text="Delete Brand" position="top">
+                        <Button shape="rounded-sm" variant="outline"
+                          className="!p-1.5 text-gray-400 hover:text-white hover:bg-rose-500 hover:border-rose-500 transition-all"
+                          onClick={() => {
+                            setBrandToDelete(brand);
+                            setIsDeleteModalOpen(true);
+                          }}
+                        >
+                          <Icon name="Delete" folder="dashboardIcon" size="sm" />
+                        </Button>
+                      </Tooltip>
                     </div>
+
                   </td>
                 </tr>
               ))}

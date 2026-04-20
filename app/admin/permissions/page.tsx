@@ -22,7 +22,7 @@ const modules = [
 ];
 
 const roles = [
- { id: "sa", name: "Super Admin", color: "bg-blue-500", users: 3 },
+ { id: "sa", name: "Super Admin", color: "bg-brand-gold", users: 3 },
  { id: "ed", name: "Editor", color: "bg-emerald-500", users: 8 },
  { id: "om", name: "Order Mgr", color: "bg-amber-500", users: 5 },
  { id: "st", name: "Support", color: "bg-rose-500", users: 12 },
@@ -138,7 +138,7 @@ export default function PermissionsAccordion() {
        value={searchQuery}
        onChange={(e) => setSearchQuery(e.target.value)}
       />
-      <Icon name="search-01" folder="dashboardIcon" size="xs" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-brand-blue transition-colors" />
+      <Icon name="search-01" folder="dashboardIcon" size="xs" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-brand-gold transition-colors" />
      </div>
      <RowsPerPage value={rowsPerPage} onChange={setRowsPerPage} />
     </div>
@@ -235,7 +235,7 @@ export default function PermissionsAccordion() {
                <td className="py-4 pr-8 text-right">
                 <button
                  onClick={() => toggleModuleRow(role.id, module.id)}
-                 className="w-7 h-7 rounded-lg bg-gray-50 flex items-center justify-center text-gray-300 hover:bg-brand-blue-light hover:text-brand-blue transition-all"
+                 className="w-7 h-7 rounded-lg bg-gray-50 flex items-center justify-center text-gray-300 hover:bg-brand-gold hover:text-white transition-all shadow-sm"
                 >
                  <Icon name="verified" folder="icon" size="md" />
                 </button>

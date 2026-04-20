@@ -27,7 +27,7 @@ const refundsData = [
 ];
 
 const statusStyles = {
-  Completed: { color: "text-blue-500", bg: "bg-blue-500" },
+  Completed: { color: "text-brand-gold", bg: "bg-brand-gold" },
   Canceled: { color: "text-rose-500", bg: "bg-rose-500" },
   Pending: { color: "text-orange-400", bg: "bg-orange-400" },
 };
@@ -114,13 +114,13 @@ export default function RefundsPage() {
               <RowsPerPage value={rowsPerPage} onChange={setRowsPerPage} />
 
               <div className="flex gap-2 ml-auto sm:ml-0">
-                <Button variant="outline" shape="rounded-sm" className="!p-2.5 text-gray-400">
+                <Button variant="outline" shape="rounded-sm" className="!p-2.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold border-gray-200 transition-all">
                   <Icon name="sort" folder="dashboardIcon" size="sm" />
                 </Button>
-                <Button variant="outline" shape="rounded-sm" className="!p-2.5 text-gray-400">
+                <Button variant="outline" shape="rounded-sm" className="!p-2.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold border-gray-200 transition-all">
                   <Icon name="flowbite_arrow-up-down-outline" folder="dashboardIcon" size="sm" />
                 </Button>
-                <Button variant="outline" shape="rounded-sm" className="!p-2.5 text-gray-400">
+                <Button variant="outline" shape="rounded-sm" className="!p-2.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold border-gray-200 transition-all">
                   <Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />
                 </Button>
               </div>
@@ -173,7 +173,7 @@ export default function RefundsPage() {
                   <td className="text-right">
                     <div className="flex justify-end items-center gap-2">
                       <Button shape="rounded-sm" variant="outline"
-                        className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
+                        className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
                         onClick={() => {
                           setActionTarget(refund);
                           setIsStatusModalOpen(true);
@@ -183,7 +183,7 @@ export default function RefundsPage() {
                         <Icon name="cached" folder="icon" size="sm" />
                       </Button>
                       <Button shape="rounded-sm" variant="outline"
-                        className="!p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-all"
+                        className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
                         onClick={() => {
                           setSelectedRefund(refund);
                           setIsDetailDrawerOpen(true);

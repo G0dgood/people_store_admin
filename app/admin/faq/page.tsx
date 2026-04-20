@@ -140,7 +140,7 @@ export default function FAQManagementPage() {
             </thead>
             <tbody className="divide-y divide-gray-50">
               {filteredFAQs.map((faq) => (
-                <tr key={faq.id} className="group hover:bg-blue-50/30 transition-colors">
+                <tr key={faq.id} className="group hover:bg-gray-50/50 transition-colors">
                   <td className="w-10 pl-8">
                     <Checkbox
                       checked={selectedIds.includes(faq.id)}
@@ -169,7 +169,7 @@ export default function FAQManagementPage() {
                   <td className="pr-8 py-5 text-right">
                     <div className="flex justify-end items-center gap-2">
                       <Button shape="rounded-sm" variant="outline"
-                        className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
+                        className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
                         onClick={() => {
                           setSelectedFAQ(faq);
                           setIsModalOpen(true);
@@ -178,7 +178,7 @@ export default function FAQManagementPage() {
                         <HiOutlinePencil size={14} />
                       </Button>
                       <Button shape="rounded-sm" variant="outline"
-                        className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
+                        className="!p-1.5 text-gray-400 hover:text-white hover:bg-rose-500 hover:border-rose-500 transition-all"
                         onClick={() => {
                           setSelectedFAQ(faq);
                           setIsDeleteModalOpen(true);

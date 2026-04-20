@@ -92,7 +92,7 @@ export default function ProductMediaListing() {
               <Button shape="rounded-sm" variant="outline"
                 className={`!p-2.5 w-10 h-10 transition-all
                   ${viewType === "grid"
-                    ? "border-brand-blue bg-brand-blue-light text-brand-blue shadow-sm"
+                    ? "border-brand-gold bg-brand-gold/10 text-brand-gold shadow-sm"
                     : "text-gray-400"}
                 `}
                 onClick={() => setViewType("grid")}
@@ -103,17 +103,13 @@ export default function ProductMediaListing() {
               <Button shape="rounded-sm" variant="outline"
                 className={`!p-2.5 w-10 h-10 transition-all
                   ${viewType === "list"
-                    ? "border-brand-blue bg-brand-blue-light text-brand-blue shadow-sm"
+                    ? "border-brand-gold bg-brand-gold/10 text-brand-gold shadow-sm"
                     : "text-gray-400"}
                 `}
                 onClick={() => setViewType("list")}
                 title="List View"
               >
                 <Icon name="menu" folder="icon" size="sm" />
-              </Button>
-              <Button shape="rounded-sm" variant="outline"
-                className="!p-2.5 w-10 h-10 text-gray-400">
-                <Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />
               </Button>
             </div>
           </div>
@@ -124,7 +120,7 @@ export default function ProductMediaListing() {
           {viewType === "grid" ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredMedia.map((item) => (
-                <div key={item.id} className="group relative bg-white border border-gray-200 rounded-[6px] overflow-hidden hover:shadow-md hover:border-blue-100 transition-all">
+                <div key={item.id} className="group relative bg-white border border-gray-200 rounded-[6px] overflow-hidden hover:shadow-md hover:border-brand-gold/20 transition-all">
                   <div className="relative aspect-video bg-gray-50 flex items-center justify-center p-4">
                     <img src={item.url} alt={item.name} className="w-full h-full object-contain transition-transform group-hover:scale-105" />
 
@@ -138,7 +134,7 @@ export default function ProductMediaListing() {
 
                     <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0">
                       <Button shape="rounded-sm" variant="outline"
-                        className="w-8 h-8 text-gray-500 bg-white/95 shadow-sm hover:text-blue-500 hover:bg-white !p-0 transition-all cursor-pointer"
+                        className="w-8 h-8 text-gray-500 bg-white/95 shadow-sm hover:text-white hover:bg-brand-gold hover:border-brand-gold !p-0 transition-all cursor-pointer"
                         onClick={() => {
                           setMediaToEdit(item);
                           setIsEditDrawerOpen(true);
@@ -147,7 +143,7 @@ export default function ProductMediaListing() {
                         <Icon name="settings" folder="dashboardIcon" size="xs" />
                       </Button>
                       <Button shape="rounded-sm" variant="outline"
-                        className="w-8 h-8 bg-white/95 shadow-sm text-gray-500 hover:text-rose-500 hover:bg-white !p-0 transition-all cursor-pointer"
+                        className="w-8 h-8 bg-white/95 shadow-sm text-gray-500 hover:text-white hover:bg-rose-500 hover:border-rose-500 !p-0 transition-all cursor-pointer"
                         onClick={() => {
                           setMediaToDelete(item);
                           setIsDeleteModalOpen(true);
@@ -197,7 +193,7 @@ export default function ProductMediaListing() {
                         </div>
                       </td>
                       <td>
-                        <span className="text-sm font-bold text-[#1D3557] truncate max-w-[200px] block group-hover:text-blue-600 transition-colors">
+                        <span className="text-sm font-bold text-[#1D3557] truncate max-w-[200px] block group-hover:text-brand-gold transition-colors">
                           {item.name}
                         </span>
                       </td>
@@ -221,7 +217,7 @@ export default function ProductMediaListing() {
                       <td className="text-right">
                         <div className="flex justify-end items-center gap-4">
                           <Button shape="rounded-sm" variant="outline"
-                            className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
+                            className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
                             onClick={() => {
                               setMediaToEdit(item);
                               setIsEditDrawerOpen(true);
@@ -230,7 +226,7 @@ export default function ProductMediaListing() {
                             <Icon name="settings" folder="dashboardIcon" size="sm" />
                           </Button>
                           <Button shape="rounded-sm" variant="outline"
-                            className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
+                            className="!p-1.5 text-gray-400 hover:text-white hover:bg-rose-500 hover:border-rose-500 transition-all"
                             onClick={() => {
                               setMediaToDelete(item);
                               setIsDeleteModalOpen(true);

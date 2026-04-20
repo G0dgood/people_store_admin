@@ -60,6 +60,13 @@ export const LoginAdvert = () => {
     stats: overrides.stats || config.stats
   };
 
+  // Sync featured items for initial slide if config is present but overrides aren't yet
+  const itemsToDisplay = (slideSpecificItems && slideSpecificItems.length > 0)
+    ? slideSpecificItems
+    : (activeCategory
+      ? config.featuredItems.filter(item => item.category === activeCategory)
+      : (config.backgroundImages?.[0]?.featuredItems || config.featuredItems));
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 30 }}
@@ -81,7 +88,7 @@ export const LoginAdvert = () => {
               >
                 <h1 className="text-6xl xl:text-7xl font-black text-white leading-[1.1] drop-shadow-2xl">
                   {config.showTitle && <span>{displayCopy.title} <br /></span>}
-                  {config.showHighlight && <span className="text-brand-blue-light">{displayCopy.titleHighlight}</span>}
+                  {config.showHighlight && <span className="text-brand-gold">{displayCopy.titleHighlight}</span>}
                 </h1>
               </motion.div>
             )}
@@ -109,7 +116,7 @@ export const LoginAdvert = () => {
         {activeLayout === "list" && (
           <div className="flex flex-col gap-6 max-w-md ml-auto">
             <AnimatePresence mode="popLayout">
-              {filteredItems.map((item, i) => (
+                {itemsToDisplay.map((item, i) => (
                 <motion.div
                   key={item.id}
                   initial={{ opacity: 0, scale: 0.9, x: 20 }}
@@ -120,7 +127,7 @@ export const LoginAdvert = () => {
                   className="flex items-center gap-6 justify-end group cursor-pointer"
                 >
                   <div className="flex flex-col items-end text-right">
-                    <span className="text-xs font-black uppercase tracking-[0.2em] text-white/50 group-hover:text-brand-blue-light transition-colors">
+                    <span className="text-xs font-black uppercase tracking-[0.2em] text-white/50 group-hover:text-brand-gold transition-colors">
                       {item.category}
                     </span>
                     <span className="text-lg font-bold text-white group-hover:text-blue-200 transition-colors">
@@ -143,7 +150,7 @@ export const LoginAdvert = () => {
         {activeLayout === "grid" && (
           <div className="grid grid-cols-3 gap-3 max-w-2xl ml-auto">
             <AnimatePresence mode="popLayout">
-              {filteredItems.slice(0, 8).map((item, i) => (
+              {itemsToDisplay.slice(0, 8).map((item, i) => (
                 <motion.div
                   key={item.id}
                   initial={{ opacity: 0, y: 20 }}
@@ -157,7 +164,7 @@ export const LoginAdvert = () => {
                     <img src={item.image} alt={item.name} className="w-full h-full object-contain group-hover:scale-125 transition-transform duration-500" />
                   </div>
                   <div className="flex flex-col text-right">
-                    <span className="text-[8px] font-black text-brand-blue-light uppercase tracking-widest">{item.category}</span>
+                    <span className="text-[8px] font-black text-brand-gold uppercase tracking-widest">{item.category}</span>
                     <span className="text-[11px] font-bold text-white truncate">{item.name}</span>
                     <span className="text-[10px] font-black text-white/60">{item.price}</span>
                   </div>
@@ -171,7 +178,7 @@ export const LoginAdvert = () => {
           <div className="fixed bottom-24 inset-x-0 px-12 z-30 flex justify-center">
             <div className="flex items-center gap-4 bg-white/5 backdrop-blur-lg border border-white/10 p-2 rounded-full overflow-hidden">
               <AnimatePresence mode="popLayout">
-                {filteredItems.map((item, i) => (
+                {itemsToDisplay.map((item, i) => (
                   <motion.div
                     key={item.id}
                     initial={{ opacity: 0, x: -20 }}
@@ -184,7 +191,7 @@ export const LoginAdvert = () => {
                       <img src={item.image} alt={item.name} className="w-full h-full object-contain" />
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-[10px] font-bold text-white group-hover:text-brand-blue-light transition-colors">{item.name}</span>
+                      <span className="text-[10px] font-bold text-white group-hover:text-brand-gold transition-colors">{item.name}</span>
                       <span className="text-[8px] font-black text-white/40 uppercase">{item.price}</span>
                     </div>
                   </motion.div>
@@ -194,7 +201,7 @@ export const LoginAdvert = () => {
           </div>
         )}
 
-        {filteredItems.length === 0 && (
+        {itemsToDisplay.length === 0 && (
           <p className="text-white/30 text-xs font-bold uppercase tracking-widest italic pt-10 text-right">
             No items in {activeCategory} category
           </p>

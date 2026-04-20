@@ -220,11 +220,11 @@ export default function NotificationCenter() {
 
        <div className="flex flex-col sm:flex-row gap-2 sm:gap-2 opacity-100 group-hover:opacity-100 sm:opacity-0 transition-all translate-x-0 sm:translate-x-2 sm:group-hover:translate-x-0 absolute sm:static right-2 top-2 sm:right-auto sm:top-auto bg-white/80 sm:bg-transparent p-1 sm:p-0 rounded-lg backdrop-blur-sm sm:backdrop-blur-none border border-gray-200 sm:border-0 shadow-sm sm:shadow-none">
         <Button shape="rounded-sm" variant="outline"
-         className="!p-1.5 text-gray-300 hover:text-blue-500 hover:bg-brand-blue-light transition-all">
+         className="!p-1.5 text-gray-300 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all">
          <Icon name="verified" folder="icon" size="sm" className="scale-75 sm:scale-100" />
         </Button>
         <Button shape="rounded-sm" variant="outline"
-         className="!p-1.5 text-gray-300 hover:text-rose-500 hover:bg-rose-50 transition-all">
+         className="!p-1.5 text-gray-300 hover:text-white hover:bg-rose-500 hover:border-rose-500 transition-all">
          <Icon name="Delete" folder="dashboardIcon" size="sm" className="scale-75 sm:scale-100" />
         </Button>
        </div>

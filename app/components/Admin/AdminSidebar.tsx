@@ -32,16 +32,6 @@ const navGroups: NavGroup[] = [
     items: [
       { name: "Dashboard", href: "/admin", icon: "Frame" },
       { name: "Order Management", href: "/admin/orders", icon: "Cart" },
-      { name: "Customers", href: "/admin/customers", icon: "users" },
-      { name: "Coupon Code", href: "/admin/coupons", icon: "ticket" },
-      { name: "Categories", href: "/admin/categories", icon: "circle-square" },
-      { name: "Transaction", href: "/admin/transactions", icon: "famicons_card-outline" },
-      { name: "Refund", href: "/admin/refunds", icon: "arrow-refresh-06" },
-      { name: "Support", href: "/admin/support", icon: "tabler_message" },
-      { name: "FAQ Management", href: "/admin/faq", icon: <HiOutlineQuestionMarkCircle size={14} /> },
-      { name: "Brand", href: "/admin/brands", icon: "star" },
-      { name: "Deals and Offers", href: "/admin/deals", icon: <RiPercentLine size={14} /> },
-      { name: "Notifications", href: "/admin/notifications", icon: "Bell outline" },
     ],
   },
   {
@@ -54,16 +44,32 @@ const navGroups: NavGroup[] = [
     ],
   },
   {
+    title: "Operations",
+    items: [
+      { name: "Customers", href: "/admin/customers", icon: "users" },
+      { name: "Coupon Code", href: "/admin/coupons", icon: "ticket" },
+      { name: "Categories", href: "/admin/categories", icon: "circle-square" },
+      { name: "Transaction", href: "/admin/transactions", icon: "famicons_card-outline" },
+      { name: "Refund", href: "/admin/refunds", icon: "arrow-refresh-06" },
+      { name: "Support", href: "/admin/support", icon: "tabler_message" },
+      { name: "FAQ Management", href: "/admin/faq", icon: <HiOutlineQuestionMarkCircle size={14} /> },
+      { name: "Brand", href: "/admin/brands", icon: "star" },
+      { name: "Deals and Offers", href: "/admin/deals", icon: <RiPercentLine size={14} /> },
+      { name: "Advert Manager", href: "/admin/advert", icon: "Frame" },
+      { name: "Notifications", href: "/admin/notifications", icon: "Bell outline" },
+    ],
+  },
+  {
     title: "Admin",
     items: [
       { name: "Users", href: "/admin/users", icon: "users" },
       { name: "View Profile", href: "/admin/profile", icon: "user-profile-circle" },
       { name: "Administrative Roles", href: "/admin/roles", icon: "settings" },
       { name: "Permissions", href: "/admin/permissions", icon: <HiShieldCheck size={14} /> },
-      { name: "Advert Manager", href: "/admin/advert", icon: "Frame" },
     ],
   },
 ];
+
 
 interface NavItemProps {
   item: {

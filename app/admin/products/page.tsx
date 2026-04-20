@@ -124,11 +124,6 @@ export default function ProductListing() {
                 className="!p-2.5 text-gray-400">
                 <Icon name="sort" folder="dashboardIcon" size="sm" />
               </Button>
-              <Button shape="rounded-sm" variant="outline"
-                className="text-gray-400 flex items-center gap-2 px-4 shadow-sm">
-                <Icon name="filter" folder="dashboardIcon" size="sm" />
-                <span className="text-xs font-bold text-[#1D3557]">Filters</span>
-              </Button>
             </div>
           </div>
         </div>
@@ -202,7 +197,7 @@ export default function ProductListing() {
                         <Icon name="settings" folder="dashboardIcon" size="sm" />
                       </Button>
                       <Button shape="rounded-sm" variant="outline"
-                        className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
+                        className="!p-1.5 text-gray-400 hover:text-white hover:bg-rose-500 hover:border-rose-500 transition-all"
                         onClick={() => {
                           setProductToDelete(product);
                           setIsDeleteModalOpen(true);

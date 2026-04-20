@@ -160,8 +160,8 @@ export default function CreateProduct() {
                 <label className="text-xs font-bold text-[#1D3557]">Tax Included</label>
                 <div className="flex items-center gap-6 py-3">
                   <label className="flex items-center gap-2 cursor-pointer group">
-                    <div className="w-4 h-4 rounded-full border-2 border-brand-blue flex items-center justify-center p-0.5">
-                      <div className="w-full h-full bg-brand-blue rounded-full"></div>
+                    <div className="w-4 h-4 rounded-full border-2 border-brand-gold flex items-center justify-center p-0.5">
+                      <div className="w-full h-full bg-brand-gold rounded-full"></div>
                     </div>
                     <span className="text-xs font-bold text-[#1D3557]">Yes</span>
                   </label>
@@ -331,13 +331,13 @@ export default function CreateProduct() {
               ))}
 
               <div
-                className="aspect-square border-2 border-dashed border-blue-200 rounded-[6px] flex flex-col items-center justify-center gap-2 bg-brand-blue-light hover:bg-brand-blue-light transition-all cursor-pointer group"
+                className="aspect-square border-2 border-dashed border-brand-gold/30 rounded-[6px] flex flex-col items-center justify-center gap-2 bg-brand-gold/5 hover:bg-brand-gold/10 transition-all cursor-pointer group"
                 onClick={() => setIsUploadModalOpen(true)}
               >
-                <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white scale-90 group-hover:scale-100 transition-transform">
+                <div className="w-6 h-6 bg-brand-gold rounded-full flex items-center justify-center text-white scale-90 group-hover:scale-100 transition-transform">
                   <Icon name="circle-plus" folder="dashboardIcon" size="xs" />
                 </div>
-                <span className="text-[10px] font-bold text-[#2196F3]">Add More</span>
+                <span className="text-[10px] font-bold text-brand-gold">Add More</span>
               </div>
             </div>
 
@@ -380,7 +380,7 @@ export default function CreateProduct() {
                       setShowColorPicker(!showColorPicker);
                       if (showColorPicker) setEditingColorIndex(null);
                     }}
-                    className="text-[10px] font-bold text-brand-blue hover:underline"
+                    className="text-[10px] font-bold text-brand-gold hover:underline"
                   >
                     {showColorPicker ? "Close Picker" : editingColorIndex !== null ? "Change Color" : "Open Custom Picker"}
                   </button>
@@ -468,7 +468,7 @@ export default function CreateProduct() {
                         setEditingColorIndex(i);
                         setShowColorPicker(true);
                       }}
-                      className={`group relative w-10 h-10 rounded-[6px] shadow-sm border transition-all cursor-pointer overflow-hidden ${editingColorIndex === i ? "ring-2 ring-brand-blue border-transparent ring-offset-2" : "border-black/5 hover:scale-110"
+                      className={`group relative w-10 h-10 rounded-[6px] shadow-sm border transition-all cursor-pointer overflow-hidden ${editingColorIndex === i ? "ring-2 ring-brand-gold border-transparent ring-offset-2" : "border-black/5 hover:scale-110"
                         }`}
                       style={{ backgroundColor: color }}
                     >
@@ -479,7 +479,7 @@ export default function CreateProduct() {
                             setEditingColorIndex(i);
                             setShowColorPicker(true);
                           }}
-                          className="flex-1 bg-brand-blue/90 hover:bg-brand-blue flex items-center justify-center transition-colors"
+                          className="flex-1 bg-brand-gold/90 hover:bg-brand-gold flex items-center justify-center transition-colors"
                           title="Edit color"
                         >
                           <HiPencil className="text-white w-3.5 h-3.5" />
@@ -505,8 +505,8 @@ export default function CreateProduct() {
                       setShowColorPicker(!showColorPicker);
                     }}
                     className={`w-10 h-10 rounded-[6px] border-2 border-dashed flex items-center justify-center transition-all group ${showColorPicker && editingColorIndex === null
-                      ? "border-brand-blue bg-blue-50 text-brand-blue"
-                      : "border-gray-200 text-gray-400 hover:border-brand-blue hover:text-brand-blue hover:bg-blue-50/50"
+                      ? "border-brand-gold bg-brand-gold/10 text-brand-gold"
+                      : "border-gray-200 text-gray-400 hover:border-brand-gold hover:text-brand-gold hover:bg-brand-gold/5"
                       }`}
                     title={showColorPicker ? "Close Picker" : "Add custom color"}
                   >
@@ -581,9 +581,9 @@ export default function CreateProduct() {
           </div>
         </ModalBody>
         <ModalFooter className="flex flex-col gap-3 pb-8">
-          <Button shape="rounded-sm"
-            variant="primary"
-            className="w-full h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
+            <Button shape="rounded-sm"
+              variant="primary"
+              className="w-full h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-brand-gold/20"
             onClick={() => {
               setIsPublishSuccessOpen(false);
               router.push("/admin/products");
@@ -608,7 +608,7 @@ export default function CreateProduct() {
         size="md"
       >
         <ModalBody className="flex flex-col items-center text-center py-10 gap-6">
-          <div className="w-20 h-20 rounded-full bg-blue-50 flex items-center justify-center text-brand-blue shadow-inner border border-blue-100">
+          <div className="w-20 h-20 rounded-full bg-brand-gold/10 flex items-center justify-center text-brand-gold shadow-inner border border-brand-gold/20">
             <Icon name="drafts" folder="icon" size="lg" className="w-10 h-10" />
           </div>
           <div className="flex flex-col gap-2">
@@ -619,9 +619,9 @@ export default function CreateProduct() {
           </div>
         </ModalBody>
         <ModalFooter className="flex flex-col gap-3 pb-8">
-          <Button shape="rounded-sm"
-            variant="primary"
-            className="w-full h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
+            <Button shape="rounded-sm"
+              variant="primary"
+              className="w-full h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-brand-gold/20"
             onClick={() => {
               setIsDraftSuccessOpen(false);
               router.push("/admin/products");

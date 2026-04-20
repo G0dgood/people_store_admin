@@ -137,9 +137,6 @@ export default function SupportPage() {
                 <Button variant="outline" shape="rounded-sm" className="!p-2.5 text-gray-400">
                   <Icon name="filter" folder="dashboardIcon" size="sm" />
                 </Button>
-                <Button variant="outline" shape="rounded-sm" className="!p-2.5 text-gray-400">
-                  <Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />
-                </Button>
               </div>
             </div>
           </div>

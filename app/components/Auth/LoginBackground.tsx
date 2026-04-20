@@ -138,7 +138,7 @@ export const LoginBackground = () => {
                onMouseEnter={() => setCurrentIndex(i)}
                onClick={() => setCurrentIndex(i)}
                className={`h-1.5 rounded-full transition-all pointer-events-auto
-                 ${currentIndex === i ? "w-8 bg-brand-blue-light shadow-[0_0_15px_rgba(33,150,243,0.5)]" : "w-3 bg-white/30 hover:bg-white/60"}
+                 ${currentIndex === i ? "w-8 bg-brand-gold shadow-[0_0_15px_rgba(184,146,80,0.5)]" : "w-3 bg-white/30 hover:bg-white/60"}
                `}
              />
            ))}
@@ -147,7 +147,7 @@ export const LoginBackground = () => {
 
       {/* Decorative Background Icon */}
       <div className="fixed bottom-24 right-24 z-0 hidden lg:block opacity-[0.05] pointer-events-none">
-        <Icon name="verified" folder="icon" size="lg" className="text-white scale-[15]" />
+        <Icon name="verified" folder="icon" size="lg" className="text-brand-gold scale-[15]" />
       </div>
     </>
   );

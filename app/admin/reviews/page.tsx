@@ -156,7 +156,7 @@ export default function ReviewListing() {
 
             <div className="flex gap-2">
               <Button shape="rounded-sm" variant="outline"
-                className="!p-2.5 text-gray-400">
+                className="!p-2.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold border-gray-200 transition-all">
                 <Icon name="sort" folder="dashboardIcon" size="sm" />
               </Button>
             </div>
@@ -239,7 +239,7 @@ export default function ReviewListing() {
                   <td className="text-right text-gray-300">
                     <div className="flex justify-end gap-4">
                       <Button shape="rounded-sm" variant="outline"
-                        className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
+                        className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
                         onClick={() => {
                           setReviewToReply(review);
                           setIsReplyDrawerOpen(true);
@@ -248,7 +248,7 @@ export default function ReviewListing() {
                         <HiMiniArrowUturnLeft className="w-4 h-4" />
                       </Button>
                       <Button shape="rounded-sm" variant="outline"
-                        className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
+                        className="!p-1.5 text-gray-400 hover:text-white hover:bg-rose-500 hover:border-rose-500 transition-all"
                         onClick={() => {
                           setReviewToDelete(review);
                           setIsDeleteModalOpen(true);

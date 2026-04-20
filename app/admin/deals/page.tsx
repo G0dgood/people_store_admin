@@ -221,12 +221,7 @@ export default function DealsPage() {
               <span className="text-base font-black text-[#1D3557]">No custom offers active</span>
               <span className="text-xs text-gray-400 font-bold max-w-xs">Global default deals are currently being displayed. You can add specific offer overrides here.</span>
             </div>
-            <Button shape="rounded-sm" variant="primary"
-              className="px-8 h-12 text-[10px] font-black uppercase tracking-widest shadow-lg shadow-brand-gold/10 transition-all duration-300 hover:bg-brand-gold hover:text-white"
-              onClick={() => setIsOfferModalOpen(true)}
-            >
-              Create Your First Offer
-            </Button>
+
           </div>
         ) : (
           <div className="admin-table-container">
@@ -279,7 +274,7 @@ export default function DealsPage() {
                             <HiOutlinePencil className="w-4.5 h-4.5" />
                           </Button>
                           <Button shape="rounded-sm" variant="outline"
-                            className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
+                            className="!p-1.5 text-gray-400 hover:text-white hover:bg-rose-500 hover:border-rose-500 transition-all"
                             onClick={() => {
                               setOfferToDelete(offer);
                               setIsDeleteModalOpen(true);

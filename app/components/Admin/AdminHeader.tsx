@@ -165,12 +165,12 @@ export const AdminHeader: React.FC<HeaderProps> = ({ onOpenMenu, className, isOp
           <div className="relative" ref={notificationRef}>
             <button
               className={`relative p-2 transition-colors group rounded-lg
-                ${isNotificationsOpen ? "bg-gray-100 text-brand-charcoal border border-[#1C1C1C1A]" : "text-gray-400 hover:text-brand-charcoal"}
+                ${isNotificationsOpen ? "bg-brand-gold/10 text-brand-charcoal border border-brand-gold/20" : "text-gray-400 hover:text-brand-charcoal"}
               `}
               onClick={toggleNotifications}
             >
               <Icon name="Bell outline" folder="dashboardIcon" size="md" className={isNotificationsOpen ? "text-brand-charcoal" : "text-brand-charcoal"} />
-              <span className="absolute top-2 right-2 w-[7px] h-[7px] bg-red-500 rounded-full border border-white"></span>
+              <span className="absolute top-2 right-2 w-[7px] h-[7px] bg-brand-gold rounded-full border border-white"></span>
             </button>
 
             {isNotificationsOpen && !isMobile && <AdminNotificationDropdown />}
@@ -190,7 +190,7 @@ export const AdminHeader: React.FC<HeaderProps> = ({ onOpenMenu, className, isOp
 
           {/* Theme Toggle Switch */}
           <div className="flex items-center">
-            <button className="w-12 h-7 bg-brand-blue-light rounded-full p-1 flex items-center relative transition-colors cursor-pointer">
+            <button className="w-12 h-7 bg-brand-gold/20 rounded-full p-1 flex items-center relative transition-colors cursor-pointer">
               <div className="w-5 h-5 bg-white rounded-full border border-[#1C1C1C1A] flex items-center justify-center transition-all transform">
                 <Icon name="Group" folder="dashboardIcon" size="xs" className="text-gray-400 opacity-60" />
               </div>
@@ -198,10 +198,9 @@ export const AdminHeader: React.FC<HeaderProps> = ({ onOpenMenu, className, isOp
           </div>
 
           {/* User Profile */}
-          <div className="relative" ref={profileRef}>
             <div
-              className={`w-11 h-11 rounded-full border border-[#1C1C1C1A] overflow-hidden cursor-pointer transition-all flex items-center justify-center bg-brand-blue-light
-                ${isProfileOpen ? "border-brand-blue scale-105" : "hover:border-brand-blue/50"}
+              className={`w-11 h-11 rounded-full border border-[#1C1C1C1A] overflow-hidden cursor-pointer transition-all flex items-center justify-center bg-brand-gold/10
+                ${isProfileOpen ? "border-brand-gold scale-105" : "hover:border-brand-gold/50"}
               `}
               onClick={toggleProfile}
             >
@@ -212,13 +211,12 @@ export const AdminHeader: React.FC<HeaderProps> = ({ onOpenMenu, className, isOp
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <HiUser className="text-brand-blue w-6 h-6" />
+                  <HiUser className="text-brand-gold w-6 h-6" />
               )}
             </div>
 
             {isProfileOpen && <AdminProfileDropdown />}
           </div>
-        </div>
       </div>
     </header>
   );

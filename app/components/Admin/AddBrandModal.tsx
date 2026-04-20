@@ -58,6 +58,7 @@ export function AddBrandModal({ isOpen, onClose }: AddBrandModalProps) {
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               className="h-12 border-gray-200 font-bold"
+              shape="rounded-sm"
               required
             />
           </div>
@@ -70,6 +71,7 @@ export function AddBrandModal({ isOpen, onClose }: AddBrandModalProps) {
                 value={formData.logo}
                 onChange={(e) => setFormData({ ...formData, logo: e.target.value })}
                 className="h-12 border-gray-200 font-bold flex-1"
+                shape="rounded-sm"
                 required
               />
               <Button
@@ -90,6 +92,7 @@ export function AddBrandModal({ isOpen, onClose }: AddBrandModalProps) {
                 options={categoryOptions}
                 value={formData.category}
                 onChange={(val) => setFormData({ ...formData, category: val })}
+                shape="rounded-sm"
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -98,6 +101,7 @@ export function AddBrandModal({ isOpen, onClose }: AddBrandModalProps) {
                 options={statusOptions}
                 value={formData.status}
                 onChange={(val) => setFormData({ ...formData, status: val })}
+                shape="rounded-sm"
               />
             </div>
           </div>

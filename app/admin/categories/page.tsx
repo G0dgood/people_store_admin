@@ -13,6 +13,8 @@ import Checkbox from "@/app/components/Checkbox";
 import { EditCategoryDrawer } from "../../components/Admin/EditCategoryDrawer";
 import { BulkActionsDrawer } from "../../components/Admin/BulkActionsDrawer";
 import { RowsPerPage } from "@/app/components/rows-per-page";
+import { Tooltip } from "../../components/Tooltip";
+
 
 const categories = [
   { name: "Electronics", image: "/dashboardImage/Electronics.png" },
@@ -155,10 +157,6 @@ export default function CategoriesPage() {
               className="!p-2 text-gray-400 shadow-sm">
               <Icon name="circle-plus" folder="dashboardIcon" size="sm" />
             </Button>
-            <Button shape="rounded-sm" variant="outline"
-              className="!p-2 text-gray-400 shadow-sm">
-              <Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />
-            </Button>
           </div>
         </div>
 
@@ -202,25 +200,30 @@ export default function CategoriesPage() {
                   <td className="text-sm font-bold text-gray-900 text-center">{p.order}</td>
                   <td className="text-right">
                     <div className="flex justify-end gap-2 px-2">
-                      <Button shape="rounded-sm" variant="outline"
-                        className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
-                        onClick={() => {
-                          setCategoryToEdit(p);
-                          setIsEditDrawerOpen(true);
-                        }}
-                      >
-                        <Icon name="settings" folder="dashboardIcon" size="sm" />
-                      </Button>
-                      <Button shape="rounded-sm" variant="outline"
-                        className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
-                        onClick={() => {
-                          setCategoryToDelete(p);
-                          setIsDeleteModalOpen(true);
-                        }}
-                      >
-                        <Icon name="Delete" folder="dashboardIcon" size="sm" />
-                      </Button>
+                      <Tooltip text="Edit Category" position="top">
+                        <Button shape="rounded-sm" variant="outline"
+                          className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
+                          onClick={() => {
+                            setCategoryToEdit(p);
+                            setIsEditDrawerOpen(true);
+                          }}
+                        >
+                          <Icon name="settings" folder="dashboardIcon" size="sm" />
+                        </Button>
+                      </Tooltip>
+                      <Tooltip text="Delete Category" position="top">
+                        <Button shape="rounded-sm" variant="outline"
+                          className="!p-1.5 text-gray-400 hover:text-white hover:bg-rose-500 hover:border-rose-500 transition-all"
+                          onClick={() => {
+                            setCategoryToDelete(p);
+                            setIsDeleteModalOpen(true);
+                          }}
+                        >
+                          <Icon name="Delete" folder="dashboardIcon" size="sm" />
+                        </Button>
+                      </Tooltip>
                     </div>
+
                   </td>
                 </tr>
               ))}

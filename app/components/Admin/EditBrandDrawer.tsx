@@ -63,7 +63,7 @@ export function EditBrandDrawer({ isOpen, onClose, brand }: EditBrandDrawerProps
               placeholder="e.g. Apple"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="h-12 border-gray-200 font-bold"
+              className="h-12 border-gray-200 font-bold rounded-sm"
               required
             />
           </div>
@@ -76,10 +76,10 @@ export function EditBrandDrawer({ isOpen, onClose, brand }: EditBrandDrawerProps
                 placeholder="/dashboardImage/example.png"
                 value={formData.logo}
                 onChange={(e) => setFormData({ ...formData, logo: e.target.value })}
-                className="h-12 border-gray-200 font-bold flex-1"
+                className="h-12 border-gray-200 font-bold flex-1 rounded-sm"
                 required
               />
-              <Button 
+              <Button
                 type="button"
                 variant="outline"
                 shape="rounded-sm"
@@ -92,8 +92,15 @@ export function EditBrandDrawer({ isOpen, onClose, brand }: EditBrandDrawerProps
 
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
+              <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Inventory No</label>
+              <div className="h-12 bg-gray-50 border border-gray-100 rounded-sm px-4 flex items-center">
+                <span className="text-xs font-black text-brand-gold uppercase tracking-wider">{brand.inventoryCount || 0} items in stock</span>
+              </div>
+            </div>
+            <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Category</label>
               <Select
+                className="rounded-sm"
                 shape="rounded-sm"
                 options={categoryOptions}
                 value={formData.category}
@@ -103,6 +110,7 @@ export function EditBrandDrawer({ isOpen, onClose, brand }: EditBrandDrawerProps
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Status</label>
               <Select
+                className="rounded-sm"
                 shape="rounded-sm"
                 options={statusOptions}
                 value={formData.status}
@@ -113,19 +121,19 @@ export function EditBrandDrawer({ isOpen, onClose, brand }: EditBrandDrawerProps
         </div>
 
         <div className="mt-auto pt-8 border-t border-gray-50 flex flex-col gap-3">
-          <Button 
+          <Button
             shape="rounded-sm"
-            variant="primary" 
-            type="submit" 
+            variant="primary"
+            type="submit"
             className="w-full h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-brand-gold/10 transition-all duration-300 hover:bg-brand-gold hover:text-white"
           >
             Update Brand
           </Button>
-          <Button 
+          <Button
             shape="rounded-sm"
-            variant="outline" 
-            type="button" 
-            onClick={onClose} 
+            variant="outline"
+            type="button"
+            onClick={onClose}
             className="w-full h-10 sm:h-12 text-[11px] font-bold text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all duration-300"
           >
             Cancel

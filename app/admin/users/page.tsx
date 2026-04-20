@@ -82,7 +82,7 @@ const staffData = [
 
 const roleColors = {
  "Super Admin": "text-[#1D3557] bg-gray-100",
- "Editor": "text-blue-500 bg-blue-50",
+ "Editor": "text-brand-gold bg-brand-gold/10",
  "Order Manager": "text-emerald-500 bg-emerald-50",
  "Support": "text-amber-500 bg-amber-50",
 };
@@ -129,7 +129,7 @@ export default function UsersManagement() {
   <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
    <div className="flex justify-end gap-3 w-full sm:w-auto">
     <Button shape="rounded-sm" variant="primary"
-     className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold shadow-md shadow-blue-50 h-10 px-4 text-[10px] font-black uppercase tracking-widest whitespace-nowrap"
+     className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold shadow-md shadow-brand-gold/10 h-10 px-4 text-[10px] font-black uppercase tracking-widest whitespace-nowrap"
      iconLeft={<Icon name="circle-plus" folder="dashboardIcon" size="sm" />}
      onClick={() => setIsAddUserModalOpen(true)}
     >
@@ -156,11 +156,11 @@ export default function UsersManagement() {
 
       <div className="flex gap-2">
 
-       <Button variant="outline" shape="rounded-sm" className="!p-2.5 text-gray-400 hover:text-brand-blue hover:bg-brand-blue-light border-gray-200 transition-all">
+       <Button variant="outline" shape="rounded-sm" className="!p-2.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold border-gray-200 transition-all">
         <Icon name="filter" folder="dashboardIcon" size="sm" />
        </Button>
        <Button shape="rounded-sm" variant="outline"
-        className="!p-2.5 text-gray-400 hover:text-brand-blue hover:bg-brand-blue-light border-gray-200 transition-all"
+        className="!p-2.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold border-gray-200 transition-all"
         onClick={() => setIsMoreActionsOpen(true)}
        >
         <Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />
@@ -203,7 +203,7 @@ export default function UsersManagement() {
             <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
            </div>
            <div className="flex flex-col min-w-0">
-            <span className="text-sm font-black text-[#1D3557] group-hover:text-brand-blue transition-colors truncate">{user.name}</span>
+            <span className="text-sm font-black text-[#1D3557] group-hover:text-brand-gold transition-colors truncate">{user.name}</span>
             <span className="text-[10px] font-medium text-gray-400 truncate tracking-tight">{user.email}</span>
            </div>
           </div>
@@ -233,7 +233,7 @@ export default function UsersManagement() {
          <td className="text-right">
           <div className="flex justify-end gap-3 transition-all duration-300">
            <Button shape="rounded-sm" variant="outline"
-            className="!p-1.5 text-gray-400 hover:text-brand-blue hover:bg-brand-blue-light border-gray-200 transition-all"
+            className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold border-gray-200 transition-all"
             onClick={() => {
              setSelectedStaff(user);
              setIsStaffDetailOpen(true);
@@ -242,7 +242,7 @@ export default function UsersManagement() {
             <Icon name="settings" folder="dashboardIcon" size="sm" />
            </Button>
            <Button shape="rounded-sm" variant="outline"
-            className="!p-1.5 text-gray-400 hover:text-brand-blue hover:bg-brand-blue-light border-gray-200 transition-all"
+            className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold border-gray-200 transition-all"
             onClick={() => {
              setUserToEdit(user);
              setIsEditModalOpen(true);
@@ -251,7 +251,7 @@ export default function UsersManagement() {
             <FiEdit3 size={14} />
            </Button>
            <Button shape="rounded-sm" variant="outline"
-            className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 border-gray-200 transition-all"
+            className="!p-1.5 text-gray-400 hover:text-white hover:bg-rose-500 hover:border-rose-500 border-gray-200 transition-all"
             onClick={() => {
              setUserToDelete(user);
              setIsDeleteModalOpen(true);
