@@ -34,12 +34,22 @@ export default function CreateProduct() {
  const [isFeatured, setIsFeatured] = useState(true);
  const [showColorPicker, setShowColorPicker] = useState(false);
  const [editingColorIndex, setEditingColorIndex] = useState<number | null>(null);
- const [taxIncluded, setTaxIncluded] = useState(true);
- const [productDescription, setProductDescription] = useState("");
- const [isRefining, setIsRefining] = useState(false);
- const [isAISettingsOpen, setIsAISettingsOpen] = useState(false);
- const [aiTone, setAiTone] = useState("Professional");
- const colorInputRef = useRef<HTMLInputElement>(null);
+  const [taxIncluded, setTaxIncluded] = useState(true);
+  const [productDescription, setProductDescription] = useState("");
+  const [isRefining, setIsRefining] = useState(false);
+  const [isAISettingsOpen, setIsAISettingsOpen] = useState(false);
+  const [aiTone, setAiTone] = useState("Professional");
+  const [selectedCurrency, setSelectedCurrency] = useState("NGN");
+  const [isCurrencyDropdownOpen, setIsCurrencyDropdownOpen] = useState(false);
+  const currencyDropdownRef = useRef<HTMLDivElement>(null);
+  const colorInputRef = useRef<HTMLInputElement>(null);
+
+  const currencies = [
+    { code: "NGN", label: "Nigeria", symbol: "₦", flag: "/icon/flag.svg" },
+    { code: "USD", label: "USA", symbol: "$", flag: "/country/Property 1=US.png" },
+    { code: "GBP", label: "UK", symbol: "£", flag: "/country/Property 1=GB.png" },
+    { code: "EUR", label: "EU", symbol: "€", flag: "/country/Property 1=FR.png" },
+  ];
 
  // Cleanup effect for preview URLs
  useEffect(() => {
