@@ -2,12 +2,27 @@
 
 import React, { useState } from "react";
 import { Breadcrumbs } from "@/app/components/Breadcrumbs";
-import { Icon } from "@/app/components/Icon";
 import { Button } from "@/app/components/Button";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { Select } from "@/app/components/Form/Select";
 import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
+import {
+  HiChevronRight,
+  HiCheckCircle,
+  HiOutlineEnvelope,
+  HiPhone,
+  HiMapPin,
+  HiPencil,
+  HiArrowDownTray
+} from "react-icons/hi2";
+import {
+  LuTruck,
+  LuPackage,
+  LuDownload,
+  LuPencilLine,
+  LuMapPin
+} from "react-icons/lu";
 
 export default function OrderDetails() {
   const { id } = useParams();
@@ -70,7 +85,7 @@ export default function OrderDetails() {
           </div>
           <div className="flex gap-3 items-center">
             <Button variant="ghost" className="bg-white border-gray-200 text-gray-700 font-bold px-6 h-12" shape="rounded-sm">
-              <Icon name="file_download" size="xs" className="mr-2" />
+              <LuDownload className="mr-2 text-lg" />
               Print Invoice
             </Button>
             <div className="w-48">
@@ -98,7 +113,7 @@ export default function OrderDetails() {
         {/* Main Details Area */}
         <div className="lg:col-span-2 flex flex-col gap-8">
           {/* Order Items Table */}
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+          <div className="bg-white border border-[#1C1C1C1A] rounded-[6px] overflow-hidden">
             <div className="p-8 border-b border-gray-50 flex items-center justify-between">
               <h3 className="text-xl font-black text-gray-900">Purchased Items</h3>
               <span className="text-sm font-bold text-gray-400">{order.items.length} Items</span>
@@ -160,19 +175,19 @@ export default function OrderDetails() {
           </div>
 
           {/* Activity Logs */}
-          <div className="bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col gap-6">
+          <div className="bg-white p-8 border border-[#1C1C1C1A] rounded-[6px] flex flex-col gap-6">
             <h3 className="text-xl font-black text-gray-900">Operational Timeline</h3>
             <div className="flex flex-col gap-6 relative">
               <div className="absolute left-4 top-4 bottom-4 w-0.5 bg-gray-50"></div>
               {[
-                { title: "Out for Delivery", date: "Oct 12, 2:45 PM", desc: "Package is being delivered by courier.", icon: "local_shipping", active: true },
-                { title: "Shipped from Warehouse", date: "Oct 12, 9:20 AM", desc: "Origin scan processed in Lagos Hub.", icon: "inventory_2" },
-                { title: "Payment Verified", date: "Oct 12, 9:00 AM", desc: "Transaction confirmed via Bank Transfer.", icon: "check_circle" },
-                { title: "Order Placed", date: "Oct 12, 8:45 AM", desc: "Order successfully submitted by customer.", icon: "check_circle" },
+                { title: "Out for Delivery", date: "Oct 12, 2:45 PM", desc: "Package is being delivered by courier.", icon: <LuTruck />, active: true },
+                { title: "Shipped from Warehouse", date: "Oct 12, 9:20 AM", desc: "Origin scan processed in Lagos Hub.", icon: <LuPackage /> },
+                { title: "Payment Verified", date: "Oct 12, 9:00 AM", desc: "Transaction confirmed via Bank Transfer.", icon: <HiCheckCircle /> },
+                { title: "Order Placed", date: "Oct 12, 8:45 AM", desc: "Order successfully submitted by customer.", icon: <HiCheckCircle /> },
               ].map((log, i) => (
                 <div key={i} className="flex gap-6 relative z-10">
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center border-4 border-white shadow-sm ${log.active ? "bg-brand-gold text-white" : "bg-gray-100 text-gray-400"}`}>
-                    <Icon name={log.icon} size="xs" />
+                    <span className="text-sm">{log.icon}</span>
                   </div>
                   <div className="flex flex-col gap-1">
                     <p className={`text-sm font-black ${log.active ? "text-gray-900" : "text-gray-500"}`}>{log.title}</p>
@@ -188,7 +203,7 @@ export default function OrderDetails() {
         {/* Sidebar Info */}
         <div className="flex flex-col gap-8">
           {/* Customer Card */}
-          <div className="bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col gap-6">
+          <div className="bg-white p-8 border border-[#1C1C1C1A] rounded-[6px] flex flex-col gap-6">
             <h3 className="text-lg font-black text-gray-900">Customer Profiles</h3>
             <div className="flex items-center gap-4">
               <img src={order.customer.avatar} alt={order.customer.name} className="w-14 h-14 rounded-2xl object-cover shadow-lg shadow-brand-gold/10 border-2 border-white" />
@@ -199,12 +214,12 @@ export default function OrderDetails() {
             </div>
 
             <div className="flex flex-col gap-4 pt-6 border-t border-gray-50">
-              <div className="flex gap-3">
-                <Icon name="mail_outline" size="xs" className="text-gray-300" />
+              <div className="flex gap-3 items-center">
+                <HiOutlineEnvelope className="text-gray-400 text-lg" />
                 <span className="text-xs font-black text-gray-600">{order.customer.email}</span>
               </div>
-              <div className="flex gap-3">
-                <Icon name="phone" size="xs" className="text-gray-300" />
+              <div className="flex gap-3 items-center">
+                <HiPhone className="text-gray-400 text-lg" />
                 <span className="text-xs font-black text-gray-600">{order.customer.phone}</span>
               </div>
             </div>
@@ -215,16 +230,16 @@ export default function OrderDetails() {
           </div>
 
           {/* Shipping Address */}
-          <div className="bg-white p-8 rounded-2xl border border-gray-200 shadow-sm flex flex-col gap-6">
+          <div className="bg-white p-8 border border-[#1C1C1C1A] rounded-[6px] flex flex-col gap-6">
             <div className="flex justify-between items-center">
               <h3 className="text-lg font-black text-gray-900">Shipping Info</h3>
-              <Icon name="create" size="xs" className="text-gray-300 cursor-pointer hover:text-brand-gold" />
+              <LuPencilLine className="text-gray-300 cursor-pointer hover:text-brand-gold text-lg" title="Edit Address" />
             </div>
 
             <div className="flex flex-col gap-4">
               <div className="flex gap-3">
                 <div className="w-10 h-10 rounded-xl bg-brand-gold/10 flex items-center justify-center text-brand-gold flex-shrink-0">
-                  <Icon name="location_on" size="sm" />
+                  <HiMapPin className="text-lg" />
                 </div>
                 <div className="flex flex-col gap-1">
                   <p className="text-xs font-black text-gray-700 leading-tight">Delivery Address</p>
@@ -236,7 +251,7 @@ export default function OrderDetails() {
 
               <div className="flex gap-3">
                 <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-brand-orange flex-shrink-0">
-                  <Icon name="local_shipping" size="sm" />
+                  <LuTruck className="text-lg" />
                 </div>
                 <div className="flex flex-col gap-1">
                   <p className="text-xs font-black text-gray-700 leading-tight">Courier Method</p>

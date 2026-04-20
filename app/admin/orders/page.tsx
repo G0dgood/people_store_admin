@@ -14,6 +14,7 @@ import { RowsPerPage } from "@/app/components/rows-per-page";
 import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import { BulkActionsDrawer } from "../../components/Admin/BulkActionsDrawer";
 import Checkbox from "@/app/components/Checkbox";
+import { HiOutlineEye } from "react-icons/hi2";
 
 const ordersData = [
  {
@@ -144,7 +145,7 @@ export default function OrderListing() {
     <StatCard title="Canceled Orders" value="87" trendValue="5%" trendIsUp={false} />
    </div>
 
-   <div className="bg-white rounded-[6px] border border-gray-200 shadow-sm overflow-hidden flex flex-col">
+   <div className="bg-white border border-[#1C1C1C1A] rounded-[6px] overflow-hidden flex flex-col">
     {/* Filter Controls Row */}
     <div className="p-4 sm:p-6 flex flex-col lg:flex-row gap-6 items-center justify-between border-b border-gray-50">
      <TabFilter
@@ -153,7 +154,7 @@ export default function OrderListing() {
       onChange={setActiveTab} id={""} />
 
      <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
-      <Input shape="rounded-sm" 
+      <Input shape="rounded-sm"
        type="text"
        placeholder="Search order report"
        containerClassName="w-full lg:w-80 xl:w-96"
@@ -245,7 +246,7 @@ export default function OrderListing() {
            <Link href={`/admin/orders/${order.id.replace("#", "")}`}>
             <Button shape="rounded-sm" variant="outline"
              className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all">
-             <Icon name="view" folder="dashboardIcon" size="sm" />
+             <HiOutlineEye className="text-lg" />
             </Button>
            </Link>
            <Button shape="rounded-sm" variant="outline"
