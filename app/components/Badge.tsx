@@ -26,7 +26,7 @@ const Badge: React.FC<BadgeProps> = ({
   return (
     <span className={`
       inline-flex items-center justify-center font-bold uppercase tracking-wider
-      ${isDot ? "w-5 h-5 rounded-full text-[11px] p-0" : "px-3 py-1 rounded-full text-[10px]"}
+      ${isDot ? "w-5 h-5 text-[11px] p-0" : "px-3 py-1 text-[10px]"}
       ${variants[variant]} 
       ${className}
     `}>

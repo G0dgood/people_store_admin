@@ -112,9 +112,8 @@ export default function DealsPage() {
           <h2 className="text-xl font-black text-[#1D3557]">Offer Countdown Management</h2>
           <p className="text-xs text-gray-400 font-bold">Configure the global countdown timer for your active deals.</p>
         </div>
-        <Button
-          variant="primary"
-          shape="rounded-sm"
+        <Button shape="rounded-sm" variant="primary"
+          className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold shadow-md shadow-brand-gold/10 h-10 px-6 text-[10px] font-black uppercase tracking-widest"
           iconLeft={<HiOutlinePlusCircle size={18} />}
           onClick={() => setIsTimerModalOpen(true)}
         >
@@ -125,7 +124,7 @@ export default function DealsPage() {
       {/* Timer Display Card */}
       <div className="w-full bg-white p-8 flex flex-col md:flex-row items-center justify-between gap-8 border border-[#1C1C1C1A] rounded-[6px] relative overflow-hidden group">
         {/* Decoration */}
-        <div className="absolute top-0 right-0 w-32 h-32 bg-brand-blue-light/20 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-brand-blue-light/40 transition-colors" />
+        <div className="absolute top-0 right-0 w-32 h-32 bg-brand-gold/10 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-brand-gold/20 transition-colors" />
 
         <div className="flex flex-col gap-4 relative z-10">
           <div className="flex items-center gap-3">
@@ -142,10 +141,10 @@ export default function DealsPage() {
               This timer is displayed in the "Deals and Offers" section. Once it hits zero, the section will auto-configure based on your store settings.
             </p>
             <div className="flex items-center gap-3">
-              <Button
+              <Button shape="rounded-sm"
                 variant={isRunning ? "secondary" : "primary"}
                 size="sm"
-                className="!py-1.5 !px-4 text-[10px] font-black uppercase tracking-widest border-none shadow-sm"
+                className="!py-1.5 !px-4 text-[10px] font-black uppercase tracking-widest border-none shadow-sm transition-all duration-300 hover:bg-brand-gold hover:text-white"
                 onClick={() => setIsRunning(!isRunning)}
               >
                 {isRunning ? "Pause Countdown" : "Resume Countdown"}
@@ -182,7 +181,7 @@ export default function DealsPage() {
         {stats.map((stat, idx) => (
           <div key={idx} className="bg-white p-6 rounded-2xl border border-[#1C1C1C1A] rounded-[6px] flex flex-col gap-4 hover:shadow-md transition-shadow">
             <div className={`w-12 h-12 rounded-xl flex items-center justify-center
-              ${stat.color === 'blue' ? 'bg-blue-50 text-blue-500' :
+              ${stat.color === 'blue' ? 'bg-brand-gold/10 text-brand-gold' :
                 stat.color === 'emerald' ? 'bg-emerald-50 text-emerald-500' :
                   stat.color === 'orange' ? 'bg-orange-50 text-orange-500' :
                     'bg-rose-50 text-rose-500'}
@@ -204,9 +203,8 @@ export default function DealsPage() {
             <h3 className="text-sm font-black text-[#1D3557] uppercase tracking-wider">Active Deals Feed</h3>
             <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Real-time status of current promotions</span>
           </div>
-          <Button
-            variant="primary"
-            shape="rounded-sm"
+          <Button shape="rounded-sm" variant="primary"
+            className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold shadow-md shadow-brand-gold/10 h-10 px-6 text-[10px] font-black uppercase tracking-widest"
             iconLeft={<HiOutlinePlusCircle size={16} />}
             onClick={() => setIsOfferModalOpen(true)}
           >
@@ -223,8 +221,8 @@ export default function DealsPage() {
               <span className="text-base font-black text-[#1D3557]">No custom offers active</span>
               <span className="text-xs text-gray-400 font-bold max-w-xs">Global default deals are currently being displayed. You can add specific offer overrides here.</span>
             </div>
-            <Button
-              variant="primary"
+            <Button shape="rounded-sm" variant="primary"
+              className="px-8 h-12 text-[10px] font-black uppercase tracking-widest shadow-lg shadow-brand-gold/10 transition-all duration-300 hover:bg-brand-gold hover:text-white"
               onClick={() => setIsOfferModalOpen(true)}
             >
               Create Your First Offer
@@ -246,14 +244,14 @@ export default function DealsPage() {
                 {offers.map((offer, idx) => {
                   const dealPrice = offer.price - (offer.price * offer.discount / 100);
                   return (
-                    <tr key={idx} className="group hover:bg-blue-50/30 transition-colors">
+                    <tr key={idx} className="group hover:bg-brand-gold/5 transition-colors">
                       <td className="pl-8 py-5">
                         <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-xl border border-gray-200 overflow-hidden bg-white p-1 shrink-0 shadow-sm group-hover:border-brand-blue/30 transition-colors">
+                          <div className="w-12 h-12 rounded-xl border border-gray-200 overflow-hidden bg-white p-1 shrink-0 shadow-sm group-hover:border-brand-gold/20 transition-colors">
                             <img src={offer.image} alt="" className="w-full h-full object-contain" />
                           </div>
                           <div className="flex flex-col">
-                            <span className="text-sm font-black text-[#1D3557] group-hover:text-brand-blue transition-colors">{offer.name}</span>
+                            <span className="text-sm font-black text-[#1D3557] group-hover:text-brand-gold transition-colors">{offer.name}</span>
                             <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider">{offer.category}</span>
                           </div>
                         </div>
@@ -271,10 +269,8 @@ export default function DealsPage() {
                       </td>
                       <td className="pr-8 py-5 text-right">
                         <div className="flex justify-end gap-2">
-                          <Button
-                            variant="outline"
-                            shape="rounded-sm"
-                            className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
+                          <Button shape="rounded-sm" variant="outline"
+                            className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
                             onClick={() => {
                               setOfferToEdit(offer);
                               setIsOfferModalOpen(true);
@@ -282,9 +278,7 @@ export default function DealsPage() {
                           >
                             <HiOutlinePencil className="w-4.5 h-4.5" />
                           </Button>
-                          <Button
-                            variant="outline"
-                            shape="rounded-sm"
+                          <Button shape="rounded-sm" variant="outline"
                             className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
                             onClick={() => {
                               setOfferToDelete(offer);

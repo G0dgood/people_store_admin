@@ -41,17 +41,17 @@ export const RealtimeUsers: React.FC<RealtimeUsersProps> = ({ onViewInsight }) =
         style={{ backgroundImage: `radial-gradient(#1D3557 1px, transparent 1px)`, backgroundSize: '20px 20px' }} />
 
       {/* Subtle Glow Overlays */}
-      <div className="absolute -top-24 -right-24 w-64 h-64 bg-brand-blue/5 rounded-full blur-[80px] pointer-events-none" />
-      <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-blue-400/5 rounded-full blur-[80px] pointer-events-none" />
+      <div className="absolute -top-24 -right-24 w-64 h-64 bg-brand-gold/5 rounded-full blur-[80px] pointer-events-none" />
+      <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-brand-gold/5 rounded-full blur-[80px] pointer-events-none" />
 
       <div className="flex justify-between items-start relative z-10">
         <div className="flex flex-col gap-1.5">
-          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-brand-blue/5 border border-brand-blue/10 w-fit">
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-brand-gold/5 border border-brand-gold/10 w-fit">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500 shadow-[0_0_8px_rgba(33,150,243,0.8)]"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-gold/40 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-gold shadow-[0_0_8px_rgba(197,160,89,0.8)]"></span>
             </span>
-            <span className="text-[10px] font-black text-brand-blue uppercase tracking-[0.1em]">Realtime Monitor</span>
+            <span className="text-[10px] font-black text-brand-gold uppercase tracking-[0.1em]">Realtime Monitor</span>
           </div>
 
           <h3 className="text-5xl font-black text-[#1D3557] tracking-[-0.04em] mt-3 tabular-nums drop-shadow-sm">
@@ -120,10 +120,10 @@ export const RealtimeUsers: React.FC<RealtimeUsersProps> = ({ onViewInsight }) =
                 backgroundColor: (context: any) => {
                   const chart = context.chart;
                   const { ctx, chartArea } = chart;
-                  if (!chartArea) return '#2196F3';
+                  if (!chartArea) return '#C5A059';
                   const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-                  gradient.addColorStop(0, '#2196F3');
-                  gradient.addColorStop(1, '#60A5FA');
+                  gradient.addColorStop(0, '#C5A059');
+                  gradient.addColorStop(1, '#D4AF37');
                   return gradient;
                 },
                 borderRadius: 3,
@@ -144,7 +144,7 @@ export const RealtimeUsers: React.FC<RealtimeUsersProps> = ({ onViewInsight }) =
       <div className="flex flex-col gap-6 pt-6 mt-2 relative z-10">
         <div className="flex justify-between items-center bg-gray-50/50 p-2 rounded-lg border border-gray-200/50">
           <h4 className="text-[12px] font-black text-[#1D3557] uppercase tracking-widest pl-1">Global Distribution</h4>
-          <span className="text-[10px] font-black text-brand-blue bg-white px-2 py-0.5 rounded border border-gray-200 shadow-sm">ACTIVE</span>
+          <span className="text-[10px] font-black text-brand-gold bg-white px-2 py-0.5 rounded border border-gray-200 shadow-sm">ACTIVE</span>
         </div>
 
         {[
@@ -179,7 +179,7 @@ export const RealtimeUsers: React.FC<RealtimeUsersProps> = ({ onViewInsight }) =
                     initial={{ opacity: 0 }}
                     animate={{ opacity: isActive ? 1 : 0.1 }}
                     transition={{ delay: 0.5 + (idx * 0.02) + (i * 0.1) }}
-                    className={`h-full flex-1 rounded-[1px] ${isActive ? 'bg-gradient-to-b from-blue-400 to-brand-blue shadow-[0_0_5px_rgba(33,150,243,0.3)]' : 'bg-gray-200'}`}
+                    className={`h-full flex-1 rounded-[1px] ${isActive ? 'bg-gradient-to-b from-brand-gold/80 to-brand-gold shadow-[0_0_5px_rgba(197,160,89,0.3)]' : 'bg-gray-200'}`}
                   />
                 );
               })}
@@ -190,10 +190,10 @@ export const RealtimeUsers: React.FC<RealtimeUsersProps> = ({ onViewInsight }) =
 
       <button
         onClick={onViewInsight}
-        className="group relative w-full h-[52px] mt-6 flex items-center justify-center transition-all duration-300 overflow-hidden rounded-[6px]"
+        className="group relative w-full h-[52px] mt-6 flex items-center justify-center transition-all duration-300 overflow-hidden rounded-[4px]"
       >
         {/* Glass Background */}
-        <div className="absolute inset-0 bg-[#1D3557] group-hover:bg-[#1D3557]/90 transition-colors" />
+        <div className="absolute inset-0 bg-brand-gold group-hover:bg-amber-600 transition-colors" />
         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12 translate-x-full group-hover:translate-x-[-200%] duration-1000" />
 
         <span className="relative z-10 text-[11px] font-black text-white uppercase tracking-[0.2em] flex items-center gap-3">
@@ -202,11 +202,11 @@ export const RealtimeUsers: React.FC<RealtimeUsersProps> = ({ onViewInsight }) =
         </span>
 
         {/* Outer Glow on hover */}
-        <div className="absolute inset-x-4 inset-y-0 bg-brand-blue/30 blur-2xl group-hover:opacity-100 opacity-0 transition-opacity pointer-events-none" />
+        <div className="absolute inset-x-4 inset-y-0 bg-brand-gold/20 blur-2xl group-hover:opacity-100 opacity-0 transition-opacity pointer-events-none" />
       </button>
 
       {/* Subtle border bottom glow */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-[1px] bg-gradient-to-r from-transparent via-brand-blue/40 to-transparent" />
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-[1px] bg-gradient-to-r from-transparent via-brand-gold/40 to-transparent" />
     </motion.div>
   );
 };

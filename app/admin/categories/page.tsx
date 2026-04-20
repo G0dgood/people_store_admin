@@ -81,18 +81,14 @@ export default function CategoriesPage() {
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row justify-end items-center gap-3">
         <div className="flex gap-3 w-full sm:w-auto">
-          <Button
-            variant="primary"
-            shape="rounded-sm"
-            className="flex-1 sm:flex-initial"
+          <Button shape="rounded-sm" variant="primary"
+            className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold flex-1 sm:flex-initial"
             iconLeft={<Icon name="add" folder="icon" size="xs" />}
             onClick={() => setIsAddModalOpen(true)}
           >
             Add Category
           </Button>
-          <Button
-            variant="outline"
-            shape="rounded-sm"
+          <Button shape="rounded-sm" variant="outline"
             className="flex-1 sm:flex-initial"
             iconRight={<Icon name="more_vert" folder="icon" size="xs" />}
             onClick={() => setIsMoreActionsOpen(true)}
@@ -105,7 +101,7 @@ export default function CategoriesPage() {
       {/* Categories Horizontal Scroll */}
       <div className="relative group">
         <button
-          className="absolute left-[-20px] top-1/2 -translate-y-1/2 w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center shadow-lg text-gray-400 hover:text-gray-900 z-10 opacity-0 group-hover:opacity-100 transition-opacity hover:border-brand-blue/30"
+          className="absolute left-[-20px] top-1/2 -translate-y-1/2 w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center shadow-lg text-gray-400 hover:text-gray-900 z-10 opacity-0 group-hover:opacity-100 transition-opacity hover:border-brand-gold/30"
           onClick={() => scroll("left")}
         >
           <Icon name="chevron_left" folder="icon" size="sm" />
@@ -116,17 +112,17 @@ export default function CategoriesPage() {
           className="flex gap-4 overflow-x-auto pb-2 no-scrollbar scroll-smooth px-1"
         >
           {categories.map((cat, i) => (
-            <div key={i} className="flex-shrink-0 w-[220px] bg-white p-3 rounded-[6px] flex items-center gap-3 hover:shadow-md transition-shadow cursor-pointer hover:border-brand-blue/30 group/item border border-[#1C1C1C1A]">
-              <div className="w-12 h-12 rounded-[6px] overflow-hidden bg-gray-50 flex items-center justify-center p-1 group-hover/item:bg-brand-blue-light transition-colors">
+            <div key={i} className="flex-shrink-0 w-[220px] bg-white p-3 rounded-[6px] flex items-center gap-3 hover:shadow-md transition-shadow cursor-pointer hover:border-brand-gold/30 group/item border border-[#1C1C1C1A]">
+              <div className="w-12 h-12 rounded-[6px] overflow-hidden bg-gray-50 flex items-center justify-center p-1 group-hover/item:bg-brand-gold/10 transition-colors">
                 <img src={cat.image} alt={cat.name} className="w-full h-full object-contain" />
               </div>
-              <span className="text-sm font-bold text-[#1D3557] group-hover/item:text-brand-blue transition-colors">{cat.name}</span>
+              <span className="text-sm font-bold text-[#1D3557] group-hover/item:text-brand-gold transition-colors">{cat.name}</span>
             </div>
           ))}
         </div>
 
         <button
-          className="absolute right-[-20px] top-1/2 -translate-y-1/2 w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center shadow-lg text-gray-400 hover:text-gray-900 z-10 opacity-0 group-hover:opacity-100 transition-opacity hover:border-brand-blue/30"
+          className="absolute right-[-20px] top-1/2 -translate-y-1/2 w-10 h-10 bg-white border border-gray-200 rounded-full flex items-center justify-center shadow-lg text-gray-400 hover:text-gray-900 z-10 opacity-0 group-hover:opacity-100 transition-opacity hover:border-brand-gold/30"
           onClick={() => scroll("right")}
         >
           <Icon name="chevron_right" folder="icon" size="sm" />
@@ -140,11 +136,10 @@ export default function CategoriesPage() {
           <TabFilter
             tabs={["All Product (145)", "Featured Products", "On Sale", "Out of Stock"]}
             activeTab={activeTab}
-            onChange={setActiveTab}
-          />
+            onChange={setActiveTab} id={""} />
 
           <div className="flex items-center gap-3 w-full md:w-auto">
-            <Input
+            <Input shape="rounded-sm"
               type="text"
               placeholder="Search your product"
               containerClassName="flex-1 md:w-96"
@@ -152,25 +147,16 @@ export default function CategoriesPage() {
               suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
             />
             <RowsPerPage value={rowsPerPage} onChange={setRowsPerPage} />
-            <Button
-              variant="outline"
-              shape="rounded-sm"
-              className="!p-2 text-gray-400 shadow-sm"
-            >
+            <Button shape="rounded-sm" variant="outline"
+              className="!p-2 text-gray-400 shadow-sm">
               <Icon name="sort" folder="dashboardIcon" size="sm" />
             </Button>
-            <Button
-              variant="outline"
-              shape="rounded-sm"
-              className="!p-2 text-gray-400 shadow-sm"
-            >
+            <Button shape="rounded-sm" variant="outline"
+              className="!p-2 text-gray-400 shadow-sm">
               <Icon name="circle-plus" folder="dashboardIcon" size="sm" />
             </Button>
-            <Button
-              variant="outline"
-              shape="rounded-sm"
-              className="!p-2 text-gray-400 shadow-sm"
-            >
+            <Button shape="rounded-sm" variant="outline"
+              className="!p-2 text-gray-400 shadow-sm">
               <Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />
             </Button>
           </div>
@@ -216,20 +202,16 @@ export default function CategoriesPage() {
                   <td className="text-sm font-bold text-gray-900 text-center">{p.order}</td>
                   <td className="text-right">
                     <div className="flex justify-end gap-2 px-2">
-                      <Button
-                        variant="outline"
-                        shape="rounded-sm"
-                        className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
+                      <Button shape="rounded-sm" variant="outline"
+                        className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
                         onClick={() => {
-                          setCategoryToEdit(p); 
+                          setCategoryToEdit(p);
                           setIsEditDrawerOpen(true);
                         }}
                       >
                         <Icon name="settings" folder="dashboardIcon" size="sm" />
                       </Button>
-                      <Button
-                        variant="outline"
-                        shape="rounded-sm"
+                      <Button shape="rounded-sm" variant="outline"
                         className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
                         onClick={() => {
                           setCategoryToDelete(p);

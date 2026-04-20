@@ -9,6 +9,7 @@ interface DatePickerProps {
   onChange?: (date: Date) => void;
   placeholder?: string;
   className?: string;
+  shape?: "rounded" | "rounded-sm" | "pill";
 }
 
 const DatePicker: React.FC<DatePickerProps> = ({
@@ -16,10 +17,17 @@ const DatePicker: React.FC<DatePickerProps> = ({
   onChange,
   placeholder = "Choose date",
   className = "",
+  shape = "rounded",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [viewDate, setViewDate] = useState(value || new Date());
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const shapes = {
+    rounded: "rounded-none",
+    "rounded-sm": "rounded-sm",
+    pill: "rounded-full",
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -97,7 +105,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className={`
-          flex items-center gap-2 w-full bg-white border rounded-md py-2.5 px-4 text-sm transition-all
+          flex items-center gap-2 w-full bg-white border py-2.5 px-4 text-sm transition-all ${shapes[shape]}
           ${isOpen ? "border-brand-blue ring-2 ring-brand-blue/20" : "border-gray-200 hover:border-gray-300"}
         `}
       >
@@ -108,7 +116,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
       </button>
 
       {isOpen && (
-        <div className="absolute z-20 w-[280px] mt-1.5 bg-white border border-gray-200 rounded-md shadow-xl p-4 animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className={`absolute z-20 w-[280px] mt-1.5 bg-white border border-gray-200 ${shapes[shape]} shadow-xl p-4 animate-in fade-in slide-in-from-top-2 duration-200`}>
           <div className="flex items-center justify-between mb-4">
              <button onClick={handlePrevMonth} className="p-1 hover:bg-gray-100 rounded text-gray-400">
                 <Icon name="chevron_left" size="sm" />
@@ -132,8 +140,8 @@ const DatePicker: React.FC<DatePickerProps> = ({
           </div>
 
           <div className="flex gap-2 mt-6 pt-4 border-t border-gray-200">
-            <Button variant="ghost" size="sm" className="flex-1 text-brand-blue border border-gray-200" onClick={handleClear}>Clear</Button>
-            <Button variant="ghost" size="sm" className="flex-1 text-brand-blue border border-gray-200" onClick={handleToday}>Today</Button>
+            <Button variant="ghost" size="sm" shape={shape} className="flex-1 text-brand-blue border border-gray-200" onClick={handleClear}>Clear</Button>
+            <Button variant="ghost" size="sm" shape={shape} className="flex-1 text-brand-blue border border-gray-200" onClick={handleToday}>Today</Button>
           </div>
         </div>
       )}

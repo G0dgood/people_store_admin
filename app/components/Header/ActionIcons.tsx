@@ -3,73 +3,92 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
 import { Icon } from "../Icon";
-import { MessageDropdown } from "./MessageDropdown";
 
 import { useAuthModal } from "@/app/context/AuthModalContext";
 import { useCart } from "@/app/context/CartContext";
 
 export const ActionIcons: React.FC = () => {
-  const [isMessagesOpen, setIsMessagesOpen] = useState(false);
   const { openLogin } = useAuthModal();
   const { cartItems } = useCart();
   const pathname = usePathname();
+  const [isAccountOpen, setIsAccountOpen] = useState(false);
 
   const isActive = (path: string) => pathname === path;
   const cartCount = cartItems.length;
 
   return (
-    <div className="flex items-center gap-4 md:gap-6">
-      <div 
-        onClick={openLogin}
-        className="flex flex-col items-center cursor-pointer group text-gray-500 hover:text-brand-red transition-colors"
-      >
-        <Icon name="profile" size="md" />
-        <span className="text-[10px] font-medium mt-1 hidden md:block">Profile</span>
-      </div>
-      <div 
-        className="relative flex flex-col items-center cursor-pointer group text-gray-500 hover:text-brand-red transition-colors hidden md:flex"
-        onMouseEnter={() => setIsMessagesOpen(true)}
-        onMouseLeave={() => setIsMessagesOpen(false)}
-      >
-        <Icon name="message_header" size="md" />
-        <span className="text-[10px] font-medium mt-1">Message</span>
+    <div className="flex items-center gap-2 md:gap-8">
+      {/* Account Section */}
+      <div className="relative group">
+        <div 
+          onClick={openLogin}
+          onMouseEnter={() => setIsAccountOpen(true)}
+          className="flex flex-col items-start cursor-pointer transition-all duration-300"
+        >
+          <span className="text-[10px] lowercase text-gray-400 font-medium leading-none mb-1">Login / Signup</span>
+          <div className="flex items-center gap-1">
+            <span className="text-[14px] font-bold text-gray-900 leading-none">My account</span>
+            <Icon name="expand_more" size="xs" className="text-gray-400 group-hover:text-brand-gold transition-colors" />
+          </div>
+        </div>
+
+        {/* Account Dropdown */}
         <AnimatePresence>
-          {isMessagesOpen && <MessageDropdown />}
+          {isAccountOpen && (
+            <div 
+              className="absolute top-full left-0 pt-4 w-52 z-[100]"
+              onMouseLeave={() => setIsAccountOpen(false)}
+            >
+              <div 
+                className="bg-white border border-gray-100 shadow-2xl py-2 flex flex-col"
+                onClick={() => setIsAccountOpen(false)}
+              >
+                <Link href="/profile" className="px-5 py-2.5 text-[11px] font-bold uppercase tracking-wider text-gray-600 hover:text-brand-gold hover:bg-gray-50/50 transition-all">
+                  My Profile
+                </Link>
+                <Link href="/wishlist" className="px-5 py-2.5 text-[11px] font-bold uppercase tracking-wider text-gray-600 hover:text-brand-gold hover:bg-gray-50/50 transition-all border-t border-gray-50">
+                  My Wishlist
+                </Link>
+                <Link href="/orders" className="px-5 py-2.5 text-[11px] font-bold uppercase tracking-wider text-gray-600 hover:text-brand-gold hover:bg-gray-50/50 transition-all border-t border-gray-50">
+                  Order History
+                </Link>
+                <Link href="/admin" className="px-5 py-2.5 text-[11px] font-bold uppercase tracking-wider text-gray-600 hover:text-brand-gold hover:bg-gray-50/50 transition-all border-t border-gray-50">
+                  Admin Dashboard
+                </Link>
+                <div className="mx-5 my-1 border-t border-gray-100" />
+                <button 
+                  onClick={openLogin}
+                  className="px-5 py-2.5 text-[11px] font-bold uppercase tracking-wider text-red-600 hover:bg-red-50/30 transition-all text-left"
+                >
+                  Sign Out
+                </button>
+              </div>
+            </div>
+          )}
         </AnimatePresence>
       </div>
-      <Link 
-        href="/wishlist" 
-        className={`flex flex-col items-center group transition-colors hidden md:flex ${
-          isActive("/wishlist") ? "text-brand-red font-bold" : "text-gray-500 hover:text-brand-red"
-        }`}
-      >
-        <Icon name="favorite" size="md" />
-        <span className="text-[10px] font-medium mt-1">Wishlist</span>
-      </Link>
-      <Link 
-        href="/orders" 
-        className={`flex flex-col items-center group transition-colors hidden md:flex ${
-          isActive("/orders") ? "text-brand-red font-bold" : "text-gray-500 hover:text-brand-red"
-        }`}
-      >
-        <Icon name="inventory_2" size="md" />
-        <span className="text-[10px] font-medium mt-1">Orders</span>
-      </Link>
+
+      {/* Vertical Divider */}
+      <div className="h-10 w-px bg-gray-200 mx-2 hidden md:block" />
+
+      {/* Cart Section */}
       <Link 
         href="/cart" 
-        className={`relative flex flex-col items-center group transition-colors ${
-          isActive("/cart") ? "text-brand-red font-bold" : "text-gray-500 hover:text-brand-red"
-        }`}
+        className="flex items-center gap-3 transition-all text-gray-900 hover:text-brand-gold group"
       >
         <div className="relative">
-          <Icon name="My_cart" size="md" />
-          {cartCount > 0 && (
-            <span className="absolute -top-1.5 -right-1.5 bg-[#EB001B] text-white text-[10px] font-bold min-w-[16px] h-[16px] flex items-center justify-center rounded-full px-1 border-2 border-white">
+          <Icon 
+            name="shopping_cart" 
+            size="md" 
+            className="text-gray-900 group-hover:text-brand-gold transition-colors" 
+          />
+          {cartCount >= 0 && (
+            <span className="absolute -top-2.5 -right-2.5 bg-[#C30000] text-white text-[10px] font-bold min-w-[20px] h-[20px] flex items-center justify-center rounded-full border-2 border-white shadow-sm">
               {cartCount}
             </span>
           )}
         </div>
-        <span className="text-[10px] font-medium mt-1 hidden md:block">My cart</span>
+        <span className="text-[15px] font-bold text-gray-900 group-hover:text-brand-gold transition-colors hidden md:block">Cart</span>
       </Link>
     </div>
   );

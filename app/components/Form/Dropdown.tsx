@@ -136,9 +136,9 @@ const Dropdown: React.FC<DropdownProps> = ({
     const disabledClass = disabled ? "opacity-50 cursor-not-allowed" : "";
 
     if (variant === "minimal") {
-      return `${baseClasses} ${sizeClass} ${disabledClass} bg-neutral-50 border border-neutral-200 rounded-[6px] hover:bg-neutral-100 focus:ring-2 focus:ring-brand-blue/20 focus:border-brand-blue`;
+      return `${baseClasses} ${sizeClass} ${disabledClass} bg-neutral-50 border border-neutral-200 rounded-[6px] hover:bg-neutral-100 focus:ring-2 focus:ring-brand-gold/20 focus:border-brand-gold`;
     } else {
-      return `${baseClasses} ${sizeClass} ${disabledClass} bg-white border border-neutral-300 rounded-[6px] hover:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 focus:border-brand-blue`;
+      return `${baseClasses} ${sizeClass} ${disabledClass} bg-white border border-neutral-300 rounded-[6px] hover:border-brand-gold focus:ring-2 focus:ring-brand-gold/20 focus:border-brand-gold`;
     }
   };
 
@@ -148,7 +148,7 @@ const Dropdown: React.FC<DropdownProps> = ({
         <label className="block md:text-[12px] text-[10px] !font-light !text-[#1F1F1F] mb-2">
           {label}
           {required && (
-            <span className="text-brand-red ml-1" aria-hidden="true">
+            <span className="text-brand-gold ml-1" aria-hidden="true">
               *
             </span>
           )}
@@ -196,7 +196,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                 <input
                   ref={searchInputRef}
                   type="text"
-                  className="w-full h-8 px-2 text-[10px] md:text-[12px] text-[#1F1F1F] placeholder:text-[rgba(31,31,31,0.5)] bg-neutral-50 border border-neutral-200 rounded-[4px] focus:outline-none focus:ring-1 focus:ring-brand-blue/20 focus:border-brand-blue"
+                  className="w-full h-8 px-2 text-[10px] md:text-[12px] text-[#1F1F1F] placeholder:text-[rgba(31,31,31,0.5)] bg-neutral-50 border border-neutral-200 rounded-[4px] focus:outline-none focus:ring-1 focus:ring-brand-gold/20 focus:border-brand-gold"
                   placeholder="Search..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -222,7 +222,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                       <span
                         className={
                           value === option.value
-                            ? "text-brand-blue font-bold"
+                            ? "text-brand-gold font-bold"
                             : ""
                         }
                       >

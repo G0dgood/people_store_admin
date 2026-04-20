@@ -72,7 +72,7 @@ export function AddBrandModal({ isOpen, onClose }: AddBrandModalProps) {
                 className="h-12 border-gray-200 font-bold flex-1"
                 required
               />
-              <Button 
+              <Button
                 type="button"
                 variant="outline"
                 shape="rounded-sm"
@@ -104,18 +104,18 @@ export function AddBrandModal({ isOpen, onClose }: AddBrandModalProps) {
         </ModalBody>
 
         <ModalFooter className="flex justify-end gap-3 border-t border-gray-50 pt-6">
-          <Button 
-            variant="outline" 
-            type="button" 
-            onClick={onClose} 
-            className="px-8 h-10 sm:h-12 text-[11px] font-bold"
+          <Button
+            shape="rounded-sm"
+            variant="outline"
+            type="button"
+            onClick={onClose}
           >
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
-            type="submit" 
-            className="px-8 h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
+          <Button
+            shape="rounded-sm"
+            variant="primary"
+            type="submit"
           >
             Create Brand
           </Button>

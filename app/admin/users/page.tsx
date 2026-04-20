@@ -128,11 +128,9 @@ export default function UsersManagement() {
  return (
   <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
    <div className="flex justify-end gap-3 w-full sm:w-auto">
-    <Button
-     variant="primary"
-     shape="rounded-sm"
+    <Button shape="rounded-sm" variant="primary"
+     className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold shadow-md shadow-blue-50 h-10 px-4 text-[10px] font-black uppercase tracking-widest whitespace-nowrap"
      iconLeft={<Icon name="circle-plus" folder="dashboardIcon" size="sm" />}
-     className="shadow-md shadow-blue-50 h-10 px-4 text-[10px] font-black uppercase tracking-widest whitespace-nowrap"
      onClick={() => setIsAddUserModalOpen(true)}
     >
      Add User
@@ -147,7 +145,7 @@ export default function UsersManagement() {
       onChange={setActiveTab} id={""} />
 
      <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
-      <Input
+      <Input shape="rounded-sm" 
        type="text"
        placeholder="Search by name, email or role..."
        containerClassName="flex-1 xl:w-80"
@@ -161,9 +159,7 @@ export default function UsersManagement() {
        <Button variant="outline" shape="rounded-sm" className="!p-2.5 text-gray-400 hover:text-brand-blue hover:bg-brand-blue-light border-gray-200 transition-all">
         <Icon name="filter" folder="dashboardIcon" size="sm" />
        </Button>
-       <Button
-        variant="outline"
-        shape="rounded-sm"
+       <Button shape="rounded-sm" variant="outline"
         className="!p-2.5 text-gray-400 hover:text-brand-blue hover:bg-brand-blue-light border-gray-200 transition-all"
         onClick={() => setIsMoreActionsOpen(true)}
        >
@@ -236,9 +232,7 @@ export default function UsersManagement() {
          </td>
          <td className="text-right">
           <div className="flex justify-end gap-3 transition-all duration-300">
-           <Button
-            variant="outline"
-            shape="rounded-sm"
+           <Button shape="rounded-sm" variant="outline"
             className="!p-1.5 text-gray-400 hover:text-brand-blue hover:bg-brand-blue-light border-gray-200 transition-all"
             onClick={() => {
              setSelectedStaff(user);
@@ -247,9 +241,7 @@ export default function UsersManagement() {
            >
             <Icon name="settings" folder="dashboardIcon" size="sm" />
            </Button>
-           <Button
-            variant="outline"
-            shape="rounded-sm"
+           <Button shape="rounded-sm" variant="outline"
             className="!p-1.5 text-gray-400 hover:text-brand-blue hover:bg-brand-blue-light border-gray-200 transition-all"
             onClick={() => {
              setUserToEdit(user);
@@ -258,9 +250,7 @@ export default function UsersManagement() {
            >
             <FiEdit3 size={14} />
            </Button>
-           <Button
-            variant="outline"
-            shape="rounded-sm"
+           <Button shape="rounded-sm" variant="outline"
             className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 border-gray-200 transition-all"
             onClick={() => {
              setUserToDelete(user);

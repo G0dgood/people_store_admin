@@ -109,9 +109,9 @@ export const StatCard: React.FC<StatCardProps> = ({
 
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-3">
-          <h2 className="text-3xl font-black text-[#1D3557] tracking-tight">{value}</h2>
+          <h2 className="text-3xl font-black text-brand-charcoal tracking-tight">{value}</h2>
           {trendValue && (
-            <div className={`flex items-center text-[10px] font-black gap-0.5 px-2 py-0.5 rounded-md ${trendIsUp ? "bg-blue-50 text-brand-blue" : "bg-rose-50 text-rose-500"}`}>
+            <div className={`flex items-center text-[10px] font-black gap-0.5 px-2 py-0.5 rounded-md ${trendIsUp ? "bg-gray-50 text-brand-charcoal" : "bg-rose-50 text-rose-500"}`}>
               <Icon name={trendIsUp ? "arrow_upward" : "arrow_downward"} size="xs" />
               <span>{trendValue}</span>
             </div>
@@ -122,7 +122,7 @@ export const StatCard: React.FC<StatCardProps> = ({
           <MiniChart
             type="area"
             data={chartData}
-            color={trendIsUp ? "#2196F3" : "#F43F5E"}
+            color={trendIsUp ? "#222222" : "#F43F5E"}
             height={40}
           />
         </div>
@@ -135,7 +135,7 @@ export const StatCard: React.FC<StatCardProps> = ({
             e.stopPropagation();
             onViewDetails?.();
           }}
-          className="flex items-center gap-1 text-[10px] font-black text-brand-blue uppercase hover:underline opacity-0 group-hover:opacity-100 transition-all duration-300"
+          className="flex items-center gap-1 text-[10px] font-black text-brand-charcoal uppercase hover:underline opacity-0 group-hover:opacity-100 transition-all duration-300"
         >
           View Details
           <Icon name="chevron_right" size="xs" className="transition-transform group-hover/btn:translate-x-1" />

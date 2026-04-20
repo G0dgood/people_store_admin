@@ -102,7 +102,7 @@ export default function RefundsPage() {
             onChange={setActiveTab} id={""} />
 
           <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
-            <Input
+            <Input shape="rounded-sm" 
               type="text"
               placeholder="Search refunds"
               containerClassName="w-full lg:w-80 xl:w-96"
@@ -172,9 +172,7 @@ export default function RefundsPage() {
                   </td>
                   <td className="text-right">
                     <div className="flex justify-end items-center gap-2">
-                      <Button
-                        variant="outline"
-                        shape="rounded-sm"
+                      <Button shape="rounded-sm" variant="outline"
                         className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
                         onClick={() => {
                           setActionTarget(refund);
@@ -184,9 +182,7 @@ export default function RefundsPage() {
                       >
                         <Icon name="cached" folder="icon" size="sm" />
                       </Button>
-                      <Button
-                        variant="outline"
-                        shape="rounded-sm"
+                      <Button shape="rounded-sm" variant="outline"
                         className="!p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-all"
                         onClick={() => {
                           setSelectedRefund(refund);

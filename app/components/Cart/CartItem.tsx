@@ -40,9 +40,9 @@ const CartItem: React.FC<CartItemProps> = ({ id, title, price, image, quantity, 
    };
 
    return (
-      <div className="flex flex-col md:flex-row gap-6 p-6 border-b border-gray-100 last:border-0 hover:bg-gray-50/30 transition-colors">
+      <div className="flex flex-col md:flex-row gap-6 p-6 border-b border-gray-200 last:border-0 hover:bg-gray-50/30 transition-colors">
          {/* Item Image */}
-         <div className="w-24 h-24 flex-shrink-0 border border-gray-100 p-3 flex items-center justify-center bg-white rounded-xl shadow-sm">
+         <div className="w-24 h-24 flex-shrink-0 border border-gray-200 p-3 flex items-center justify-center bg-white shadow-none">
             <div className="relative w-full h-full">
                <Image src={image} alt={title} fill className="object-contain" />
             </div>

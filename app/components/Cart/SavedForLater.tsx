@@ -41,7 +41,7 @@ const SavedForLater = () => {
       <div className="p-6 border-b border-gray-200">
         <h3 className="text-xl font-bold text-gray-900">Saved for later ({wishlistItems.length})</h3>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 divide-x divide-gray-100">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 divide-x divide-gray-200">
         {wishlistItems.map((item) => (
           <div key={item.id} className="p-6 flex flex-col gap-4 hover:bg-gray-50 transition-colors group cursor-pointer">
             <div className="w-full aspect-square relative bg-white border border-gray-200 flex items-center justify-center p-14 md:p-10 overflow-hidden">

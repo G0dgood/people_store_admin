@@ -6,6 +6,7 @@ import { Radio } from "@/app/components/Form";
 import Checkbox from "@/app/components/Checkbox";
 import { RangeSlider } from "../Form/RangeSlider";
 import { Rating } from "../Other/Rating";
+import { FilterState } from "@/app/types/products";
 
 interface FilterSectionProps {
   title: string;
@@ -35,20 +36,8 @@ const FilterSection: React.FC<FilterSectionProps> = ({ title, children, defaultO
 };
 
 interface FilterSidebarProps {
-  filters: {
-    category: string | null;
-    brands: string[];
-    priceRange: [number, number];
-    condition: string;
-    ratings: number[];
-  };
-  setFilters: React.Dispatch<React.SetStateAction<{
-    category: string | null;
-    brands: string[];
-    priceRange: [number, number];
-    condition: string;
-    ratings: number[];
-  }>>;
+  filters: FilterState;
+  setFilters: React.Dispatch<React.SetStateAction<FilterState>>;
 }
 
 const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilters }) => {

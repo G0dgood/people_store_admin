@@ -42,8 +42,6 @@
   --primary: oklch(0.205 0 0);
   --text-primary: var(--primary);
   /* Brand Colors - Essenza Inspired */
-  --brand-red: #8B0000;
-  --brand-red-dark: #4A0000;
   --brand-black: #111111;
   --brand-charcoal: #222222;
   --brand-gold: #C5A028;
@@ -57,6 +55,16 @@
   /* Override existing brand blue with gold for luxury impact as per user request */
   --brand-blue: var(--brand-gold);
   --brand-blue-light: #FFFBF0;
+}
+
+/* Scoped theme for Administrative Panel */
+.admin-theme {
+  --brand-blue: var(--brand-charcoal);
+  --brand-blue-light: #F9FAFB;
+  --primary: var(--brand-charcoal);
+  --neutral-900: var(--brand-charcoal);
+  --admin-blue-accent: var(--brand-charcoal);
+  --admin-green-accent: var(--brand-charcoal);
 }
 
 @theme inline {
@@ -89,9 +97,9 @@
   /* Brand */
   --color-brand-blue-light: var(--brand-blue-light);
   --color-brand-blue: var(--brand-blue);
-  --color-brand-red: var(--brand-red);
   --color-brand-gold: var(--brand-gold);
   --color-brand-gold-light: var(--brand-gold-light);
+  --color-brand-charcoal: var(--brand-charcoal);
 
   --font-inter: var(--font-inter);
   --font-outfit: var(--font-outfit);

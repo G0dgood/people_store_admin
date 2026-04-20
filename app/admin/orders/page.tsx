@@ -119,18 +119,14 @@ export default function OrderListing() {
    {/* Header Area */}
    <div className="flex flex-col sm:flex-row justify-end items-center gap-3">
     <div className="flex gap-3 w-full sm:w-auto">
-     <Button
-      variant="primary"
-      shape="rounded-sm"
-      className="flex-1 sm:flex-initial"
+     <Button shape="rounded-sm" variant="primary"
+      className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold flex-1 sm:flex-initial"
       iconLeft={<Icon name="circle-plus" folder="dashboardIcon" size="sm" />}
       onClick={() => setIsAddOrderModalOpen(true)}
      >
       Add Order
      </Button>
-     <Button
-      variant="outline"
-      shape="rounded-sm"
+     <Button shape="rounded-sm" variant="outline"
       className="flex-1 sm:flex-initial"
       iconRight={<Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" className="text-gray-400" />}
       onClick={() => setIsMoreActionDrawerOpen(true)}
@@ -157,7 +153,7 @@ export default function OrderListing() {
       onChange={setActiveTab} id={""} />
 
      <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
-      <Input
+      <Input shape="rounded-sm" 
        type="text"
        placeholder="Search order report"
        containerClassName="w-full lg:w-80 xl:w-96"
@@ -169,25 +165,16 @@ export default function OrderListing() {
        <RowsPerPage value={rowsPerPage} onChange={setRowsPerPage} />
 
        <div className="flex gap-2 ml-auto sm:ml-0">
-        <Button
-         variant="outline"
-         shape="rounded-sm"
-         className="!p-2.5 text-gray-400"
-        >
+        <Button shape="rounded-sm" variant="outline"
+         className="!p-2.5 text-gray-400">
          <Icon name="sort" folder="dashboardIcon" size="sm" />
         </Button>
-        <Button
-         variant="outline"
-         shape="rounded-sm"
-         className="!p-2.5 text-gray-400"
-        >
+        <Button shape="rounded-sm" variant="outline"
+         className="!p-2.5 text-gray-400">
          <Icon name="flowbite_arrow-up-down-outline" folder="dashboardIcon" size="sm" />
         </Button>
-        <Button
-         variant="outline"
-         shape="rounded-sm"
-         className="!p-2.5 text-gray-400"
-        >
+        <Button shape="rounded-sm" variant="outline"
+         className="!p-2.5 text-gray-400">
          <Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />
         </Button>
        </div>
@@ -256,17 +243,12 @@ export default function OrderListing() {
          <td className="text-right">
           <div className="flex justify-end items-center gap-4">
            <Link href={`/admin/orders/${order.id.replace("#", "")}`}>
-            <Button
-             variant="outline"
-             shape="rounded-sm"
-             className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
-            >
+            <Button shape="rounded-sm" variant="outline"
+             className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all">
              <Icon name="view" folder="dashboardIcon" size="sm" />
             </Button>
            </Link>
-           <Button
-            variant="outline"
-            shape="rounded-sm"
+           <Button shape="rounded-sm" variant="outline"
             className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
             onClick={() => setOrderToDelete(order.id)}
            >

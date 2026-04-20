@@ -105,13 +105,13 @@ const customersData = [
 ];
 
 const statusStyles = {
- Active: "text-blue-500",
+ Active: "text-brand-gold",
  Inactive: "text-rose-500",
  VIP: "text-amber-500",
 };
 
 const statusDots = {
- Active: "bg-blue-500",
+ Active: "bg-brand-gold",
  Inactive: "bg-rose-500",
  VIP: "bg-amber-500",
 };
@@ -165,7 +165,7 @@ export default function CustomersListing() {
 
     <div className="flex-1 bg-white rounded-[6px] border border-[#1C1C1C1A] p-6 flex flex-col gap-5">
      <div className="flex justify-between items-center">
-      <h3 className="text-lg font-bold text-[#1D3557]">Customer Overview</h3>
+      <h3 className="text-lg font-bold text-brand-charcoal">Customer Overview</h3>
       <div className="flex items-center gap-2">
        <span className="text-xs font-bold text-gray-400 uppercase tracking-widest px-4 border border-gray-200 rounded-[6px] h-10 flex items-center bg-gray-50/30">
         {chartTab}
@@ -186,13 +186,13 @@ export default function CustomersListing() {
         datasets: [{
          label: activeMetric.replace(/^\w/, (c) => c.toUpperCase()) + (activeMetric === 'conversion' ? '' : ' Count'),
          data: currentChartDataset,
-         borderColor: '#2196F3',
+         borderColor: '#C5A028',
          borderWidth: 3,
          fill: true,
-         backgroundColor: 'rgba(33, 150, 243, 0.05)',
+         backgroundColor: 'rgba(197, 160, 40, 0.05)',
          tension: 0.4,
          pointRadius: (context: any) => context.dataIndex === 4 ? 6 : 0,
-         pointBackgroundColor: '#2196F3',
+         pointBackgroundColor: '#C5A028',
          pointBorderColor: '#fff',
          pointBorderWidth: 2,
         }]
@@ -226,11 +226,10 @@ export default function CustomersListing() {
        <TabFilter
         tabs={["This week", "Last week"]}
         activeTab={chartTab}
-        onChange={setChartTab}
-       />
+        onChange={setChartTab} id={""} />
 
        <div className="flex items-center gap-2">
-        <Input
+        <Input shape="rounded-sm" 
          type="text"
          placeholder="Search customer..."
          containerClassName="flex-1 lg:w-72"
@@ -238,11 +237,8 @@ export default function CustomersListing() {
          suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
         />
         <RowsPerPage value={rowsPerPage} onChange={setRowsPerPage} />
-        <Button
-         variant="outline"
-         shape="rounded-sm"
-         className="!p-1.5 text-gray-300"
-        >
+        <Button shape="rounded-sm" variant="outline"
+         className="!p-1.5 text-gray-300">
          <Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />
         </Button>
        </div>
@@ -299,10 +295,8 @@ export default function CustomersListing() {
           </td>
           <td className="text-right">
            <div className="flex justify-end gap-2 px-2">
-            <Button
-             variant="outline"
-             shape="rounded-sm"
-             className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
+            <Button shape="rounded-sm" variant="outline"
+             className="!p-1.5 text-gray-400 hover:text-brand-gold hover:bg-gray-50 transition-all"
              onClick={(e) => {
               e.stopPropagation();
               setCustomerToMessage(customer);
@@ -311,9 +305,7 @@ export default function CustomersListing() {
             >
              <Icon name="tabler_message" folder="dashboardIcon" size="sm" />
             </Button>
-            <Button
-             variant="outline"
-             shape="rounded-sm"
+            <Button shape="rounded-sm" variant="outline"
              className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
              onClick={(e) => {
               e.stopPropagation();

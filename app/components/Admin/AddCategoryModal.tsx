@@ -57,7 +57,7 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
                 className="h-12 border-gray-200 font-bold flex-1"
                 required
               />
-              <Button 
+              <Button
                 type="button"
                 variant="outline"
                 shape="rounded-sm"
@@ -81,18 +81,18 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
         </ModalBody>
 
         <ModalFooter className="flex justify-end gap-3 border-t border-gray-50 pt-6">
-          <Button 
-            variant="outline" 
-            type="button" 
-            onClick={onClose} 
-            className="px-8 h-10 sm:h-12 text-[11px] font-bold"
+          <Button
+            variant="outline"
+            type="button"
+            onClick={onClose}
+            shape="rounded-sm"
           >
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
-            type="submit" 
-            className="px-8 h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
+          <Button
+            variant="primary"
+            type="submit"
+            shape="rounded-sm"
           >
             Create Category
           </Button>

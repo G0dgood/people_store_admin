@@ -79,6 +79,7 @@ export function CreateFAQModal({
           </label>
           <div className="relative">
             <Select
+              shape="rounded-sm"
               options={categoryOptions}
               value={formData.category}
               onChange={(val) => setFormData({ ...formData, category: val })}
@@ -90,6 +91,7 @@ export function CreateFAQModal({
         <div className="flex flex-col gap-1.5">
           <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Question</label>
           <Input
+            shape="rounded-sm"
             placeholder="e.g. How do I track my order?"
             value={formData.question}
             onChange={(e) => setFormData({ ...formData, question: e.target.value })}
@@ -100,6 +102,7 @@ export function CreateFAQModal({
         <div className="flex flex-col gap-1.5">
           <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Answer Content</label>
           <Textarea
+            shape="rounded-sm"
             placeholder="Provide a detailed answer for your customers..."
             value={formData.answer}
             onChange={(e) => setFormData({ ...formData, answer: e.target.value })}
@@ -110,6 +113,7 @@ export function CreateFAQModal({
 
         <div className="flex justify-end gap-3 mt-4">
           <Button
+            shape="rounded-sm"
             type="button"
             variant="outline"
             onClick={onClose}
@@ -117,8 +121,10 @@ export function CreateFAQModal({
             Cancel
           </Button>
           <Button
+            shape="rounded-sm"
             type="submit"
             variant="primary"
+            className="transition-all duration-300 hover:bg-brand-gold hover:text-white"
           >
             {initialData ? "Update FAQ" : "Publish FAQ"}
           </Button>

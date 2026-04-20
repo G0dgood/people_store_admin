@@ -46,6 +46,7 @@ export function AddRoleModal({ isOpen, onClose }: AddRoleModalProps) {
           <div className="flex flex-col gap-2">
             <label className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Role Name</label>
             <Input
+              shape="rounded-sm"
               placeholder="e.g. Content Manager"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -57,6 +58,7 @@ export function AddRoleModal({ isOpen, onClose }: AddRoleModalProps) {
           <div className="flex flex-col gap-2">
             <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Description</label>
             <Textarea
+              shape="rounded-sm"
               placeholder="Describe the responsibilities and access level for this role..."
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -69,6 +71,7 @@ export function AddRoleModal({ isOpen, onClose }: AddRoleModalProps) {
             <div className="flex flex-col gap-2 w-full">
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Department</label>
               <Select
+                shape="rounded-sm"
                 options={departmentOptions}
                 value={formData.department}
                 onChange={(val) => setFormData({ ...formData, department: val })}
@@ -78,6 +81,7 @@ export function AddRoleModal({ isOpen, onClose }: AddRoleModalProps) {
             <div className="flex flex-col gap-2 w-full">
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Initial Status</label>
               <Select
+                shape="rounded-sm"
                 options={statusOptions}
                 value={formData.status}
                 onChange={(val) => setFormData({ ...formData, status: val })}
@@ -88,6 +92,7 @@ export function AddRoleModal({ isOpen, onClose }: AddRoleModalProps) {
 
         <ModalFooter className="flex justify-end gap-3 border-t border-gray-50 pt-6">
           <Button 
+            shape="rounded-sm"
             variant="outline" 
             type="button" 
             onClick={onClose} 
@@ -96,9 +101,10 @@ export function AddRoleModal({ isOpen, onClose }: AddRoleModalProps) {
             Cancel
           </Button>
           <Button 
+            shape="rounded-sm"
             variant="primary" 
             type="submit" 
-            className="px-8 h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
+            className="px-8 h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-brand-gold/10 transition-all duration-300 hover:bg-brand-gold hover:text-white"
           >
             Create Role
           </Button>

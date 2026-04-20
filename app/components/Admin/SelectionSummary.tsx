@@ -25,17 +25,17 @@ export function SelectionSummary({
   const selectedItems = items.filter((item) => selectedIds.includes(item[idProp]));
 
   return (
-    <div className="flex flex-col gap-4 p-4 rounded-2xl bg-brand-blue-light/30 border border-brand-blue/10 animate-in fade-in slide-in-from-top-2 duration-300">
+    <div className="flex flex-col gap-4 p-4 rounded-[4px] bg-brand-gold/5 border border-brand-gold/10 animate-in fade-in slide-in-from-top-2 duration-300">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-brand-blue text-white flex items-center justify-center font-black text-xs">
+          <div className="w-8 h-8 rounded-[4px] bg-brand-gold text-white flex items-center justify-center font-black text-xs">
             {selectedIds.length}
           </div>
           <span className="text-[13px] font-black text-[#1D3557]">{title}</span>
         </div>
         <button
           onClick={onClear}
-          className="text-[11px] font-bold text-brand-blue hover:text-blue-700 hover:underline transition-colors"
+          className="text-[11px] font-bold text-brand-gold hover:text-amber-600 hover:underline transition-colors"
         >
           Clear Selection
         </button>
@@ -47,7 +47,7 @@ export function SelectionSummary({
             key={item[idProp] || idx}
             className="flex items-center gap-2 py-1.5 px-3 rounded-lg bg-white/60 border border-white shadow-sm"
           >
-            <div className="w-1.5 h-1.5 rounded-full bg-brand-blue opacity-40"></div>
+            <div className="w-1.5 h-1.5 rounded-full bg-brand-gold opacity-40"></div>
             <span className="text-[11px] font-bold text-gray-600 truncate">
               {item[labelProp] || item[idProp]}
             </span>

@@ -90,16 +90,16 @@ export function BulkActionsDrawer({
                       <button
                         key={action.id}
                         onClick={action.onClick}
-                        className={`flex items-center gap-4 p-3.5 rounded-2xl transition-all text-left border border-transparent
+                        className={`flex items-center gap-4 p-3.5 rounded-[4px] transition-all text-left border border-transparent
                           ${action.variant === "danger"
                             ? "hover:bg-rose-50 hover:border-rose-100 text-rose-600"
-                            : "hover:bg-brand-blue-light hover:border-brand-blue/10 text-[#1D3557]"}
+                            : "hover:bg-brand-gold hover:text-white hover:border-brand-gold text-[#1D3557]"}
                         `}
                       >
-                        <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0
+                        <div className={`w-9 h-9 rounded-[4px] flex items-center justify-center shrink-0
                           ${action.variant === "danger"
                             ? "bg-rose-50 text-rose-500 shadow-sm shadow-rose-100"
-                            : "bg-white text-brand-blue shadow-sm border border-gray-50"}
+                            : "bg-white text-brand-gold shadow-sm border border-gray-50"}
                         `}>
                           <Icon name={action.icon} folder={action.folder} size="xs" />
                         </div>

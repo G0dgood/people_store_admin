@@ -26,6 +26,7 @@ interface SearchInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   showClear?: boolean;
   iconPosition?: "left" | "right";
   containerClassName?: string;
+  shape?: "rounded" | "rounded-sm" | "pill";
 }
 
 const SearchInput: React.FC<SearchInputProps> = ({ 
@@ -35,6 +36,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
   iconPosition = "left",
   containerClassName = "",
   className = "",
+  shape = "rounded",
   ...props 
 }) => {
   const icon = <HiMagnifyingGlass className="w-4 h-4 text-gray-400" />;
@@ -55,6 +57,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
       value={value}
       containerClassName={containerClassName}
       className={className}
+      shape={shape}
       {...props}
     />
   );
@@ -67,6 +70,7 @@ interface NumberInputProps {
   max?: number;
   step?: number;
   className?: string;
+  shape?: "rounded" | "rounded-sm" | "pill";
 }
 
 const NumberInput: React.FC<NumberInputProps> = ({
@@ -76,9 +80,16 @@ const NumberInput: React.FC<NumberInputProps> = ({
   max = 100,
   step = 1,
   className = "",
+  shape = "rounded",
 }) => {
+  const shapes = {
+    rounded: "rounded-none",
+    "rounded-sm": "rounded-sm",
+    pill: "rounded-full",
+  };
+
   return (
-    <div className={`flex items-center border border-gray-200 rounded-md bg-white overflow-hidden w-fit ${className}`}>
+    <div className={`flex items-center border border-gray-200 ${shapes[shape]} bg-white overflow-hidden w-fit ${className}`}>
       <button
         onClick={() => onChange(Math.max(min, value - step))}
         className="px-4 py-2 text-brand-blue hover:bg-gray-50 transition-colors border-r border-gray-200 disabled:opacity-30"
@@ -105,9 +116,21 @@ const NumberInput: React.FC<NumberInputProps> = ({
 
 interface RichTextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string;
+  shape?: "rounded" | "rounded-sm" | "pill";
 }
 
-const RichTextArea: React.FC<RichTextAreaProps> = ({ label, ...props }) => {
+const RichTextArea: React.FC<RichTextAreaProps> = ({ label, shape = "rounded", ...props }) => {
+  const shapes = {
+    rounded: "rounded-none",
+    "rounded-sm": "rounded-sm",
+    pill: "rounded-full",
+  };
+
+  const toolbarShapes = {
+    rounded: "rounded-none",
+    "rounded-sm": "rounded-sm",
+    pill: "rounded-t-2xl",
+  };
   const toolbarIcons = [
     { icon: MdFormatBold, label: "Bold" },
     { icon: MdFormatItalic, label: "Italic" },
@@ -120,8 +143,8 @@ const RichTextArea: React.FC<RichTextAreaProps> = ({ label, ...props }) => {
   ];
 
   return (
-    <div className="flex flex-col border border-gray-200 rounded-lg overflow-hidden bg-white focus-within:ring-4 focus-within:ring-brand-blue/5 focus-within:border-brand-blue transition-all">
-      <div className="flex items-center gap-1 p-1.5 border-b border-gray-200 bg-gray-50/30">
+    <div className={`flex flex-col border border-gray-200 ${shapes[shape]} overflow-hidden bg-white focus-within:ring-4 focus-within:ring-brand-blue/5 focus-within:border-brand-blue transition-all`}>
+      <div className={`flex items-center gap-1 p-1.5 border-b border-gray-200 bg-gray-50/30 ${toolbarShapes[shape]}`}>
         {toolbarIcons.map((item, index) => (
           <button
             key={index}
@@ -135,6 +158,7 @@ const RichTextArea: React.FC<RichTextAreaProps> = ({ label, ...props }) => {
       </div>
       <Textarea
         className="border-none rounded-none focus:ring-0 min-h-[140px] px-4 py-3 text-[13px] leading-relaxed"
+        shape="rounded"
         {...props}
       />
     </div>

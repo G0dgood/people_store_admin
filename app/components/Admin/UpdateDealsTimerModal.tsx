@@ -43,11 +43,11 @@ export function UpdateDealsTimerModal({ isOpen, onClose, initialValues, onUpdate
     <Modal isOpen={isOpen} onClose={onClose} title="Configure Offer Countdown" size="md">
       <form onSubmit={handleSubmit} className="flex flex-col gap-8">
         {/* Help Text */}
-        <div className="bg-blue-50 border border-blue-100 rounded-2xl p-4 flex gap-3">
-          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-brand-blue shadow-sm shrink-0">
+        <div className="bg-brand-gold/5 border border-brand-gold/20 rounded-2xl p-4 flex gap-3">
+          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-brand-gold shadow-sm shrink-0">
             <HiOutlineInformationCircle size={20} />
           </div>
-          <p className="text-[11px] font-bold text-brand-blue leading-relaxed">
+          <p className="text-[11px] font-bold text-brand-gold leading-relaxed">
             Set the remaining time for the active "Deals and Offers" section. This will be visible on the home page.
           </p>
         </div>
@@ -57,40 +57,44 @@ export function UpdateDealsTimerModal({ isOpen, onClose, initialValues, onUpdate
           <div className="flex flex-col gap-2">
             <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Days</label>
             <Input
+              shape="rounded-sm"
               placeholder="00"
               value={formData.days}
               onChange={(e) => handleInputChange("days", e.target.value)}
-              className="text-center font-black text-lg h-14 !rounded-xl"
+              className="text-center font-black text-lg h-14"
               maxLength={3}
             />
           </div>
           <div className="flex flex-col gap-2">
             <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Hours</label>
             <Input
+              shape="rounded-sm"
               placeholder="00"
               value={formData.hours}
               onChange={(e) => handleInputChange("hours", e.target.value)}
-              className="text-center font-black text-lg h-14 !rounded-xl"
+              className="text-center font-black text-lg h-14"
               maxLength={2}
             />
           </div>
           <div className="flex flex-col gap-2">
             <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Min</label>
             <Input
+              shape="rounded-sm"
               placeholder="00"
               value={formData.minutes}
               onChange={(e) => handleInputChange("minutes", e.target.value)}
-              className="text-center font-black text-lg h-14 !rounded-xl"
+              className="text-center font-black text-lg h-14"
               maxLength={2}
             />
           </div>
           <div className="flex flex-col gap-2">
             <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Sec</label>
             <Input
+              shape="rounded-sm"
               placeholder="00"
               value={formData.seconds}
               onChange={(e) => handleInputChange("seconds", e.target.value)}
-              className="text-center font-black text-lg h-14 !rounded-xl"
+              className="text-center font-black text-lg h-14"
               maxLength={2}
             />
           </div>
@@ -122,16 +126,18 @@ export function UpdateDealsTimerModal({ isOpen, onClose, initialValues, onUpdate
         {/* Actions */}
         <div className="flex gap-3 pt-6 border-t border-gray-50">
           <Button
+            shape="rounded-sm"
             variant="outline"
             onClick={onClose}
-            className="flex-1 h-11 text-[11px] font-black uppercase tracking-widest border-gray-200 text-gray-400 hover:text-[#1D3557]"
+            className="flex-1 h-11 text-[11px] font-black uppercase tracking-widest border-gray-200 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
           >
             Cancel
           </Button>
           <Button
+            shape="rounded-sm"
             type="submit"
             variant="primary"
-            className="flex-[2] h-11 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
+            className="flex-[2] h-11 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-brand-gold/10 transition-all duration-300 hover:bg-brand-gold hover:text-white"
           >
             Establish Timer
           </Button>

@@ -155,7 +155,7 @@ export default function AdvertManagement() {
       const currentVisual = newBackgrounds[activeVisualIndex];
       const items = currentVisual.featuredItems || [];
       const isSelected = items.some(p => p.id === product.id);
-      
+
       if (isSelected) {
         newBackgrounds[activeVisualIndex] = {
           ...currentVisual,
@@ -171,8 +171,8 @@ export default function AdvertManagement() {
     }
   };
 
-  const activeFeaturedItems = activeVisualIndex === null 
-    ? config.featuredItems 
+  const activeFeaturedItems = activeVisualIndex === null
+    ? config.featuredItems
     : (config.backgroundImages[activeVisualIndex]?.featuredItems || []);
 
   return (
@@ -194,10 +194,9 @@ export default function AdvertManagement() {
             />
           </div>
 
-          <Button
-            variant="primary"
-            shape="rounded-sm"
+          <Button shape="rounded-sm" variant="primary"
             onClick={() => setIsDeployModalOpen(true)}
+            className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold"
             iconLeft={<Icon name="cloud_upload" folder="icon" size="sm" className="brightness-0 invert" />}
           >
             Deploy Changes
@@ -212,35 +211,33 @@ export default function AdvertManagement() {
           <section className="bg-white p-8 rounded-[6px] border border-gray-200 shadow-sm flex flex-col gap-8">
             <div className="flex justify-between items-center">
               <h3 className="text-lg font-black text-[#1D3557] flex items-center gap-2">
-                <span className="w-8 h-8 rounded-[6px] bg-blue-50 text-blue-500 flex items-center justify-center text-xs">01</span>
+                <span className="w-8 h-8 rounded-[4px] bg-brand-gold/10 text-brand-gold flex items-center justify-center text-xs">01</span>
                 Feature Copy & Timing
               </h3>
               <div className="flex items-center gap-6">
                 <div className="flex flex-col items-end gap-1.5 ">
-                   <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest leading-none italic">Targeting Atmosphere</span>
-                   <Dropdown 
-                     options={[
-                       { value: "global", label: "Global Defaults (Sequence)" },
-                       ...config.backgroundImages.map((bg, i) => ({ value: i.toString(), label: `Atmosphere ${i + 1}` }))
-                     ]}
-                     value={activeVisualIndex === null ? "global" : activeVisualIndex.toString()}
-                     onChange={(val) => setActiveVisualIndex(val === "global" ? null : parseInt(val))}
-                     size="sm"
-                     className="min-w-[180px]"
-                   />
+                  <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest leading-none italic">Targeting Atmosphere</span>
+                  <Dropdown
+                    options={[
+                      { value: "global", label: "Global Defaults (Sequence)" },
+                      ...config.backgroundImages.map((bg, i) => ({ value: i.toString(), label: `Atmosphere ${i + 1}` }))
+                    ]}
+                    value={activeVisualIndex === null ? "global" : activeVisualIndex.toString()}
+                    onChange={(val) => setActiveVisualIndex(val === "global" ? null : parseInt(val))}
+                    size="sm"
+                    className="min-w-[180px]"
+                  />
                 </div>
                 {activeVisualIndex !== null && (
-                  <Button
-                    variant="outline"
-                    shape="rounded-sm"
+                  <Button shape="rounded-sm" variant="outline"
                     className="text-[10px] py-1 h-9 px-4"
                     onClick={() => {
                       const newBgs = [...config.backgroundImages];
-                      newBgs[activeVisualIndex] = { 
-                        ...newBgs[activeVisualIndex], 
-                        title: undefined, 
-                        titleHighlight: undefined, 
-                        description: undefined, 
+                      newBgs[activeVisualIndex] = {
+                        ...newBgs[activeVisualIndex],
+                        title: undefined,
+                        titleHighlight: undefined,
+                        description: undefined,
                         stats: undefined,
                         duration: undefined
                       };
@@ -263,10 +260,10 @@ export default function AdvertManagement() {
                         onChange={(checked) => setConfig({ ...config, showTitle: checked })}
                         size="md"
                       />
-                      <Label className={`!mb-0 text-[10px] font-black uppercase tracking-widest transition-opacity ${!config.showTitle ? "text-gray-300" : "text-brand-blue/60"}`}>Main Title</Label>
+                      <Label className={`!mb-0 text-[10px] font-black uppercase tracking-widest transition-opacity ${!config.showTitle ? "text-gray-300" : "text-brand-gold/60"}`}>Main Title</Label>
                     </div>
                     <div className={`transition-opacity duration-300 ${!config.showTitle ? "opacity-20 pointer-events-none" : "opacity-100"}`}>
-                      <Input
+                      <Input shape="rounded-sm"
                         value={activeVisualIndex === null ? config.title : (config.backgroundImages[activeVisualIndex]?.title || "")}
                         onChange={(e) => {
                           if (activeVisualIndex === null) {
@@ -288,10 +285,10 @@ export default function AdvertManagement() {
                         onChange={(checked) => setConfig({ ...config, showHighlight: checked })}
                         size="md"
                       />
-                      <Label className={`!mb-0 text-[10px] font-black uppercase tracking-widest transition-opacity ${!config.showHighlight ? "text-gray-300" : "text-brand-blue/60"}`}>Highlighted Title</Label>
+                      <Label className={`!mb-0 text-[10px] font-black uppercase tracking-widest transition-opacity ${!config.showHighlight ? "text-gray-300" : "text-brand-gold/60"}`}>Highlighted Title</Label>
                     </div>
                     <div className={`transition-opacity duration-300 ${!config.showHighlight ? "opacity-20 pointer-events-none" : "opacity-100"}`}>
-                      <Input
+                      <Input shape="rounded-sm"
                         value={activeVisualIndex === null ? config.titleHighlight : (config.backgroundImages[activeVisualIndex]?.titleHighlight || "")}
                         onChange={(e) => {
                           if (activeVisualIndex === null) {
@@ -314,10 +311,10 @@ export default function AdvertManagement() {
                       onChange={(checked) => setConfig({ ...config, showDescription: checked })}
                       size="md"
                     />
-                    <Label className={`!mb-0 text-[10px] font-black uppercase tracking-widest transition-opacity ${!config.showDescription ? "text-gray-300" : "text-brand-blue/60"}`}>Description Text</Label>
+                    <Label className={`!mb-0 text-[10px] font-black uppercase tracking-widest transition-opacity ${!config.showDescription ? "text-gray-300" : "text-brand-gold/60"}`}>Description Text</Label>
                   </div>
                   <div className={`transition-opacity duration-300 ${!config.showDescription ? "opacity-20 pointer-events-none" : "opacity-100"}`}>
-                    <Input
+                    <Input shape="rounded-sm"
                       value={activeVisualIndex === null ? config.description : (config.backgroundImages[activeVisualIndex]?.description || "")}
                       onChange={(e) => {
                         if (activeVisualIndex === null) {
@@ -339,10 +336,10 @@ export default function AdvertManagement() {
                       onChange={(checked) => setConfig({ ...config, showStats: checked })}
                       size="md"
                     />
-                    <Label className={`!mb-0 text-[10px] font-black uppercase tracking-widest transition-opacity ${!config.showStats ? "text-gray-300" : "text-brand-blue/60"}`}>Platform Stats</Label>
+                    <Label className={`!mb-0 text-[10px] font-black uppercase tracking-widest transition-opacity ${!config.showStats ? "text-gray-300" : "text-brand-gold/60"}`}>Platform Stats</Label>
                   </div>
                   <div className={`transition-opacity duration-300 ${!config.showStats ? "opacity-20 pointer-events-none" : "opacity-100"}`}>
-                    <Input
+                    <Input shape="rounded-sm"
                       value={activeVisualIndex === null ? config.stats : (config.backgroundImages[activeVisualIndex]?.stats || "")}
                       onChange={(e) => {
                         if (activeVisualIndex === null) {
@@ -365,8 +362,8 @@ export default function AdvertManagement() {
                     {activeVisualIndex === null ? "Global Cycle Duration" : `Atmosphere ${activeVisualIndex + 1} Timing Override`}
                   </label>
                   <p className="text-[10px] text-gray-400 font-medium">
-                    {activeVisualIndex === null 
-                      ? "How many seconds should each background image stay before cycling?" 
+                    {activeVisualIndex === null
+                      ? "How many seconds should each background image stay before cycling?"
                       : `Override the global timing for this specific atmosphere.`}
                   </p>
                 </div>
@@ -386,9 +383,9 @@ export default function AdvertManagement() {
                         setConfig({ ...config, backgroundImages: newBgs });
                       }
                     }}
-                    className="flex-1 accent-brand-blue"
+                    className="flex-1 accent-brand-gold"
                   />
-                  <span className="w-16 h-12 bg-white rounded-[6px] border border-gray-200 flex items-center justify-center font-black text-brand-blue text-lg">
+                  <span className="w-16 h-12 bg-white rounded-[4px] border border-gray-200 flex items-center justify-center font-black text-brand-gold text-lg">
                     {activeVisualIndex === null ? config.cycleDuration : (config.backgroundImages[activeVisualIndex]?.duration || config.cycleDuration)}s
                   </span>
                 </div>
@@ -400,12 +397,10 @@ export default function AdvertManagement() {
           <section className="bg-white p-8 rounded-[6px] border border-gray-200 shadow-sm flex flex-col gap-6">
             <div className="flex justify-between items-center">
               <h3 className="text-lg font-black text-[#1D3557] flex items-center gap-2">
-                <span className="w-8 h-8 rounded-[6px] bg-indigo-50 text-indigo-500 flex items-center justify-center text-xs">02</span>
+                <span className="w-8 h-8 rounded-[4px] bg-brand-gold/10 text-brand-gold flex items-center justify-center text-xs">02</span>
                 Atmospheric Visuals
               </h3>
-              <Button
-                variant="outline"
-                shape="rounded-sm"
+              <Button shape="rounded-sm" variant="outline"
                 onClick={() => setIsBackgroundModalOpen(true)}
                 iconLeft={<Icon name="material-symbols_image-outline" folder="dashboardIcon" size="xs" />}
                 className="text-xs py-2"
@@ -415,111 +410,111 @@ export default function AdvertManagement() {
             </div>
 
             <div className="flex gap-4 overflow-x-auto pb-6 custom-scrollbar">
-              <Reorder.Group 
-                axis="x" 
-                values={config.backgroundImages} 
+              <Reorder.Group
+                axis="x"
+                values={config.backgroundImages}
                 onReorder={handleReorderBackgrounds}
                 className="flex gap-4"
               >
                 {config.backgroundImages.map((bg, i) => {
-                const categories = Array.from(new Set(productsData.map(p => p.category)));
-                return (
-                  <Reorder.Item 
-                    key={bg.url} 
-                    value={bg}
-                    className="flex flex-col gap-3 min-w-[240px] cursor-grab active:cursor-grabbing"
-                  >
-                    <div className="relative aspect-[16/10] rounded-[6px] overflow-hidden border border-gray-200 shadow-sm group">
-                      <img
-                        src={bg.url}
-                        alt="Visual"
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 pointer-events-none"
-                        style={{ objectPosition: `${bg.positionX}% ${bg.positionY}%` }}
-                      />
-                      
-                      {/* Drag Handle */}
-                      <div className="absolute top-2 left-2 flex items-center gap-1.5 z-20">
-                        <div className="w-6 h-6 bg-brand-blue rounded-full flex items-center justify-center text-[10px] font-black text-white shadow-lg">
-                          {i + 1}
+                  const categories = Array.from(new Set(productsData.map(p => p.category)));
+                  return (
+                    <Reorder.Item
+                      key={bg.url}
+                      value={bg}
+                      className="flex flex-col gap-3 min-w-[240px] cursor-grab active:cursor-grabbing"
+                    >
+                      <div className="relative aspect-[16/10] rounded-[6px] overflow-hidden border border-gray-200 shadow-sm group">
+                        <img
+                          src={bg.url}
+                          alt="Visual"
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 pointer-events-none"
+                          style={{ objectPosition: `${bg.positionX}% ${bg.positionY}%` }}
+                        />
+
+                        {/* Drag Handle */}
+                        <div className="absolute top-2 left-2 flex items-center gap-1.5 z-20">
+                          <div className="w-6 h-6 bg-brand-gold rounded-full flex items-center justify-center text-[10px] font-black text-white shadow-lg">
+                            {i + 1}
+                          </div>
+                          <div className="w-6 h-6 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-400 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Icon name="drag_indicator" folder="icon" size="xs" />
+                          </div>
                         </div>
-                        <div className="w-6 h-6 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-400 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Icon name="drag_indicator" folder="icon" size="xs" />
+
+                        {bg.linkedCategory && (
+                          <div className="absolute top-2 right-2 px-2 py-0.5 bg-emerald-500 rounded-[4px] text-[8px] font-black text-white shadow-lg uppercase tracking-widest z-10 animate-in fade-in zoom-in duration-300">
+                            {bg.linkedCategory}
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 z-10">
+                          <div className="flex items-center gap-2 transform translate-y-2 group-hover:translate-y-0 transition-transform">
+                            <button
+                              onClick={() => {
+                                setRefiningAssetIndex(i);
+                                setIsRefineModalOpen(true);
+                              }}
+                              className="w-9 h-9 bg-white rounded-full flex items-center justify-center text-[#1D3557] hover:bg-brand-gold hover:text-white transition-all shadow-lg text-lg"
+                              title="Edit Focal Point"
+                            >
+                              <LuPencilLine />
+                            </button>
+                            <button
+                              onClick={() => {
+                                setReplacingAssetIndex(i);
+                                setIsBackgroundModalOpen(true);
+                              }}
+                              className="w-9 h-9 bg-white rounded-full flex items-center justify-center text-[#1D3557] hover:bg-brand-gold hover:text-white transition-all shadow-lg text-lg"
+                              title="Replace Image"
+                            >
+                              <LuArrowLeftRight />
+                            </button>
+                            <button
+                              onClick={() => {
+                                setRefiningAssetIndex(i);
+                                setIsRefineModalOpen(true);
+                              }}
+                              className="px-4 py-1.5 bg-white rounded-[4px] text-[10px] font-black uppercase tracking-widest text-[#1D3557] hover:bg-brand-gold hover:text-white transition-all shadow-lg"
+                            >
+                              Edit Visual
+                            </button>
+                          </div>
+                          <button
+                            onClick={() => toggleBackgroundSelection(bg.url)}
+                            className="text-[9px] font-bold text-white/70 hover:text-rose-400 transition-colors uppercase tracking-widest mt-1"
+                          >
+                            Remove
+                          </button>
                         </div>
                       </div>
 
-                      {bg.linkedCategory && (
-                        <div className="absolute top-2 right-2 px-2 py-0.5 bg-emerald-500 rounded-[4px] text-[8px] font-black text-white shadow-lg uppercase tracking-widest z-10 animate-in fade-in zoom-in duration-300">
-                          {bg.linkedCategory}
-                        </div>
-                      )}
-                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 z-10">
-                        <div className="flex items-center gap-2 transform translate-y-2 group-hover:translate-y-0 transition-transform">
-                          <button
-                            onClick={() => {
-                              setRefiningAssetIndex(i);
-                              setIsRefineModalOpen(true);
-                            }}
-                            className="w-9 h-9 bg-white rounded-full flex items-center justify-center text-[#1D3557] hover:bg-brand-blue hover:text-white transition-all shadow-lg text-lg"
-                            title="Edit Focal Point"
-                          >
-                            <LuPencilLine />
-                          </button>
-                          <button
-                            onClick={() => {
-                              setReplacingAssetIndex(i);
-                              setIsBackgroundModalOpen(true);
-                            }}
-                            className="w-9 h-9 bg-white rounded-full flex items-center justify-center text-[#1D3557] hover:bg-brand-blue hover:text-white transition-all shadow-lg text-lg"
-                            title="Replace Image"
-                          >
-                            <LuArrowLeftRight />
-                          </button>
-                          <button
-                            onClick={() => {
-                              setRefiningAssetIndex(i);
-                              setIsRefineModalOpen(true);
-                            }}
-                            className="px-4 py-1.5 bg-white rounded-[4px] text-[10px] font-black uppercase tracking-widest text-[#1D3557] hover:bg-brand-blue hover:text-white transition-all shadow-lg"
-                          >
-                            Edit Visual
-                          </button>
-                        </div>
-                        <button
-                          onClick={() => toggleBackgroundSelection(bg.url)}
-                          className="text-[9px] font-bold text-white/70 hover:text-rose-400 transition-colors uppercase tracking-widest mt-1"
-                        >
-                          Remove
-                        </button>
+                      {/* Category Link Selector */}
+                      <div className="flex flex-col gap-1.5 pointer-events-auto">
+                        <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Linked Category</label>
+                        <Dropdown
+                          options={[
+                            { value: "", label: "All Categories (General)" },
+                            ...categories.map(cat => ({ value: cat, label: cat }))
+                          ]}
+                          value={bg.linkedCategory || ""}
+                          onChange={(val) => {
+                            const newBackgrounds = [...config.backgroundImages];
+                            newBackgrounds[i] = { ...newBackgrounds[i], linkedCategory: val || undefined };
+                            setConfig({ ...config, backgroundImages: newBackgrounds });
+                          }}
+                          size="sm"
+                        />
                       </div>
-                    </div>
-                    
-                    {/* Category Link Selector */}
-                    <div className="flex flex-col gap-1.5 pointer-events-auto">
-                       <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Linked Category</label>
-                       <Dropdown 
-                        options={[
-                          { value: "", label: "All Categories (General)" },
-                          ...categories.map(cat => ({ value: cat, label: cat }))
-                        ]}
-                        value={bg.linkedCategory || ""}
-                        onChange={(val) => {
-                          const newBackgrounds = [...config.backgroundImages];
-                          newBackgrounds[i] = { ...newBackgrounds[i], linkedCategory: val || undefined };
-                          setConfig({ ...config, backgroundImages: newBackgrounds });
-                        }}
-                        size="sm"
-                      />
-                    </div>
-                  </Reorder.Item>
-                );
-              })}
-            </Reorder.Group>
+                    </Reorder.Item>
+                  );
+                })}
+              </Reorder.Group>
               <button
                 onClick={() => setIsBackgroundModalOpen(true)}
-                className="min-w-[240px] h-[150px] aspect-[16/10] rounded-[6px] border-2 border-dashed border-gray-200 flex flex-col items-center justify-center gap-2 hover:border-indigo-200 transition-colors bg-indigo-50/10 group mt-0"
+                className="min-w-[240px] h-[150px] aspect-[16/10] rounded-[4px] border-2 border-dashed border-gray-200 flex flex-col items-center justify-center gap-2 hover:border-brand-gold/30 transition-colors bg-brand-gold/5 group mt-0"
               >
-                <Icon name="circle-plus" folder="dashboardIcon" size="md" className="text-gray-300 group-hover:text-indigo-400 transition-colors" />
-                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest group-hover:text-indigo-500 transition-colors">Add Visual</span>
+                <Icon name="circle-plus" folder="dashboardIcon" size="md" className="text-gray-300 group-hover:text-brand-gold transition-colors" />
+                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest group-hover:text-brand-gold transition-colors">Add Visual</span>
               </button>
             </div>
           </section>
@@ -529,25 +524,25 @@ export default function AdvertManagement() {
             <section className="bg-white p-8 rounded-[6px] border border-gray-200 shadow-sm flex flex-col gap-6 xl:col-span-2">
               <h3 className="text-lg font-black text-[#1D3557] flex flex-col gap-6">
                 <div className="flex items-center justify-between w-full">
-                  <div className="flex items-center gap-2 text-emerald-500">
-                    <span className="w-8 h-8 rounded-[6px] bg-emerald-50 flex items-center justify-center text-xs">03</span>
+                  <div className="flex items-center gap-2 text-brand-gold">
+                    <span className="w-8 h-8 rounded-[4px] bg-brand-gold/10 flex items-center justify-center text-xs">03</span>
                     Featured Inventory
                   </div>
                   <div className="flex items-center gap-6">
                     <div className="flex flex-col items-end gap-1.5 ">
-                       <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest leading-none italic">Targeting Atmosphere</span>
-                       <Dropdown 
-                         options={[
-                           { value: "global", label: "Global Sequence (Default)" },
-                           ...config.backgroundImages.map((bg, i) => ({ value: i.toString(), label: `Atmosphere ${i + 1}` }))
-                         ]}
-                         value={activeVisualIndex === null ? "global" : activeVisualIndex.toString()}
-                         onChange={(val) => setActiveVisualIndex(val === "global" ? null : parseInt(val))}
-                         size="sm"
-                         className="min-w-[180px]"
-                       />
+                      <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest leading-none italic">Targeting Atmosphere</span>
+                      <Dropdown
+                        options={[
+                          { value: "global", label: "Global Sequence (Default)" },
+                          ...config.backgroundImages.map((bg, i) => ({ value: i.toString(), label: `Atmosphere ${i + 1}` }))
+                        ]}
+                        value={activeVisualIndex === null ? "global" : activeVisualIndex.toString()}
+                        onChange={(val) => setActiveVisualIndex(val === "global" ? null : parseInt(val))}
+                        size="sm"
+                        className="min-w-[180px]"
+                      />
                     </div>
-                    <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest leading-tight">{activeFeaturedItems.length} Selected</span>
+                    <span className="text-[10px] font-black text-brand-gold uppercase tracking-widest leading-tight">{activeFeaturedItems.length} Selected</span>
                   </div>
                 </div>
 
@@ -557,21 +552,21 @@ export default function AdvertManagement() {
                       {activeVisualIndex === null ? "Global Display Preset" : `Atmosphere ${activeVisualIndex + 1} Layout Override`}
                     </span>
                     {activeVisualIndex !== null && config.backgroundImages[activeVisualIndex].inventoryLayout && (
-                      <span className="text-[9px] font-bold text-brand-blue-light uppercase tracking-widest bg-brand-blue/5 px-2 py-0.5 rounded-[4px]">Active Override</span>
+                      <span className="text-[9px] font-bold text-brand-gold-light uppercase tracking-widest bg-brand-gold/5 px-2 py-0.5 rounded-[4px]">Active Override</span>
                     )}
                   </div>
                   <TabFilter
                     id="inventory-display-presets"
-                    tabs={activeVisualIndex === null 
+                    tabs={activeVisualIndex === null
                       ? ["Cinematic List", "Asset Grid", "Scrolling Strip"]
                       : ["Default", "Cinematic List", "Asset Grid", "Scrolling Strip"]
                     }
                     activeTab={
-                      activeVisualIndex === null 
+                      activeVisualIndex === null
                         ? (config.inventoryLayout === "list" ? "Cinematic List" : config.inventoryLayout === "grid" ? "Asset Grid" : "Scrolling Strip")
                         : (config.backgroundImages[activeVisualIndex].inventoryLayout === "list" ? "Cinematic List" :
-                           config.backgroundImages[activeVisualIndex].inventoryLayout === "grid" ? "Asset Grid" :
-                           config.backgroundImages[activeVisualIndex].inventoryLayout === "strip" ? "Scrolling Strip" : "Default")
+                          config.backgroundImages[activeVisualIndex].inventoryLayout === "grid" ? "Asset Grid" :
+                            config.backgroundImages[activeVisualIndex].inventoryLayout === "strip" ? "Scrolling Strip" : "Default")
                     }
                     onChange={(tab) => {
                       const layout = tab === "Cinematic List" ? "list" : tab === "Asset Grid" ? "grid" : tab === "Scrolling Strip" ? "strip" : undefined;
@@ -593,8 +588,8 @@ export default function AdvertManagement() {
                     <button
                       key={product.id}
                       onClick={() => toggleProductSelection(product)}
-                      className={`p-3 rounded-[6px] border transition-all flex flex-col gap-3 group relative
-                          ${isSelected ? "border-brand-blue bg-blue-50/20" : "border-gray-50 bg-white hover:border-blue-100"}
+                      className={`p-3 rounded-[4px] border transition-all flex flex-col gap-3 group relative
+                          ${isSelected ? "border-brand-gold bg-brand-gold/5" : "border-gray-50 bg-white hover:border-brand-gold/30"}
                         `}
                     >
                       <div className="relative aspect-square rounded-[6px] bg-white border border-gray-50 flex items-center justify-center overflow-hidden">
@@ -605,7 +600,7 @@ export default function AdvertManagement() {
                       </div>
                       <div className="flex flex-col text-left">
                         <span className="text-[11px] font-bold text-[#1D3557] truncate">{product.name}</span>
-                        <span className="text-[9px] font-black text-brand-blue uppercase">{product.category}</span>
+                        <span className="text-[9px] font-black text-brand-gold uppercase">{product.category}</span>
                       </div>
                     </button>
                   );
@@ -616,7 +611,7 @@ export default function AdvertManagement() {
             {/* Section 4: Item Arrangement */}
             <section className="bg-white p-8 rounded-[6px] border border-gray-200 shadow-sm flex flex-col gap-6 xl:col-span-1">
               <h3 className="text-lg font-black text-[#1D3557] flex items-center gap-2">
-                <span className="w-8 h-8 rounded-[6px] bg-orange-50 text-orange-500 flex items-center justify-center text-xs">04</span>
+                <span className="w-8 h-8 rounded-[4px] bg-brand-gold/10 text-brand-gold flex items-center justify-center text-xs">04</span>
                 Marketing Arrangement
               </h3>
               <div className="flex flex-col gap-6">
@@ -624,8 +619,8 @@ export default function AdvertManagement() {
                   {config.showTitle && (
                     <div className="flex flex-col gap-1">
                       <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Main Header</span>
-                      <div className="p-3 bg-gray-50 border border-gray-200 rounded-[4px] text-xs font-bold text-brand-blue">
-                        {config.title} <span className="text-emerald-500">{config.titleHighlight}</span>
+                      <div className="p-3 bg-gray-50 border border-gray-200 rounded-[4px] text-xs font-bold text-brand-gold">
+                        {config.title} <span className="text-brand-gold-light">{config.titleHighlight}</span>
                       </div>
                     </div>
                   )}
@@ -633,8 +628,8 @@ export default function AdvertManagement() {
                   {config.showStats && (
                     <div className="flex flex-col gap-1">
                       <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Global Impact Stats</span>
-                      <div className="flex bg-gray-50 border border-gray-200 p-4 rounded-[6px] items-center gap-4">
-                        <Icon name="verified" folder="icon" size="sm" className="text-emerald-500" />
+                      <div className="flex bg-gray-50 border border-gray-200 p-4 rounded-[4px] items-center gap-4">
+                        <Icon name="verified" folder="icon" size="sm" className="text-brand-gold" />
                         <span className="text-[10px] font-bold text-gray-500 leading-relaxed uppercase tracking-widest">
                           {config.stats}
                         </span>
@@ -665,7 +660,7 @@ export default function AdvertManagement() {
                       <Reorder.Item
                         key={item.id}
                         value={item}
-                        className="p-4 bg-white rounded-[6px] border border-gray-200 shadow-sm cursor-grab active:cursor-grabbing flex items-center justify-between group hover:border-brand-blue transition-colors"
+                        className="p-4 bg-white rounded-[4px] border border-gray-200 shadow-sm cursor-grab active:cursor-grabbing flex items-center justify-between group hover:border-brand-gold transition-colors"
                       >
                         <div className="flex items-center gap-4">
                           <div className="w-10 h-10 rounded-[6px] bg-gray-50 p-1">
@@ -675,7 +670,7 @@ export default function AdvertManagement() {
                             <span className="text-sm font-bold text-[#1D3557]">{item.name}</span>
                           </div>
                         </div>
-                        <Icon name="Frame" folder="dashboardIcon" size="sm" className="text-gray-300 group-hover:text-brand-blue transition-colors" />
+                        <Icon name="Frame" folder="dashboardIcon" size="sm" className="text-gray-300 group-hover:text-brand-gold transition-colors" />
                       </Reorder.Item>
                     ))}
                   </Reorder.Group>
@@ -725,13 +720,13 @@ export default function AdvertManagement() {
                     <button
                       key={i}
                       onClick={() => handleSelectBackground(bg)}
-                      className={`group relative aspect-[16/10] rounded-[6px] overflow-hidden border-4 transition-all
-                          ${isSelected ? "border-brand-blue ring-8 ring-blue-50 scale-[1.02]" : "border-transparent opacity-70 hover:opacity-100 shadow-sm"}
+                      className={`group relative aspect-[16/10] rounded-[4px] overflow-hidden border-4 transition-all
+                          ${isSelected ? "border-brand-gold ring-8 ring-brand-gold/10 scale-[1.02]" : "border-transparent opacity-70 hover:opacity-100 shadow-sm"}
                         `}
                     >
                       <img src={bg} alt="Background" className="w-full h-full object-cover" />
                       {isSelected && (
-                        <div className="absolute top-3 right-3 p-1.5 bg-brand-blue rounded-[6px] text-white shadow-xl overflow-hidden flex items-center gap-2 px-3">
+                        <div className="absolute top-3 right-3 p-1.5 bg-brand-gold rounded-[4px] text-white shadow-xl overflow-hidden flex items-center gap-2 px-3">
                           <Checkbox checked={true} onChange={() => { }} size="md" className="!p-0" />
                           <span className="text-[10px] font-black uppercase">{order}</span>
                         </div>
@@ -751,14 +746,14 @@ export default function AdvertManagement() {
                     <button
                       key={product.id}
                       onClick={() => handleSelectBackground(product.image)}
-                      className={`group relative aspect-square rounded-[6px] overflow-hidden border-2 transition-all p-2 flex flex-col gap-2
-                          ${isSelected ? "border-brand-blue bg-blue-50/20 ring-4 ring-blue-50" : "border-gray-200 bg-white hover:border-blue-200 shadow-sm"}
+                      className={`group relative aspect-square rounded-[4px] overflow-hidden border-2 transition-all p-2 flex flex-col gap-2
+                          ${isSelected ? "border-brand-gold bg-brand-gold/5 ring-4 ring-brand-gold/10" : "border-gray-200 bg-white hover:border-brand-gold/30 shadow-sm"}
                         `}
                     >
                       <div className="relative flex-1 bg-white rounded-[4px] overflow-hidden flex items-center justify-center p-2">
                         <img src={product.image} alt={product.name} className="w-full h-full object-contain group-hover:scale-110 transition-transform" />
                         {isSelected && (
-                          <div className="absolute top-1 right-1 p-1 bg-brand-blue rounded-[4px] text-white shadow-lg overflow-hidden flex items-center gap-1.5 px-2">
+                          <div className="absolute top-1 right-1 p-1 bg-brand-gold rounded-[4px] text-white shadow-lg overflow-hidden flex items-center gap-1.5 px-2">
                             <Checkbox checked={true} onChange={() => { }} size="md" className="!p-0" />
                             <span className="text-[9px] font-black uppercase">{order}</span>
                           </div>
@@ -766,7 +761,7 @@ export default function AdvertManagement() {
                       </div>
                       <div className="flex flex-col text-left px-1">
                         <span className="text-[10px] font-bold text-[#1D3557] truncate">{product.name}</span>
-                        <span className="text-[8px] font-black text-brand-blue uppercase">{product.category}</span>
+                        <span className="text-[8px] font-black text-brand-gold uppercase">{product.category}</span>
                       </div>
                     </button>
                   );
@@ -776,7 +771,7 @@ export default function AdvertManagement() {
 
             {backgroundModalTab === "url" && (
               <div className="flex flex-col gap-8 items-center justify-center py-10 px-6">
-                <div className="w-20 h-20 bg-indigo-50 rounded-[20px] flex items-center justify-center text-indigo-500 mb-2">
+                <div className="w-20 h-20 bg-brand-gold/10 rounded-[20px] flex items-center justify-center text-brand-gold mb-2">
                   <Icon name="link-external" folder="dashboardIcon" size="lg" />
                 </div>
                 <div className="flex flex-col gap-2 text-center max-w-sm">
@@ -784,22 +779,21 @@ export default function AdvertManagement() {
                   <p className="text-xs text-gray-400 font-medium">Paste a direct link to a high-resolution image to inject it into your login sequence.</p>
                 </div>
                 <div className="w-full flex gap-3">
-                  <Input
+                  <Input shape="rounded-sm"
                     placeholder="https://images.unsplash.com/photo-..."
                     value={customUrl}
                     onChange={(e) => setCustomUrl(e.target.value)}
                     containerClassName="flex-1"
                     className="bg-gray-50 border-gray-200"
                   />
-                  <Button
-                    variant="primary"
-                    shape="rounded-sm"
+                  <Button shape="rounded-sm" variant="primary"
                     onClick={() => {
                       if (customUrl) {
                         handleSelectBackground(customUrl);
                         setCustomUrl("");
                       }
                     }}
+                    className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold"
                     disabled={!customUrl}
                   >
                     Add to Library
@@ -843,8 +837,8 @@ export default function AdvertManagement() {
                     }
                   }}
                   className={`w-full border-2 border-dashed rounded-[20px] p-12 flex flex-col items-center justify-center gap-4 transition-all cursor-pointer group
-                    ${isDragging 
-                      ? "border-brand-blue bg-blue-50/50 scale-[1.02] shadow-xl" 
+                    ${isDragging
+                      ? "border-brand-blue bg-blue-50/50 scale-[1.02] shadow-xl"
                       : "border-gray-200 bg-transparent hover:border-brand-blue hover:bg-blue-50/20 shadow-sm"}
                   `}
                 >
@@ -901,7 +895,10 @@ export default function AdvertManagement() {
             >
               Reset to Default
             </button>
-            <Button variant="primary" shape="rounded-sm" onClick={() => setIsBackgroundModalOpen(false)}>
+            <Button variant="primary" shape="rounded-sm"
+              onClick={() => setIsBackgroundModalOpen(false)}
+              className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold"
+            >
               Confirm Library Selection
             </Button>
           </div>
@@ -998,17 +995,18 @@ export default function AdvertManagement() {
             </div>
 
             <div className="flex gap-3 justify-end pt-4 border-t border-gray-50">
-              <Button
+              <Button shape="rounded-sm"
                 variant="outline"
                 onClick={() => handleUpdateFocalPoint(refiningAssetIndex, 50, 50)}
               >
                 Center Image
               </Button>
-              <Button
-                variant="primary"
+              <Button shape="rounded-sm" variant="primary"
                 onClick={() => setIsRefineModalOpen(false)}
+                className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold"
               >
-                Save Cinematic Framing
+                {/* Save Cinematic Framing */}
+                Save Focal Point
               </Button>
             </div>
           </div>

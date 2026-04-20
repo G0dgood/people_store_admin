@@ -100,8 +100,8 @@ const NavItem: React.FC<NavItemProps> = ({ item, isCollapsed, pathname, onHover 
         }}
         onMouseLeave={() => onHover(null, null)}
         className={`flex items-center gap-3 px-4 py-2.5 rounded-[6px] transition-all text-sm font-medium w-full ${isCollapsed ? "justify-center px-2" : ""} ${isActive
-          ? "bg-brand-gold text-white shadow-md shadow-brand-gold/20"
-          : "text-gray-500 hover:bg-brand-gold/10 hover:text-brand-gold"
+          ? "bg-brand-charcoal text-white shadow-md shadow-brand-charcoal/20"
+          : "text-gray-500 hover:bg-brand-gold-light hover:text-white"
           }`}
       >
         {typeof item.icon === "string" ? (
@@ -166,8 +166,7 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
 
   return (
     <aside id="sidenav"
-      // className={`${isCollapsed ? "w-20" : "w-64"} bg-white border-r border-gray-200 h-screen sticky top-0 flex flex-col transition-all duration-300 ease-in-out`}
-      className={`${isCollapsed ? "w-20" : "w-64"} h-full shrink-0 flex-col justify-between bg-white transition-transform duration-300 ease-in-out sm:flex sm:translate-x-0 ${isOpen ? "fixed inset-y-0 left-0 z-50 flex translate-x-0" : "hidden -translate-x-full sm:flex"
+      className={`${isCollapsed ? "w-20" : "w-64"} h-full shrink-0 flex-col justify-between bg-white transition-transform duration-300 ease-in-out sm:flex sm:translate-x-0 border-r border-gray-100 ${isOpen ? "fixed inset-y-0 left-0 z-50 flex translate-x-0" : "hidden -translate-x-full sm:flex"
         }`}
     >
       {/* Brand */}
@@ -193,7 +192,7 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
         {isCollapsed && (
           <button
             onClick={() => setIsCollapsed(false)}
-            className="text-gray-400 hover:text-brand-blue transition-colors p-1 cursor-pointer"
+            className="text-gray-400 hover:text-brand-gold transition-colors p-1 cursor-pointer"
           >
             <HiXMark size={20} />
           </button>
@@ -211,12 +210,12 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
                   onClick={() => toggleGroup(group.title)}
                   className="px-4 py-2 flex items-center justify-between group/title w-full"
                 >
-                  <h4 className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-hover/title:text-brand-blue transition-colors">
+                  <h4 className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-hover/title:text-brand-charcoal transition-colors">
                     {group.title}
                   </h4>
                   <HiChevronDown
                     size={14}
-                    className={`text-gray-300 transition-transform duration-300 ${isExpanded ? "rotate-180" : ""} group-hover/title:text-brand-blue`}
+                    className={`text-gray-300 transition-transform duration-300 ${isExpanded ? "rotate-180" : ""} group-hover/title:text-brand-charcoal`}
                   />
                 </button>
               )}
@@ -260,12 +259,12 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
             }}
             onMouseLeave={() => setHoveredItem(null)}
           >
-            <div className="w-10 h-10 rounded-full border border-gray-200 overflow-hidden shadow-sm flex-shrink-0 group-hover:border-rose-500 group-hover:shadow-md transition-all">
+            <div className="w-10 h-10 rounded-full border border-gray-200 overflow-hidden shadow-sm flex-shrink-0 group-hover:border-brand-gold-light group-hover:shadow-md transition-all">
               <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop" alt="User" />
             </div>
             {!isCollapsed && (
               <div className="flex flex-col min-w-0">
-                <span className="text-sm font-bold text-gray-900 truncate group-hover:text-brand-blue transition-colors">Bloom & Mist</span>
+                <span className="text-sm font-bold text-gray-900 truncate group-hover:text-brand-charcoal transition-colors">Bloom & Mist</span>
                 <span className="text-[10px] font-medium text-gray-400 truncate">Store Management</span>
               </div>
             )}
@@ -283,13 +282,13 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
         {!isCollapsed ? (
           <Link
             href="/"
-            className="flex items-center justify-between px-4 py-2.5 border border-gray-200 rounded-md hover:border-brand-blue/30 hover:bg-brand-blue-light hover:shadow-lg hover:shadow-gray-100 transition-all group"
+            className="flex items-center justify-between px-4 py-2.5 border border-gray-200 rounded-md hover:border-brand-gold-light/30 hover:bg-gray-50 hover:shadow-lg hover:shadow-gray-100 transition-all group"
           >
-            <div className="flex items-center gap-3 text-gray-600 font-bold">
-              <Icon name="Cart" folder="dashboardIcon" size="sm" className="text-brand-blue" />
+            <div className="flex items-center gap-3 text-gray-600 font-bold group-hover:text-brand-charcoal">
+              <Icon name="Cart" folder="dashboardIcon" size="sm" className="text-brand-charcoal" />
               <span className="text-xs">Your Shop</span>
             </div>
-            <Icon name="link-external" folder="dashboardIcon" size="xs" className="text-gray-300 group-hover:text-brand-blue" />
+            <Icon name="link-external" folder="dashboardIcon" size="xs" className="text-gray-300 group-hover:text-brand-charcoal" />
           </Link>
         ) : (
           <div className="relative flex items-center justify-center">
@@ -301,9 +300,9 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
                 }
               }}
               onMouseLeave={() => setHoveredItem(null)}
-              className="flex items-center justify-center p-2.5 border border-gray-200 rounded-md hover:border-brand-blue/30 hover:shadow-lg hover:shadow-gray-100 transition-all group w-full"
+              className="flex items-center justify-center p-2.5 border border-gray-200 rounded-md hover:border-brand-gold-light/30 hover:shadow-lg hover:shadow-gray-100 transition-all group w-full"
             >
-              <Icon name="Cart" folder="dashboardIcon" size="sm" className="text-brand-blue" />
+              <Icon name="Cart" folder="dashboardIcon" size="sm" className="text-brand-charcoal" />
             </Link>
           </div>
         )}

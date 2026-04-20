@@ -14,24 +14,12 @@ import { Pagination } from "@/app/components/Navigation/Pagination";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 
-interface FilterState {
-  category: string | null;
-  brands: string[];
-  priceRange: [number, number];
-  condition: string;
-  ratings: number[];
-}
+import { FilterState, DEFAULT_FILTERS, ViewMode } from "@/app/types/products";
 
 const ProductsPage = () => {
-  const [viewMode, setViewMode] = useState<"grid" | "list">("list");
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
-  const [filters, setFilters] = useState<FilterState>({
-    category: null,
-    brands: ["Bloom & Mist"], 
-    priceRange: [150, 850],
-    condition: "Any",
-    ratings: [],
-  });
+  const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
 
   const categories = ["Signature Fragrance", "Luxury Skincare", "Boutique Gift Sets", "Body & Bath", "Home Fragrance", "Men's Grooming"];
 

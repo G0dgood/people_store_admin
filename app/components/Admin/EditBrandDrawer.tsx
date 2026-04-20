@@ -59,6 +59,7 @@ export function EditBrandDrawer({ isOpen, onClose, brand }: EditBrandDrawerProps
           <div className="flex flex-col gap-2">
             <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Brand Name</label>
             <Input
+              shape="rounded-sm"
               placeholder="e.g. Apple"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -71,6 +72,7 @@ export function EditBrandDrawer({ isOpen, onClose, brand }: EditBrandDrawerProps
             <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Brand Logo Path</label>
             <div className="flex gap-4">
               <Input
+                shape="rounded-sm"
                 placeholder="/dashboardImage/example.png"
                 value={formData.logo}
                 onChange={(e) => setFormData({ ...formData, logo: e.target.value })}
@@ -92,6 +94,7 @@ export function EditBrandDrawer({ isOpen, onClose, brand }: EditBrandDrawerProps
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Category</label>
               <Select
+                shape="rounded-sm"
                 options={categoryOptions}
                 value={formData.category}
                 onChange={(val) => setFormData({ ...formData, category: val })}
@@ -100,6 +103,7 @@ export function EditBrandDrawer({ isOpen, onClose, brand }: EditBrandDrawerProps
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Status</label>
               <Select
+                shape="rounded-sm"
                 options={statusOptions}
                 value={formData.status}
                 onChange={(val) => setFormData({ ...formData, status: val })}
@@ -110,17 +114,19 @@ export function EditBrandDrawer({ isOpen, onClose, brand }: EditBrandDrawerProps
 
         <div className="mt-auto pt-8 border-t border-gray-50 flex flex-col gap-3">
           <Button 
+            shape="rounded-sm"
             variant="primary" 
             type="submit" 
-            className="w-full h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
+            className="w-full h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-brand-gold/10 transition-all duration-300 hover:bg-brand-gold hover:text-white"
           >
             Update Brand
           </Button>
           <Button 
+            shape="rounded-sm"
             variant="outline" 
             type="button" 
             onClick={onClose} 
-            className="w-full h-10 sm:h-12 text-[11px] font-bold text-gray-400 hover:text-gray-900"
+            className="w-full h-10 sm:h-12 text-[11px] font-bold text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all duration-300"
           >
             Cancel
           </Button>

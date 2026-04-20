@@ -52,17 +52,14 @@ export default function ProductMediaListing() {
       {/* Header Area */}
       <div className="flex justify-end items-center">
         <div className="flex gap-3">
-          <Button
-            variant="primary"
-            shape="rounded-sm"
+          <Button shape="rounded-sm" variant="primary"
             iconLeft={<Icon name="circle-plus" folder="dashboardIcon" size="sm" />}
+            className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold"
             onClick={() => setIsUploadModalOpen(true)}
           >
             Upload New
           </Button>
-          <Button
-            variant="outline"
-            shape="rounded-sm"
+          <Button shape="rounded-sm" variant="outline"
             iconRight={<Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" className="text-gray-400" />}
             onClick={() => setIsMoreActionsOpen(true)}
           >
@@ -81,7 +78,7 @@ export default function ProductMediaListing() {
           />
 
           <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
-            <Input
+            <Input shape="rounded-sm"
               type="text"
               placeholder="Search media filename..."
               value={searchQuery}
@@ -92,9 +89,7 @@ export default function ProductMediaListing() {
             />
 
             <div className="flex gap-2">
-              <Button
-                variant="outline"
-                shape="rounded-sm"
+              <Button shape="rounded-sm" variant="outline"
                 className={`!p-2.5 w-10 h-10 transition-all
                   ${viewType === "grid"
                     ? "border-brand-blue bg-brand-blue-light text-brand-blue shadow-sm"
@@ -105,9 +100,7 @@ export default function ProductMediaListing() {
               >
                 <Icon name="grid_view" folder="icon" size="sm" />
               </Button>
-              <Button
-                variant="outline"
-                shape="rounded-sm"
+              <Button shape="rounded-sm" variant="outline"
                 className={`!p-2.5 w-10 h-10 transition-all
                   ${viewType === "list"
                     ? "border-brand-blue bg-brand-blue-light text-brand-blue shadow-sm"
@@ -118,11 +111,8 @@ export default function ProductMediaListing() {
               >
                 <Icon name="menu" folder="icon" size="sm" />
               </Button>
-              <Button
-                variant="outline"
-                shape="rounded-sm"
-                className="!p-2.5 w-10 h-10 text-gray-400"
-              >
+              <Button shape="rounded-sm" variant="outline"
+                className="!p-2.5 w-10 h-10 text-gray-400">
                 <Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />
               </Button>
             </div>
@@ -147,9 +137,7 @@ export default function ProductMediaListing() {
                     )}
 
                     <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0">
-                      <Button
-                        variant="outline"
-                        shape="rounded-sm"
+                      <Button shape="rounded-sm" variant="outline"
                         className="w-8 h-8 text-gray-500 bg-white/95 shadow-sm hover:text-blue-500 hover:bg-white !p-0 transition-all cursor-pointer"
                         onClick={() => {
                           setMediaToEdit(item);
@@ -158,9 +146,7 @@ export default function ProductMediaListing() {
                       >
                         <Icon name="settings" folder="dashboardIcon" size="xs" />
                       </Button>
-                      <Button
-                        variant="outline"
-                        shape="rounded-sm"
+                      <Button shape="rounded-sm" variant="outline"
                         className="w-8 h-8 bg-white/95 shadow-sm text-gray-500 hover:text-rose-500 hover:bg-white !p-0 transition-all cursor-pointer"
                         onClick={() => {
                           setMediaToDelete(item);
@@ -234,9 +220,7 @@ export default function ProductMediaListing() {
                       </td>
                       <td className="text-right">
                         <div className="flex justify-end items-center gap-4">
-                          <Button
-                            variant="outline"
-                            shape="rounded-sm"
+                          <Button shape="rounded-sm" variant="outline"
                             className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
                             onClick={() => {
                               setMediaToEdit(item);
@@ -245,9 +229,7 @@ export default function ProductMediaListing() {
                           >
                             <Icon name="settings" folder="dashboardIcon" size="sm" />
                           </Button>
-                          <Button
-                            variant="outline"
-                            shape="rounded-sm"
+                          <Button shape="rounded-sm" variant="outline"
                             className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
                             onClick={() => {
                               setMediaToDelete(item);

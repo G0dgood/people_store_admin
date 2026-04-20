@@ -26,9 +26,9 @@ const CartSummary = () => {
    return (
       <div className="w-full lg:w-[380px] flex flex-col gap-6">
          {/* Coupon Section */}
-         <div className="bg-white border border-gray-100 p-6 flex flex-col gap-4 rounded-2xl shadow-sm">
+         <div className="bg-white border border-gray-200 p-6 flex flex-col gap-4 shadow-none">
             <span className="text-[10px] uppercase tracking-widest text-gray-400 font-bold">Promotion Code</span>
-            <div className="flex border border-gray-100 rounded-full overflow-hidden bg-gray-50/50">
+            <div className="flex border border-gray-200 overflow-hidden bg-gray-50/50">
                <input
                   type="text"
                   placeholder="Enter code"
@@ -41,10 +41,10 @@ const CartSummary = () => {
          </div>
 
          {/* Summary Section */}
-         <div className="bg-white border border-gray-100 p-8 flex flex-col gap-6 rounded-2xl shadow-sm">
-            <h3 className="font-outfit font-light text-xl uppercase tracking-widest border-b border-gray-100 pb-4">Order <span className="font-bold">Summary</span></h3>
+         <div className="bg-white border border-gray-200 p-8 flex flex-col gap-6 shadow-none">
+            <h3 className="font-outfit font-light text-xl uppercase tracking-widest border-b border-gray-200 pb-4">Order <span className="font-bold">Summary</span></h3>
             
-            <div className="flex flex-col gap-3 pb-6 border-b border-gray-100">
+            <div className="flex flex-col gap-3 pb-6 border-b border-gray-200">
                <div className="flex justify-between text-[11px] uppercase tracking-widest font-bold">
                   <span className="text-gray-400">Subtotal</span>
                   <span className="text-gray-900 font-outfit">₦{subtotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
@@ -67,7 +67,7 @@ const CartSummary = () => {
             <div className="w-full pt-2">
                <Button
                   disabled={cartItems.length === 0}
-                  className={`w-full text-white font-bold h-14 text-[11px] uppercase tracking-[0.2em] transition-all rounded-none shadow-xl ${cartItems.length === 0 ? "bg-gray-200 cursor-not-allowed" : "bg-black hover:bg-brand-gold cursor-pointer"}`}
+                  className={`w-full text-white font-bold h-14 text-[11px] uppercase tracking-[0.2em] transition-all rounded-none shadow-none ${cartItems.length === 0 ? "bg-gray-200 cursor-not-allowed" : "bg-black hover:bg-brand-gold cursor-pointer"}`}
                >
                   {cartItems.length > 0 ? (
                     <Link href="/checkout" className="w-full h-full flex items-center justify-center">
@@ -79,7 +79,7 @@ const CartSummary = () => {
                </Button>
             </div>
 
-            <div className="flex items-center justify-center gap-4 pt-4 border-t border-gray-100">
+            <div className="flex items-center justify-center gap-4 pt-4 border-t border-gray-200">
                {["amex", "mastercard", "applepay", "visa", "pp"].map((pay, idx) => (
                   <div key={idx} className="w-10 h-7 relative opacity-40 hover:opacity-100 transition-all cursor-pointer">
                      <Image src={`/payment/Payment=payment, Pay-type=${pay}.png`} alt={pay} fill className="object-contain" />

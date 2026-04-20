@@ -77,9 +77,9 @@ const AboutPage = () => {
               transition={{ duration: 0.8 }}
               className="flex flex-col items-center gap-4"
             >
-              <span className="px-4 py-1.5 bg-brand-red text-[10px] font-black uppercase tracking-[0.3em] text-white">Established 2015</span>
+              <span className="px-4 py-1.5 bg-brand-gold text-[10px] font-black uppercase tracking-[0.3em] text-white">Established 2015</span>
               <h1 className="text-4xl md:text-7xl font-black text-white tracking-tighter font-inter leading-none">
-                Cultivating <span className="text-brand-red">Pure</span> Excellence
+                Cultivating <span className="text-brand-gold">Pure</span> Excellence
               </h1>
               <p className="text-white/70 max-w-xl text-sm md:text-lg mt-2 leading-relaxed font-medium">
                 Bloom & Mist was founded on a simple philosophy: beauty should be accessible, sustainable, and high-fidelity.
@@ -97,7 +97,7 @@ const AboutPage = () => {
               className="flex flex-col gap-6"
             >
               <h2 className="text-3xl md:text-5xl font-black text-neutral-900 tracking-tight leading-tight uppercase font-inter">The intersection <br />of scent and skin.</h2>
-              <div className="w-16 h-1 bg-brand-red" />
+              <div className="w-16 h-1 bg-brand-gold" />
               <p className="text-gray-500 text-base md:text-xl leading-relaxed font-medium">
                 In a world of mass-produced beauty, we chose the path of the artisan. Our journey began with a single botanical extract and a vision to merge the alchemy of scent with the science of skin wellness.
               </p>
@@ -131,7 +131,7 @@ const AboutPage = () => {
               className="flex flex-col gap-6 order-1 lg:order-2"
             >
               <h2 className="text-3xl md:text-5xl font-black text-neutral-900 tracking-tight leading-tight uppercase font-inter">Sourced with soul, <br />crafted for life.</h2>
-              <div className="w-16 h-1 bg-brand-red" />
+              <div className="w-16 h-1 bg-brand-gold" />
               <p className="text-gray-500 text-base md:text-xl leading-relaxed font-medium">
                 We travel the globe, not just for materials, but for stories. Our sourcing team partners with local communities to ensure that every raw material is harvested with respect for the earth.
               </p>
@@ -153,7 +153,7 @@ const AboutPage = () => {
         <section className="bg-white py-24 md:py-32 border-y border-gray-200">
           <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 text-center">
             <div className="flex flex-col items-center gap-4 mb-20 text-center">
-              <span className="text-brand-red font-bold tracking-[0.2em] uppercase text-xs">Our Foundations</span>
+              <span className="text-brand-gold font-bold tracking-[0.2em] uppercase text-xs">Our Foundations</span>
               <h2 className="text-3xl md:text-5xl font-black text-neutral-900 tracking-tight uppercase font-inter">The Mist & Bloom Values</h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -164,9 +164,9 @@ const AboutPage = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
-                  className="bg-white p-10 border border-gray-200 transition-all text-left flex flex-col gap-6 group hover:border-brand-red/20"
+                  className="bg-white p-10 border border-gray-200 transition-all text-left flex flex-col gap-6 group hover:border-brand-gold/20"
                 >
-                  <div className="w-14 h-14 bg-gray-50 flex items-center justify-center transition-colors group-hover:bg-brand-red group-hover:text-white">
+                  <div className="w-14 h-14 bg-gray-50 flex items-center justify-center transition-colors group-hover:bg-brand-gold group-hover:text-white">
                     {v.icon}
                   </div>
                   <div className="flex flex-col gap-2">
@@ -207,7 +207,7 @@ const AboutPage = () => {
                   </div>
                   <div className="flex flex-col gap-1">
                     <h5 className="font-bold text-neutral-900 text-lg uppercase tracking-tight font-inter">{member.name}</h5>
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-brand-red">{member.role}</span>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-brand-gold">{member.role}</span>
                   </div>
                 </motion.div>
               ))}
@@ -218,19 +218,19 @@ const AboutPage = () => {
         <section className="bg-neutral-900 py-20 overflow-hidden relative">
           <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 grid grid-cols-2 lg:grid-cols-4 gap-12 relative z-10">
             <div className="flex flex-col items-center lg:items-start gap-2">
-              <span className="text-4xl md:text-6xl font-black text-white tracking-tighter">10<span className="text-brand-red">+</span></span>
+              <span className="text-4xl md:text-6xl font-black text-white tracking-tighter">10<span className="text-brand-gold">+</span></span>
               <span className="text-[12px] font-bold text-gray-500 uppercase tracking-widest">Years of Pursuit</span>
             </div>
             <div className="flex flex-col items-center lg:items-start gap-2">
-              <span className="text-4xl md:text-6xl font-black text-white tracking-tighter">5M<span className="text-brand-red">+</span></span>
+              <span className="text-4xl md:text-6xl font-black text-white tracking-tighter">5M<span className="text-brand-gold">+</span></span>
               <span className="text-[12px] font-bold text-gray-500 uppercase tracking-widest">Global Shipments</span>
             </div>
             <div className="flex flex-col items-center lg:items-start gap-2">
-              <span className="text-4xl md:text-6xl font-black text-white tracking-tighter">24<span className="text-brand-red">/</span>7</span>
+              <span className="text-4xl md:text-6xl font-black text-white tracking-tighter">24<span className="text-brand-gold">/</span>7</span>
               <span className="text-[12px] font-bold text-gray-500 uppercase tracking-widest">Expert Support</span>
             </div>
             <div className="flex flex-col items-center lg:items-start gap-2">
-              <span className="text-4xl md:text-6xl font-black text-white tracking-tighter">98<span className="text-brand-red">%</span></span>
+              <span className="text-4xl md:text-6xl font-black text-white tracking-tighter">98<span className="text-brand-gold">%</span></span>
               <span className="text-[12px] font-bold text-gray-500 uppercase tracking-widest">Customer Trust</span>
             </div>
           </div>

@@ -37,7 +37,7 @@ export const UpdateRefundStatusModal: React.FC<UpdateStatusModalProps> = ({
       <div className="flex flex-col gap-8 py-4">
         {/* Target Info */}
         <div className="bg-gray-50 border border-gray-200 rounded-2xl p-5 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-brand-blue shadow-sm">
+          <div className="w-12 h-12 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-brand-gold shadow-sm">
             <Icon name={isBulk ? "users" : "cached"} folder={isBulk ? "dashboardIcon" : "icon"} size="md" />
           </div>
           <div className="flex flex-col">
@@ -122,8 +122,9 @@ export const UpdateRefundStatusModal: React.FC<UpdateStatusModalProps> = ({
             Cancel
           </Button>
           <Button
+            shape="rounded-sm"
             variant="primary"
-            className="flex-2 h-10 text-[10px] font-black uppercase tracking-widest shadow-md shadow-blue-100"
+            className="flex-2 h-10 text-[10px] font-black uppercase tracking-widest shadow-md shadow-brand-gold/10 transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold"
             onClick={() => {
               onConfirm(selectedStatus, reason);
               onClose();

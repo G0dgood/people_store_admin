@@ -98,9 +98,8 @@ export default function PermissionsAccordion() {
      <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest leading-none">Role Based Governance</p>
     </div>
     <div className="flex gap-3">
-     <Button
-      variant="primary"
-      shape="rounded-sm"
+     <Button shape="rounded-sm" variant="primary"
+      className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold"
       iconLeft={<Icon name="verified" folder="icon" size="sm" />}
       onClick={() => setIsSyncModalOpen(true)}
      >
@@ -133,7 +132,7 @@ export default function PermissionsAccordion() {
 
     <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
      <div className="flex-1 xl:w-80 relative group">
-      <Input
+      <Input shape="rounded-sm" 
        type="text"
        placeholder="Search modules or keywords..."
        value={searchQuery}

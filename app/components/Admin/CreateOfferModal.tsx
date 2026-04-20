@@ -102,14 +102,14 @@ export function CreateOfferModal({ isOpen, onClose, onSave, initialSelections }:
               <button
                 key={cat.name}
                 onClick={() => setSelectedCategory(cat.name)}
-                className={`flex items-center justify-between px-4 py-3 rounded-xl transition-all text-xs font-bold
+                className={`flex items-center justify-between px-4 py-3 rounded-sm transition-all text-xs font-bold
                   ${selectedCategory === cat.name
-                    ? "bg-brand-blue text-white shadow-lg shadow-blue-100"
-                    : "text-gray-500 hover:bg-white hover:text-brand-blue"}
+                    ? "bg-brand-gold text-white shadow-lg shadow-brand-gold/10"
+                    : "text-gray-500 hover:bg-white hover:text-brand-gold"}
                 `}
               >
                 <span>{cat.name}</span>
-                <span className={`text-[10px] ${selectedCategory === cat.name ? "text-blue-100" : "text-gray-400"}`}>
+                <span className={`text-[10px] ${selectedCategory === cat.name ? "text-white/60" : "text-gray-400"}`}>
                   {cat.count}
                 </span>
               </button>
@@ -124,7 +124,7 @@ export function CreateOfferModal({ isOpen, onClose, onSave, initialSelections }:
               <h3 className="text-sm font-black text-[#1D3557]">Selection Area</h3>
               <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Picking products from {selectedCategory}</span>
             </div>
-            <span className="text-[11px] font-black text-brand-blue bg-brand-blue-light px-3 py-1 rounded-full uppercase">
+            <span className="text-[11px] font-black text-brand-gold bg-brand-gold/10 px-3 py-1 rounded-sm uppercase">
               {filteredProducts.length} Products Found
             </span>
           </div>
@@ -134,10 +134,10 @@ export function CreateOfferModal({ isOpen, onClose, onSave, initialSelections }:
               <div
                 key={product.id}
                 onClick={() => toggleProduct(product.id)}
-                className={`relative flex flex-col gap-3 p-4 rounded-2xl border-2 transition-all cursor-pointer group
+                className={`relative flex flex-col gap-3 p-4 rounded-sm border-2 transition-all cursor-pointer group
                   ${selections[product.id] !== undefined
-                    ? "border-brand-blue bg-blue-50/30"
-                    : "border-gray-200 hover:border-brand-blue/30 bg-white"}
+                    ? "border-brand-gold bg-brand-gold/5"
+                    : "border-gray-200 hover:border-brand-gold/20 bg-white"}
                 `}
               >
                 <div className="w-full aspect-square bg-white rounded-xl border border-gray-50 p-2 flex items-center justify-center overflow-hidden">
@@ -145,7 +145,7 @@ export function CreateOfferModal({ isOpen, onClose, onSave, initialSelections }:
                 </div>
                 <div className="flex flex-col gap-1">
                   <h4 className="text-xs font-bold text-[#1D3557] line-clamp-1">{product.name}</h4>
-                  <span className="text-[10px] font-black text-brand-blue">₦{product.price.toLocaleString()}</span>
+                  <span className="text-[10px] font-black text-brand-gold">₦{product.price.toLocaleString()}</span>
                 </div>
 
                 <div className="absolute top-4 right-4 z-10">
@@ -175,9 +175,9 @@ export function CreateOfferModal({ isOpen, onClose, onSave, initialSelections }:
               </div>
             ) : (
               selectedProductList.map(p => (
-                <div key={p.id} className="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm flex flex-col gap-3">
+                <div key={p.id} className="bg-white p-4 rounded-sm border border-gray-200 shadow-sm flex flex-col gap-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-gray-50 rounded-lg p-1 shrink-0">
+                    <div className="w-10 h-10 bg-gray-50 rounded-sm p-1 shrink-0">
                       <img src={p.image} alt="" className="w-full h-full object-contain" />
                     </div>
                     <div className="flex flex-col min-w-0 flex-1">
@@ -191,8 +191,8 @@ export function CreateOfferModal({ isOpen, onClose, onSave, initialSelections }:
                       <HiXMark size={16} />
                     </button>
                   </div>
-                  <div className="flex items-center gap-3 bg-gray-50 p-2 rounded-xl">
-                    <RiPercentLine className="text-brand-blue" />
+                  <div className="flex items-center gap-3 bg-gray-50 p-2 rounded-sm border border-gray-100">
+                    <RiPercentLine className="text-brand-gold" />
                     <input
                       type="number"
                       value={selections[p.id]}
@@ -211,11 +211,13 @@ export function CreateOfferModal({ isOpen, onClose, onSave, initialSelections }:
           <div className="p-6 border-t border-gray-200 bg-white flex flex-col gap-4">
             <div className="flex justify-between items-center text-xs font-bold text-gray-500">
               <span>Selected Items:</span>
-              <span className="text-brand-blue">{selectedProductList.length}</span>
+              <span className="text-brand-gold">{selectedProductList.length}</span>
             </div>
             <Button
+              shape="rounded-sm"
               variant="primary"
               disabled={selectedProductList.length === 0}
+              className="transition-all duration-300 hover:bg-brand-gold hover:text-white"
               onClick={handleSave}
             >
               {Object.keys(initialSelections || {}).length > 0 ? "Update Promotion" : "Establish Deals"}

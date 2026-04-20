@@ -21,16 +21,17 @@ export function TransactionTable() {
 
   return (
     <div className="bg-white p-8 rounded-[6px] border border-gray-200 shadow-sm flex flex-col gap-6">
-      <TransactionDetailDrawer 
+      <TransactionDetailDrawer
         isOpen={isDetailDrawerOpen}
         onClose={() => setIsDetailDrawerOpen(false)}
         transaction={selectedTransaction}
       />
       <div className="flex justify-between items-center">
-        <h3 className="text-[18px] font-black text-[#1D3557]">Transaction</h3>
-        <Button 
+        <h3 className="text-[18px] font-black text-brand-charcoal">Transaction</h3>
+        <Button
+          shape="rounded-sm"
           iconRight={<Icon name="sort" folder="dashboardIcon" size="sm" />}
-          className="bg-[#66BB6A] hover:bg-[#4CAF50] text-white text-[11px] font-black px-6 h-9 rounded-[6px] shadow-sm"
+          className="bg-brand-charcoal hover:bg-black text-white text-[11px] font-black px-6 h-9 rounded-[6px] shadow-sm"
         >
           Filter
         </Button>
@@ -44,33 +45,33 @@ export function TransactionTable() {
               <th>Id Customer</th>
               <th>Order Date</th>
               <th className="pl-4">Status</th>
-              <th className="text-right">Amount</th>
+              <th>Amount</th>
               <th className="text-right">Action</th>
             </tr>
           </thead>
           <tbody>
             {transactionData.map((tx, i) => (
-              <tr key={i} className="group">
-                <td className="text-[13px] font-black text-[#1D3557]">{i + 1}.</td>
-                <td className="text-[13px] font-black text-[#1D3557]">#{tx.id}</td>
+              <tr key={i} className="group border-b border-gray-100 last:border-0">
+                <td className="text-[13px] font-black text-brand-charcoal">{i + 1}.</td>
+                <td className="text-[13px] font-black text-brand-charcoal">#{tx.id}</td>
                 <td className="text-[11px] font-bold text-gray-600">{tx.date}</td>
-                <td className="pl-4">
+                <td>
                   <div className="flex items-center gap-2">
                     <span className={`w-2 h-2 rounded-full ${tx.color}`}></span>
-                    <span className="text-[12px] font-bold text-[#1D3557]">{tx.status}</span>
+                    <span className="text-[12px] font-bold text-brand-charcoal">{tx.status}</span>
                   </div>
                 </td>
-                <td className="text-[13px] font-black text-[#1D3557] text-right">{tx.amount}</td>
+                <td className="text-[13px] font-black text-brand-charcoal">{tx.amount}</td>
                 <td className="text-right">
-                   <button 
-                     className="p-1 px-2 text-[10px] font-black text-brand-blue uppercase hover:bg-brand-blue-light rounded-[4px] transition-all"
-                     onClick={() => {
-                       setSelectedTransaction(tx);
-                       setIsDetailDrawerOpen(true);
-                     }}
-                   >
-                      View
-                   </button>
+                  <button
+                    className="p-1 px-2 text-[10px] font-black text-brand-charcoal uppercase hover:bg-gray-100 rounded-[4px] transition-all"
+                    onClick={() => {
+                      setSelectedTransaction(tx);
+                      setIsDetailDrawerOpen(true);
+                    }}
+                  >
+                    View
+                  </button>
                 </td>
               </tr>
             ))}
@@ -80,8 +81,9 @@ export function TransactionTable() {
 
       <div className="flex justify-end pt-2">
         <Button
+          shape="rounded-sm"
           variant="ghost"
-          className="border border-brand-blue/20 text-brand-blue text-[10px] font-black uppercase tracking-widest px-8 h-10 rounded-[6px] hover:bg-brand-blue/5"
+          className="border border-brand-charcoal/20 text-brand-charcoal text-[10px] font-black uppercase tracking-widest px-8 h-10 rounded-[6px] hover:bg-brand-charcoal/5"
           onClick={() => router.push("/admin/transactions")}
         >
           Details

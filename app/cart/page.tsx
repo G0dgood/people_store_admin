@@ -29,14 +29,14 @@ export default function CartPage() {
           {/* Cart List Container */}
           <div className="flex-1 bg-white flex flex-col w-full">
             {cartItems.length > 0 ? (
-              <div className="flex flex-col border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
+              <div className="flex flex-col border border-gray-200 shadow-none">
                 {cartItems.map((item) => (
                   <CartItem key={item.id} {...item} />
                 ))}
               </div>
             ) : (
-              <div className="py-20 flex flex-col items-center gap-8 text-center bg-gray-50/50 rounded-2xl border border-dashed border-gray-200">
-                <div className="w-24 h-24 bg-white shadow-xl rounded-full flex items-center justify-center text-brand-gold">
+              <div className="py-20 flex flex-col items-center gap-8 text-center bg-gray-50/50 border border-dashed border-gray-200">
+                <div className="w-24 h-24 bg-white border border-gray-200 flex items-center justify-center text-brand-gold">
                   <Icon name="shopping_cart" size="md" />
                 </div>
                 <div className="flex flex-col gap-3">
@@ -44,7 +44,7 @@ export default function CartPage() {
                   <p className="text-gray-500 text-xs uppercase tracking-wider font-medium">Looks like you haven't added anything to your cart yet.</p>
                 </div>
                 <Link href="/products">
-                  <Button className="bg-black text-white px-12 py-4 font-bold uppercase tracking-[0.2em] text-[10px] hover:bg-brand-gold transition-all shadow-lg rounded-none">
+                  <Button className="bg-black text-white px-12 py-4 font-bold uppercase tracking-[0.2em] text-[10px] hover:bg-brand-gold transition-all rounded-none shadow-none">
                     Start Shopping
                   </Button>
                 </Link>

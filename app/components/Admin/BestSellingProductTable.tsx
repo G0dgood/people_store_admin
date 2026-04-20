@@ -45,6 +45,8 @@ export function BestSellingProductTable() {
    <div className="flex justify-between items-center">
     <h3 className="text-[18px] font-black text-[#1D3557]">Best selling product</h3>
     <Button
+     shape="rounded-sm"
+
      iconRight={<Icon name="sort" folder="dashboardIcon" size="sm" />}
      className="bg-[#66BB6A] hover:bg-[#4CAF50] text-white text-[11px] font-black px-6 h-9 rounded-[6px] shadow-sm"
     >
@@ -90,6 +92,7 @@ export function BestSellingProductTable() {
 
    <div className="flex justify-end pt-2">
     <Button
+     shape="rounded-sm"
      variant="ghost"
      className="border border-brand-blue/20 text-brand-blue text-[10px] font-black uppercase tracking-widest px-8 h-10 rounded-[6px] hover:bg-brand-blue/5"
     >

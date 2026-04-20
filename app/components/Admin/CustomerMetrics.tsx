@@ -33,12 +33,12 @@ export function CustomerMetrics({ activeMetric, onMetricClick }: CustomerMetrics
           className="flex flex-col gap-1 items-start text-left transition-all group relative pr-4 md:border-r md:border-gray-200 last:border-r-0"
         >
           <span className={`text-2xl font-bold transition-colors ${
-            activeMetric === metric.id ? "text-blue-600" : "text-[#1D3557] group-hover:text-blue-500"
+            activeMetric === metric.id ? "text-brand-gold" : "text-[#1D3557] group-hover:text-brand-gold/80"
           }`}>
             {metric.value}
           </span>
           <span className={`text-[10px] font-medium uppercase tracking-wider transition-colors ${
-            activeMetric === metric.id ? "text-blue-400" : "text-gray-400"
+            activeMetric === metric.id ? "text-brand-gold/60" : "text-gray-400"
           }`}>
             {metric.label}
           </span>
@@ -46,8 +46,8 @@ export function CustomerMetrics({ activeMetric, onMetricClick }: CustomerMetrics
           {/* Active Indicator Bar */}
           <div className={`h-0.5 w-full mt-2 rounded-full transition-all duration-300 ${
             activeMetric === metric.id 
-              ? "bg-blue-500 opacity-100 translate-y-0" 
-              : "bg-blue-100 opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0"
+              ? "bg-brand-gold opacity-100 translate-y-0" 
+              : "bg-brand-gold/10 opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0"
           }`}></div>
         </button>
       ))}

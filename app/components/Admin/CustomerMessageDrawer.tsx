@@ -21,7 +21,7 @@ interface CustomerMessageDrawerProps {
 
 export function CustomerMessageDrawer({ isOpen, onClose, customer }: CustomerMessageDrawerProps) {
   const [messageText, setMessageText] = useState("");
-  
+
   const mockMessages: Message[] = [
     { id: 1, sender: "customer", text: "Hi, I have a question about my recent order #ORD0001.", time: "10:30 AM" },
     { id: 2, sender: "admin", text: "Hello! Sure, I'd be happy to help. What seems to be the issue?", time: "10:32 AM" },
@@ -36,11 +36,11 @@ export function CustomerMessageDrawer({ isOpen, onClose, customer }: CustomerMes
         {/* Customer Quick Header */}
         <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
           <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 animate-in fade-in zoom-in duration-300">
-             <img 
-              src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=100&h=100&fit=crop" 
-              alt="" 
-              className="w-full h-full object-cover" 
-             />
+            <img
+              src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=100&h=100&fit=crop"
+              alt=""
+              className="w-full h-full object-cover"
+            />
           </div>
           <div className="flex flex-col">
             <span className="text-sm font-black text-[#1D3557]">{customer.name}</span>
@@ -55,18 +55,18 @@ export function CustomerMessageDrawer({ isOpen, onClose, customer }: CustomerMes
         {/* Message Feed */}
         <div className="flex-1 overflow-y-auto pr-2 flex flex-col gap-4">
           <div className="flex flex-col items-center py-4">
-             <span className="text-[10px] font-bold text-gray-300 uppercase tracking-[0.2em]">Today, Jan 15</span>
+            <span className="text-[10px] font-bold text-gray-300 uppercase tracking-[0.2em]">Today, Jan 15</span>
           </div>
-          
+
           {mockMessages.map((msg) => (
-            <div 
-              key={msg.id} 
+            <div
+              key={msg.id}
               className={`flex flex-col ${msg.sender === "admin" ? "items-end" : "items-start"} gap-1.5`}
             >
-              <div 
+              <div
                 className={`max-w-[85%] px-4 py-3 rounded-2xl text-[13px] font-medium leading-relaxed shadow-sm transition-all
-                  ${msg.sender === "admin" 
-                    ? "bg-[#1D3557] text-white rounded-tr-none" 
+                  ${msg.sender === "admin"
+                    ? "bg-brand-charcoal text-white rounded-tr-none"
                     : "bg-white border border-gray-200 text-gray-700 rounded-tl-none"}
                 `}
               >
@@ -82,10 +82,10 @@ export function CustomerMessageDrawer({ isOpen, onClose, customer }: CustomerMes
           <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest px-1">Quick Templates</span>
           <div className="flex flex-wrap gap-2">
             {["Order Update", "Security Alert", "Greeting"].map((template) => (
-              <button 
+              <button
                 key={template}
                 onClick={() => setMessageText(prev => prev + (prev ? " " : "") + template)}
-                className="px-3 py-1.5 rounded-full bg-white border border-gray-200 text-[11px] font-bold text-gray-500 hover:border-brand-blue hover:text-brand-blue transition-all"
+                className="px-3 py-1.5 rounded-full bg-white border border-gray-200 text-[11px] font-bold text-gray-500 hover:border-brand-gold hover:text-brand-gold transition-all"
               >
                 {template}
               </button>
@@ -101,15 +101,16 @@ export function CustomerMessageDrawer({ isOpen, onClose, customer }: CustomerMes
             placeholder="Type your message here..."
             className="min-h-[120px]"
           />
-          
-          <Button 
-            variant="primary" 
-            className="w-full h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-[#1D3557]/10"
+
+          <Button
+            shape="rounded-sm"
+            variant="primary"
+            className="w-full h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-brand-charcoal/10"
             disabled={!messageText.trim()}
             iconRight={<Icon name="arrow_forward" folder="icon" size="sm" />}
             onClick={() => {
-               console.log(`Sending to ${customer.name}: ${messageText}`);
-               setMessageText("");
+              console.log(`Sending to ${customer.name}: ${messageText}`);
+              setMessageText("");
             }}
           >
             Send Message

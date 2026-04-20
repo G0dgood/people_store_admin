@@ -32,12 +32,12 @@ const ticketsData = [
 const priorityStyles = {
   Urgent: "text-rose-600 bg-rose-50",
   High: "text-orange-600 bg-orange-50",
-  Medium: "text-blue-600 bg-blue-50",
+  Medium: "text-brand-gold bg-brand-gold/10",
   Low: "text-emerald-600 bg-emerald-50",
 };
 
 const statusStyles = {
-  Open: "bg-blue-500",
+  Open: "bg-brand-gold",
   Pending: "bg-orange-400",
   Resolved: "bg-emerald-500",
 };
@@ -71,9 +71,8 @@ export default function SupportPage() {
 
       {/* Header Area */}
       <div className="flex justify-end items-center mb-2">
-        <Button
-          variant="primary"
-          shape="rounded-sm"
+        <Button shape="rounded-sm" variant="primary"
+          className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold  text-[10px] font-black uppercase tracking-widest"
           iconLeft={<Icon name="circle-plus" folder="dashboardIcon" size="sm" />}
           onClick={() => setIsCreateModalOpen(true)}
         >
@@ -120,11 +119,10 @@ export default function SupportPage() {
           <TabFilter
             tabs={["All tickets", "Open", "Pending", "Resolved"]}
             activeTab={activeTab}
-            onChange={setActiveTab}
-          />
+            onChange={setActiveTab} id={""} />
 
           <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
-            <Input
+            <Input shape="rounded-sm"
               type="text"
               placeholder="Search tickets by ID or Subject"
               containerClassName="w-full lg:w-80 xl:w-96"
@@ -202,10 +200,8 @@ export default function SupportPage() {
                   </td>
                   <td className="text-right pr-8">
                     <div className="flex justify-end items-center gap-2">
-                      <Button
-                        variant="outline"
-                        shape="rounded-sm"
-                        className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
+                      <Button shape="rounded-sm" variant="outline"
+                        className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all duration-300"
                         onClick={() => {
                           setSelectedTicket(ticket);
                           setIsChatDrawerOpen(true);
@@ -213,10 +209,8 @@ export default function SupportPage() {
                       >
                         <BiMessageDetail size={14} />
                       </Button>
-                      <Button
-                        variant="outline"
-                        shape="rounded-sm"
-                        className="!p-1.5 text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-all"
+                      <Button shape="rounded-sm" variant="outline"
+                        className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all duration-300"
                         onClick={() => {
                           setSelectedTicket(ticket);
                           setIsDetailDrawerOpen(true);

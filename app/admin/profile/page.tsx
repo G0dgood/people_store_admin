@@ -43,18 +43,18 @@ export default function ProfilePage() {
        </Button>
       </div>
 
-      <div className="w-24 h-24 rounded-full border-4 border-gray-50 overflow-hidden mb-4 shadow-sm bg-brand-blue-light flex items-center justify-center">
+      <div className="w-24 h-24 rounded-full border-4 border-gray-50 overflow-hidden mb-4 shadow-sm bg-brand-gold/10 flex items-center justify-center">
        {userImage ? (
         <img src={userImage} alt="Wade Warren" className="w-full h-full object-cover" />
        ) : (
-        <HiUser className="w-12 h-12 text-brand-blue" />
+        <HiUser className="w-12 h-12 text-brand-gold" />
        )}
       </div>
 
       <h2 className="text-base font-bold text-[#1D3557]">Wade Warren</h2>
       <div className="flex items-center gap-2 text-xs font-medium text-gray-400 mb-6">
        <span>wade.warren@example.com</span>
-       <button className="text-brand-blue hover:scale-110 transition-transform">
+       <button className="text-brand-gold hover:scale-110 transition-transform">
         <Icon name="Frame 4386" folder="dashboardIcon" size="xs" />
        </button>
       </div>
@@ -86,13 +86,13 @@ export default function ProfilePage() {
      <div className="bg-white rounded-[6px] border border-gray-200 shadow-sm p-8 flex flex-col gap-6 transition-all hover:shadow-md">
       <div className="flex items-center justify-between">
        <div className="flex items-center gap-3">
-        <div className="w-8 h-8 rounded-[6px] bg-brand-blue-light flex items-center justify-center">
-         <HiLockClosed className="text-brand-blue w-3 h-3" />
+        <div className="w-8 h-8 rounded-[6px] bg-brand-gold/10 flex items-center justify-center">
+         <HiLockClosed className="text-brand-gold w-3 h-3" />
         </div>
         <h3 className="text-sm font-bold text-[#1D3557]">Change Password</h3>
        </div>
        <button
-        className="text-[10px] font-bold text-brand-blue underline underline-offset-2 hover:text-blue-600 transition-colors"
+        className="text-[10px] font-bold text-brand-gold underline underline-offset-2 hover:text-brand-gold/80 transition-colors"
         onClick={() => setIsHelpDrawerOpen(true)}
        >
         Need help? <Icon name="live_help" folder="icon" size="xs" className="inline ml-1" />
@@ -102,7 +102,7 @@ export default function ProfilePage() {
       <div className="flex flex-col gap-5">
        <div className="flex flex-col gap-2">
         <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Current Password</label>
-        <Input
+        <Input shape="rounded-sm" 
          type={showCurrentPassword ? "text" : "password"}
          placeholder="Enter current password"
          className="bg-gray-50/80 border-gray-50 text-xs font-medium"
@@ -111,18 +111,18 @@ export default function ProfilePage() {
           <button
            type="button"
            onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-           className="text-gray-300 hover:text-brand-blue transition-colors"
+           className="text-gray-300 hover:text-brand-gold transition-colors"
           >
            {showCurrentPassword ? <HiEyeSlash className="w-3 h-3" /> : <HiEye className="w-3 h-3" />}
           </button>
          }
         />
-        <button className="text-[10px] font-bold text-brand-blue w-fit hover:underline hover:scale-105 transition-transform">Forgot Current Password? Click here</button>
+        <button className="text-[10px] font-bold text-brand-gold w-fit hover:underline hover:scale-105 transition-transform">Forgot Current Password? Click here</button>
        </div>
 
        <div className="flex flex-col gap-2">
         <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">New Password</label>
-        <Input
+        <Input shape="rounded-sm" 
          type={showNewPassword ? "text" : "password"}
          placeholder="Enter new password"
          className="bg-gray-50/80 border-gray-50 text-xs font-medium"
@@ -131,7 +131,7 @@ export default function ProfilePage() {
           <button
            type="button"
            onClick={() => setShowNewPassword(!showNewPassword)}
-           className="text-gray-300 hover:text-brand-blue transition-colors"
+           className="text-gray-300 hover:text-brand-gold transition-colors"
           >
            {showNewPassword ? <HiEyeSlash className="w-3 h-3" /> : <HiEye className="w-3 h-3" />}
           </button>
@@ -141,7 +141,7 @@ export default function ProfilePage() {
 
        <div className="flex flex-col gap-2">
         <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Re-enter Password</label>
-        <Input
+        <Input shape="rounded-sm" 
          type={showReenterPassword ? "text" : "password"}
          placeholder="Confirm new password"
          className="bg-gray-50/80 border-gray-50 text-xs font-medium"
@@ -150,7 +150,7 @@ export default function ProfilePage() {
           <button
            type="button"
            onClick={() => setShowReenterPassword(!showReenterPassword)}
-           className="text-gray-300 hover:text-brand-blue transition-colors"
+           className="text-gray-300 hover:text-brand-gold transition-colors"
           >
            {showReenterPassword ? <HiEyeSlash className="w-3 h-3" /> : <HiEye className="w-3 h-3" />}
           </button>
@@ -158,10 +158,8 @@ export default function ProfilePage() {
         />
        </div>
 
-       <Button
-        variant="primary"
-        shape="rounded-sm"
-        className="w-full h-12 mt-2 shadow-lg shadow-blue-100 text-[11px] font-black uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all"
+       <Button shape="rounded-sm" variant="primary"
+        className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold w-full h-12 mt-2 shadow-lg shadow-brand-gold/10 text-[11px] font-black uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all"
         onClick={() => setIsChangeSuccessOpen(true)}
        >
         Save Change
@@ -178,7 +176,7 @@ export default function ProfilePage() {
        <button
         className={`flex items-center gap-2 px-4 py-2 border rounded-[6px] text-xs font-bold transition-all shadow-sm
                            ${isEditMode
-          ? "bg-brand-blue border-brand-blue text-white hover:bg-blue-600"
+          ? "bg-brand-charcoal border-brand-charcoal text-white hover:bg-brand-charcoal/90"
           : "bg-white border-gray-200 text-gray-500 hover:bg-gray-50"}
                         `}
         onClick={() => {
@@ -195,25 +193,21 @@ export default function ProfilePage() {
 
       {/* Avatar Management */}
       <div className="flex items-center gap-4">
-       <div className="w-16 h-16 rounded-full overflow-hidden shadow-inner border border-gray-200 bg-brand-blue-light flex items-center justify-center">
+       <div className="w-16 h-16 rounded-full overflow-hidden shadow-inner border border-gray-200 bg-brand-gold/10 flex items-center justify-center">
         {userImage ? (
          <img src={userImage} alt="Avatar" className="w-full h-full object-cover" />
         ) : (
-         <HiUser className="w-8 h-8 text-brand-blue" />
+         <HiUser className="w-8 h-8 text-brand-gold" />
         )}
        </div>
        <div className="flex gap-2">
-        <Button
-         variant="primary"
-         shape="rounded-sm"
-         className="px-5 py-2 text-[10px] shadow-sm"
+        <Button shape="rounded-sm" variant="primary"
+         className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold px-5 py-2 text-[10px] shadow-sm"
          onClick={() => setIsAvatarModalOpen(true)}
         >
          Upload New
         </Button>
-        <Button
-         variant="outline"
-         shape="rounded-sm"
+        <Button shape="rounded-sm" variant="outline"
          className="text-gray-400 px-5 py-2 text-[10px] font-bold shadow-sm"
          onClick={() => setIsDeleteConfirmOpen(true)}
         >
@@ -226,7 +220,7 @@ export default function ProfilePage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
        <div className="flex flex-col gap-2">
         <label className="text-xs font-bold text-[#1D3557]">First Name</label>
-        <Input
+        <Input shape="rounded-sm" 
          type="text"
          defaultValue="Wade"
          readOnly={!isEditMode}
@@ -235,7 +229,7 @@ export default function ProfilePage() {
        </div>
        <div className="flex flex-col gap-2">
         <label className="text-xs font-bold text-[#1D3557]">Last Name</label>
-        <Input
+        <Input shape="rounded-sm" 
          type="text"
          defaultValue="Warren"
          readOnly={!isEditMode}
@@ -245,7 +239,7 @@ export default function ProfilePage() {
 
        <div className="flex flex-col gap-2">
         <label className="text-xs font-bold text-[#1D3557]">Phone Number</label>
-        <Input
+        <Input shape="rounded-sm" 
          type="text"
          defaultValue="(406) 555-0120"
          readOnly={!isEditMode}
@@ -256,7 +250,7 @@ export default function ProfilePage() {
 
        <div className="flex flex-col gap-2">
         <label className="text-xs font-bold text-[#1D3557]">E-mail</label>
-        <Input
+        <Input shape="rounded-sm" 
          type="email"
          defaultValue="wade.warren@example.com"
          readOnly={!isEditMode}
@@ -265,7 +259,7 @@ export default function ProfilePage() {
        </div>
        <div className="flex flex-col gap-2">
         <label className="text-xs font-bold text-[#1D3557]">Date of Birth</label>
-        <Input
+        <Input shape="rounded-sm" 
          type="text"
          defaultValue="12- January- 1999"
          className="bg-gray-50/80 border-gray-50 text-xs font-bold text-gray-900"
@@ -277,7 +271,7 @@ export default function ProfilePage() {
 
        <div className="md:col-span-2 flex flex-col gap-2">
         <label className="text-xs font-bold text-[#1D3557]">Location</label>
-        <Input
+        <Input shape="rounded-sm" 
          type="text"
          defaultValue="2972 Westheimer Rd. Santa Ana, Illinois 85486"
          readOnly={!isEditMode}
@@ -290,7 +284,7 @@ export default function ProfilePage() {
        <div className="md:col-span-2 flex flex-col gap-2">
         <label className="text-xs font-bold text-[#1D3557]">Biography</label>
         <div className="relative group">
-         <Textarea
+         <Textarea shape="rounded-sm" 
           rows={4}
           placeholder="Enter a biography about you"
           readOnly={!isEditMode}
@@ -325,7 +319,7 @@ export default function ProfilePage() {
     size="md"
    >
     <ModalBody className="flex flex-col items-center text-center py-10 gap-6">
-     <div className="w-20 h-20 rounded-full bg-blue-50 flex items-center justify-center text-brand-blue shadow-inner border border-blue-100">
+     <div className="w-20 h-20 rounded-full bg-brand-gold/10 flex items-center justify-center text-brand-gold shadow-inner border border-brand-gold/20">
       <Icon name="verified" folder="icon" size="lg" className="w-10 h-10" />
      </div>
      <div className="flex flex-col gap-2">
@@ -336,9 +330,9 @@ export default function ProfilePage() {
      </div>
     </ModalBody>
     <ModalFooter className="flex flex-col gap-3 pb-8">
-     <Button
+     <Button shape="rounded-sm" 
       variant="primary"
-      className="w-full h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
+      className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold w-full h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-brand-gold/10"
       onClick={() => setIsChangeSuccessOpen(false)}
      >
       Great, thank you

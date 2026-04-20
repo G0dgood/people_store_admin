@@ -16,6 +16,7 @@ interface SelectProps<T extends boolean = false> {
   placeholder?: string;
   isMulti?: T;
   className?: string;
+  shape?: "rounded" | "rounded-sm" | "pill";
 }
 
 export const Select = <T extends boolean = false>({
@@ -25,9 +26,16 @@ export const Select = <T extends boolean = false>({
   placeholder = "Select",
   isMulti = false as T,
   className = "",
+  shape = "rounded",
 }: SelectProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const shapes = {
+    rounded: "rounded-none",
+    "rounded-sm": "rounded-sm",
+    pill: "rounded-full",
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -70,8 +78,9 @@ export const Select = <T extends boolean = false>({
           }
         }}
         className={`
-          flex items-center justify-between w-full bg-white border rounded-[6px] py-2.5 px-4 text-sm transition-all cursor-pointer outline-none
-          ${isOpen ? "border-brand-blue ring-2 ring-brand-blue/20" : "border-gray-200 hover:border-gray-300"}
+          flex items-center justify-between w-full bg-white border py-2.5 px-4 text-sm transition-all cursor-pointer outline-none
+          ${shapes[shape]}
+          ${isOpen ? "border-brand-gold ring-2 ring-brand-gold/20" : "border-gray-200 hover:border-gray-300"}
         `}
       >
         <div className="flex flex-wrap gap-1.5 flex-1 min-w-0">
@@ -101,7 +110,7 @@ export const Select = <T extends boolean = false>({
       </div>
 
       {isOpen && (
-        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-[6px] shadow-xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className={`absolute z-50 w-full mt-1 bg-white border border-gray-200 shadow-xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200 ${shapes[shape]}`}>
           <ul className="max-h-60 overflow-y-auto">
             {options.map((option) => {
               const isSelected = isMulti
@@ -114,7 +123,7 @@ export const Select = <T extends boolean = false>({
                     onClick={() => handleSelect(option)}
                     className={`
                       w-full text-left px-4 py-3 text-sm transition-colors
-                      ${isSelected ? "bg-brand-blue-light text-brand-blue font-black" : "text-gray-700 hover:bg-gray-50"}
+                      ${isSelected ? "bg-brand-gold/10 text-brand-gold font-black" : "text-gray-700 hover:bg-gray-50"}
                     `}
                   >
                     {option.label}

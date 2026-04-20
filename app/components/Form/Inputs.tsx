@@ -5,10 +5,17 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   suffixElement?: React.ReactNode;
   containerClassName?: string;
   error?: boolean;
+  shape?: "rounded" | "rounded-sm" | "pill";
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ prefixElement, suffixElement, containerClassName = "", className = "", error, ...props }, ref) => {
+  ({ prefixElement, suffixElement, containerClassName = "", className = "", error, shape = "rounded", ...props }, ref) => {
+    const shapes = {
+      rounded: "rounded-none",
+      "rounded-sm": "rounded-sm",
+      pill: "rounded-full",
+    };
+
     return (
       <div className={`relative flex items-center w-full ${containerClassName}`}>
         {prefixElement && (
@@ -22,6 +29,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             w-full bg-white border border-gray-200 py-2.5 px-4 text-sm text-gray-900 
             placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-neutral-900 focus:border-neutral-900
             transition-all duration-200
+            ${shapes[shape]}
             ${prefixElement ? "pl-10" : ""}
             ${suffixElement ? "pr-10" : ""}
             ${error ? "border-red-500 focus:ring-red-500/20 focus:border-red-500" : ""}
@@ -43,10 +51,17 @@ Input.displayName = "Input";
 
 interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   error?: boolean;
+  shape?: "rounded" | "rounded-sm" | "pill";
 }
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ className = "", error, ...props }, ref) => {
+  ({ className = "", error, shape = "rounded", ...props }, ref) => {
+    const shapes = {
+      rounded: "rounded-none",
+      "rounded-sm": "rounded-sm",
+      pill: "rounded-full",
+    };
+
     return (
       <textarea
         ref={ref}
@@ -54,6 +69,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           w-full bg-white border border-gray-200 py-2.5 px-4 text-sm text-gray-900 
           placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-neutral-900 focus:border-neutral-900
           transition-all duration-200 min-h-[100px] resize-y
+          ${shapes[shape]}
           ${error ? "border-red-500 focus:ring-red-500/20 focus:border-red-500" : ""}
           ${className}
         `}

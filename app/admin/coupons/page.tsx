@@ -63,18 +63,14 @@ export default function CouponsListing() {
       {/* Header Area */}
       <div className="flex flex-col sm:flex-row justify-end items-center gap-3">
         <div className="flex gap-3 w-full sm:w-auto">
-          <Button
-            variant="primary"
-            shape="rounded-sm"
-            className="flex-1 sm:flex-initial"
+          <Button shape="rounded-sm" variant="primary"
+            className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold flex-1 sm:flex-initial"
             iconLeft={<Icon name="ticket" folder="dashboardIcon" size="sm" />}
             onClick={() => setIsAddModalOpen(true)}
           >
             Add Coupon
           </Button>
-          <Button
-            variant="outline"
-            shape="rounded-sm"
+          <Button shape="rounded-sm" variant="outline"
             className="flex-1 sm:flex-initial"
             iconRight={<Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" className="text-gray-400" />}
             onClick={() => setIsMoreActionsOpen(true)}
@@ -93,7 +89,7 @@ export default function CouponsListing() {
             onChange={setActiveTab} id={""} />
 
           <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
-            <Input
+            <Input shape="rounded-sm" 
               type="text"
               placeholder="Search coupon code"
               containerClassName="w-full lg:w-80 xl:w-72"
@@ -105,25 +101,16 @@ export default function CouponsListing() {
               <RowsPerPage value={rowsPerPage} onChange={setRowsPerPage} />
 
               <div className="flex gap-2 ml-auto sm:ml-0">
-                <Button
-                  variant="outline"
-                  shape="rounded-sm"
-                  className="!p-2.5 text-gray-400"
-                >
+                <Button shape="rounded-sm" variant="outline"
+                  className="!p-2.5 text-gray-400">
                   <Icon name="sort" folder="dashboardIcon" size="sm" />
                 </Button>
-                <Button
-                  variant="outline"
-                  shape="rounded-sm"
-                  className="!p-2.5 text-gray-400"
-                >
+                <Button shape="rounded-sm" variant="outline"
+                  className="!p-2.5 text-gray-400">
                   <Icon name="flowbite_arrow-up-down-outline" folder="dashboardIcon" size="sm" />
                 </Button>
-                <Button
-                  variant="outline"
-                  shape="rounded-sm"
-                  className="!p-2.5 text-gray-400"
-                >
+                <Button shape="rounded-sm" variant="outline"
+                  className="!p-2.5 text-gray-400">
                   <Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />
                 </Button>
               </div>
@@ -181,9 +168,7 @@ export default function CouponsListing() {
                   </td>
                   <td className="text-right">
                     <div className="flex justify-end items-center gap-4">
-                      <Button
-                        variant="outline"
-                        shape="rounded-sm"
+                      <Button shape="rounded-sm" variant="outline"
                         className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
                         onClick={() => {
                           setCouponToEdit(coupon);
@@ -192,9 +177,7 @@ export default function CouponsListing() {
                       >
                         <Icon name="settings" folder="dashboardIcon" size="sm" />
                       </Button>
-                      <Button
-                        variant="outline"
-                        shape="rounded-sm"
+                      <Button shape="rounded-sm" variant="outline"
                         className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
                         onClick={() => setCouponToDelete(coupon)}
                       >

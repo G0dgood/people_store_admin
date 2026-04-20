@@ -133,7 +133,7 @@ export const AdminHeader: React.FC<HeaderProps> = ({ onOpenMenu, className, isOp
           key={pathname}
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
-          className="text-[16px] sm:text-[20px] font-black text-[#1D3557] tracking-tight truncate xl:max-w-none"
+          className="text-[16px] sm:text-[20px] font-black text-brand-charcoal tracking-tight truncate xl:max-w-none"
         >
           {getPageTitle()}
         </motion.h1>
@@ -146,12 +146,13 @@ export const AdminHeader: React.FC<HeaderProps> = ({ onOpenMenu, className, isOp
           <Input
             type="text"
             placeholder="Search data, users, or reports"
+            shape="rounded-sm"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={handleSearchFocus}
             containerClassName="w-full"
             className={`bg-white border-gray-200 placeholder:text-gray-400 text-xs font-medium transition-all
-              ${isSearchOpen ? "ring-4 ring-blue-50 border-brand-blue/30 shadow-sm" : ""}
+              ${isSearchOpen ? "ring-4 ring-gray-100 border-brand-charcoal/30 shadow-sm" : ""}
             `}
             suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
           />
@@ -164,11 +165,11 @@ export const AdminHeader: React.FC<HeaderProps> = ({ onOpenMenu, className, isOp
           <div className="relative" ref={notificationRef}>
             <button
               className={`relative p-2 transition-colors group rounded-lg
-                ${isNotificationsOpen ? "bg-brand-blue-light text-brand-blue border border-[#1C1C1C1A]" : "text-gray-400 hover:text-brand-blue"}
+                ${isNotificationsOpen ? "bg-gray-100 text-brand-charcoal border border-[#1C1C1C1A]" : "text-gray-400 hover:text-brand-charcoal"}
               `}
               onClick={toggleNotifications}
             >
-              <Icon name="Bell outline" folder="dashboardIcon" size="md" className={isNotificationsOpen ? "text-brand-blue" : "text-[#1D3557]"} />
+              <Icon name="Bell outline" folder="dashboardIcon" size="md" className={isNotificationsOpen ? "text-brand-charcoal" : "text-brand-charcoal"} />
               <span className="absolute top-2 right-2 w-[7px] h-[7px] bg-red-500 rounded-full border border-white"></span>
             </button>
 

@@ -24,7 +24,7 @@ const RecommendedItems = () => {
           <Link
             key={idx}
             href="/products/detail"
-            className="bg-white border border-gray-200 p-5 flex flex-col gap-4 hover:border-brand-red/20 transition-all duration-300 cursor-pointer group"
+            className="bg-white border border-gray-200 p-5 flex flex-col gap-4 hover:border-brand-gold/20 transition-all duration-300 cursor-pointer group"
           >
             <div className="w-full aspect-square relative mb-2 overflow-hidden">
               <Image
@@ -36,7 +36,7 @@ const RecommendedItems = () => {
             </div>
             <div className="flex flex-col gap-2">
               <span className="font-black text-neutral-900 text-lg tracking-tight">{item.price}</span>
-              <p className="text-[13px] text-gray-500 font-medium line-clamp-2 leading-snug group-hover:text-brand-red transition-colors">
+              <p className="text-[13px] text-gray-500 font-medium line-clamp-2 leading-snug group-hover:text-brand-gold transition-colors">
                 {item.title}
               </p>
             </div>

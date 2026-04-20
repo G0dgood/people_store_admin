@@ -37,12 +37,12 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 
     // Variant styles
     const variants = {
-      primary: "bg-brand-blue text-white hover:bg-blue-600 active:bg-blue-700 focus:ring-brand-blue/50 border border-transparent ",
-      secondary: "bg-white text-brand-blue border border-brand-blue hover:bg-brand-blue/5 active:bg-brand-blue/10 focus:ring-brand-blue/50 ",
-      emerald: "bg-brand-blue text-white hover:bg-blue-600 active:bg-blue-700 focus:ring-brand-blue/50 border border-transparent shadow-sm",
-      rose: "bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white active:bg-rose-600 focus:ring-rose-500/50 border border-transparent shadow-sm transition-all",
-      outline: "bg-white text-[#1D3557] border border-gray-200 hover:bg-gray-50 active:bg-gray-100 focus:ring-gray-100/50 shadow-sm",
-      ghost: "bg-transparent text-brand-blue hover:bg-brand-blue/10 active:bg-brand-blue/20 focus:ring-brand-blue/50",
+      primary: "bg-brand-blue text-white hover:bg-brand-gold hover:text-white active:scale-[0.98] focus:ring-brand-gold/50 border border-transparent shadow-sm",
+      secondary: "bg-white text-brand-blue border border-brand-blue hover:bg-brand-gold hover:text-white active:scale-[0.98] focus:ring-brand-gold/50 transition-all",
+      emerald: "bg-emerald-500 text-white hover:bg-emerald-600 active:scale-[0.98] focus:ring-emerald-500/50 border border-transparent shadow-sm",
+      rose: "bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white active:scale-[0.98] focus:ring-rose-500/50 border border-transparent shadow-sm transition-all",
+      outline: "bg-white text-[#1D3557] border border-gray-200 hover:bg-brand-gold hover:text-white hover:border-brand-gold active:scale-[0.98] focus:ring-brand-gold/50 shadow-sm transition-all duration-300",
+      ghost: "bg-transparent text-brand-blue hover:bg-brand-gold/10 active:scale-[0.98] focus:ring-brand-gold/50",
     };
 
     // Size styles
@@ -55,7 +55,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     // Shape styles
     const shapes = {
       rounded: "rounded-none",
-      "rounded-sm": "rounded-none",
+      "rounded-sm": "rounded-sm",
       pill: "rounded-full",
     };
 

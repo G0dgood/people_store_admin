@@ -26,7 +26,7 @@ const brandsData = [
 ];
 
 const statusConfig = {
-  Active: "text-blue-500 bg-brand-blue-light",
+  Active: "text-brand-gold bg-brand-gold/10",
   Inactive: "text-rose-500 bg-rose-50/50",
 };
 
@@ -62,18 +62,14 @@ export default function BrandsListing() {
       {/* Header Area */}
       <div className="flex flex-col sm:flex-row justify-end items-center gap-3">
         <div className="flex gap-3 w-full sm:w-auto">
-          <Button
-            variant="primary"
-            shape="rounded-sm"
-            className="flex-1 sm:flex-initial"
+          <Button shape="rounded-sm" variant="primary"
+            className="flex-1 sm:flex-initial transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold"
             iconLeft={<Icon name="circle-plus" folder="dashboardIcon" size="sm" />}
             onClick={() => setIsAddModalOpen(true)}
           >
             Add Brand
           </Button>
-          <Button
-            variant="outline"
-            shape="rounded-sm"
+          <Button shape="rounded-sm" variant="outline"
             className="flex-1 sm:flex-initial"
             iconRight={<Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" className="text-gray-400" />}
             onClick={() => setIsMoreActionsOpen(true)}
@@ -89,11 +85,10 @@ export default function BrandsListing() {
           <TabFilter
             tabs={["All brands", "Active", "Inactive"]}
             activeTab={activeTab}
-            onChange={setActiveTab}
-          />
+            onChange={setActiveTab} id={""} />
 
           <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
-            <Input
+            <Input shape="rounded-sm"
               type="text"
               placeholder="Search brand name"
               containerClassName="w-full lg:w-80 xl:w-96"
@@ -104,25 +99,16 @@ export default function BrandsListing() {
               <RowsPerPage value={rowsPerPage} onChange={setRowsPerPage} />
 
               <div className="flex gap-2 ml-auto sm:ml-0">
-                <Button
-                  variant="outline"
-                  shape="rounded-sm"
-                  className="!p-2.5 text-gray-400"
-                >
+                <Button shape="rounded-sm" variant="outline"
+                  className="!p-2.5 text-gray-400">
                   <Icon name="sort" folder="dashboardIcon" size="sm" />
                 </Button>
-                <Button
-                  variant="outline"
-                  shape="rounded-sm"
-                  className="!p-2.5 text-gray-400"
-                >
+                <Button shape="rounded-sm" variant="outline"
+                  className="!p-2.5 text-gray-400">
                   <Icon name="flowbite_arrow-up-down-outline" folder="dashboardIcon" size="sm" />
                 </Button>
-                <Button
-                  variant="outline"
-                  shape="rounded-sm"
-                  className="!p-2.5 text-gray-400"
-                >
+                <Button shape="rounded-sm" variant="outline"
+                  className="!p-2.5 text-gray-400">
                   <Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />
                 </Button>
               </div>
@@ -164,7 +150,7 @@ export default function BrandsListing() {
                       <div className="w-10 h-10 rounded-[6px] border border-gray-200 overflow-hidden bg-white p-1 ring-1 ring-gray-100 flex items-center justify-center">
                         <img src={brand.logo} alt={brand.name} className="w-full h-full object-contain" />
                       </div>
-                      <span className="text-sm font-bold text-[#1D3557] group-hover:text-blue-600 transition-colors">
+                      <span className="text-sm font-bold text-[#1D3557] group-hover:text-brand-gold transition-colors">
                         {brand.name}
                       </span>
                     </div>
@@ -183,10 +169,8 @@ export default function BrandsListing() {
                   </td>
                   <td className="text-right">
                     <div className="flex justify-end items-center gap-4">
-                      <Button
-                        variant="outline"
-                        shape="rounded-sm"
-                        className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
+                      <Button shape="rounded-sm" variant="outline"
+                        className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
                         onClick={() => {
                           setBrandToEdit(brand);
                           setIsEditDrawerOpen(true);
@@ -194,9 +178,7 @@ export default function BrandsListing() {
                       >
                         <Icon name="settings" folder="dashboardIcon" size="sm" />
                       </Button>
-                      <Button
-                        variant="outline"
-                        shape="rounded-sm"
+                      <Button shape="rounded-sm" variant="outline"
                         className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
                         onClick={() => {
                           setBrandToDelete(brand);

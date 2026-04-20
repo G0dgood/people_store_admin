@@ -14,7 +14,7 @@ const Newsletter = () => {
         </p>
       </div>
 
-      <div className="flex flex-col md:flex-row gap-0 w-full max-w-[500px] z-10 px-4 md:px-0 border border-white/20 rounded-full overflow-hidden bg-white/5 backdrop-blur-sm">
+      <div className="flex flex-col md:flex-row gap-0 w-full max-w-[500px] z-10 px-4 md:px-0 border border-white/20 overflow-hidden bg-white/5 backdrop-blur-sm">
         <div className="flex-1 relative flex items-center group">
           <Icon name="email" size="sm" className="absolute left-6 text-white/40 group-focus-within:text-brand-gold transition-colors" />
           <input

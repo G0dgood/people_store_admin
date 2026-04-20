@@ -118,17 +118,14 @@ export default function ReviewListing() {
       {/* Header Area */}
       <div className="flex justify-end items-center">
         <div className="flex gap-3">
-          <Button
-            variant="primary"
-            shape="rounded-sm"
+          <Button shape="rounded-sm" variant="primary"
             iconLeft={<Icon name="ticket" folder="dashboardIcon" size="sm" />}
+            className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold"
             onClick={() => setIsExportSuccessOpen(true)}
           >
             Export Reviews
           </Button>
-          <Button
-            variant="outline"
-            shape="rounded-sm"
+          <Button shape="rounded-sm" variant="outline"
             iconRight={<Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" className="text-gray-400" />}
             onClick={() => setIsMoreActionsOpen(true)}
           >
@@ -147,7 +144,7 @@ export default function ReviewListing() {
           />
 
           <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
-            <Input
+            <Input shape="rounded-sm"
               type="text"
               placeholder="Search reviewer, comment..."
               containerClassName="flex-1 xl:w-96"
@@ -158,11 +155,8 @@ export default function ReviewListing() {
             <RowsPerPage value={rowsPerPage} onChange={setRowsPerPage} />
 
             <div className="flex gap-2">
-              <Button
-                variant="outline"
-                shape="rounded-sm"
-                className="!p-2.5 text-gray-400"
-              >
+              <Button shape="rounded-sm" variant="outline"
+                className="!p-2.5 text-gray-400">
                 <Icon name="sort" folder="dashboardIcon" size="sm" />
               </Button>
             </div>
@@ -244,9 +238,7 @@ export default function ReviewListing() {
                   </td>
                   <td className="text-right text-gray-300">
                     <div className="flex justify-end gap-4">
-                      <Button
-                        variant="outline"
-                        shape="rounded-sm"
+                      <Button shape="rounded-sm" variant="outline"
                         className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
                         onClick={() => {
                           setReviewToReply(review);
@@ -255,9 +247,7 @@ export default function ReviewListing() {
                       >
                         <HiMiniArrowUturnLeft className="w-4 h-4" />
                       </Button>
-                      <Button
-                        variant="outline"
-                        shape="rounded-sm"
+                      <Button shape="rounded-sm" variant="outline"
                         className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
                         onClick={() => {
                           setReviewToDelete(review);
@@ -378,9 +368,9 @@ export default function ReviewListing() {
           </div>
         </ModalBody>
         <ModalFooter className="flex flex-col gap-3 pb-8">
-          <Button
+          <Button shape="rounded-sm"
             variant="primary"
-            className="w-full h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
+            className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold w-full h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
             onClick={() => setIsExportSuccessOpen(false)}
           >
             Great, thank you

@@ -6,116 +6,122 @@ import { Icon } from "../Icon";
 import { Button } from "../Button";
 
 interface TicketDetailDrawerProps {
-  isOpen: boolean;
-  onClose: () => void;
-  ticket: any;
+   isOpen: boolean;
+   onClose: () => void;
+   ticket: any;
 }
 
 const priorityStyles = {
-  Urgent: "text-rose-600 bg-rose-50 border-rose-100",
-  High: "text-orange-600 bg-orange-50 border-orange-100",
-  Medium: "text-blue-600 bg-blue-50 border-blue-100",
-  Low: "text-emerald-600 bg-emerald-50 border-emerald-100",
+   Urgent: "text-rose-600 bg-rose-50 border-rose-100",
+   High: "text-orange-600 bg-orange-50 border-orange-100",
+   Medium: "text-brand-gold bg-brand-gold/10 border-brand-gold/20",
+   Low: "text-emerald-600 bg-emerald-50 border-emerald-100",
 };
 
 export function TicketDetailDrawer({ isOpen, onClose, ticket }: TicketDetailDrawerProps) {
-  if (!ticket) return null;
+   if (!ticket) return null;
 
-  return (
-    <Drawer isOpen={isOpen} onClose={onClose} title="Ticket Details" width="max-w-md">
-      <div className="flex flex-col gap-8 pb-8">
-        {/* Header Summary */}
-        <div className="p-6 rounded-2xl bg-[#1D3557] text-white flex flex-col gap-4 shadow-lg shadow-blue-100/50 relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-8 opacity-10 rotate-12">
-             <Icon name="tabler_message" folder="dashboardIcon" size="lg" className="w-24 h-24" />
-          </div>
-          <div className="flex justify-between items-start relative z-10">
-             <div className="flex flex-col gap-1">
-                <span className="text-[10px] font-black text-blue-200 uppercase tracking-[0.2em]">Reference ID</span>
-                <span className="text-sm font-black text-white">{ticket.ticketId}</span>
-             </div>
-             <div className={`px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider border shadow-sm ${priorityStyles[ticket.priority as keyof typeof priorityStyles]}`}>
-                {ticket.priority} Priority
-             </div>
-          </div>
-          <div className="flex flex-col gap-1 relative z-10">
-             <span className="text-[10px] font-black text-blue-200 uppercase tracking-[0.2em]">Subject</span>
-             <h3 className="text-lg font-black leading-tight">{ticket.subject}</h3>
-          </div>
-        </div>
+   return (
+      <Drawer isOpen={isOpen} onClose={onClose} title="Ticket Details" width="max-w-md">
+         <div className="flex flex-col gap-8 pb-8">
+            {/* Header Summary */}
+            <div className="p-6 rounded-2xl bg-[#1D3557] text-white flex flex-col gap-4 shadow-lg shadow-brand-gold/10 relative overflow-hidden">
+               <div className="absolute top-0 right-0 p-8 opacity-10 rotate-12">
+                  <Icon name="tabler_message" folder="dashboardIcon" size="lg" className="w-24 h-24" />
+               </div>
+               <div className="flex justify-between items-start relative z-10">
+                  <div className="flex flex-col gap-1">
+                     <span className="text-[10px] font-black text-white/60 uppercase tracking-[0.2em]">Reference ID</span>
+                     <span className="text-sm font-black text-white">{ticket.ticketId}</span>
+                  </div>
+                  <div className={`px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider border shadow-sm ${priorityStyles[ticket.priority as keyof typeof priorityStyles]}`}>
+                     {ticket.priority} Priority
+                  </div>
+               </div>
+               <div className="flex flex-col gap-1 relative z-10">
+                  <span className="text-[10px] font-black text-white/60 uppercase tracking-[0.2em]">Subject</span>
+                  <h3 className="text-lg font-black leading-tight">{ticket.subject}</h3>
+               </div>
+            </div>
 
-        {/* Customer Information */}
-        <div className="flex flex-col gap-4">
-           <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Customer Profile</h4>
-           <div className="bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-4 shadow-sm">
-              <div className="w-12 h-12 rounded-full bg-blue-50 border-2 border-white shadow-sm flex items-center justify-center overflow-hidden">
-                 <img src={"https://ui-avatars.com/api/?name=" + ticket.customer} alt="" className="w-full h-full object-cover" />
-              </div>
-              <div className="flex-1 flex flex-col gap-0.5">
-                 <span className="text-[13px] font-black text-[#1D3557]">{ticket.customer}</span>
-                 <span className="text-[11px] font-bold text-gray-400">#USR_023456789</span>
-              </div>
-              <button className="p-2 text-gray-400 hover:text-brand-blue transition-colors">
-                 <Icon name="link-external" folder="dashboardIcon" size="sm" />
-              </button>
-           </div>
-        </div>
+            {/* Customer Information */}
+            <div className="flex flex-col gap-4">
+               <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Customer Profile</h4>
+               <div className="bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-4 shadow-sm">
+                  <div className="w-12 h-12 rounded-full bg-brand-gold/10 border-2 border-white shadow-sm flex items-center justify-center overflow-hidden">
+                     <img src={"https://ui-avatars.com/api/?name=" + ticket.customer} alt="" className="w-full h-full object-cover" />
+                  </div>
+                  <div className="flex-1 flex flex-col gap-0.5">
+                     <span className="text-[13px] font-black text-[#1D3557]">{ticket.customer}</span>
+                     <span className="text-[11px] font-bold text-gray-400">#USR_023456789</span>
+                  </div>
+                  <button className="p-2 text-gray-400 hover:text-brand-blue transition-colors">
+                     <Icon name="link-external" folder="dashboardIcon" size="sm" />
+                  </button>
+               </div>
+            </div>
 
-        {/* Ticket Description / Messages */}
-        <div className="flex flex-col gap-4">
-           <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Ticket Conversation</h4>
-           <div className="flex flex-col gap-6">
-              <div className="flex flex-col gap-2">
-                 <div className="bg-gray-50 border border-gray-200 rounded-2xl rounded-tl-none p-4 shadow-sm">
-                    <p className="text-xs font-bold text-[#1D3557] leading-relaxed">
-                       Hello support team, I'm having issues with my latest order. The status hasn't updated in three days though I've been charged. Please assist.
-                    </p>
-                 </div>
-                 <span className="text-[10px] font-bold text-gray-400 pl-1">{ticket.activity}</span>
-              </div>
+            {/* Ticket Description / Messages */}
+            <div className="flex flex-col gap-4">
+               <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Ticket Conversation</h4>
+               <div className="flex flex-col gap-6">
+                  <div className="flex flex-col gap-2">
+                     <div className="bg-gray-50 border border-gray-200 rounded-2xl rounded-tl-none p-4 shadow-sm">
+                        <p className="text-xs font-bold text-[#1D3557] leading-relaxed">
+                           Hello support team, I'm having issues with my latest order. The status hasn't updated in three days though I've been charged. Please assist.
+                        </p>
+                     </div>
+                     <span className="text-[10px] font-bold text-gray-400 pl-1">{ticket.activity}</span>
+                  </div>
 
-              {/* Internal Note Tag */}
-              <div className="flex items-center gap-2 border-l-4 border-amber-400 pl-3 py-1">
-                 <div className="flex flex-col">
-                    <span className="text-[10px] font-black text-amber-500 uppercase tracking-widest">Internal Note</span>
-                    <p className="text-[11px] font-bold text-gray-500">System checked: Transaction verified, logistics delay detected.</p>
-                 </div>
-              </div>
-           </div>
-        </div>
+                  {/* Internal Note Tag */}
+                  <div className="flex items-center gap-2 border-l-4 border-amber-400 pl-3 py-1">
+                     <div className="flex flex-col">
+                        <span className="text-[10px] font-black text-amber-500 uppercase tracking-widest">Internal Note</span>
+                        <p className="text-[11px] font-bold text-gray-500">System checked: Transaction verified, logistics delay detected.</p>
+                     </div>
+                  </div>
+               </div>
+            </div>
 
-        {/* Timeline Log */}
-        <div className="flex flex-col gap-6">
-           <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Case Timeline</h4>
-           <div className="flex flex-col gap-8 relative pl-6 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-gray-100">
-              <div className="relative flex flex-col gap-1">
-                 <div className="absolute -left-[22px] top-1 w-3 h-3 rounded-full bg-blue-500 border-2 border-white ring-4 ring-blue-50"></div>
-                 <span className="text-[12px] font-black text-[#1D3557]">Last Activity Tracked</span>
-                 <span className="text-[10px] font-bold text-gray-400">{ticket.activity}</span>
-              </div>
-              <div className="relative flex flex-col gap-1 opacity-60">
-                 <div className="absolute -left-[22px] top-1 w-3 h-3 rounded-full bg-gray-200 border-2 border-white"></div>
-                 <span className="text-[12px] font-black text-[#1D3557]">Ticket Assigned to Agent</span>
-                 <span className="text-[10px] font-bold text-gray-400">1 hour ago</span>
-              </div>
-              <div className="relative flex flex-col gap-1 opacity-60">
-                 <div className="absolute -left-[22px] top-1 w-3 h-3 rounded-full bg-gray-200 border-2 border-white"></div>
-                 <span className="text-[12px] font-black text-[#1D3557]">Ticket Created</span>
-                 <span className="text-[10px] font-bold text-gray-400">3 hours ago</span>
-              </div>
-           </div>
-        </div>
+            {/* Timeline Log */}
+            <div className="flex flex-col gap-6">
+               <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Case Timeline</h4>
+               <div className="flex flex-col gap-8 relative pl-6 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-gray-100">
+                  <div className="relative flex flex-col gap-1">
+                     <div className="absolute -left-[22px] top-1 w-3 h-3 rounded-full bg-brand-gold border-2 border-white ring-4 ring-brand-gold/10"></div>
+                     <span className="text-[12px] font-black text-[#1D3557]">Last Activity Tracked</span>
+                     <span className="text-[10px] font-bold text-gray-400">{ticket.activity}</span>
+                  </div>
+                  <div className="relative flex flex-col gap-1 opacity-60">
+                     <div className="absolute -left-[22px] top-1 w-3 h-3 rounded-full bg-gray-200 border-2 border-white"></div>
+                     <span className="text-[12px] font-black text-[#1D3557]">Ticket Assigned to Agent</span>
+                     <span className="text-[10px] font-bold text-gray-400">1 hour ago</span>
+                  </div>
+                  <div className="relative flex flex-col gap-1 opacity-60">
+                     <div className="absolute -left-[22px] top-1 w-3 h-3 rounded-full bg-gray-200 border-2 border-white"></div>
+                     <span className="text-[12px] font-black text-[#1D3557]">Ticket Created</span>
+                     <span className="text-[10px] font-bold text-gray-400">3 hours ago</span>
+                  </div>
+               </div>
+            </div>
 
-        {/* Bottom Actions */}
-        <div className="mt-auto pt-8 border-t border-gray-50 flex flex-col gap-3">
-           <Button variant="primary" className="w-full h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100">
-              Reply to Customer
-           </Button>
-           <Button variant="outline" className="w-full h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest border-gray-200 text-gray-400 hover:text-[#1D3557]">
-              Escalate Ticket
-           </Button>
-        </div>
-      </div>
-    </Drawer>
-  );
+            {/* Bottom Actions */}
+            <div className="mt-auto pt-8 border-t border-gray-50 flex flex-col gap-3">
+               <Button
+                  shape="rounded-sm"
+                  variant="primary" 
+                  className="w-full h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-brand-gold/10 transition-all duration-300 hover:bg-brand-gold hover:text-white">
+                  Reply to Customer
+               </Button>
+               <Button
+                  shape="rounded-sm"
+                  variant="outline" 
+                  className="w-full h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest border-gray-200 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all duration-300">
+                  Escalate Ticket
+               </Button>
+            </div>
+         </div>
+      </Drawer>
+   );
 }

@@ -13,9 +13,9 @@ interface RefundDetailDrawerProps {
 }
 
 const statusStyles = {
-  Completed: { color: "text-blue-500", bg: "bg-blue-500", lightBg: "bg-blue-50" },
+  Completed: { color: "text-emerald-500", bg: "bg-emerald-500", lightBg: "bg-emerald-50" },
   Canceled: { color: "text-rose-500", bg: "bg-rose-500", lightBg: "bg-rose-50" },
-  Pending: { color: "text-orange-400", bg: "bg-orange-400", lightBg: "bg-orange-50" },
+  Pending: { color: "text-brand-gold", bg: "bg-brand-gold", lightBg: "bg-brand-gold/5" },
 };
 
 export function RefundDetailDrawer({ isOpen, onClose, refund, onUpdateStatus }: RefundDetailDrawerProps) {
@@ -61,14 +61,14 @@ export function RefundDetailDrawer({ isOpen, onClose, refund, onUpdateStatus }: 
         <div className="flex flex-col gap-4">
            <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Customer Details</h4>
            <div className="bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-blue-50 border-2 border-white shadow-sm flex items-center justify-center overflow-hidden">
+              <div className="w-12 h-12 rounded-full bg-gray-50 border-2 border-white shadow-sm flex items-center justify-center overflow-hidden">
                  <img src={refund.image || "https://ui-avatars.com/api/?name=" + refund.name} alt="" className="w-full h-full object-cover" />
               </div>
               <div className="flex-1 flex flex-col gap-0.5">
                  <span className="text-[13px] font-black text-[#1D3557]">{refund.name}</span>
-                 <span className="text-[11px] font-bold text-gray-400 text-brand-blue">{refund.custId}</span>
+                 <span className="text-[11px] font-bold text-gray-400 text-brand-gold">{refund.custId}</span>
               </div>
-              <button className="p-2 text-gray-400 hover:text-brand-blue transition-colors">
+              <button className="p-2 text-gray-400 hover:text-brand-gold transition-colors">
                  <Icon name="link-external" folder="dashboardIcon" size="sm" />
               </button>
            </div>
@@ -89,7 +89,7 @@ export function RefundDetailDrawer({ isOpen, onClose, refund, onUpdateStatus }: 
            <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Refund Timeline</h4>
            <div className="flex flex-col gap-8 relative pl-6 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-gray-100">
               <div className="relative flex flex-col gap-1">
-                 <div className="absolute -left-[22px] top-1 w-3 h-3 rounded-full bg-blue-500 border-2 border-white ring-4 ring-blue-50"></div>
+                 <div className="absolute -left-[22px] top-1 w-3 h-3 rounded-full bg-brand-gold border-2 border-white ring-4 ring-brand-gold/10"></div>
                  <span className="text-[12px] font-black text-[#1D3557]">Refund Processed</span>
                  <span className="text-[10px] font-bold text-gray-400">Just now • 10:15 AM</span>
               </div>
@@ -109,13 +109,18 @@ export function RefundDetailDrawer({ isOpen, onClose, refund, onUpdateStatus }: 
         {/* Bottom Actions */}
         <div className="mt-auto pt-8 border-t border-gray-50 flex flex-col gap-3">
            <Button 
+              shape="rounded-sm"
               variant="primary" 
-              className="w-full h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
+              className="w-full h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-brand-gold/10 transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold"
               onClick={onUpdateStatus}
            >
               Update Refund Status
            </Button>
-           <Button variant="outline" className="w-full h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest border-gray-200 text-gray-400 hover:text-[#1D3557]">
+           <Button 
+              shape="rounded-sm"
+              variant="outline" 
+              className="w-full h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest border-gray-200 text-gray-400 hover:text-brand-gold transition-all duration-300"
+           >
               Generate Refund Receipt
            </Button>
         </div>

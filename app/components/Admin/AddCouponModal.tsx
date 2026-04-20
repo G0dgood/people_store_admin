@@ -67,7 +67,7 @@ export function AddCouponModal({ isOpen, onClose }: AddCouponModalProps) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col gap-2">
-            <label className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Discount Amount</label>
+              <label className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Discount Amount</label>
               <Input
                 placeholder="e.g. 50% or 20.00"
                 value={formData.discount}
@@ -88,7 +88,7 @@ export function AddCouponModal({ isOpen, onClose }: AddCouponModalProps) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col gap-2">
-            <label className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Start Date</label>
+              <label className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Start Date</label>
               <Input
                 type="text"
                 placeholder="DD-MM-YYYY"
@@ -99,7 +99,7 @@ export function AddCouponModal({ isOpen, onClose }: AddCouponModalProps) {
               />
             </div>
             <div className="flex flex-col gap-2">
-            <label className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">End Date</label>
+              <label className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">End Date</label>
               <Input
                 type="text"
                 placeholder="DD-MM-YYYY"
@@ -122,18 +122,18 @@ export function AddCouponModal({ isOpen, onClose }: AddCouponModalProps) {
         </ModalBody>
 
         <ModalFooter className="flex justify-end gap-3 border-t border-gray-50 pt-6">
-          <Button 
-            variant="outline" 
-            type="button" 
-            onClick={onClose} 
-            className="px-8 h-10 sm:h-12 text-[11px] font-bold"
+          <Button
+            variant="outline"
+            type="button"
+            onClick={onClose}
+            shape="rounded-sm"
           >
             Cancel
           </Button>
-          <Button 
-            variant="primary" 
-            type="submit" 
-            className="px-8 h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
+          <Button
+            variant="primary"
+            type="submit"
+            shape="rounded-sm"
           >
             Create Coupon
           </Button>

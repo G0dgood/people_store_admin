@@ -62,7 +62,7 @@ export function EditCategoryDrawer({ isOpen, onClose, category }: EditCategoryDr
                 className="h-12 border-gray-200 font-bold flex-1"
                 required
               />
-              <Button 
+              <Button
                 type="button"
                 variant="outline"
                 shape="rounded-sm"
@@ -85,17 +85,19 @@ export function EditCategoryDrawer({ isOpen, onClose, category }: EditCategoryDr
         </div>
 
         <div className="mt-auto pt-8 border-t border-gray-50 flex flex-col gap-3">
-          <Button 
-            variant="primary" 
-            type="submit" 
+          <Button
+            shape="rounded-sm"
+            variant="primary"
+            type="submit"
             className="w-full h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
           >
             Update Category
           </Button>
-          <Button 
-            variant="outline" 
-            type="button" 
-            onClick={onClose} 
+          <Button
+            shape="rounded-sm"
+            variant="outline"
+            type="button"
+            onClick={onClose}
             className="w-full h-10 sm:h-12 text-[11px] font-bold text-gray-400 hover:text-gray-900"
           >
             Cancel

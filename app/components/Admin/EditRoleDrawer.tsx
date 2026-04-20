@@ -100,10 +100,10 @@ export function EditRoleDrawer({ isOpen, onClose, role }: EditRoleDrawerProps) {
               {modules.map((module) => (
                 <div 
                   key={module.id} 
-                  className="grid grid-cols-12 gap-2 items-center p-3 sm:p-4 bg-white border border-gray-200 rounded-2xl hover:border-blue-100 hover:shadow-md transition-all group"
+                  className="grid grid-cols-12 gap-2 items-center p-3 sm:p-4 bg-white border border-gray-200 rounded-2xl hover:border-brand-gold/20 hover:shadow-md transition-all group"
                 >
                   <div className="col-span-5 flex flex-col gap-0.5">
-                    <span className="text-[13px] font-black text-[#1D3557] group-hover:text-brand-blue transition-colors">{module.label}</span>
+                    <span className="text-[13px] font-black text-[#1D3557] group-hover:text-brand-gold transition-colors">{module.label}</span>
                   </div>
                   
                   {accessTypes.map(a => (
@@ -119,7 +119,7 @@ export function EditRoleDrawer({ isOpen, onClose, role }: EditRoleDrawerProps) {
                      <button 
                        type="button" 
                        onClick={() => toggleRow(module.id)}
-                       className="w-6 h-6 rounded-lg bg-gray-50 flex items-center justify-center text-gray-300 hover:bg-brand-blue-light hover:text-brand-blue transition-all"
+                       className="w-6 h-6 rounded-sm bg-gray-50 flex items-center justify-center text-gray-300 hover:bg-brand-gold/10 hover:text-brand-gold transition-all"
                      >
                         <Icon name="verified" folder="icon" size="xs" />
                      </button>
@@ -145,13 +145,15 @@ export function EditRoleDrawer({ isOpen, onClose, role }: EditRoleDrawerProps) {
 
         <div className="mt-auto pt-8 border-t border-gray-50 flex flex-col gap-3 pb-8">
           <Button 
+            shape="rounded-sm"
             variant="primary" 
             type="submit"
-            className="w-full h-12 text-[11px] font-black uppercase tracking-widest shadow-xl shadow-blue-100 animate-pulse-subtle"
+            className="w-full h-12 text-[11px] font-black uppercase tracking-widest shadow-xl shadow-brand-gold/10 transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold animate-pulse-subtle"
           >
             Deploy Governance Update
           </Button>
           <Button 
+            shape="rounded-sm"
             variant="outline" 
             type="button" 
             onClick={onClose}

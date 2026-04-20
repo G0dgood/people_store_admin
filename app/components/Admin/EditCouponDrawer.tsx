@@ -128,17 +128,19 @@ export function EditCouponDrawer({ isOpen, onClose, coupon }: EditCouponDrawerPr
         </div>
 
         <div className="mt-auto pt-8 border-t border-gray-50 flex flex-col gap-3">
-          <Button 
-            variant="primary" 
-            type="submit" 
+          <Button
+            shape="rounded-sm"
+            variant="primary"
+            type="submit"
             className="w-full h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
           >
             Update Coupon
           </Button>
-          <Button 
-            variant="outline" 
-            type="button" 
-            onClick={onClose} 
+          <Button
+            shape="rounded-sm"
+            variant="outline"
+            type="button"
+            onClick={onClose}
             className="w-full h-10 sm:h-12 text-[11px] font-bold text-gray-400 hover:text-gray-900"
           >
             Cancel

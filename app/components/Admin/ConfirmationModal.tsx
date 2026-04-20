@@ -43,17 +43,17 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
     },
     success: {
       icon: "verified",
-      iconBg: "bg-brand-blue-light",
-      iconColor: "text-brand-blue",
-      buttonBg: "bg-brand-blue hover:bg-blue-600",
-      shadow: "shadow-blue-100",
+      iconBg: "bg-brand-gold/5",
+      iconColor: "text-brand-gold",
+      buttonBg: "bg-brand-gold hover:bg-brand-gold/90",
+      shadow: "shadow-brand-gold/10",
     },
     info: {
       icon: "help_outline",
-      iconBg: "bg-brand-blue-light",
-      iconColor: "text-brand-blue",
-      buttonBg: "bg-brand-blue hover:bg-blue-600",
-      shadow: "shadow-blue-100",
+      iconBg: "bg-brand-charcoal/5",
+      iconColor: "text-brand-charcoal",
+      buttonBg: "bg-brand-charcoal hover:bg-brand-charcoal/90",
+      shadow: "shadow-brand-charcoal/10",
     },
   };
 
@@ -88,6 +88,7 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
             {cancelText}
           </Button>
           <Button
+            shape="rounded-sm"
             className={`flex-1 h-10 sm:h-12 font-black text-white border-transparent shadow-lg ${config.shadow} transition-all active:scale-95 ${config.buttonBg}`}
             onClick={() => {
               onConfirm();

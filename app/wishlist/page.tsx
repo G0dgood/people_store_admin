@@ -50,7 +50,7 @@ const WishlistPage = () => {
         </div>
 
         <div className="flex flex-col gap-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-gray-100 pb-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-gray-200 pb-6">
             <div className="flex flex-col gap-2">
               <h1 className="text-3xl md:text-4xl font-outfit font-light text-gray-900 uppercase tracking-[0.1em]">
                 My <span className="font-bold">Wishlist</span>
@@ -82,7 +82,7 @@ const WishlistPage = () => {
           ) : (
             <div className="bg-gray-50/50 py-20 md:py-32 flex flex-col items-center text-center gap-8 rounded-2xl border border-dashed border-gray-200">
               <div className="w-24 h-24 bg-white shadow-xl rounded-full flex items-center justify-center text-brand-gold animate-pulse">
-                <Icon name="favorite" size="lg" />
+                <Icon name="perfume_empty" size="lg" />
               </div>
               <div className="flex flex-col gap-3 max-w-sm">
                 <h3 className="text-2xl font-outfit font-light text-gray-900 uppercase tracking-widest">
@@ -105,7 +105,7 @@ const WishlistPage = () => {
         </div>
 
         {/* Recently Viewed */}
-        <div className="mt-12 border-t border-gray-100 pt-16 pb-12">
+        <div className="mt-12 border-t border-gray-200 pt-16 pb-12">
           <h2 className="text-xl font-outfit font-light text-gray-900 mb-8 uppercase tracking-[0.2em]">
             Recently <span className="font-bold">viewed</span>
           </h2>

@@ -83,9 +83,7 @@ export default function FAQManagementPage() {
     <div className="flex flex-col gap-8">
       {/* Top Actions */}
       <div className="flex justify-end items-center">
-        <Button
-          variant="primary"
-          shape="rounded-sm"
+        <Button shape="rounded-sm" variant="primary"
           iconLeft={<HiOutlinePlusCircle size={18} />}
           onClick={() => {
             setSelectedFAQ(null);
@@ -103,11 +101,10 @@ export default function FAQManagementPage() {
             <TabFilter
               tabs={categories}
               activeTab={activeTab}
-              onChange={setActiveTab}
-            />
+              onChange={setActiveTab} id={""} />
           </div>
           <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
-            <Input
+            <Input shape="rounded-sm"
               type="text"
               placeholder="Search content..."
               value={searchQuery}
@@ -171,9 +168,7 @@ export default function FAQManagementPage() {
                   </td>
                   <td className="pr-8 py-5 text-right">
                     <div className="flex justify-end items-center gap-2">
-                      <Button
-                        variant="outline"
-                        shape="rounded-sm"
+                      <Button shape="rounded-sm" variant="outline"
                         className="!p-1.5 text-gray-400 hover:text-blue-500 hover:bg-brand-blue-light transition-all"
                         onClick={() => {
                           setSelectedFAQ(faq);
@@ -182,9 +177,7 @@ export default function FAQManagementPage() {
                       >
                         <HiOutlinePencil size={14} />
                       </Button>
-                      <Button
-                        variant="outline"
-                        shape="rounded-sm"
+                      <Button shape="rounded-sm" variant="outline"
                         className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 transition-all"
                         onClick={() => {
                           setSelectedFAQ(faq);

@@ -29,16 +29,15 @@ export const AnalyticsOverview: React.FC = () => {
   return (
     <div className="bg-white p-6 sm:p-8 rounded-[6px] border border-gray-200 shadow-sm flex flex-col gap-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
-        <h3 className="text-[20px] font-black text-[#1D3557]">Report for this week</h3>
+        <h3 className="text-[20px] font-black text-brand-charcoal">Report for this week</h3>
         <div className="flex items-center justify-between w-full sm:w-auto gap-4">
           <TabFilter
             tabs={["This week", "Last week"]}
             activeTab={chartTab}
-            onChange={setChartTab}
-          />
+            onChange={setChartTab} id={""} />
           <div className="relative" ref={dropdownRef}>
             <button
-              className={`p-1 rounded-[6px] transition-all ${isDropdownOpen ? "bg-brand-blue-light text-brand-blue shadow-sm" : "text-gray-400 hover:bg-gray-50"}`}
+              className={`p-1 rounded-[6px] transition-all ${isDropdownOpen ? "bg-gray-100 text-brand-charcoal shadow-sm" : "text-gray-400 hover:bg-gray-50"}`}
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             >
               <Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />
@@ -81,7 +80,7 @@ export const AnalyticsOverview: React.FC = () => {
           { label: "Revenue", val: "250k" },
         ].map((stat) => (
           <div key={stat.label} className="flex flex-col gap-1 lg:border-gray-200 lg:border-l lg:pl-4 first:border-l-0 first:pl-0">
-            <span className="text-[22px] font-black text-[#1D3557] leading-none">{stat.val}</span>
+            <span className="text-[22px] font-black text-brand-charcoal leading-none">{stat.val}</span>
             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{stat.label}</span>
           </div>
         ))}
@@ -95,13 +94,13 @@ export const AnalyticsOverview: React.FC = () => {
             datasets: [{
               label: 'Revenue',
               data: [18, 18.5, 17, 16, 11, 12, 11],
-              borderColor: '#2196F3',
+              borderColor: '#222222',
               borderWidth: 3,
               fill: true,
-              backgroundColor: 'rgba(33, 150, 243, 0.05)',
+              backgroundColor: 'rgba(34, 34, 34, 0.05)',
               tension: 0.4,
               pointRadius: (context: any) => context.dataIndex === 4 ? 6 : 0,
-              pointBackgroundColor: '#2196F3',
+              pointBackgroundColor: '#222222',
               pointBorderColor: '#fff',
               pointBorderWidth: 2,
             }]

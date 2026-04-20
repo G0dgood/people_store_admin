@@ -15,7 +15,7 @@ export default function DesignSystemVerificationPage() {
     { name: 'brand-blue', class: 'bg-brand-blue', light: 'bg-brand-blue-light' },
     { name: 'brand-green', class: 'bg-brand-green', light: 'bg-brand-green-light' },
     { name: 'brand-orange', class: 'bg-brand-orange', light: 'bg-brand-orange-light' },
-    { name: 'brand-red', class: 'bg-brand-red' },
+    { name: 'brand-gold', class: 'bg-brand-gold', light: 'bg-brand-gold-light' },
   ];
 
   const cursors = [

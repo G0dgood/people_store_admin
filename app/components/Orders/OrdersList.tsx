@@ -142,83 +142,114 @@ export const OrdersList: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-8">
       {/* List Toolbar */}
-      <div className="bg-white p-4 border border-gray-200 rounded-lg flex flex-col sm:flex-row justify-between items-center gap-4">
-        <h2 className="text-lg font-bold text-gray-900 leading-none">All Orders</h2>
+      <div className="bg-white p-6 border border-gray-200 flex flex-col md:flex-row justify-between items-center gap-6">
+        <div className="flex flex-col gap-1">
+          <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-400">Inventory</span>
+          <h2 className="text-xl font-outfit font-light text-gray-900 uppercase tracking-widest">
+            All <span className="font-bold">Purchases</span>
+          </h2>
+        </div>
 
-        <div className="w-full sm:w-80 relative">
-          <Icon name="search" size="sm" className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+        <div className="w-full md:w-96 relative group">
+          <Icon name="search" size="sm" className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-gold transition-colors" />
           <input
             type="text"
             placeholder="Search by Order ID..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-10 pl-10 pr-4 bg-gray-50 border border-gray-200 rounded-lg text-sm outline-none focus:border-brand-blue focus:bg-white transition-colors text-gray-900"
+            className="w-full h-12 pl-12 pr-4 bg-gray-50 border border-gray-200 text-[11px] font-bold uppercase tracking-widest outline-none focus:border-brand-gold transition-all text-gray-900"
           />
         </div>
       </div>
 
       {/* Orders Map */}
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-5">
         {paginatedOrders.length > 0 ? (
           paginatedOrders.map((order) => (
-            <div key={order.id} className="bg-white border border-gray-200 rounded-xl hover:shadow-md transition-shadow p-5 flex flex-col md:flex-row md:items-center justify-between gap-5 md:gap-6">
+            <div key={order.id} className="bg-white border border-gray-200 p-4 md:p-6 flex flex-col md:flex-row gap-6 transition-all group relative">
               
-              {/* Thumbnail */}
-              <div className="w-20 h-20 md:w-24 md:h-24 bg-gray-100 rounded-lg border border-gray-200 overflow-hidden relative flex-shrink-0 p-2 flex items-center justify-center">
+              {/* Product Representation Image */}
+              <div className="w-24 h-24 md:w-48 md:h-48 flex-shrink-0 border border-gray-200 flex items-center justify-center p-4 bg-white overflow-hidden relative">
                 {order.image ? (
-                  <Image src={order.image} alt={`Order ${order.id}`} fill className="object-contain" />
+                  <div className="relative w-full h-full transition-transform duration-500 group-hover:scale-110">
+                    <Image src={order.image} alt={`Order ${order.id}`} fill className="object-contain" />
+                  </div>
                 ) : (
-                  <Icon name="inventory_2" size="lg" className="text-gray-300 opacity-60" />
+                  <Icon name="perfume_empty" size="lg" className="text-gray-100" />
                 )}
               </div>
 
-              {/* Info */}
-              <div className="flex flex-col flex-1 gap-1">
-                <span className="font-bold text-base md:text-lg text-gray-900 tracking-tight">{order.id}</span>
-                <span className="text-xs md:text-sm text-gray-500 font-medium">Placed on {order.date}</span>
-                <span className="text-xs md:text-sm text-gray-500 font-medium mt-1">
-                  Contains {order.items} {order.items === 1 ? 'item' : 'items'}
-                </span>
+              {/* Order Context */}
+              <div className="flex-1 flex flex-col gap-3">
+                <div className="flex flex-col gap-1">
+                  <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-brand-gold">{order.status}</span>
+                  <div className="flex items-center gap-3">
+                    <span className="font-outfit font-bold text-xl md:text-2xl text-gray-900 tracking-tight">{order.id}</span>
+                  </div>
+                  <span className="text-[11px] font-bold uppercase tracking-widest text-gray-400">Placed on {order.date}</span>
+                </div>
+
+                <div className="flex items-center gap-3 mt-1">
+                  <div className="w-1.5 h-1.5 bg-gray-200" />
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
+                    {order.items} {order.items === 1 ? 'Magnificent Piece' : 'Artisanal Pieces'}
+                  </span>
+                </div>
+
+                <div className="mt-auto pt-4 flex items-center gap-6">
+                  <button 
+                    onClick={() => handleViewDetails(order.id)}
+                    className="text-black hover:text-brand-gold font-bold text-[10px] uppercase tracking-widest cursor-pointer flex items-center gap-2 transition-all border-b border-black/0 hover:border-brand-gold pb-0.5"
+                  >
+                    View details
+                  </button>
+                  <button 
+                    className="text-gray-400 font-bold text-[10px] uppercase tracking-widest cursor-pointer flex items-center gap-2"
+                    onClick={() => toast.info("Invoice generation coming soon")}
+                  >
+                    Download Invoice
+                  </button>
+                </div>
               </div>
 
-              {/* Price & Status */}
-              <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-center gap-2 md:w-32 lg:w-48">
-                <span className="font-bold text-lg md:text-xl text-brand-blue">₦{order.total.toLocaleString()}</span>
-                {getStatusBadge(order.status)}
-              </div>
+              {/* Price & Primary Actions */}
+              <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-between py-1 min-w-[180px] border-t md:border-t-0 md:border-l border-gray-200 md:pl-8 pt-4 md:pt-0">
+                <div className="flex flex-col md:items-end gap-1">
+                  <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-400">Total Selection</span>
+                  <span className="font-outfit font-bold text-2xl md:text-3xl text-gray-900">₦{order.total.toLocaleString()}</span>
+                </div>
 
-              {/* Actions */}
-              <div className="flex gap-3 md:flex-col mt-4 md:mt-0 pt-4 md:pt-0 border-t border-gray-50 md:border-t-0 md:border-l border-gray-200 md:pl-6 w-full md:w-auto flex-shrink-0">
-                <Button 
-                  onClick={() => handleReorder(order)}
-                  variant="primary" 
-                  className="flex-1 md:w-[130px] h-10 md:h-11 text-sm font-bold shadow-none rounded-lg active:scale-95 transition-all"
-                >
-                  Reorder
-                </Button>
-                <Button 
-                  onClick={() => handleViewDetails(order.id)}
-                  variant="secondary" 
-                  className="flex-1 md:w-[130px] h-10 md:h-11 text-sm font-bold border border-gray-200 text-gray-700 hover:text-brand-blue shadow-none rounded-lg focus:ring-0 transition-colors active:scale-95 transition-all"
-                >
-                  View Details
-                </Button>
+                <div className="flex flex-col gap-3 w-full md:w-auto">
+                  {getStatusBadge(order.status)}
+                  <Button 
+                    onClick={() => handleReorder(order)}
+                    variant="primary" 
+                    className="w-full md:w-36 bg-black text-white hover:bg-brand-gold font-bold shadow-none rounded-none text-[10px] uppercase tracking-widest h-11 transition-all active:scale-95"
+                  >
+                    Reorder Curation
+                  </Button>
+                </div>
               </div>
             </div>
           ))
         ) : (
-          <div className="py-12 flex flex-col items-center justify-center text-gray-400 bg-white border border-gray-200 rounded-xl">
-            <Icon name="inventory_2" size="lg" className="mb-2 opacity-50" />
-            <p className="font-medium text-gray-500">No orders found.</p>
+          <div className="py-24 flex flex-col items-center justify-center text-center gap-8 bg-white border border-dashed border-gray-200">
+            <div className="w-20 h-20 bg-gray-50 flex items-center justify-center text-gray-200">
+              <Icon name="perfume_empty" size="lg" />
+            </div>
+            <div className="flex flex-col gap-2">
+              <h3 className="text-xl font-outfit font-light text-gray-900 uppercase tracking-widest">No order history found</h3>
+              <p className="text-gray-400 text-[10px] uppercase tracking-widest font-bold">Time to begin your curated journey</p>
+            </div>
           </div>
         )}
       </div>
 
-      {/* Pagination component replaces manual buttons */}
+      {/* Pagination Container */}
       {totalPages > 1 && (
-        <div className="flex justify-end mt-2">
+        <div className="flex justify-end mt-4 pt-8 border-t border-gray-200">
           <Pagination 
             currentPage={currentPage}
             totalPages={totalPages}

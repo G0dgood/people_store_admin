@@ -73,6 +73,7 @@ export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-[#1D3557] uppercase tracking-widest">Full Name</label>
               <Input
+                shape="rounded-sm"
                 placeholder="e.g. Eleanor Pena"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -84,6 +85,7 @@ export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-[#1D3557] uppercase tracking-widest">Email Address</label>
               <Input
+                shape="rounded-sm"
                 type="email"
                 placeholder="e.g. penna@dealport.com"
                 value={formData.email}
@@ -98,6 +100,7 @@ export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-[#1D3557] uppercase tracking-widest">Gender</label>
               <Select
+                shape="rounded-sm"
                 options={genderOptions}
                 value={formData.gender}
                 onChange={(val) => setFormData({ ...formData, gender: val })}
@@ -108,6 +111,7 @@ export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-[#1D3557] uppercase tracking-widest">Date of Birth</label>
               <Input
+                shape="rounded-sm"
                 type="date"
                 value={formData.dob}
                 onChange={(e) => setFormData({ ...formData, dob: e.target.value })}
@@ -121,6 +125,7 @@ export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-[#1D3557] uppercase tracking-widest">System Role</label>
               <Select
+                shape="rounded-sm"
                 options={roleOptions}
                 value={formData.role}
                 onChange={(val) => setFormData({ ...formData, role: val })}
@@ -131,6 +136,7 @@ export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-[#1D3557] uppercase tracking-widest">Department</label>
               <Select
+                shape="rounded-sm"
                 options={departmentOptions}
                 value={formData.department}
                 onChange={(val) => setFormData({ ...formData, department: val })}
@@ -155,6 +161,7 @@ export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
 
         <ModalFooter className="flex justify-end gap-3 border-t border-gray-50 pt-8 mt-4">
           <Button
+            shape="rounded-sm"
             variant="outline"
             type="button"
             onClick={onClose}
@@ -162,7 +169,9 @@ export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
             Discard
           </Button>
           <Button
+            shape="rounded-sm"
             variant="primary"
+            className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold shadow-md shadow-brand-gold/10"
             type="submit"
           >
             Quick Onboard

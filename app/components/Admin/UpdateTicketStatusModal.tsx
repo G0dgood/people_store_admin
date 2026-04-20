@@ -41,7 +41,7 @@ export const UpdateTicketStatusModal: React.FC<UpdateTicketStatusModalProps> = (
          <div className="flex flex-col gap-8 py-2">
             {/* Ticket Context */}
             <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-2xl border border-gray-200">
-               <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-brand-blue shadow-sm border border-gray-200">
+               <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-brand-gold shadow-sm border border-gray-200">
                   <Icon name="ticket" folder="dashboardIcon" size="sm" />
                </div>
                <div className="flex flex-col">
@@ -74,12 +74,15 @@ export const UpdateTicketStatusModal: React.FC<UpdateTicketStatusModalProps> = (
 
             {/* Actions */}
             <div className="flex gap-3 pt-6 border-t border-gray-50">
-               <Button variant="ghost" className="flex-1 h-10 text-[10px] font-black uppercase tracking-widest text-gray-400" onClick={onClose}>
+               <Button
+                  shape="rounded-sm"
+                  variant="ghost" className="flex-1 h-10 text-[10px] font-black uppercase tracking-widest text-gray-400" onClick={onClose}>
                   Cancel
                </Button>
                <Button
+                  shape="rounded-sm"
                   variant="primary"
-                  className="flex-2 h-10 text-[10px] font-black uppercase tracking-widest shadow-md shadow-blue-100"
+                  className="flex-2 h-10 text-[10px] font-black uppercase tracking-widest shadow-md shadow-brand-gold/10 transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold"
                   onClick={() => {
                      onConfirm(selectedStatus, note);
                      onClose();

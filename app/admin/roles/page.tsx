@@ -95,17 +95,14 @@ export default function RolesManagement() {
     <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
       {/* Action Bar */}
       <div className="flex justify-end items-center gap-3">
-        <Button
-          variant="primary"
-          shape="rounded-sm"
+        <Button shape="rounded-sm" variant="primary"
+          className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold"
           iconLeft={<Icon name="circle-plus" folder="dashboardIcon" size="sm" />}
           onClick={() => setIsAddModalOpen(true)}
         >
           Add Role
         </Button>
-        <Button
-          variant="outline"
-          shape="rounded-sm"
+        <Button shape="rounded-sm" variant="outline"
           onClick={() => setIsMoreActionsOpen(true)}
         >
           More Action
@@ -136,21 +133,18 @@ export default function RolesManagement() {
 
           <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
             <div className="flex-1 xl:w-80 relative group">
-              <Input
+               <Input shape="rounded-sm" 
                 type="text"
                 placeholder="Filter roles by keyword..."
-              />
-              <Icon name="search-01" folder="dashboardIcon" size="xs" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-brand-blue transition-colors" />
+               />
+               <Icon name="search-01" folder="dashboardIcon" size="xs" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-brand-gold transition-colors" />
             </div>
 
             <RowsPerPage value={rowsPerPage} onChange={setRowsPerPage} />
 
             <div className="flex gap-2">
-              <Button
-                variant="outline"
-                shape="rounded-sm"
-                className="!p-2.5 text-gray-400 border-gray-200"
-              >
+              <Button shape="rounded-sm" variant="outline"
+                className="!p-2.5 text-gray-400 border-gray-200">
                 <Icon name="sort" folder="dashboardIcon" size="sm" />
               </Button>
             </div>
@@ -195,7 +189,7 @@ export default function RolesManagement() {
                     </td>
                     <td className="py-6">
                       <div className="flex flex-col gap-0.5">
-                        <span className="text-[14px] font-black text-[#1D3557] group-hover:text-brand-blue transition-colors">
+                        <span className="text-[14px] font-black text-[#1D3557] group-hover:text-brand-gold transition-colors">
                           {role.name}
                         </span>
                         <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest">{role.department} unit</span>
@@ -207,8 +201,8 @@ export default function RolesManagement() {
                       </p>
                     </td>
                     <td className="py-6 text-center">
-                      <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-50 rounded-full border border-gray-200 group-hover:bg-white group-hover:border-blue-100 transition-all cursor-default">
-                        <Icon name="users" folder="icon" size="xs" className="text-gray-400 group-hover:text-brand-blue" />
+                      <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-50 rounded-full border border-gray-200 group-hover:bg-brand-gold/10 group-hover:border-brand-gold/20 transition-all cursor-default">
+                        <Icon name="users" folder="icon" size="xs" className="text-gray-400 group-hover:text-brand-gold" />
                         <span className="text-[11px] font-black text-[#1D3557]">{role.users} Active</span>
                       </div>
                     </td>
@@ -222,10 +216,8 @@ export default function RolesManagement() {
                     </td>
                     <td className="py-6 text-right pr-6">
                       <div className="flex justify-end gap-3">
-                        <Button
-                          variant="outline"
-                          shape="rounded-sm"
-                          className="!p-1.5 text-gray-400 hover:text-brand-blue hover:bg-brand-blue-light border-gray-200 transition-all font-bold"
+                        <Button shape="rounded-sm" variant="outline"
+                          className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold border-gray-200 transition-all font-bold"
                           onClick={() => {
                             setRoleToEdit(role);
                             setIsEditDrawerOpen(true);
@@ -233,9 +225,7 @@ export default function RolesManagement() {
                         >
                           <Icon name="settings" folder="dashboardIcon" size="sm" />
                         </Button>
-                        <Button
-                          variant="outline"
-                          shape="rounded-sm"
+                        <Button shape="rounded-sm" variant="outline"
                           className="!p-1.5 text-gray-400 hover:text-rose-500 hover:bg-rose-50 border-gray-200 transition-all"
                           onClick={() => setRoleToDelete(role)}
                         >
