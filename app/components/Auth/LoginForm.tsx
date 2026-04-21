@@ -7,17 +7,45 @@ import { Input } from "../Form/Inputs";
 import { Button } from "../Button";
 import { Checkbox } from "../Form/Checkbox";
 
+import { useLoginMutation } from "@/lib/redux/services/authApi";
+import { setCredentials } from "@/lib/redux/features/authSlice";
+import { useAppDispatch } from "@/lib/redux/hooks";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
 export const LoginForm = () => {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const [login, { isLoading }] = useLoginMutation();
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    // Simulate login
-    setTimeout(() => setIsLoading(false), 2000);
+    
+    try {
+      const response = await login({ email, password }).unwrap();
+      
+      // The API response matches ApiResponse(200, { user, accessToken, refreshToken }, "...")
+      if (response?.success && response?.data) {
+        dispatch(setCredentials({
+          user: response.data.user,
+          accessToken: response.data.accessToken
+        }));
+        
+        toast.success("Log-in Successful", {
+          description: "Welcome to the Administrative Portal."
+        });
+        
+        router.push("/admin");
+      }
+    } catch (err: any) {
+      toast.error("Authentication Failed", {
+        description: err?.data?.message || "Invalid credentials or system error."
+      });
+    }
   };
 
   return (
@@ -39,10 +67,7 @@ export const LoginForm = () => {
             <img src="/dashboardIcon/dashboardLogo.svg" alt="Logo" className="brightness-0 invert w-full h-full object-contain" />
           </motion.div>
 
-          <div className="flex flex-col gap-1">
-            <h2 className="text-2xl font-black text-[#1D3557]">Admin Portal</h2>
-            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest opacity-60">Control Authority Access</p>
-          </div>
+
         </div>
 
         {/* Login Fields */}
@@ -89,7 +114,7 @@ export const LoginForm = () => {
             className="h-12 text-[10px] font-black uppercase tracking-[0.15em] mt-1 shadow-xl shadow-brand-gold/20 hover:bg-brand-gold-light transition-all"
             isLoading={isLoading}
           >
-            Initialize Command
+            Login
           </Button>
         </form>
 

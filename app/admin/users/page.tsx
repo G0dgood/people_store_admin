@@ -129,7 +129,6 @@ export default function UsersManagement() {
   <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
    <div className="flex justify-end gap-3 w-full sm:w-auto">
     <Button shape="rounded-sm" variant="primary"
-     className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold shadow-md shadow-brand-gold/10 h-10 px-4 text-[10px] font-black uppercase tracking-widest whitespace-nowrap"
      iconLeft={<Icon name="circle-plus" folder="dashboardIcon" size="sm" />}
      onClick={() => setIsAddUserModalOpen(true)}
     >
@@ -145,7 +144,7 @@ export default function UsersManagement() {
       onChange={setActiveTab} id={""} />
 
      <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
-      <Input shape="rounded-sm" 
+      <Input shape="rounded-sm"
        type="text"
        placeholder="Search by name, email or role..."
        containerClassName="flex-1 xl:w-80"

@@ -11,11 +11,11 @@ interface RadioProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 const Radio = React.forwardRef<HTMLInputElement, RadioProps>(
-  ({ label, icon, rightElement, activeColor = "#2196F3", className = "", checked, ...props }, ref) => {
+  ({ label, icon, rightElement, activeColor = "#C5A028", className = "", checked, ...props }, ref) => {
     // Determine dynamic styles for the custom circle
     const circleStyles = checked
       ? { borderColor: activeColor }
-      : { borderColor: "#D1D5DB" }; // gray-300
+      : { borderColor: "var(--neutral-300)" }; // Using design system neutral-300
 
     return (
       <label className={`flex items-center cursor-pointer group w-full ${className}`}>

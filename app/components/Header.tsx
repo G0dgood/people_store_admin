@@ -68,30 +68,37 @@ const Header = () => {
         </Link>
 
         {/* Search Bar (Desktop: inline, Mobile: hidden or secondary) */}
-        <div className="flex-1 max-w-[660px] h-11 border border-neutral-200 hidden md:flex relative z-50 rounded-full overflow-hidden bg-gray-50/50">
+        <div className="flex-1 max-w-[660px] h-11 border border-neutral-200 hidden md:flex relative z-50 rounded-full bg-gray-50/50">
           <div className="flex-1 flex items-center px-5 relative" ref={searchRef}>
             <Icon name="search" size="sm" className="text-gray-400 mr-3" />
             <input
               type="text"
-              placeholder="Search fragrances, skincare, brands..."
+              placeholder="Search fragrances, skincare, body spray, brands..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => setIsSearchFocused(true)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  router.push(`/products?search=${searchQuery}`);
+                  setIsSearchFocused(false);
+                }
+              }}
               className="w-full text-sm outline-none text-gray-700 bg-transparent focus:outline-none placeholder:text-gray-400 font-medium"
             />
             {/* Search Autocomplete Dropdown */}
             <SearchAutocomplete searchQuery={searchQuery} isVisible={isSearchFocused} />
           </div>
-          <div className="relative z-50 flex items-stretch border-l border-neutral-200" ref={categoryRef}>
+          {/* Category Selector */}
+          <div className="relative flex items-stretch border-l border-neutral-200" ref={categoryRef}>
             <div
               onClick={(e) => {
                 e.stopPropagation();
                 setIsCategoryOpen(prev => !prev);
               }}
-              className="w-40 h-full flex items-center justify-between px-4 bg-transparent cursor-pointer hover:bg-gray-100 transition-colors"
+              className="w-36 h-full flex items-center justify-between px-4 bg-transparent cursor-pointer hover:bg-gray-100 transition-colors border-r border-neutral-200"
             >
-              <span className="text-xs font-bold uppercase tracking-wider text-gray-600 truncate pr-2">Categories</span>
-              <Icon name="expand_more" size="xs" className={`text-gray-400 flex-shrink-0 transition-transform ${isCategoryOpen ? 'rotate-180' : ''}`} />
+              <span className="text-xs font-bold uppercase tracking-wider text-gray-600 truncate">Categories</span>
+              <Icon name="expand_more" size="xs" className={`text-gray-400 transition-transform ${isCategoryOpen ? 'rotate-180' : ''}`} />
             </div>
 
             {/* Category Dropdown */}
@@ -109,6 +116,19 @@ const Header = () => {
                 </div>
               )}
             </AnimatePresence>
+          </div>
+
+          {/* Gold Search Action Button */}
+          <div className="flex items-center px-1">
+            <button
+              onClick={() => {
+                router.push(`/products?search=${searchQuery}`);
+                setIsSearchFocused(false);
+              }}
+              className="h-9 w-9 flex items-center justify-center bg-brand-gold text-white rounded-tr-full rounded-br-full hover:bg-brand-gold/80 transition-all active:scale-95 shadow-sm"
+            >
+              <Icon name="search" size="sm" className="text-white" />
+            </button>
           </div>
         </div>
 

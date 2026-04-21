@@ -5,11 +5,13 @@ import Drawer from "../Drawer/Drawer";
 import { Button } from "../Button";
 import { Icon } from "../Icon";
 import Checkbox from "@/app/components/Checkbox";
+import { Role, useUpdateRoleMutation } from "@/lib/redux/services/roleApi";
+import { toast } from "sonner";
 
 interface EditRoleDrawerProps {
   isOpen: boolean;
   onClose: () => void;
-  role: any;
+  role: Role | null;
 }
 
 const modules = [
@@ -29,22 +31,26 @@ const accessTypes = [
 ];
 
 export function EditRoleDrawer({ isOpen, onClose, role }: EditRoleDrawerProps) {
+  const [updateRole, { isLoading }] = useUpdateRoleMutation();
   // permissionState[moduleId][accessTypeId] = boolean
   const [permissionState, setPermissionState] = useState<Record<string, Record<string, boolean>>>({});
 
   useEffect(() => {
     if (role) {
       const initial: Record<string, Record<string, boolean>> = {};
+      const currentPermissions = new Set(role.permissions || []);
+
       modules.forEach(m => {
         initial[m.id] = {};
         accessTypes.forEach(a => {
-           // Mock logic: Super Admin gets all, others get View only by default
-           initial[m.id][a.id] = role.name === "Super Admin" || a.id === "view";
+           // If permission exists in backend, check it. 
+           // Format assumed: "module_access" e.g. "products_view"
+           initial[m.id][a.id] = currentPermissions.has(`${m.id}_${a.id}`);
         });
       });
       setPermissionState(initial);
     }
-  }, [role]);
+  }, [role, isOpen]);
 
   const togglePermission = (moduleId: string, accessId: string) => {
     setPermissionState(prev => ({
@@ -64,10 +70,35 @@ export function EditRoleDrawer({ isOpen, onClose, role }: EditRoleDrawerProps) {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Updating Access Matrix:", { roleId: role.id, matrix: permissionState });
-    onClose();
+    if (!role) return;
+
+    // Flatten selected permissions into an array
+    const permissions: string[] = [];
+    Object.entries(permissionState).forEach(([moduleId, actions]) => {
+      Object.entries(actions).forEach(([actionId, isAllowed]) => {
+        if (isAllowed) {
+          permissions.push(`${moduleId}_${actionId}`);
+        }
+      });
+    });
+
+    try {
+      await updateRole({ 
+        roleId: role._id, 
+        data: { permissions } 
+      }).unwrap();
+      
+      toast.success("Governance Updated", {
+        description: `Access matrix for "${role.name}" has been synchronized.`
+      });
+      onClose();
+    } catch (err: any) {
+      toast.error("Update Failed", {
+          description: err.data?.message || "Something went wrong while updating governance."
+      });
+    }
   };
 
   if (!role) return null;
@@ -148,9 +179,10 @@ export function EditRoleDrawer({ isOpen, onClose, role }: EditRoleDrawerProps) {
             shape="rounded-sm"
             variant="primary" 
             type="submit"
+            disabled={isLoading}
             className="w-full h-12 text-[11px] font-black uppercase tracking-widest shadow-xl shadow-brand-gold/10 transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold animate-pulse-subtle"
           >
-            Deploy Governance Update
+            {isLoading ? "Synchronizing..." : "Deploy Governance Update"}
           </Button>
           <Button 
             shape="rounded-sm"

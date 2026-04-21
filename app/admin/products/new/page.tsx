@@ -34,22 +34,26 @@ export default function CreateProduct() {
  const [isFeatured, setIsFeatured] = useState(true);
  const [showColorPicker, setShowColorPicker] = useState(false);
  const [editingColorIndex, setEditingColorIndex] = useState<number | null>(null);
-  const [taxIncluded, setTaxIncluded] = useState(true);
-  const [productDescription, setProductDescription] = useState("");
-  const [isRefining, setIsRefining] = useState(false);
-  const [isAISettingsOpen, setIsAISettingsOpen] = useState(false);
-  const [aiTone, setAiTone] = useState("Professional");
-  const [selectedCurrency, setSelectedCurrency] = useState("NGN");
-  const [isCurrencyDropdownOpen, setIsCurrencyDropdownOpen] = useState(false);
-  const currencyDropdownRef = useRef<HTMLDivElement>(null);
-  const colorInputRef = useRef<HTMLInputElement>(null);
+ const [taxIncluded, setTaxIncluded] = useState(true);
+ const [productDescription, setProductDescription] = useState("");
+ const [isRefining, setIsRefining] = useState(false);
+ const [isAISettingsOpen, setIsAISettingsOpen] = useState(false);
+ const [aiTone, setAiTone] = useState("Professional");
+ const [selectedCurrency, setSelectedCurrency] = useState("NGN");
+ const [isCurrencyDropdownOpen, setIsCurrencyDropdownOpen] = useState(false);
+ const [isDiscountDropdownOpen, setIsDiscountDropdownOpen] = useState(false);
+ const [isUnlimited, setIsUnlimited] = useState(true);
+ const [stockQuantity, setStockQuantity] = useState("0");
+ const currencyDropdownRef = useRef<HTMLDivElement>(null);
+ const discountDropdownRef = useRef<HTMLDivElement>(null);
+ const colorInputRef = useRef<HTMLInputElement>(null);
 
-  const currencies = [
-    { code: "NGN", label: "Nigeria", symbol: "₦", flag: "/icon/flag.svg" },
-    { code: "USD", label: "USA", symbol: "$", flag: "/country/Property 1=US.png" },
-    { code: "GBP", label: "UK", symbol: "£", flag: "/country/Property 1=GB.png" },
-    { code: "EUR", label: "EU", symbol: "€", flag: "/country/Property 1=FR.png" },
-  ];
+ const currencies = [
+  { code: "NGN", label: "Nigeria", symbol: "₦", flag: "/icon/flag.svg" },
+  { code: "USD", label: "USA", symbol: "$", flag: "/country/Property 1=US.png" },
+  { code: "GBP", label: "UK", symbol: "£", flag: "/country/Property 1=GB.png" },
+  { code: "EUR", label: "EU", symbol: "€", flag: "/country/Property 1=FR.png" },
+ ];
 
  // Cleanup effect for preview URLs
  useEffect(() => {
@@ -57,6 +61,21 @@ export default function CreateProduct() {
    stagedMedia.forEach(item => URL.revokeObjectURL(item.url));
   };
  }, [stagedMedia]);
+
+  // Close currency dropdowns on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+      if (currencyDropdownRef.current && !currencyDropdownRef.current.contains(target)) {
+        setIsCurrencyDropdownOpen(false);
+      }
+      if (discountDropdownRef.current && !discountDropdownRef.current.contains(target)) {
+        setIsDiscountDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
  const handleMediaUpload = (files: File[]) => {
   const newMedia = files.map(file => ({
@@ -188,29 +207,94 @@ export default function CreateProduct() {
 
       <div className="flex flex-col gap-2.5">
        <label className="text-xs font-bold text-[#1D3557]">Product Price</label>
-       <Input shape="rounded-sm" type="text"
-        defaultValue="$999.89"
-        className="bg-gray-50/80 border-gray-50 text-sm font-bold text-gray-900"
-        suffixElement={
-         <div className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-[6px] cursor-pointer shadow-sm">
-          <img src="/dashboardIcon/usa.svg" alt="USA" className="w-5 h-3 object-cover rounded-[1px]" />
-          <Icon name="material-symbols_arrow-downward-rounded" folder="dashboardIcon" size="xs" className="text-gray-400" />
+       <div className="relative" ref={currencyDropdownRef}>
+        <Input shape="rounded-sm" type="text"
+         value=""
+         onChange={() => { }}
+         placeholder="0.00"
+         className="bg-gray-50/80 border-gray-50 text-sm font-bold text-gray-900"
+         prefixElement={<span className="text-sm font-bold text-gray-400">{currencies.find(c => c.code === selectedCurrency)?.symbol}</span>}
+         suffixElement={
+          <div
+           className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-[6px] cursor-pointer shadow-sm hover:bg-gray-50 transition-colors"
+           onClick={() => setIsCurrencyDropdownOpen(!isCurrencyDropdownOpen)}
+          >
+           <img src={currencies.find(c => c.code === selectedCurrency)?.flag} alt={selectedCurrency} className="w-5 h-3 object-cover rounded-[1px]" />
+           <Icon name="material-symbols_arrow-downward-rounded" folder="dashboardIcon" size="xs" className="text-gray-400" />
+          </div>
+         }
+        />
+        {isCurrencyDropdownOpen && (
+         <div className="absolute right-0 top-full mt-2 w-44 bg-white border border-gray-100 rounded-[6px] shadow-xl z-50 py-1 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+          {currencies.map((curr) => (
+           <div
+            key={curr.code}
+            className={`flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 cursor-pointer transition-colors ${selectedCurrency === curr.code ? "bg-gray-50" : ""}`}
+            onClick={() => {
+             setSelectedCurrency(curr.code);
+             setIsCurrencyDropdownOpen(false);
+            }}
+           >
+            <img src={curr.flag} alt={curr.label} className="w-5 h-3 object-cover rounded-[1px]" />
+            <div className="flex flex-col">
+             <span className="text-[11px] font-bold text-gray-700">{curr.label}</span>
+             <span className="text-[9px] text-gray-400 font-medium uppercase">{curr.code}</span>
+            </div>
+            {selectedCurrency === curr.code && (
+             <div className="ml-auto w-1.5 h-1.5 bg-brand-gold rounded-full" />
+            )}
+           </div>
+          ))}
          </div>
-        }
-       />
+        )}
+       </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
        <div className="flex flex-col gap-2.5">
         <label className="text-xs font-bold text-gray-400">Discounted Price <span className="text-gray-300 font-medium">(Optional)</span></label>
-        <Input
-         shape="rounded-sm"
-         type="text"
-         placeholder="0.00"
-         className="bg-gray-50/80 border-gray-50 text-sm font-bold text-gray-900"
-         prefixElement={<span className="text-sm font-bold text-gray-400">$</span>}
-         containerClassName="w-full"
-        />
+        <div className="relative" ref={discountDropdownRef}>
+         <Input
+          shape="rounded-sm"
+          type="text"
+          placeholder="0.00"
+          className="bg-gray-50/80 border-gray-50 text-sm font-bold text-gray-900"
+          prefixElement={<span className="text-sm font-bold text-gray-400">{currencies.find(c => c.code === selectedCurrency)?.symbol}</span>}
+          suffixElement={
+           <div
+            className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-[6px] cursor-pointer shadow-sm hover:bg-gray-50 transition-colors"
+            onClick={() => setIsDiscountDropdownOpen(!isDiscountDropdownOpen)}
+           >
+            <img src={currencies.find(c => c.code === selectedCurrency)?.flag} alt={selectedCurrency} className="w-5 h-3 object-cover rounded-[1px]" />
+            <Icon name="material-symbols_arrow-downward-rounded" folder="dashboardIcon" size="xs" className="text-gray-400" />
+           </div>
+          }
+          containerClassName="w-full"
+         />
+         {isDiscountDropdownOpen && (
+          <div className="absolute right-0 top-full mt-2 w-44 bg-white border border-gray-100 rounded-[6px] shadow-xl z-50 py-1 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+           {currencies.map((curr) => (
+            <div
+             key={curr.code}
+             className={`flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 cursor-pointer transition-colors ${selectedCurrency === curr.code ? "bg-gray-50" : ""}`}
+             onClick={() => {
+              setSelectedCurrency(curr.code);
+              setIsDiscountDropdownOpen(false);
+             }}
+            >
+             <img src={curr.flag} alt={curr.label} className="w-5 h-3 object-cover rounded-[1px]" />
+             <div className="flex flex-col">
+              <span className="text-[11px] font-bold text-gray-700">{curr.label}</span>
+              <span className="text-[9px] text-gray-400 font-medium uppercase">{curr.code}</span>
+             </div>
+             {selectedCurrency === curr.code && (
+              <div className="ml-auto w-1.5 h-1.5 bg-brand-gold rounded-full" />
+             )}
+            </div>
+           ))}
+          </div>
+         )}
+        </div>
        </div>
 
        <div className="flex flex-col gap-2.5">
@@ -253,9 +337,11 @@ export default function CreateProduct() {
        <div className="flex flex-col gap-2.5">
         <label className="text-xs font-bold text-[#1D3557]">Stock Quantity</label>
         <Input shape="rounded-sm"
-         type="text"
-         defaultValue="Unlimited"
-         className="bg-gray-50/80 border-gray-50 text-sm font-bold text-gray-900"
+         type={isUnlimited ? "text" : "number"}
+         disabled={isUnlimited}
+         value={isUnlimited ? "Unlimited" : stockQuantity}
+         onChange={(e) => setStockQuantity(e.target.value)}
+         className="bg-gray-50/80 border-gray-50 text-sm font-bold text-gray-900 focus:bg-white transition-colors"
         />
        </div>
 
@@ -278,7 +364,11 @@ export default function CreateProduct() {
 
       <div className="flex flex-col gap-4 pt-2">
        <div className="flex items-center justify-between w-full max-w-[200px]">
-        <Switch checked={true} readOnly label={<span className="text-xs font-bold text-gray-900">Unlimited</span>} />
+        <Switch
+         checked={isUnlimited}
+         onChange={(e) => setIsUnlimited(e.target.checked)}
+         label={<span className="text-xs font-bold text-gray-900">Unlimited</span>}
+        />
        </div>
 
        <Checkbox

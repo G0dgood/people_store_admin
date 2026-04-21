@@ -1,18 +1,19 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Modal from "../Modal/Modal";
 import ModalBody from "../Modal/ModalBody";
 import ModalFooter from "../Modal/ModalFooter";
 import { Input, Textarea } from "../Form/Inputs";
 import { Select } from "../Form/Select";
 import { Button } from "../Button";
-import { useCreateRoleMutation } from "@/lib/redux/services/roleApi";
+import { Role, useUpdateRoleMutation } from "@/lib/redux/services/roleApi";
 import { toast } from "sonner";
 
-interface AddRoleModalProps {
+interface UpdateRoleModalProps {
   isOpen: boolean;
   onClose: () => void;
+  role: Role | null;
 }
 
 const statusOptions = [
@@ -20,8 +21,8 @@ const statusOptions = [
   { value: "Inactive", label: "Inactive" },
 ];
 
-export function AddRoleModal({ isOpen, onClose }: AddRoleModalProps) {
-  const [createRole, { isLoading }] = useCreateRoleMutation();
+export function UpdateRoleModal({ isOpen, onClose, role }: UpdateRoleModalProps) {
+  const [updateRole, { isLoading }] = useUpdateRoleMutation();
   
   const [formData, setFormData] = useState({
     name: "",
@@ -29,29 +30,39 @@ export function AddRoleModal({ isOpen, onClose }: AddRoleModalProps) {
     status: "Active",
   });
 
+  useEffect(() => {
+    if (role) {
+      setFormData({
+        name: role.name,
+        description: role.description,
+        status: role.status,
+      });
+    }
+  }, [role, isOpen]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!role) return;
     
     try {
-      await createRole(formData).unwrap();
-      toast.success("Role Created", {
-        description: `Successfully established the "${formData.name}" ruleset.`
-      });
-      setFormData({
-        name: "",
-        description: "",
-        status: "Active",
+      await updateRole({
+          roleId: role._id,
+          data: formData
+      }).unwrap();
+      
+      toast.success("Role Updated", {
+        description: `Successfully updated the "${formData.name}" metadata.`
       });
       onClose();
     } catch (err: any) {
-      toast.error("Creation Failed", {
-        description: err.data?.message || "Something went wrong while creating the role."
+      toast.error("Update Failed", {
+        description: err.data?.message || "Something went wrong while updating the role."
       });
     }
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Add Administrative Role" size="lg">
+    <Modal isOpen={isOpen} onClose={onClose} title="Update Role Details" size="lg">
       <form onSubmit={handleSubmit}>
         <ModalBody className="flex flex-col gap-6">
           <div className="flex flex-col gap-2">
@@ -80,7 +91,7 @@ export function AddRoleModal({ isOpen, onClose }: AddRoleModalProps) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col gap-2 w-full">
-              <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Initial Status</label>
+              <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Role Status</label>
               <Select
                 shape="rounded-sm"
                 options={statusOptions}
@@ -106,7 +117,7 @@ export function AddRoleModal({ isOpen, onClose }: AddRoleModalProps) {
             type="submit"
             disabled={isLoading}
           >
-            {isLoading ? "Creating..." : "Create Role"}
+            {isLoading ? "Saving..." : "Save Changes"}
           </Button>
         </ModalFooter>
       </form>

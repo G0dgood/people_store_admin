@@ -51,7 +51,7 @@ const OfflineBanner: React.FC = () => {
 		// Play slow network sound (warning tone)
 		if (networkSpeed === 'slow' && isOnline && !hasPlayedSlowNetworkSound.current) {
 			hasPlayedSlowNetworkSound.current = true;
-			playNotificationSound('warning', 'offlineBanner');
+			// playNotificationSound('warning', 'offlineBanner');
 		}
 
 		// Reset slow network sound flag when network is fast
@@ -63,7 +63,7 @@ const OfflineBanner: React.FC = () => {
 		const currentlyOffline = isOffline || status === 'offline' || status === 'error' || !isOnline;
 		if (currentlyOffline && !hasPlayedOfflineSound.current) {
 			hasPlayedOfflineSound.current = true;
-			playNotificationSound('warning', 'offlineBanner');
+			// playNotificationSound('warning', 'offlineBanner');
 		}
 
 		// Reset offline sound flag when connection is restored

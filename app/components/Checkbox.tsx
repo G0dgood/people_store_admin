@@ -6,9 +6,9 @@ import { IoCheckmark } from 'react-icons/io5';
 
 interface CheckboxProps {
 	id?: string;
-	checked: boolean;
-	onChange: (checked: boolean) => void;
-	label?: string;
+	checked?: boolean;
+	onChange?: (checked: boolean) => void;
+	label?: React.ReactNode;
 	disabled?: boolean;
 	size?: 'sm' | 'md' | 'lg';
 	variant?: 'default' | 'error';
@@ -59,7 +59,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
 		: '';
 
 	const handleClick = () => {
-		if (!disabled) {
+		if (!disabled && onChange) {
 			onChange(!checked);
 		}
 	};

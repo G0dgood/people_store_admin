@@ -13,20 +13,38 @@ export const SearchAutocomplete: React.FC<SearchAutocompleteProps> = ({ searchQu
 
   return (
     <AnimatePresence>
-      {isVisible && searchQuery.length > 0 && (
+      {isVisible && (
         <div className="absolute top-full left-0 pt-3 w-full z-[100]">
-          <DropdownMenu width="100%" className="shadow-xl border border-gray-200">
-            <div className="px-4 py-2 text-xs font-bold text-gray-400 border-b border-gray-50 uppercase tracking-wider">
-              Top Results for "{searchQuery}"
-            </div>
-            <DropdownItem label={`${searchQuery} case for iPhone`} subtext="In Accessories" icon="search" />
-            <DropdownItem label={`${searchQuery} wireless headphones`} subtext="In Electronics" icon="search" />
-            <DropdownItem label={`Blue ${searchQuery}`} subtext="In Fashion" icon="search" />
-            <DropdownFooterAction 
-              label={`View all results for ${searchQuery}`} 
-              onClick={() => router.push('/products')} 
-              icon="arrow_forward" 
-            />
+          <DropdownMenu width="100%" className="shadow-2xl border border-gray-100 rounded-xl overflow-hidden">
+            {searchQuery.length > 0 ? (
+              <>
+                <div className="px-5 py-3 text-[10px] font-black text-gray-400 border-b border-gray-50 uppercase tracking-[0.2em]">
+                  Top Results for "{searchQuery}"
+                </div>
+                <DropdownItem label={`${searchQuery} in Fragrances`} subtext="Collection 2024" icon="search" />
+                <DropdownItem label={`${searchQuery} Luxury Set`} subtext="New Arrivals" icon="search" />
+                <DropdownItem label={`Boutique ${searchQuery}`} subtext="Exclusive" icon="search" />
+                <DropdownFooterAction 
+                  label={`Explore all results for ${searchQuery}`} 
+                  onClick={() => router.push('/products')} 
+                  icon="arrow_forward" 
+                />
+              </>
+            ) : (
+              <>
+                <div className="px-5 py-3 text-[10px] font-black text-gray-400 border-b border-gray-50 uppercase tracking-[0.2em]">
+                  Trending Searches
+                </div>
+                <DropdownItem label="Signature Oud" subtext="Trending Now" icon="trending_up" />
+                <DropdownItem label="Summer Mist Collection" subtext="Most Popular" icon="trending_up" />
+                <DropdownItem label="Luxury Gift Sets" subtext="Curated for you" icon="trending_up" />
+                <div className="px-5 py-3 text-[10px] font-black text-gray-400 border-t border-gray-50 uppercase tracking-[0.2em] mt-2">
+                  Popular Categories
+                </div>
+                <DropdownItem label="Fragrance Boutique" />
+                <DropdownItem label="Skin Care Rituals" />
+              </>
+            )}
           </DropdownMenu>
         </div>
       )}

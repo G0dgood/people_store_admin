@@ -1,28 +1,58 @@
-import { useUser } from "../../context/UserContext";
 import { HiUser } from "react-icons/hi2";
 import { Icon } from "../Icon";
 import { DropdownMenu, DropdownFooterAction } from "../Dropdown/DropdownMenu";
 import { useState } from "react";
 import { ConfirmationModal } from "./ConfirmationModal";
+import { useLogoutMutation } from "@/lib/redux/services/authApi";
+import { logOut, selectCurrentUser } from "@/lib/redux/features/authSlice";
+import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export const AdminProfileDropdown: React.FC = () => {
-   const { userImage } = useUser();
+   const router = useRouter();
+   const dispatch = useAppDispatch();
+   const user = useAppSelector(selectCurrentUser);
+   const [logout] = useLogoutMutation();
+   
    const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+
+   const handleLogout = async () => {
+      try {
+         await logout({}).unwrap();
+         dispatch(logOut());
+         toast.success("Session Terminated", {
+            description: "You have been successfully logged out."
+         });
+         router.push("/login");
+      } catch (err) {
+         dispatch(logOut());
+         router.push("/login");
+      }
+   };
+
+   const displayRole = user?.role?.replace(/_/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "Super Administrator";
    return (
       <div className="absolute top-full right-0 pt-4 z-50 cursor-default">
          <DropdownMenu width={280} className="shadow-2xl border-gray-200 p-0 overflow-hidden">
             {/* User Summary */}
             <div className="px-6 py-5 bg-gray-50/50 border-b border-gray-50 flex items-center gap-3">
                <div className="w-12 h-12 rounded-full border-2 border-white shadow-sm overflow-hidden shrink-0 bg-white flex items-center justify-center">
-                  {userImage ? (
-                     <img src={userImage} alt="Admin" className="w-full h-full object-cover" />
+                  {user?.avatar ? (
+                     <img src={user.avatar} alt="Admin" className="w-full h-full object-cover" />
                   ) : (
-                     <HiUser className="text-brand-blue w-6 h-6" />
+                     <div className="w-full h-full bg-brand-gold flex items-center justify-center text-white font-black text-sm uppercase">
+                        {user?.fullName?.charAt(0) || "A"}
+                     </div>
                   )}
                </div>
                <div className="flex flex-col min-w-0">
-                  <span className="text-sm font-black text-[#1D3557] truncate leading-tight">Bloom & Mist Admin</span>
-                  <span className="text-[10px] font-bold text-gray-400 truncate uppercase tracking-widest mt-0.5">Super Administrator</span>
+                  <span className="text-sm font-black text-[#1D3557] truncate leading-tight">
+                    {user?.fullName || "Bloom & Mist Admin"}
+                  </span>
+                  <span className="text-[10px] font-bold text-gray-400 truncate uppercase tracking-widest mt-0.5">
+                    {displayRole}
+                  </span>
                </div>
             </div>
 
@@ -63,10 +93,7 @@ export const AdminProfileDropdown: React.FC = () => {
          <ConfirmationModal
             isOpen={isLogoutModalOpen}
             onClose={() => setIsLogoutModalOpen(false)}
-            onConfirm={() => {
-               console.log("Session terminated. Redirecting to login...");
-               // Implement actual logout logic/redirect here
-            }}
+            onConfirm={handleLogout}
             title="Logout Session"
             message="Are you sure you want to end your current session? You will need to sign in again to access the administrative dashboard."
             confirmText="Yes, Logout Now"

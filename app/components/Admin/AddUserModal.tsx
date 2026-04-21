@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import Modal from "../Modal/Modal";
 import ModalBody from "../Modal/ModalBody";
 import ModalFooter from "../Modal/ModalFooter";
@@ -8,18 +8,12 @@ import { Input } from "../Form/Inputs";
 import { Select } from "../Form/Select";
 import { Button } from "../Button";
 import { Icon } from "../Icon";
+import { useGetRolesQuery } from "@/lib/redux/services/roleApi";
 
 interface AddUserModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
-
-const roleOptions = [
-  { value: "Super Admin", label: "Super Admin" },
-  { value: "Editor", label: "Editor" },
-  { value: "Order Manager", label: "Order Manager" },
-  { value: "Support", label: "Support" },
-];
 
 const departmentOptions = [
   { value: "Management", label: "Management" },
@@ -35,14 +29,30 @@ const genderOptions = [
 ];
 
 export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
+  const { data: roles = [], isLoading: isLoadingRoles } = useGetRolesQuery();
+
+  const roleOptions = useMemo(() => {
+    return roles.map(role => ({
+      value: role.name,
+      label: role.name
+    }));
+  }, [roles]);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     gender: "Male",
     dob: "",
-    role: "Support",
-    department: "Support",
+    role: "",
+    department: "",
   });
+
+  // Set default role when roles are loaded
+  React.useEffect(() => {
+    if (roles.length > 0 && !formData.role) {
+      setFormData(prev => ({ ...prev, role: roles[0].name }));
+    }
+  }, [roles, formData.role]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,8 +64,8 @@ export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
       email: "",
       gender: "Male",
       dob: "",
-      role: "Support",
-      department: "Support",
+      role: roles.length > 0 ? roles[0].name : "",
+      department: "",
     });
   };
 
@@ -173,6 +183,7 @@ export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
             variant="primary"
             className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold shadow-md shadow-brand-gold/10"
             type="submit"
+            disabled={isLoadingRoles || roles.length === 0}
           >
             Quick Onboard
           </Button>

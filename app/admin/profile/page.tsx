@@ -11,10 +11,53 @@ import ModalFooter from "../../components/Modal/ModalFooter";
 import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import { SecurityHelpDrawer } from "../../components/Admin/SecurityHelpDrawer";
 import { HiLockClosed, HiKey, HiShieldCheck, HiEye, HiEyeSlash, HiCalendarDays, HiUser } from "react-icons/hi2";
-import { useUser } from "../../context/UserContext";
+import { useAppSelector, useAppDispatch } from "@/lib/redux/hooks";
+import { selectCurrentUser, updateUser } from "@/lib/redux/features/authSlice";
+import { useGetCurrentUserQuery, useUpdateAccountMutation, useUpdateAvatarMutation, useChangePasswordMutation } from "@/lib/redux/services/authApi";
+import { toast } from "sonner";
 
 export default function ProfilePage() {
- const { userImage, setUserImage } = useUser();
+ const dispatch = useAppDispatch();
+ const user = useAppSelector(selectCurrentUser);
+
+ // Get the refetch function to ensure we can force a refresh immediately
+ const { refetch } = useGetCurrentUserQuery(undefined);
+
+ const [updateAccount, { isLoading: isUpdatingAccount }] = useUpdateAccountMutation();
+ const [updateAvatar, { isLoading: isUpdatingAvatar }] = useUpdateAvatarMutation();
+ const [changePassword, { isLoading: isChangingPassword }] = useChangePasswordMutation();
+
+ const [formData, setFormData] = useState({
+  firstName: "",
+  lastName: "",
+  email: "",
+  phoneNumber: "",
+  location: "",
+  biography: "",
+  dob: "",
+ });
+
+ const [passwordData, setPasswordData] = useState({
+  oldPassword: "",
+  newPassword: "",
+  confirmPassword: "",
+ });
+
+ // Initialize and sync form whenever user data changes
+ React.useEffect(() => {
+  if (user) {
+   setFormData({
+    firstName: user.firstName || "",
+    lastName: user.lastName || "",
+    email: user.email || "",
+    phoneNumber: user.phoneNumber || "",
+    location: user.location || "",
+    biography: user.biography || "",
+    dob: user.dob ? new Date(user.dob).toISOString().split('T')[0] : "",
+   });
+  }
+ }, [user]);
+
  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
  const [showNewPassword, setShowNewPassword] = useState(false);
  const [showReenterPassword, setShowReenterPassword] = useState(false);
@@ -23,6 +66,93 @@ export default function ProfilePage() {
  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
  const [isEditMode, setIsEditMode] = useState(false);
  const [isHelpDrawerOpen, setIsHelpDrawerOpen] = useState(false);
+
+ const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const { name, value } = e.target;
+  setFormData(prev => ({ ...prev, [name]: value }));
+ };
+
+ const handlePasswordInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const { name, value } = e.target;
+  setPasswordData(prev => ({ ...prev, [name]: value }));
+ };
+
+ const handleChangePassword = async () => {
+  if (!passwordData.oldPassword || !passwordData.newPassword || !passwordData.confirmPassword) {
+   toast.error("Required Fields", {
+    description: "Please fill in all password fields."
+   });
+   return;
+  }
+
+  if (passwordData.newPassword !== passwordData.confirmPassword) {
+   toast.error("Password Mismatch", {
+    description: "New password and confirmation password do not match."
+   });
+   return;
+  }
+
+  if (passwordData.newPassword.length < 6) {
+   toast.error("Weak Password", {
+    description: "New password must be at least 6 characters long."
+   });
+   return;
+  }
+
+  try {
+   const response = await changePassword({
+    oldPassword: passwordData.oldPassword,
+    newPassword: passwordData.newPassword
+   }).unwrap();
+
+   if (response.success) {
+    setPasswordData({ oldPassword: "", newPassword: "", confirmPassword: "" });
+    toast.success("Password Changed", {
+     description: "Your security credentials have been updated successfully."
+    });
+   }
+  } catch (err: any) {
+   toast.error("Change Failed", {
+    description: err.data?.message || "Invalid current password or update failed."
+   });
+  }
+ };
+
+ const handleUpdateProfile = async () => {
+  try {
+   const response = await updateAccount(formData).unwrap();
+   if (response.success) {
+    // Force an immediate refresh of the user data across the whole app
+    await refetch();
+    setIsEditMode(false);
+    setIsChangeSuccessOpen(true);
+   }
+  } catch (err: any) {
+   toast.error("Update Failed", {
+    description: err.data?.message || "Something went wrong while updating your profile."
+   });
+  }
+ };
+
+ const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+
+  try {
+   const response = await updateAvatar(file).unwrap();
+   if (response.success) {
+    // Force an immediate refresh of the user data across the whole app
+    await refetch();
+    toast.success("Avatar Updated", {
+     description: "Your profile picture has been successfully changed."
+    });
+   }
+  } catch (err: any) {
+   toast.error("Upload Failed", {
+    description: err.data?.message || "Something went wrong while uploading your avatar."
+   });
+  }
+ };
 
  return (
   <div className="flex flex-col gap-8 max-w-[1600px] mx-auto pb-12">
@@ -44,16 +174,18 @@ export default function ProfilePage() {
       </div>
 
       <div className="w-24 h-24 rounded-full border-4 border-gray-50 overflow-hidden mb-4 shadow-sm bg-brand-gold/10 flex items-center justify-center">
-       {userImage ? (
-        <img src={userImage} alt="Wade Warren" className="w-full h-full object-cover" />
+       {user?.avatar ? (
+        <img src={user.avatar} alt={user.fullName} className="w-full h-full object-cover" />
        ) : (
-        <HiUser className="w-12 h-12 text-brand-gold" />
+        <div className="w-full h-full bg-brand-gold flex items-center justify-center text-white font-black text-2xl uppercase">
+         {user?.fullName?.charAt(0) || "A"}
+        </div>
        )}
       </div>
 
-      <h2 className="text-base font-bold text-[#1D3557]">Wade Warren</h2>
+      <h2 className="text-base font-bold text-[#1D3557]">{user?.fullName || "Administrative Account"}</h2>
       <div className="flex items-center gap-2 text-xs font-medium text-gray-400 mb-6">
-       <span>wade.warren@example.com</span>
+       <span>{user?.email || "No email provided"}</span>
        <button className="text-brand-gold hover:scale-110 transition-transform">
         <Icon name="Frame 4386" folder="dashboardIcon" size="xs" />
        </button>
@@ -102,8 +234,11 @@ export default function ProfilePage() {
       <div className="flex flex-col gap-5">
        <div className="flex flex-col gap-2">
         <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Current Password</label>
-        <Input shape="rounded-sm" 
+        <Input shape="rounded-sm"
          type={showCurrentPassword ? "text" : "password"}
+         name="oldPassword"
+         value={passwordData.oldPassword}
+         onChange={handlePasswordInputChange}
          placeholder="Enter current password"
          className="bg-gray-50/80 border-gray-50 text-xs font-medium"
          prefixElement={<HiLockClosed className="text-gray-400 w-3 h-3" />}
@@ -122,8 +257,11 @@ export default function ProfilePage() {
 
        <div className="flex flex-col gap-2">
         <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">New Password</label>
-        <Input shape="rounded-sm" 
+        <Input shape="rounded-sm"
          type={showNewPassword ? "text" : "password"}
+         name="newPassword"
+         value={passwordData.newPassword}
+         onChange={handlePasswordInputChange}
          placeholder="Enter new password"
          className="bg-gray-50/80 border-gray-50 text-xs font-medium"
          prefixElement={<HiKey className="text-gray-400 w-3 h-3" />}
@@ -141,8 +279,11 @@ export default function ProfilePage() {
 
        <div className="flex flex-col gap-2">
         <label className="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Re-enter Password</label>
-        <Input shape="rounded-sm" 
+        <Input shape="rounded-sm"
          type={showReenterPassword ? "text" : "password"}
+         name="confirmPassword"
+         value={passwordData.confirmPassword}
+         onChange={handlePasswordInputChange}
          placeholder="Confirm new password"
          className="bg-gray-50/80 border-gray-50 text-xs font-medium"
          prefixElement={<HiShieldCheck className="text-gray-400 w-3 h-3" />}
@@ -160,9 +301,10 @@ export default function ProfilePage() {
 
        <Button shape="rounded-sm" variant="primary"
         className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold w-full h-12 mt-2 shadow-lg shadow-brand-gold/10 text-[11px] font-black uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all"
-        onClick={() => setIsChangeSuccessOpen(true)}
+        disabled={isChangingPassword}
+        onClick={handleChangePassword}
        >
-        Save Change
+        {isChangingPassword ? "Updating..." : "Save Change"}
        </Button>
       </div>
      </div>
@@ -175,37 +317,49 @@ export default function ProfilePage() {
        <h3 className="text-sm font-bold text-[#1D3557]">Profile Update</h3>
        <button
         className={`flex items-center gap-2 px-4 py-2 border rounded-[6px] text-xs font-bold transition-all shadow-sm
-                           ${isEditMode
+                            ${isEditMode
           ? "bg-brand-charcoal border-brand-charcoal text-white hover:bg-brand-charcoal/90"
           : "bg-white border-gray-200 text-gray-500 hover:bg-gray-50"}
-                        `}
+                         `}
+        disabled={isUpdatingAccount}
         onClick={() => {
          if (isEditMode) {
-          setIsChangeSuccessOpen(true);
+          handleUpdateProfile();
+         } else {
+          setIsEditMode(true);
          }
-         setIsEditMode(!isEditMode);
         }}
        >
         <Icon name={isEditMode ? "verified" : "settings"} folder={isEditMode ? "icon" : "dashboardIcon"} size="xs" />
-        {isEditMode ? "Update Profile" : "Edit"}
+        {isUpdatingAccount ? "Updating..." : (isEditMode ? "Update Profile" : "Edit")}
        </button>
       </div>
 
       {/* Avatar Management */}
       <div className="flex items-center gap-4">
        <div className="w-16 h-16 rounded-full overflow-hidden shadow-inner border border-gray-200 bg-brand-gold/10 flex items-center justify-center">
-        {userImage ? (
-         <img src={userImage} alt="Avatar" className="w-full h-full object-cover" />
+        {user?.avatar ? (
+         <img src={user.avatar} alt="Avatar" className="w-full h-full object-cover" />
         ) : (
-         <HiUser className="w-8 h-8 text-brand-gold" />
+         <div className="w-full h-full bg-brand-gold flex items-center justify-center text-white font-black text-xs uppercase">
+          {user?.fullName?.charAt(0) || "A"}
+         </div>
         )}
        </div>
        <div className="flex gap-2">
+        <input
+         type="file"
+         id="avatar-upload"
+         hidden
+         accept="image/*"
+         onChange={handleAvatarChange}
+        />
         <Button shape="rounded-sm" variant="primary"
          className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold px-5 py-2 text-[10px] shadow-sm"
-         onClick={() => setIsAvatarModalOpen(true)}
+         disabled={isUpdatingAvatar}
+         onClick={() => document.getElementById('avatar-upload')?.click()}
         >
-         Upload New
+         {isUpdatingAvatar ? "Uploading..." : "Upload New"}
         </Button>
         <Button shape="rounded-sm" variant="outline"
          className="text-gray-400 px-5 py-2 text-[10px] font-bold shadow-sm"
@@ -220,18 +374,22 @@ export default function ProfilePage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
        <div className="flex flex-col gap-2">
         <label className="text-xs font-bold text-[#1D3557]">First Name</label>
-        <Input shape="rounded-sm" 
+        <Input shape="rounded-sm"
          type="text"
-         defaultValue="Wade"
+         name="firstName"
+         value={formData.firstName}
+         onChange={handleInputChange}
          readOnly={!isEditMode}
          className={`${!isEditMode ? "bg-gray-50/50" : "bg-white"} border-gray-50 text-xs font-bold text-gray-900 transition-colors`}
         />
        </div>
        <div className="flex flex-col gap-2">
         <label className="text-xs font-bold text-[#1D3557]">Last Name</label>
-        <Input shape="rounded-sm" 
+        <Input shape="rounded-sm"
          type="text"
-         defaultValue="Warren"
+         name="lastName"
+         value={formData.lastName}
+         onChange={handleInputChange}
          readOnly={!isEditMode}
          className={`${!isEditMode ? "bg-gray-50/50" : "bg-white"} border-gray-50 text-xs font-bold text-gray-900 transition-colors`}
         />
@@ -239,61 +397,65 @@ export default function ProfilePage() {
 
        <div className="flex flex-col gap-2">
         <label className="text-xs font-bold text-[#1D3557]">Phone Number</label>
-        <Input shape="rounded-sm" 
+        <Input shape="rounded-sm"
          type="text"
-         defaultValue="(406) 555-0120"
+         name="phoneNumber"
+         value={formData.phoneNumber}
+         onChange={handleInputChange}
+         placeholder="Enter phone number"
          readOnly={!isEditMode}
          className={`${!isEditMode ? "bg-gray-50/50" : "bg-white"} border-gray-50 text-xs font-bold text-gray-900 transition-colors`}
-
         />
        </div>
 
        <div className="flex flex-col gap-2">
         <label className="text-xs font-bold text-[#1D3557]">E-mail</label>
-        <Input shape="rounded-sm" 
+        <Input shape="rounded-sm"
          type="email"
-         defaultValue="wade.warren@example.com"
+         name="email"
+         value={formData.email}
+         onChange={handleInputChange}
          readOnly={!isEditMode}
          className={`${!isEditMode ? "bg-gray-50/50" : "bg-white"} border-gray-50 text-xs font-bold text-gray-900 transition-colors`}
         />
        </div>
        <div className="flex flex-col gap-2">
         <label className="text-xs font-bold text-[#1D3557]">Date of Birth</label>
-        <Input shape="rounded-sm" 
-         type="text"
-         defaultValue="12- January- 1999"
-         className="bg-gray-50/80 border-gray-50 text-xs font-bold text-gray-900"
-         suffixElement={
-          <HiCalendarDays className="text-gray-300 w-3.5 h-3.5" />
-         }
-        />
-       </div>
-
-       <div className="md:col-span-2 flex flex-col gap-2">
-        <label className="text-xs font-bold text-[#1D3557]">Location</label>
-        <Input shape="rounded-sm" 
-         type="text"
-         defaultValue="2972 Westheimer Rd. Santa Ana, Illinois 85486"
+        <Input shape="rounded-sm"
+         type="date"
+         name="dob"
+         value={formData.dob}
+         onChange={handleInputChange}
          readOnly={!isEditMode}
          className={`${!isEditMode ? "bg-gray-50/50" : "bg-white"} border-gray-50 text-xs font-bold text-gray-900 transition-colors`}
         />
        </div>
 
-
+       <div className="md:col-span-2 flex flex-col gap-2">
+        <label className="text-xs font-bold text-[#1D3557]">Location</label>
+        <Input shape="rounded-sm"
+         type="text"
+         name="location"
+         value={formData.location}
+         onChange={handleInputChange}
+         placeholder="Enter your location"
+         readOnly={!isEditMode}
+         className={`${!isEditMode ? "bg-gray-50/50" : "bg-white"} border-gray-50 text-xs font-bold text-gray-900 transition-colors`}
+        />
+       </div>
 
        <div className="md:col-span-2 flex flex-col gap-2">
         <label className="text-xs font-bold text-[#1D3557]">Biography</label>
         <div className="relative group">
-         <Textarea shape="rounded-sm" 
+         <Textarea shape="rounded-sm"
           rows={4}
+          name="biography"
+          value={formData.biography}
+          onChange={(e: any) => setFormData(prev => ({ ...prev, biography: e.target.value }))}
           placeholder="Enter a biography about you"
           readOnly={!isEditMode}
           className={`${!isEditMode ? "bg-gray-50/50" : "bg-white"} border-gray-50 text-xs font-medium text-gray-700 resize-none leading-relaxed transition-colors`}
          />
-         <div className="absolute bottom-4 right-4 flex gap-2 opacity-50 group-hover:opacity-100 transition-opacity">
-          <Icon name="settings" folder="dashboardIcon" size="xs" className="cursor-pointer hover:text-gray-900" />
-          <Icon name="star" folder="dashboardIcon" size="xs" className="cursor-pointer hover:text-gray-900" />
-         </div>
         </div>
        </div>
       </div>
@@ -307,7 +469,7 @@ export default function ProfilePage() {
      setIsAvatarModalOpen(false);
     }}
     onUploadSuccess={(newSrc) => {
-     setUserImage(newSrc);
+     dispatch(updateUser({ avatar: newSrc }));
      setIsChangeSuccessOpen(true);
     }}
    />
@@ -330,7 +492,7 @@ export default function ProfilePage() {
      </div>
     </ModalBody>
     <ModalFooter className="flex flex-col gap-3 pb-8">
-     <Button shape="rounded-sm" 
+     <Button shape="rounded-sm"
       variant="primary"
       className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold w-full h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-brand-gold/10"
       onClick={() => setIsChangeSuccessOpen(false)}
@@ -344,7 +506,7 @@ export default function ProfilePage() {
     isOpen={isDeleteConfirmOpen}
     onClose={() => setIsDeleteConfirmOpen(false)}
     onConfirm={() => {
-     setUserImage(null);
+     dispatch(updateUser({ avatar: undefined }));
      setIsDeleteConfirmOpen(false);
      setIsChangeSuccessOpen(true);
     }}

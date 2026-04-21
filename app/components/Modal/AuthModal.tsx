@@ -3,10 +3,11 @@
 import React from "react";
 import Modal from "./Modal";
 import { useAuthModal } from "@/app/context/AuthModalContext";
-import { FloatingInput, Checkbox } from "../Form";
+import { FloatingInput } from "../Form";
 import { Button } from "../Button";
 import { Icon } from "../Icon";
 import { TermsModal } from "./TermsModal";
+import Checkbox from "../Checkbox";
 
 const AuthModal = () => {
   const { isOpen, view, closeModal, setView } = useAuthModal();
@@ -88,7 +89,8 @@ const LoginForm = ({ onSwitch }: { onSwitch: () => void }) => {
 
       <Checkbox label="Remember me" id="remember" />
 
-      <Button className="w-full h-12 font-bold" size="lg">
+      <Button
+        shape="rounded-sm" className="w-full h-12 font-bold" size="lg">
         Log In
       </Button>
 
@@ -102,6 +104,7 @@ const LoginForm = ({ onSwitch }: { onSwitch: () => void }) => {
 
       <div className="flex flex-col gap-3">
         <Button
+          shape="rounded-sm"
           variant="secondary"
           className="w-full h-11 border-gray-200 text-gray-700 font-medium hover:bg-gray-50 active:bg-gray-100"
           iconLeft={
@@ -170,6 +173,7 @@ const RegisterForm = ({
 
       <div className="flex flex-col gap-3 px-1">
         <Checkbox
+          size="md"
           id="terms"
           label={
             <span className="text-xs text-gray-500 font-medium">
@@ -199,6 +203,7 @@ const RegisterForm = ({
       </div>
 
       <Button
+
         variant="secondary"
         className="w-full h-11 border-gray-200 text-gray-700 font-medium hover:bg-gray-50 active:bg-gray-100"
         iconLeft={
@@ -224,7 +229,7 @@ const RegisterForm = ({
 };
 
 const ForgotPasswordForm = ({ onBack }: { onBack: () => void }) => (
-  <div className="flex flex-col gap-6 py-6 p-10">
+  <div className="flex flex-col gap-6 py-6 w-full">
     <div className="flex flex-col gap-2 text-center">
       <p className="text-sm text-gray-500">
         Enter your email address and we'll send you a link to reset your
@@ -240,7 +245,9 @@ const ForgotPasswordForm = ({ onBack }: { onBack: () => void }) => (
       />
     </div>
 
-    <Button className="w-full h-12 font-bold" size="lg">
+    <Button
+      shape="rounded-sm"
+      className="w-full h-12 font-bold" size="lg">
       Send Reset Link
     </Button>
 

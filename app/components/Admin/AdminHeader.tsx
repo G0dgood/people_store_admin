@@ -8,13 +8,14 @@ import { AdminNotificationDropdown } from "./AdminNotificationDropdown";
 import { AdminProfileDropdown } from "./AdminProfileDropdown";
 import { AdminSearchDropdown } from "./AdminSearchDropdown";
 import { useState, useRef, useEffect } from "react";
-import { useUser } from "../../context/UserContext";
 import { HiUser } from "react-icons/hi2";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoMdClose } from "react-icons/io";
 import Modal from "../Modal/Modal";
 import { NotificationList } from "./AdminNotificationDropdown";
 import { motion } from "framer-motion";
+import { useAppSelector } from "@/lib/redux/hooks";
+import { selectCurrentUser } from "@/lib/redux/features/authSlice";
 
 type HeaderProps = {
   onOpenMenu?: () => void;
@@ -24,7 +25,7 @@ type HeaderProps = {
 };
 
 export const AdminHeader: React.FC<HeaderProps> = ({ onOpenMenu, className, isOpen, role }) => {
-  const { userImage } = useUser();
+  const user = useAppSelector(selectCurrentUser);
   const pathname = usePathname();
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -204,9 +205,9 @@ export const AdminHeader: React.FC<HeaderProps> = ({ onOpenMenu, className, isOp
               `}
               onClick={toggleProfile}
             >
-              {userImage ? (
+              {user?.avatar ? (
                 <img
-                  src={userImage}
+                  src={user.avatar}
                   alt="Admin"
                   className="w-full h-full object-cover"
                 />

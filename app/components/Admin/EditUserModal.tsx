@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Modal from "../Modal/Modal";
 import ModalBody from "../Modal/ModalBody";
 import ModalFooter from "../Modal/ModalFooter";
@@ -8,6 +8,7 @@ import { Input } from "../Form/Inputs";
 import { Select } from "../Form/Select";
 import { Button } from "../Button";
 import { Icon } from "../Icon";
+import { useGetRolesQuery } from "@/lib/redux/services/roleApi";
 
 interface EditUserModalProps {
   isOpen: boolean;
@@ -15,11 +16,10 @@ interface EditUserModalProps {
   staff: any;
 }
 
-const roleOptions = [
-  { value: "Super Admin", label: "Super Admin" },
-  { value: "Editor", label: "Editor" },
-  { value: "Order Manager", label: "Order Manager" },
-  { value: "Support", label: "Support" },
+const genderOptions = [
+  { value: "Male", label: "Male" },
+  { value: "Female", label: "Female" },
+  { value: "Other", label: "Other" },
 ];
 
 const departmentOptions = [
@@ -29,20 +29,23 @@ const departmentOptions = [
   { value: "Support", label: "Support" },
 ];
 
-const genderOptions = [
-  { value: "Male", label: "Male" },
-  { value: "Female", label: "Female" },
-  { value: "Other", label: "Other" },
-];
-
 export function EditUserModal({ isOpen, onClose, staff }: EditUserModalProps) {
+  const { data: roles = [], isLoading: isLoadingRoles } = useGetRolesQuery();
+
+  const roleOptions = useMemo(() => {
+    return roles.map(role => ({
+      value: role.name,
+      label: role.name
+    }));
+  }, [roles]);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     gender: "Male",
     dob: "",
-    role: "Support",
-    department: "Support",
+    role: "",
+    department: "",
   });
 
   useEffect(() => {
@@ -50,13 +53,13 @@ export function EditUserModal({ isOpen, onClose, staff }: EditUserModalProps) {
       setFormData({
         name: staff.name || "",
         email: staff.email || "",
-        gender: staff.gender || "Male",
+        gender: staff.gender || "",
         dob: staff.dob || "",
-        role: staff.role || "Support",
-        department: staff.department || "Support",
+        role: staff.role || "",
+        department: staff.department || "",
       });
     }
-  }, [staff]);
+  }, [staff, isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -127,17 +130,16 @@ export function EditUserModal({ isOpen, onClose, staff }: EditUserModalProps) {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
-            <div className="flex flex-col gap-2">
-              <label className="text-[10px] font-black text-[#1D3557] uppercase tracking-widest">System Role</label>
-              <Select
-                shape="rounded-sm"
-                options={roleOptions}
-                value={formData.role}
-                onChange={(val) => setFormData({ ...formData, role: val })}
-                className="h-12"
-              />
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">            <div className="flex flex-col gap-2">
+            <label className="text-[10px] font-black text-[#1D3557] uppercase tracking-widest">System Role</label>
+            <Select
+              shape="rounded-sm"
+              options={roleOptions}
+              value={formData.role}
+              onChange={(val) => setFormData({ ...formData, role: val })}
+              className="h-12"
+            />
+          </div>
 
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-[#1D3557] uppercase tracking-widest">Department</label>
@@ -166,6 +168,7 @@ export function EditUserModal({ isOpen, onClose, staff }: EditUserModalProps) {
             variant="primary"
             className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold shadow-md shadow-brand-gold/10"
             type="submit"
+            disabled={isLoadingRoles || roles.length === 0}
           >
             Update Profile
           </Button>

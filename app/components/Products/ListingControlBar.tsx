@@ -20,18 +20,16 @@ const ViewSwitcher = ({ mode, onChange }: { mode: ViewMode; onChange: (mode: Vie
   <div className="flex items-center border border-gray-100 bg-white">
     <button
       onClick={() => onChange("grid")}
-      className={`w-10 h-10 flex items-center justify-center transition-all duration-300 ${
-        mode === "grid" ? "bg-gray-50 text-brand-gold" : "text-gray-400 hover:text-gray-900"
-      }`}
+      className={`w-10 h-10 flex items-center justify-center transition-all duration-300 ${mode === "grid" ? "bg-gray-50 text-brand-gold" : "text-gray-400 hover:text-gray-900"
+        }`}
       aria-label="Grid View"
     >
       <Icon name="grid_view" size="sm" />
     </button>
     <button
       onClick={() => onChange("list")}
-      className={`w-10 h-10 flex items-center justify-center border-l border-gray-100 transition-all duration-300 ${
-        mode === "list" ? "bg-gray-50 text-brand-gold" : "text-gray-400 hover:text-gray-900"
-      }`}
+      className={`w-10 h-10 flex items-center justify-center border-l border-gray-100 transition-all duration-300 ${mode === "list" ? "bg-gray-50 text-brand-gold" : "text-gray-400 hover:text-gray-900"
+        }`}
       aria-label="List View"
     >
       <Icon name="list" size="sm" />
@@ -88,7 +86,7 @@ const ListingControlBar: React.FC<ListingControlBarProps> = ({
         label: brand,
         onRemove: () => onFiltersChange({ ...filters, brands: filters.brands.filter((b) => b !== brand) }),
       });
-    } );
+    });
 
     filters.ratings.forEach((rating) => {
       tags.push({
@@ -110,7 +108,7 @@ const ListingControlBar: React.FC<ListingControlBarProps> = ({
         <div className="flex items-center gap-6">
           <div className="flex flex-col">
             <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-400 mb-1">Curation</span>
-            <span className="text-xs font-outfit text-gray-900">
+            <span className="text-md font-outfit text-gray-900">
               <span className="font-bold text-brand-gold">{count.toLocaleString()}</span> masterpieces found
               {filters.category && <span> in <span className="font-bold">{filters.category}</span></span>}
             </span>
@@ -132,7 +130,7 @@ const ListingControlBar: React.FC<ListingControlBarProps> = ({
           </div>
           <ViewSwitcher mode={viewMode} onChange={onViewModeChange} />
         </div>
-        
+
         <div className="flex items-center gap-2">
           {/* Mobile Sort/Filter Buttons */}
           <button className="flex-1 flex items-center justify-between px-4 py-3 bg-white border border-gray-100 group hover:border-brand-gold transition-colors">

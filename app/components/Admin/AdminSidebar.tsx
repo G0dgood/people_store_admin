@@ -9,6 +9,11 @@ import { ConfirmationModal } from "./ConfirmationModal";
 import { motion, AnimatePresence } from "framer-motion";
 import { HiChevronDown, HiOutlineQuestionMarkCircle, HiShieldCheck, HiXMark, HiBars3BottomLeft } from "react-icons/hi2";
 import { RiPercentLine } from "react-icons/ri";
+import { useLogoutMutation } from "@/lib/redux/services/authApi";
+import { logOut, selectCurrentUser } from "@/lib/redux/features/authSlice";
+import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface NavGroup {
   title: string;
@@ -170,6 +175,28 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
     );
   };
 
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(selectCurrentUser);
+  const [logout] = useLogoutMutation();
+
+  const handleLogout = async () => {
+    try {
+      await logout({}).unwrap();
+      dispatch(logOut());
+      toast.success("Session Terminated", {
+        description: "You have been successfully logged out."
+      });
+      router.push("/login");
+    } catch (err) {
+      // Even if the backend call fails (e.g. timeout), we should still clear local state
+      dispatch(logOut());
+      router.push("/login");
+    }
+  };
+
+  const displayRole = user?.role?.replace(/_/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "Store Management";
+
   return (
     <aside id="sidenav"
       className={`${isCollapsed ? "w-20" : "w-64"} h-full shrink-0 flex-col justify-between bg-white transition-transform duration-300 ease-in-out sm:flex sm:translate-x-0 border-r border-gray-100 ${isOpen ? "fixed inset-y-0 left-0 z-50 flex translate-x-0" : "hidden -translate-x-full sm:flex"
@@ -266,12 +293,20 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
             onMouseLeave={() => setHoveredItem(null)}
           >
             <div className="w-10 h-10 rounded-full border border-gray-200 overflow-hidden shadow-sm flex-shrink-0 group-hover:border-brand-gold-light group-hover:shadow-md transition-all">
-              <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop" alt="User" />
+              <img 
+                src={user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.fullName || "A")}&background=C5A028&color=fff`} 
+                alt="User" 
+                className="w-full h-full object-cover"
+              />
             </div>
             {!isCollapsed && (
               <div className="flex flex-col min-w-0">
-                <span className="text-sm font-bold text-gray-900 truncate group-hover:text-brand-charcoal transition-colors">Bloom & Mist</span>
-                <span className="text-[10px] font-medium text-gray-400 truncate">Store Management</span>
+                <span className="text-sm font-bold text-gray-900 truncate group-hover:text-brand-charcoal transition-colors">
+                  {user?.fullName || "Bloom & Mist"}
+                </span>
+                <span className="text-[10px] font-medium text-gray-400 truncate">
+                  {displayRole}
+                </span>
               </div>
             )}
           </div>
@@ -324,10 +359,7 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
       <ConfirmationModal
         isOpen={isLogoutModalOpen}
         onClose={() => setIsLogoutModalOpen(false)}
-        onConfirm={() => {
-          console.log("Sidebar: Session terminated. Redirecting to login...");
-          // Implement actual logout logic/redirect here
-        }}
+        onConfirm={handleLogout}
         title="Logout Session"
         message="Are you sure you want to end your current session? You will need to sign in again to access the administrative dashboard."
         confirmText="Yes, Logout Now"

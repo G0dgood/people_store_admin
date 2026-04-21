@@ -97,33 +97,56 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
 
       <div className="relative w-full">
         <div className="absolute rounded-[3px] h-1 w-full bg-gray-200 z-[1]" />
-        <div 
-          ref={range} 
-          className="absolute rounded-[3px] h-1 bg-brand-blue z-[2]" 
+        <div
+          ref={range}
+          className="absolute rounded-[3px] h-1 bg-brand-gold z-[2]"
         />
       </div>
 
       <style jsx>{`
         .thumb::-webkit-slider-thumb {
-          background-color: white;
-          border: 2px solid #3B82F6;
+          background-color: black;
+          border: 2px solid #C5A028; 
           border-radius: 50%;
           cursor: pointer;
-          height: 14px;
-          width: 14px;
+          height: 18px;
+          width: 18px;
           margin-top: 0px;
           pointer-events: auto;
           -webkit-appearance: none;
+          transition: all 0.2s ease;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .thumb:active::-webkit-slider-thumb {
+          background-color: #C5A028;
+          box-shadow: 0 0 0 8px rgba(197, 160, 40, 0.1);
+        }
+        .thumb:focus::-webkit-slider-thumb {
+          box-shadow: 0 0 0 8px rgba(197, 160, 40, 0.1);
         }
         .thumb::-moz-range-thumb {
           background-color: white;
-          border: 2px solid #3B82F6;
+          border: 2px solid #C5A028;
           border-radius: 50%;
           cursor: pointer;
-          height: 14px;
-          width: 14px;
+          height: 18px;
+          width: 18px;
           pointer-events: auto;
           -moz-appearance: none;
+          transition: all 0.2s ease;
+        }
+        .thumb:active::-moz-range-thumb {
+          background-color: #C5A028;
+        }
+
+        /* Remove default browser track coloring */
+        input[type=range]::-webkit-slider-runnable-track {
+          -webkit-appearance: none;
+          background: transparent;
+        }
+        input[type=range]::-moz-range-track {
+          -moz-appearance: none;
+          background: transparent;
         }
       `}</style>
     </div>

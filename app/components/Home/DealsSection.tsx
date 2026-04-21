@@ -64,7 +64,7 @@ const DealsSection = () => {
   };
 
   return (
-    <section className="w-full bg-white flex flex-col md:flex-row overflow-hidden rounded-2xl shadow-sm border border-gray-100">
+    <section className="w-full bg-white flex flex-col md:flex-row overflow-hidden rounded-md border border-gray-200">
       <div className="w-full md:w-80 p-8 border-b md:border-b-0 md:border-r border-gray-100 flex md:flex-col justify-between md:justify-center items-center md:items-start gap-6 bg-gray-50/50">
         <div className="flex flex-col gap-1">
           <h3 className="text-xl md:text-2xl font-outfit font-bold text-gray-900 uppercase tracking-wider">Limited <span className="text-brand-gold">Offers</span></h3>

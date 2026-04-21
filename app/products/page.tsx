@@ -107,8 +107,14 @@ const ProductsPage = () => {
     }
   ];
 
+  const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
+  const searchBarQuery = searchParams?.get("search")?.toLowerCase() || "";
+
   const filteredProducts = React.useMemo(() => {
     return products.filter(product => {
+      // Search Bar filter
+      if (searchBarQuery && !product.title.toLowerCase().includes(searchBarQuery)) return false;
+
       // Category filter
       if (filters.category && product.category !== filters.category) return false;
 
@@ -135,7 +141,7 @@ const ProductsPage = () => {
   return (
     <div className="min-h-screen bg-white flex flex-col font-sans text-black">
       {/* Desktop Header */}
-      <div className="hidden md:block">
+      <div className="hidden md:block sticky top-0 z-[80]">
         <Header />
       </div>
 
@@ -182,11 +188,34 @@ const ProductsPage = () => {
                 ? "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 md:gap-5"
                 : "flex flex-col gap-3 md:gap-4"}
               `}>
-              {filteredProducts.map(product => (
-                viewMode === "grid"
-                  ? <ProductGridItem key={product.id} product={product} />
-                  : <ProductListItem key={product.id} product={product} />
-              ))}
+              {filteredProducts.length > 0 ? (
+                filteredProducts.map(product => (
+                  viewMode === "grid"
+                    ? <ProductGridItem key={product.id} product={product} />
+                    : <ProductListItem key={product.id} product={product} />
+                ))
+              ) : (
+                <div className="py-20 flex flex-col items-center justify-center gap-4 text-center">
+                  <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center text-gray-300">
+                    <Icon name="search" size="lg" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 tracking-tight">No products found</h3>
+                    <p className="text-gray-400 text-sm mt-1">Try adjusting your search or filters to find what you're looking for.</p>
+                  </div>
+                  <button 
+                    onClick={() => {
+                      setFilters(DEFAULT_FILTERS);
+                      if (typeof window !== "undefined") {
+                        window.history.replaceState({}, "", window.location.pathname);
+                      }
+                    }}
+                    className="mt-2 text-brand-gold font-bold text-sm hover:underline"
+                  >
+                    Clear all filters
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Bottom Pagination */}

@@ -12,7 +12,7 @@ export const ProductMobileHeader: React.FC<ProductMobileHeaderProps> = ({ title 
   const router = useRouter();
 
   return (
-    <div className="flex flex-col gap-3 bg-white px-4 py-3 md:hidden">
+    <div className="flex flex-col gap-3 bg-white px-4 py-3 md:hidden sticky top-0 z-[80] shadow-sm">
       {/* Top row */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
