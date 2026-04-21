@@ -3,12 +3,14 @@ import { setupListeners } from '@reduxjs/toolkit/query';
 import { baseApi } from './baseApi';
 
 import authReducer from './features/authSlice';
+import privilegeReducer from './features/privilegeSlice';
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       [baseApi.reducerPath]: baseApi.reducer,
       auth: authReducer,
+      privilege: privilegeReducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(baseApi.middleware),

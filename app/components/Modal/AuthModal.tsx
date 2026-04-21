@@ -54,8 +54,9 @@ const LoginForm = ({ onSwitch }: { onSwitch: () => void }) => {
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-4">
         <FloatingInput
-          label="Username or Email"
-          placeholder="Email or username"
+          type="email"
+          label="Email Address"
+          placeholder="example@gmail.com"
         />
 
         <div className="flex flex-col gap-1">
@@ -141,9 +142,8 @@ const RegisterForm = ({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="grid grid-cols-2 gap-4">
-        <FloatingInput label="First Name" placeholder="John" />
-        <FloatingInput label="Last Name" placeholder="Doe" />
+      <div className="flex flex-col gap-4">
+        <FloatingInput label="Full Name" placeholder="John Doe" />
       </div>
 
       <div className="flex flex-col gap-4">

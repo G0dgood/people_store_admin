@@ -5,11 +5,19 @@ import { LoginForm } from "../components/Auth/LoginForm";
 import { LoginAdvert } from "../components/Auth/LoginAdvert";
 import { LoginBackground } from "../components/Auth/LoginBackground";
 import { getAdvertConfig } from "../utils/advertState";
+import { useAppSelector } from "@/lib/redux/hooks";
+import { selectIsAuthenticated } from "@/lib/redux/features/authSlice";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [layout, setLayout] = useState<"left-form" | "right-form">("left-form");
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  const router = useRouter();
 
   useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/admin");
+    }
     setLayout(getAdvertConfig().layout);
 
     const handleUpdate = () => {

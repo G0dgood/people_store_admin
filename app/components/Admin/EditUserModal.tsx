@@ -9,6 +9,9 @@ import { Select } from "../Form/Select";
 import { Button } from "../Button";
 import { Icon } from "../Icon";
 import { useGetRolesQuery } from "@/lib/redux/services/roleApi";
+import { useUpdateStaffMutation } from "@/lib/redux/services/authApi";
+import { toast } from "sonner";
+import { Avatar } from "../Other/Avatar";
 
 interface EditUserModalProps {
   isOpen: boolean;
@@ -27,10 +30,15 @@ const departmentOptions = [
   { value: "Content", label: "Content" },
   { value: "Logistics", label: "Logistics" },
   { value: "Support", label: "Support" },
+  { value: "Finance", label: "Finance" },
+  { value: "HR", label: "Human Resources" },
+  { value: "Marketing", label: "Marketing" },
+  { value: "IT", label: "IT & Systems" },
 ];
 
 export function EditUserModal({ isOpen, onClose, staff }: EditUserModalProps) {
   const { data: roles = [], isLoading: isLoadingRoles } = useGetRolesQuery();
+  const [updateStaff, { isLoading: isUpdating }] = useUpdateStaffMutation();
 
   const roleOptions = useMemo(() => {
     return roles.map(role => ({
@@ -51,7 +59,7 @@ export function EditUserModal({ isOpen, onClose, staff }: EditUserModalProps) {
   useEffect(() => {
     if (staff) {
       setFormData({
-        name: staff.name || "",
+        name: staff.fullName || "",
         email: staff.email || "",
         gender: staff.gender || "",
         dob: staff.dob || "",
@@ -61,10 +69,32 @@ export function EditUserModal({ isOpen, onClose, staff }: EditUserModalProps) {
     }
   }, [staff, isOpen]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Updating staff profile:", { id: staff?.id, ...formData });
-    onClose();
+    if (!staff?._id) return;
+
+    try {
+      await updateStaff({
+        userId: staff._id,
+        data: {
+          fullName: formData.name,
+          email: formData.email,
+          role: formData.role,
+          gender: formData.gender,
+          dob: formData.dob,
+          department: formData.department
+        }
+      }).unwrap();
+
+      toast.success("Profile Updated", {
+        description: `Successfully updated the administrative profile for ${formData.name}.`
+      });
+      onClose();
+    } catch (err: any) {
+      toast.error("Update Failed", {
+        description: err.data?.message || "Something went wrong while updating the staff member."
+      });
+    }
   };
 
   return (
@@ -72,9 +102,7 @@ export function EditUserModal({ isOpen, onClose, staff }: EditUserModalProps) {
       <form onSubmit={handleSubmit}>
         <ModalBody className="flex flex-col gap-8 py-4">
           <div className="flex flex-col gap-1 px-1 text-center items-center">
-            <div className="w-16 h-16 rounded-full border-2 border-brand-gold/20 shadow-sm overflow-hidden mb-2">
-              <img src={staff?.avatar} alt={staff?.name} className="w-full h-full object-cover" />
-            </div>
+            <Avatar src={staff?.avatar} name={staff?.fullName} size="lg" className="mb-2" />
             <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Administrative Credentials</h4>
           </div>
 
@@ -168,9 +196,9 @@ export function EditUserModal({ isOpen, onClose, staff }: EditUserModalProps) {
             variant="primary"
             className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold shadow-md shadow-brand-gold/10"
             type="submit"
-            disabled={isLoadingRoles || roles.length === 0}
+            disabled={isLoadingRoles || roles.length === 0 || isUpdating}
           >
-            Update Profile
+            {isUpdating ? "Updating..." : "Update Profile"}
           </Button>
         </ModalFooter>
       </form>

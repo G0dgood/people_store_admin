@@ -1,10 +1,9 @@
-import Image from "next/image";
 import { Icon } from "../Icon";
 
 interface AvatarProps {
   src?: string;
   name?: string;
-  size?: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg" | "xl";
   className?: string;
 }
 
@@ -15,34 +14,43 @@ const Avatar: React.FC<AvatarProps> = ({
   className = "",
 }) => {
   const sizes = {
-    sm: { class: "w-8 h-8", dim: 32 },
-    md: { class: "w-12 h-12", dim: 48 },
-    lg: { class: "w-24 h-24", dim: 96 },
+    sm: "w-8 h-8 text-[10px]",
+    md: "w-12 h-12 text-xs",
+    lg: "w-16 h-16 text-lg",
+    xl: "w-24 h-24 text-3xl",
   };
 
-  const selectedSize = sizes[size];
-  const initials = name
-    ? name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2)
-    : "";
+  const getInitials = (fullName?: string) => {
+    if (!fullName) return "";
+    const parts = fullName.trim().split(/\s+/);
+    if (parts.length >= 2) {
+      return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+    }
+    return parts[0].substring(0, 2).toUpperCase();
+  };
+
+  const initials = getInitials(name);
 
   return (
     <div className={`
-      relative rounded-full overflow-hidden flex items-center justify-center bg-gray-100 border-2 border-white  shrink-0
-      ${selectedSize.class} ${className}
+      relative rounded-full overflow-hidden flex items-center justify-center bg-brand-blue/5 border-2 border-white shrink-0
+      ${sizes[size]} ${className}
     `}>
       {src ? (
-        <Image
+        <img
           src={src}
           alt={name || "Avatar"}
-          width={selectedSize.dim}
-          height={selectedSize.dim}
           className="w-full h-full object-cover"
+          onError={(e) => {
+            (e.target as HTMLImageElement).style.display = 'none';
+            (e.target as HTMLImageElement).parentElement!.classList.add('bg-brand-blue/5');
+          }}
         />
       ) : initials ? (
-        <span className="text-gray-500 font-bold text-sm">{initials}</span>
+        <span className="text-brand-blue font-black tracking-tighter">{initials}</span>
       ) : (
-        <div className="w-full h-full bg-[#BFDBFE] flex items-center justify-center text-white">
-          <Icon name="person" size={size === "lg" ? "lg" : "md"} />
+        <div className="w-full h-full bg-brand-blue/10 flex items-center justify-center text-brand-blue">
+          <Icon name="person" size={size === "xl" ? "lg" : size === "lg" ? "md" : "sm"} />
         </div>
       )}
     </div>

@@ -9,6 +9,8 @@ import { Select } from "../Form/Select";
 import { Button } from "../Button";
 import { Icon } from "../Icon";
 import { useGetRolesQuery } from "@/lib/redux/services/roleApi";
+import { useOnboardUserMutation } from "@/lib/redux/services/authApi";
+import { toast } from "sonner";
 
 interface AddUserModalProps {
   isOpen: boolean;
@@ -20,6 +22,11 @@ const departmentOptions = [
   { value: "Content", label: "Content" },
   { value: "Logistics", label: "Logistics" },
   { value: "Support", label: "Support" },
+  { value: "Finance", label: "Finance" },
+  { value: "HR", label: "Human Resources" },
+  { value: "Marketing", label: "Marketing" },
+  { value: "IT", label: "IT & Systems" },
+  { value: "Sales", label: "Sales" },
 ];
 
 const genderOptions = [
@@ -30,6 +37,7 @@ const genderOptions = [
 
 export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
   const { data: roles = [], isLoading: isLoadingRoles } = useGetRolesQuery();
+  const [onboardUser, { isLoading: isOnboarding }] = useOnboardUserMutation();
 
   const roleOptions = useMemo(() => {
     return roles.map(role => ({
@@ -54,19 +62,37 @@ export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
     }
   }, [roles, formData.role]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Onboarding new staff member:", formData);
-    // Simulated success behavior
-    onClose();
-    setFormData({
-      name: "",
-      email: "",
-      gender: "Male",
-      dob: "",
-      role: roles.length > 0 ? roles[0].name : "",
-      department: "",
-    });
+    
+    try {
+      const response = await onboardUser({
+        fullName: formData.name,
+        email: formData.email,
+        gender: formData.gender,
+        dob: formData.dob,
+        role: formData.role,
+        department: formData.department
+      }).unwrap();
+
+      toast.success("Staff Member Onboarded", {
+        description: `Successfully created an account for ${formData.name}. Temporary password: ${response.data.tempPassword}`
+      });
+      
+      onClose();
+      setFormData({
+        name: "",
+        email: "",
+        gender: "Male",
+        dob: "",
+        role: roles.length > 0 ? roles[0].name : "",
+        department: "",
+      });
+    } catch (err: any) {
+      toast.error("Onboarding Failed", {
+        description: err.data?.message || "Something went wrong while creating the staff account."
+      });
+    }
   };
 
   return (
@@ -183,9 +209,9 @@ export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
             variant="primary"
             className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold shadow-md shadow-brand-gold/10"
             type="submit"
-            disabled={isLoadingRoles || roles.length === 0}
+            disabled={isLoadingRoles || roles.length === 0 || isOnboarding}
           >
-            Quick Onboard
+            {isOnboarding ? "Onboarding..." : "Quick Onboard"}
           </Button>
         </ModalFooter>
       </form>

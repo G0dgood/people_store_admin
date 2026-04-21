@@ -16,32 +16,21 @@ import { RowsPerPage } from "@/app/components/rows-per-page";
 import { Tooltip } from "../../components/Tooltip";
 
 
-const categories = [
-  { name: "Electronics", image: "/dashboardImage/Electronics.png" },
-  { name: "Fashion", image: "/dashboardImage/Fashion.png" },
-  { name: "Accessories", image: "/dashboardImage/Accessories.png" },
-  { name: "Home & Kitchen", image: "/dashboardImage/Home & Kitchen.png" },
-  { name: "Sports & Outdoors", image: "/dashboardImage/Sports & Outdoors.png" },
-  { name: "Toys & Games", image: "/dashboardImage/Toys & Games.png" },
-  { name: "Health & Fitness", image: "/dashboardImage/Health & Fitness.png" },
-  { name: "Books", image: "/dashboardImage/Books.png" },
-];
-
-const products = [
-  { id: 1, name: "Wireless Bluetooth Headphones", image: "/dashboardImage/Headphones.png", date: "01-01-2025", order: 25 },
-  { id: 2, name: "Men's T-Shirt", image: "/dashboardImage/T-Shirt.png", date: "01-01-2025", order: 20 },
-  { id: 3, name: "Men's Leather Wallet", image: "/dashboardImage/Wallet.png", date: "01-01-2025", order: 35 },
-  { id: 4, name: "Memory Foam Pillow", image: "/dashboardImage/Pillow.png", date: "01-01-2025", order: 40 },
-  { id: 5, name: "Coffee Maker", image: "/dashboardImage/Coffee Maker.png", date: "01-01-2025", order: 45 },
-  { id: 6, name: "Casual Baseball Cap", image: "/dashboardImage/Cap.png", date: "01-01-2025", order: 55 },
-  { id: 7, name: "Full HD Webcam", image: "/dashboardImage/Webcam.png", date: "01-01-2025", order: 20 },
-  { id: 8, name: "Smart LED Color Bulb", image: "/dashboardImage/Bulb.png", date: "01-01-2025", order: 16 },
-  { id: 9, name: "Men's T-Shirt", image: "/dashboardImage/T-Shirt.png", date: "01-01-2025", order: 10 },
-  { id: 10, name: "Men's Leather Wallet", image: "/dashboardImage/Wallet.png", date: "01-01-2025", order: 35 },
-];
+import {
+  useGetCategoriesQuery,
+  useDeleteCategoryMutation,
+} from "@/lib/redux/services/categoryApi";
+import { toast } from "sonner";
+import { NoRecordFound, SVGLoaderFetch } from "@/app/components/Options";
+import moment from "moment";
 
 export default function CategoriesPage() {
-  const [activeTab, setActiveTab] = useState("All Product (145)");
+  const { data: categoriesData, isLoading } = useGetCategoriesQuery();
+  const [deleteCategory] = useDeleteCategoryMutation();
+
+  const categories = categoriesData?.data || [];
+
+  const [activeTab, setActiveTab] = useState(`All Categories (${categories.length})`);
   const [currentPage, setCurrentPage] = useState(1);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isMoreActionsOpen, setIsMoreActionsOpen] = useState(false);
@@ -51,21 +40,58 @@ export default function CategoriesPage() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState<any>(null);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
+  // Filter Logic
+  const filteredCategories = categories.filter((cat: any) => {
+    // Search filter
+    const matchesSearch = cat.name.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    // Tab filter (if needed - currently we only have "All Categories")
+    const matchesTab = activeTab.includes("All Categories") || 
+                      (activeTab === "Active" && cat.isActive) || 
+                      (activeTab === "Inactive" && !cat.isActive);
+    
+    return matchesSearch;
+  });
+
+  // Pagination Metadata
+  const totalItems = filteredCategories.length;
+  const totalPages = Math.ceil(totalItems / rowsPerPage) || 1;
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const paginatedCategories = filteredCategories.slice(startIndex, startIndex + rowsPerPage);
+
+  // Sync pagination reset
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, activeTab, rowsPerPage]);
+
   const toggleAll = () => {
-    if (selectedIds.length === products.length) {
+    if (selectedIds.length === categories.length) {
       setSelectedIds([]);
     } else {
-      setSelectedIds(products.map(p => p.id));
+      setSelectedIds(categories.map((c: any) => c._id));
     }
   };
 
-  const toggleItem = (id: number) => {
-    setSelectedIds(prev =>
-      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+  const toggleItem = (id: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
+  };
+
+  const handleDeleteCategory = async () => {
+    if (!categoryToDelete?._id) return;
+    try {
+      await deleteCategory(categoryToDelete._id).unwrap();
+      toast.success("Category deleted successfully");
+      setIsDeleteModalOpen(false);
+      setCategoryToDelete(null);
+    } catch (error) {
+      toast.error("Failed to delete category");
+    }
   };
 
   const scroll = (direction: "left" | "right") => {
@@ -85,7 +111,7 @@ export default function CategoriesPage() {
         <div className="flex gap-3 w-full sm:w-auto">
           <Button shape="rounded-sm" variant="primary"
             className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold flex-1 sm:flex-initial"
-            iconLeft={<Icon name="add" folder="icon" size="xs" />}
+            iconLeft={<Icon name="add" folder="icon" size="md" />}
             onClick={() => setIsAddModalOpen(true)}
           >
             Add Category
@@ -136,14 +162,16 @@ export default function CategoriesPage() {
         {/* Fill Tabs & Controls */}
         <div className="px-6 flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
           <TabFilter
-            tabs={["All Product (145)", "Featured Products", "On Sale", "Out of Stock"]}
+            tabs={[`All Categories (${categories.length})`]}
             activeTab={activeTab}
             onChange={setActiveTab} id={""} />
 
           <div className="flex items-center gap-3 w-full md:w-auto">
             <Input shape="rounded-sm"
               type="text"
-              placeholder="Search your product"
+              placeholder="Search categories..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               containerClassName="flex-1 md:w-96"
               className="bg-white border-gray-200 placeholder:text-gray-400 text-xs font-medium"
               suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
@@ -167,66 +195,79 @@ export default function CategoriesPage() {
               <tr>
                 <th className="pl-6 w-12">
                   <Checkbox
-                    checked={selectedIds.length === products.length && products.length > 0}
+                    checked={selectedIds.length === categories.length && categories.length > 0}
                     onChange={toggleAll}
                   />
                 </th>
-                <th className="px-4">No.</th>
-                <th>Product</th>
-                <th>Created Date</th>
-                <th className="text-center">Order</th>
+                <th>Category Name</th>
+                <th>Created At</th>
+                <th>Attributes</th>
                 <th className="text-right">Action</th>
               </tr>
             </thead>
             <tbody>
-              {products.map((p, idx) => (
-                <tr key={idx} className="group">
-                  <td className="pl-6">
-                    <Checkbox
-                      checked={selectedIds.includes(p.id)}
-                      onChange={() => toggleItem(p.id)}
-                    />
-                  </td>
-                  <td className="px-4">
-                    <span className="text-sm font-bold text-gray-900">1</span>
-                  </td>
-                  <td className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-[6px] overflow-hidden bg-gray-50 border border-gray-200 p-1">
-                      <img src={p.image} alt="" className="w-full h-full object-contain" />
-                    </div>
-                    <span className="text-sm font-bold text-gray-900 leading-tight block truncate max-w-[200px]">{p.name}</span>
-                  </td>
-                  <td className="text-sm font-bold text-gray-900">{p.date}</td>
-                  <td className="text-sm font-bold text-gray-900 text-center">{p.order}</td>
-                  <td className="text-right">
-                    <div className="flex justify-end gap-2 px-2">
-                      <Tooltip text="Edit Category" position="top">
-                        <Button shape="rounded-sm" variant="outline"
-                          className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
-                          onClick={() => {
-                            setCategoryToEdit(p);
-                            setIsEditDrawerOpen(true);
-                          }}
-                        >
-                          <Icon name="settings" folder="dashboardIcon" size="sm" />
-                        </Button>
-                      </Tooltip>
-                      <Tooltip text="Delete Category" position="top">
-                        <Button shape="rounded-sm" variant="outline"
-                          className="!p-1.5 text-gray-400 hover:text-white hover:bg-rose-500 hover:border-rose-500 transition-all"
-                          onClick={() => {
-                            setCategoryToDelete(p);
-                            setIsDeleteModalOpen(true);
-                          }}
-                        >
-                          <Icon name="Delete" folder="dashboardIcon" size="sm" />
-                        </Button>
-                      </Tooltip>
-                    </div>
-
-                  </td>
-                </tr>
-              ))}
+              {isLoading ? (
+                <SVGLoaderFetch colSpan={5} text="Fetching Categories..." />
+              ) : categories.length === 0 ? (
+                <NoRecordFound colSpan={5} text="No categories found" />
+              ) : (
+                paginatedCategories.map((c: any, idx: number) => (
+                  <tr key={idx} className="group">
+                    <td className="pl-6">
+                      <Checkbox
+                        checked={selectedIds.includes(c._id)}
+                        onChange={() => toggleItem(c._id)}
+                      />
+                    </td>
+                    <td className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-[6px] overflow-hidden bg-gray-50 border border-gray-200 p-1">
+                        <img src={c.image} alt="" className="w-full h-full object-contain" />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-black text-gray-900 leading-tight block truncate max-w-[200px]">{c.name}</span>
+                        <span className="text-[10px] text-gray-400 font-bold uppercase truncate max-w-[200px]">{c.description || "No description"}</span>
+                      </div>
+                    </td>
+                    <td className="text-[11px] font-bold text-gray-400">
+                      {c.createdAt ? moment(c.createdAt).format('MMM DD, YYYY') : "-"}
+                    </td>
+                    <td className="py-5">
+                      <div className="flex gap-1 flex-wrap">
+                        {c.hasSize && <span className="px-2 py-0.5 bg-blue-50 text-blue-500 text-[9px] font-black rounded uppercase">Size</span>}
+                        {c.hasML && <span className="px-2 py-0.5 bg-emerald-50 text-emerald-500 text-[9px] font-black rounded uppercase">Volume</span>}
+                        {c.hasSex && <span className="px-2 py-0.5 bg-purple-50 text-purple-500 text-[9px] font-black rounded uppercase">Gender</span>}
+                        {!c.hasSize && !c.hasML && !c.hasSex && <span className="text-[10px] text-gray-300 font-bold italic">No attributes</span>}
+                      </div>
+                    </td>
+                    <td className="text-right">
+                      <div className="flex justify-end gap-2 px-6">
+                        <Tooltip text="Edit Category" position="top">
+                          <Button shape="rounded-sm" variant="outline"
+                            className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
+                            onClick={() => {
+                              setCategoryToEdit(c);
+                              setIsEditDrawerOpen(true);
+                            }}
+                          >
+                            <Icon name="settings" folder="dashboardIcon" size="sm" />
+                          </Button>
+                        </Tooltip>
+                        <Tooltip text="Delete Category" position="top">
+                          <Button shape="rounded-sm" variant="outline"
+                            className="!p-1.5 text-gray-400 hover:text-white hover:bg-rose-500 hover:border-rose-500 transition-all"
+                            onClick={() => {
+                              setCategoryToDelete(c);
+                              setIsDeleteModalOpen(true);
+                            }}
+                          >
+                            <Icon name="Delete" folder="dashboardIcon" size="sm" />
+                          </Button>
+                        </Tooltip>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -234,7 +275,7 @@ export default function CategoriesPage() {
         {/* Footer / Pagination */}
         <Pagination
           currentPage={currentPage}
-          totalPages={24}
+          totalPages={totalPages}
           onPageChange={setCurrentPage}
         />
       </div>
@@ -249,18 +290,20 @@ export default function CategoriesPage() {
         onClose={() => setIsMoreActionsOpen(false)}
         onCleanEmpty={() => setIsDeleteModalOpen(true)}
         selectedIds={selectedIds}
-        items={products}
+        items={categories}
         onClearSelection={() => setSelectedIds([])}
+        idProp="_id"
       />
 
       <BulkActionsDrawer
         isOpen={selectedIds.length > 0}
         onClose={() => setSelectedIds([])}
         selectedIds={selectedIds}
-        items={products}
+        items={categories}
         onClearSelection={() => setSelectedIds([])}
         title="Categories Selected"
-        labelProp="product"
+        labelProp="name"
+        idProp="_id"
         actions={[
           {
             id: "export",
@@ -301,11 +344,11 @@ export default function CategoriesPage() {
 
       <ConfirmationModal
         isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={() => {
-          console.log("Deleting category:", categoryToDelete?.name);
+        onClose={() => {
           setIsDeleteModalOpen(false);
+          setCategoryToDelete(null);
         }}
+        onConfirm={handleDeleteCategory}
         title="Delete Category"
         message={`Are you sure you want to delete the category "${categoryToDelete?.name}"? This will remove it from all associated products.`}
         confirmText="Yes, delete category"

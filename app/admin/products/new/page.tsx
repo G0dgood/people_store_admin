@@ -16,13 +16,37 @@ import Checkbox from "@/app/components/Checkbox";
 import { HiPhoto, HiArrowPath, HiXCircle, HiXMark, HiPencil } from "react-icons/hi2";
 import { Tooltip } from "../../../components/Tooltip";
 import { AISettingsModal } from "../../../components/Admin/AISettingsModal";
+import { useAddProductMutation } from "@/lib/redux/services/productApi";
+import { toast } from "sonner";
 
 
 export default function CreateProduct() {
  const router = useRouter();
- const [stockStatus, setStockStatus] = useState("");
- const [category, setCategory] = useState("");
- const [tag, setTag] = useState("");
+ const [addProduct, { isLoading: isSubmitting }] = useAddProductMutation();
+
+ // Unified Form State
+ const [formData, setFormData] = useState({
+  name: "",
+  description: "",
+  price: "",
+  discountPrice: "",
+  category: "",
+  tag: "",
+  stockStatus: "In Stock",
+  stockQuantity: "10",
+  isUnlimited: false,
+  isFeatured: false,
+  taxIncluded: true,
+  expiryStart: "",
+  expiryEnd: "",
+  colors: [] as string[]
+ });
+
+ const handleInputChange = (field: string, value: any) => {
+  setFormData(prev => ({ ...prev, [field]: value }));
+ };
+
+ // UI States (keeping these separate as they don't represent the product data itself)
  const [isPublishConfirmOpen, setIsPublishConfirmOpen] = useState(false);
  const [isPublishSuccessOpen, setIsPublishSuccessOpen] = useState(false);
  const [isDraftConfirmOpen, setIsDraftConfirmOpen] = useState(false);
@@ -30,20 +54,15 @@ export default function CreateProduct() {
  const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
  const [stagedMedia, setStagedMedia] = useState<{ file: File, url: string }[]>([]);
- const [productColors, setProductColors] = useState<string[]>([]);
- const [isFeatured, setIsFeatured] = useState(true);
  const [showColorPicker, setShowColorPicker] = useState(false);
  const [editingColorIndex, setEditingColorIndex] = useState<number | null>(null);
- const [taxIncluded, setTaxIncluded] = useState(true);
- const [productDescription, setProductDescription] = useState("");
  const [isRefining, setIsRefining] = useState(false);
  const [isAISettingsOpen, setIsAISettingsOpen] = useState(false);
  const [aiTone, setAiTone] = useState("Professional");
  const [selectedCurrency, setSelectedCurrency] = useState("NGN");
  const [isCurrencyDropdownOpen, setIsCurrencyDropdownOpen] = useState(false);
  const [isDiscountDropdownOpen, setIsDiscountDropdownOpen] = useState(false);
- const [isUnlimited, setIsUnlimited] = useState(true);
- const [stockQuantity, setStockQuantity] = useState("0");
+
  const currencyDropdownRef = useRef<HTMLDivElement>(null);
  const discountDropdownRef = useRef<HTMLDivElement>(null);
  const colorInputRef = useRef<HTMLInputElement>(null);
@@ -62,20 +81,20 @@ export default function CreateProduct() {
   };
  }, [stagedMedia]);
 
-  // Close currency dropdowns on outside click
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Node;
-      if (currencyDropdownRef.current && !currencyDropdownRef.current.contains(target)) {
-        setIsCurrencyDropdownOpen(false);
-      }
-      if (discountDropdownRef.current && !discountDropdownRef.current.contains(target)) {
-        setIsDiscountDropdownOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+ // Close currency dropdowns on outside click
+ useEffect(() => {
+  const handleClickOutside = (event: MouseEvent) => {
+   const target = event.target as Node;
+   if (currencyDropdownRef.current && !currencyDropdownRef.current.contains(target)) {
+    setIsCurrencyDropdownOpen(false);
+   }
+   if (discountDropdownRef.current && !discountDropdownRef.current.contains(target)) {
+    setIsDiscountDropdownOpen(false);
+   }
+  };
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => document.removeEventListener("mousedown", handleClickOutside);
+ }, []);
 
  const handleMediaUpload = (files: File[]) => {
   const newMedia = files.map(file => ({
@@ -93,23 +112,74 @@ export default function CreateProduct() {
   });
  };
 
+ const handleSubmit = async (submitStatus: "Published" | "Draft") => {
+  try {
+   const {
+    name, description, price, category, discountPrice,
+    stockStatus, stockQuantity, isUnlimited, isFeatured,
+    taxIncluded, expiryStart, expiryEnd, tag, colors
+   } = formData;
+
+   if (!name || !description || !price || !category) {
+    toast.error("Please fill in all required fields (Name, Description, Price, Category)");
+    return;
+   }
+
+   if (stagedMedia.length === 0) {
+    toast.error("Please add at least one product image");
+    return;
+   }
+
+   const postData = new FormData();
+   postData.append("name", name);
+   postData.append("description", description);
+   postData.append("price", price);
+   postData.append("discountPrice", discountPrice || "0");
+   postData.append("category", category);
+   postData.append("stock", isUnlimited ? "0" : stockQuantity);
+   postData.append("stockStatus", stockStatus);
+   postData.append("status", submitStatus);
+   postData.append("isUnlimited", String(isUnlimited));
+   postData.append("isFeatured", String(isFeatured));
+   postData.append("taxIncluded", String(taxIncluded));
+   postData.append("expiryStart", expiryStart);
+   postData.append("expiryEnd", expiryEnd);
+   postData.append("tags", JSON.stringify(tag ? [tag] : []));
+   postData.append("colors", JSON.stringify(colors));
+
+   // Append all media files
+   stagedMedia.forEach((item) => {
+    postData.append("media", item.file);
+   });
+
+   const response = await addProduct(postData).unwrap();
+
+   if (response.success) {
+    if (submitStatus === "Published") {
+     setIsPublishSuccessOpen(true);
+    } else {
+     setIsDraftSuccessOpen(true);
+    }
+    toast.success(`Product ${submitStatus === 'Published' ? 'published' : 'saved as draft'} successfully!`);
+   }
+  } catch (error: any) {
+   console.error("Failed to add product:", error);
+   toast.error(error?.data?.message || "Something went wrong while saving the product");
+  }
+ };
+
  return (
   <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
    {/* Top Header / Action Bar */}
    <div className="flex flex-col xl:flex-row justify-end items-start xl:items-center gap-4">
 
     <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
-     <Input shape="rounded-sm"
-      type="text"
-      placeholder="Search product for add"
-      containerClassName="flex-1 xl:w-96"
-      className="bg-white border-gray-200 placeholder:text-gray-400 text-xs font-medium"
-      suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
-     />
+
 
      <div className="flex gap-2">
       <Button shape="rounded-sm" variant="primary"
        size="md"
+       isLoading={isSubmitting}
        onClick={() => setIsPublishConfirmOpen(true)}
       >
        Publish Product
@@ -117,6 +187,7 @@ export default function CreateProduct() {
       <Button shape="rounded-sm"
        variant="outline"
        size="md"
+       isLoading={isSubmitting}
        iconLeft={<Icon name="ticket"
         folder="dashboardIcon"
         size="md"
@@ -149,7 +220,8 @@ export default function CreateProduct() {
       <div className="flex flex-col gap-2.5">
        <label className="text-xs font-bold text-[#1D3557]">Product Name</label>
        <Input shape="rounded-sm" type="text"
-        defaultValue=""
+        value={formData.name}
+        onChange={(e) => handleInputChange("name", e.target.value)}
         className="bg-gray-50/80 border-gray-50 text-sm font-medium text-gray-700"
         placeholder="Enter product name"
        />
@@ -161,8 +233,8 @@ export default function CreateProduct() {
         <Textarea shape="rounded-sm"
          placeholder="Enter product description"
          rows={6}
-         value={productDescription}
-         onChange={(e) => setProductDescription(e.target.value)}
+         value={formData.description}
+         onChange={(e) => handleInputChange("description", e.target.value)}
          className="bg-gray-50/80 border-gray-50 text-sm font-medium text-gray-700 resize-none leading-relaxed"
         />
         <div className="absolute bottom-4 right-4 flex gap-1.5 opacity-40 group-hover:opacity-100 transition-opacity">
@@ -183,7 +255,7 @@ export default function CreateProduct() {
            onClick={() => {
             setIsRefining(true);
             setTimeout(() => {
-             setProductDescription(prev => prev.trim() + " This masterpiece represents the pinnacle of mobile excellence.");
+             handleInputChange("description", formData.description.trim() + " This masterpiece represents the pinnacle of mobile excellence.");
              setIsRefining(false);
             }, 1200);
            }}
@@ -208,9 +280,9 @@ export default function CreateProduct() {
       <div className="flex flex-col gap-2.5">
        <label className="text-xs font-bold text-[#1D3557]">Product Price</label>
        <div className="relative" ref={currencyDropdownRef}>
-        <Input shape="rounded-sm" type="text"
-         value=""
-         onChange={() => { }}
+        <Input shape="rounded-sm" type="number"
+         value={formData.price}
+         onChange={(e) => handleInputChange("price", e.target.value)}
          placeholder="0.00"
          className="bg-gray-50/80 border-gray-50 text-sm font-bold text-gray-900"
          prefixElement={<span className="text-sm font-bold text-gray-400">{currencies.find(c => c.code === selectedCurrency)?.symbol}</span>}
@@ -256,7 +328,9 @@ export default function CreateProduct() {
         <div className="relative" ref={discountDropdownRef}>
          <Input
           shape="rounded-sm"
-          type="text"
+          type="number"
+          value={formData.discountPrice}
+          onChange={(e) => handleInputChange("discountPrice", e.target.value)}
           placeholder="0.00"
           className="bg-gray-50/80 border-gray-50 text-sm font-bold text-gray-900"
           prefixElement={<span className="text-sm font-bold text-gray-400">{currencies.find(c => c.code === selectedCurrency)?.symbol}</span>}
@@ -301,13 +375,13 @@ export default function CreateProduct() {
         <label className="text-xs font-bold text-[#1D3557]">Tax Included</label>
         <div className="flex items-center gap-6 py-3">
          <Checkbox
-          checked={taxIncluded}
-          onChange={() => setTaxIncluded(true)}
+          checked={formData.taxIncluded}
+          onChange={() => handleInputChange("taxIncluded", true)}
           label="Yes"
          />
          <Checkbox
-          checked={!taxIncluded}
-          onChange={() => setTaxIncluded(false)}
+          checked={!formData.taxIncluded}
+          onChange={() => handleInputChange("taxIncluded", false)}
           label="No"
          />
         </div>
@@ -319,10 +393,14 @@ export default function CreateProduct() {
        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Input shape="rounded-sm"
          type="date"
+         value={formData.expiryStart}
+         onChange={(e) => handleInputChange("expiryStart", e.target.value)}
          placeholder="Start"
         />
         <Input shape="rounded-sm"
          type="date"
+         value={formData.expiryEnd}
+         onChange={(e) => handleInputChange("expiryEnd", e.target.value)}
          placeholder="End"
         />
        </div>
@@ -337,10 +415,10 @@ export default function CreateProduct() {
        <div className="flex flex-col gap-2.5">
         <label className="text-xs font-bold text-[#1D3557]">Stock Quantity</label>
         <Input shape="rounded-sm"
-         type={isUnlimited ? "text" : "number"}
-         disabled={isUnlimited}
-         value={isUnlimited ? "Unlimited" : stockQuantity}
-         onChange={(e) => setStockQuantity(e.target.value)}
+         type={formData.isUnlimited ? "text" : "number"}
+         disabled={formData.isUnlimited}
+         value={formData.isUnlimited ? "Unlimited" : formData.stockQuantity}
+         onChange={(e) => handleInputChange("stockQuantity", e.target.value)}
          className="bg-gray-50/80 border-gray-50 text-sm font-bold text-gray-900 focus:bg-white transition-colors"
         />
        </div>
@@ -349,8 +427,8 @@ export default function CreateProduct() {
         <label className="text-xs font-bold text-[#1D3557]">Stock Status</label>
         <Select
          shape="rounded-sm"
-         value={stockStatus}
-         onChange={(val) => setStockStatus(val as string)}
+         value={formData.stockStatus}
+         onChange={(val) => handleInputChange("stockStatus", val as string)}
          options={[
           { label: "In Stock", value: "In Stock" },
           { label: "Out of Stock", value: "Out of Stock" },
@@ -365,15 +443,15 @@ export default function CreateProduct() {
       <div className="flex flex-col gap-4 pt-2">
        <div className="flex items-center justify-between w-full max-w-[200px]">
         <Switch
-         checked={isUnlimited}
-         onChange={(e) => setIsUnlimited(e.target.checked)}
+         checked={formData.isUnlimited}
+         onChange={(e) => handleInputChange("isUnlimited", e.target.checked)}
          label={<span className="text-xs font-bold text-gray-900">Unlimited</span>}
         />
        </div>
 
        <Checkbox
-        checked={isFeatured}
-        onChange={setIsFeatured}
+        checked={formData.isFeatured}
+        onChange={(checked) => handleInputChange("isFeatured", checked)}
         className="w-fit pt-2"
        >
         <span className="text-xs font-bold text-gray-400 underline underline-offset-4 decoration-gray-200">Highlight this product in a featured section.</span>
@@ -383,14 +461,16 @@ export default function CreateProduct() {
       <div className="flex gap-3 justify-end mt-4 pt-6 border-t border-gray-50">
        <button
         type="button"
-        className="bg-white border border-gray-200 text-[#1D3557] px-6 py-2.5 rounded-[6px] text-xs font-bold hover:bg-gray-50 transition-all flex items-center gap-2"
+        disabled={isSubmitting}
+        className="bg-white border border-gray-200 text-[#1D3557] px-6 py-2.5 rounded-[6px] text-xs font-bold hover:bg-gray-50 transition-all flex items-center gap-2 disabled:opacity-50"
         onClick={() => setIsDraftConfirmOpen(true)}
        >
         <Icon name="ticket" folder="dashboardIcon" size="xs" className="opacity-70" />
-        Save to draft
+        {isSubmitting ? "Saving..." : "Save to draft"}
        </button>
        <Button shape="rounded-sm" variant="primary"
         className="px-8 py-2.5"
+        isLoading={isSubmitting}
         onClick={() => setIsPublishConfirmOpen(true)}
        >
         Publish Product
@@ -495,12 +575,16 @@ export default function CreateProduct() {
         <label className="text-[11px] font-bold text-[#1D3557]">Product Categories</label>
         <Select
          shape="rounded-sm"
-         value={category}
-         onChange={(val) => setCategory(val as string)}
+         value={formData.category}
+         onChange={(val) => handleInputChange("category", val as string)}
          placeholder="Select your product"
          options={[
-          { label: "Electronics", value: "Electronics" },
-          { label: "Smartphone", value: "Smartphone" },
+          { label: "PERFUME", value: "PERFUME" },
+          { label: "SKINCARE", value: "SKINCARE" },
+          { label: "MAKE UP", value: "MAKE UP" },
+          { label: "GIFT", value: "GIFT" },
+          { label: "BODY SPRAY", value: "BODY SPRAY" },
+          { label: "BODY MIST", value: "BODY MIST" },
          ]}
         />
        </div>
@@ -509,8 +593,8 @@ export default function CreateProduct() {
         <label className="text-[11px] font-bold text-[#1D3557]">Product Tag</label>
         <Select
          shape="rounded-sm"
-         value={tag}
-         onChange={(val) => setTag(val as string)}
+         value={formData.tag}
+         onChange={(val) => handleInputChange("tag", val as string)}
          placeholder="Select your product"
          options={[
           { label: "New Arrival", value: "New Arrival" },
@@ -547,11 +631,11 @@ export default function CreateProduct() {
               style={{ backgroundColor: preset }}
               onClick={() => {
                if (editingColorIndex !== null) {
-                const newColors = [...productColors];
+                const newColors = [...formData.colors];
                 newColors[editingColorIndex] = preset;
-                setProductColors(newColors);
-               } else if (!productColors.includes(preset)) {
-                setProductColors([...productColors, preset]);
+                handleInputChange("colors", newColors);
+               } else if (!formData.colors.includes(preset)) {
+                handleInputChange("colors", [...formData.colors, preset]);
                }
               }}
              />
@@ -571,23 +655,23 @@ export default function CreateProduct() {
             <div className="relative group">
              <input
               type="color"
-              value={editingColorIndex !== null ? productColors[editingColorIndex] : "#000000"}
+              value={editingColorIndex !== null ? formData.colors[editingColorIndex] : "#000000"}
               className="w-8 h-8 rounded-[4px] cursor-pointer border-none bg-transparent"
               onChange={(e) => {
                const newColor = e.target.value.toUpperCase();
                if (editingColorIndex !== null) {
-                const newColors = [...productColors];
+                const newColors = [...formData.colors];
                 newColors[editingColorIndex] = newColor;
-                setProductColors(newColors);
-               } else if (!productColors.includes(newColor)) {
-                setProductColors([...productColors, newColor]);
+                handleInputChange("colors", newColors);
+               } else if (!formData.colors.includes(newColor)) {
+                handleInputChange("colors", [...formData.colors, newColor]);
                }
               }}
              />
             </div>
             <input
              type="text"
-             value={editingColorIndex !== null ? productColors[editingColorIndex] : ""}
+             value={editingColorIndex !== null ? formData.colors[editingColorIndex] : ""}
              placeholder="#000000"
              className="flex-1 h-8 bg-white border border-gray-200 rounded-[4px] px-2 text-[10px] font-mono text-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-100"
              onChange={(e) => {
@@ -595,11 +679,11 @@ export default function CreateProduct() {
               if (val.match(/^#[0-9A-F]{6}$/i)) {
                const newColor = val.toUpperCase();
                if (editingColorIndex !== null) {
-                const newColors = [...productColors];
+                const newColors = [...formData.colors];
                 newColors[editingColorIndex] = newColor;
-                setProductColors(newColors);
-               } else if (!productColors.includes(newColor)) {
-                setProductColors([...productColors, newColor]);
+                handleInputChange("colors", newColors);
+               } else if (!formData.colors.includes(newColor)) {
+                handleInputChange("colors", [...formData.colors, newColor]);
                }
               }
              }}
@@ -610,7 +694,7 @@ export default function CreateProduct() {
         )}
 
         <div className="flex flex-wrap gap-3 items-center">
-         {productColors?.map((color, i) => (
+         {formData.colors?.map((color, i) => (
           <div
            key={i}
            onClick={() => {
@@ -636,8 +720,8 @@ export default function CreateProduct() {
             <div
              onClick={(e) => {
               e.stopPropagation();
-              const newColors = productColors.filter((_, idx) => idx !== i);
-              setProductColors(newColors);
+              const newColors = formData.colors.filter((_, idx) => idx !== i);
+              handleInputChange("colors", newColors);
               if (editingColorIndex === i) setEditingColorIndex(null);
              }}
              className="flex-1 bg-rose-500/90 hover:bg-rose-600 flex items-center justify-center transition-colors border-l border-white/20"
@@ -678,7 +762,7 @@ export default function CreateProduct() {
     onClose={() => setIsPublishConfirmOpen(false)}
     onConfirm={() => {
      setIsPublishConfirmOpen(false);
-     setIsPublishSuccessOpen(true);
+     handleSubmit("Published");
     }}
     title="Confirm Publication"
     message="Are you sure you want to publish this product? It will be immediately visible to all customers on the storefront."
@@ -691,7 +775,7 @@ export default function CreateProduct() {
     onClose={() => setIsDraftConfirmOpen(false)}
     onConfirm={() => {
      setIsDraftConfirmOpen(false);
-     setIsDraftSuccessOpen(true);
+     handleSubmit("Draft");
     }}
     title="Save as Draft"
     message="Are you sure you want to save this product as a draft? It will be stored in your catalog but hidden from the storefront."

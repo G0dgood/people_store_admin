@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { AdminSidebar } from "../components/Admin/AdminSidebar";
 import { AdminHeader } from "../components/Admin/AdminHeader";
 import { UserProvider } from "../context/UserContext";
+import { PrivilegeProvider } from "@/lib/contexts/PrivilegeContext";
 import { usePathname } from "next/navigation";
 
 export default function AdminLayout({
@@ -22,20 +23,22 @@ export default function AdminLayout({
 
   return (
     <UserProvider>
-      <div className="admin-theme min-h-screen transition-colors duration-500">
-        <div id="page-wrapper" className={`overflow-x-hidden ${mobileMenuOpen ? "mobile-nav-open" : ""}`}>
-          <AdminHeader onOpenMenu={() => setMobileMenuOpen((prev) => !prev)}
-            isOpen={mobileMenuOpen}
-          />
-          <AdminSidebar
-            isOpen={mobileMenuOpen}
-            onClose={() => setMobileMenuOpen(false)}
-          />
-          <main>
-            {children}
-          </main>
+      <PrivilegeProvider>
+        <div className="admin-theme min-h-screen transition-colors duration-500">
+          <div id="page-wrapper" className={`overflow-x-hidden ${mobileMenuOpen ? "mobile-nav-open" : ""}`}>
+            <AdminHeader onOpenMenu={() => setMobileMenuOpen((prev) => !prev)}
+              isOpen={mobileMenuOpen}
+            />
+            <AdminSidebar
+              isOpen={mobileMenuOpen}
+              onClose={() => setMobileMenuOpen(false)}
+            />
+            <main>
+              {children}
+            </main>
+          </div>
         </div>
-      </div>
+      </PrivilegeProvider>
     </UserProvider>
   );
 }

@@ -16,9 +16,11 @@ interface UploadMediaModalProps {
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "video/mp4"];
 
+import { useUploadMediaMutation } from "@/lib/redux/services/mediaApi";
+
 export function UploadMediaModal({ isOpen, onClose, onUploadSuccess }: UploadMediaModalProps) {
+  const [uploadMedia, { isLoading: isUploading }] = useUploadMediaMutation();
   const [stagedFiles, setStagedFiles] = useState<File[]>([]);
-  const [isUploading, setIsUploading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -64,21 +66,26 @@ export function UploadMediaModal({ isOpen, onClose, onUploadSuccess }: UploadMed
     setStagedFiles(prev => prev.filter((_, i) => i !== index));
   };
 
-  const handleUpload = () => {
+  const handleUpload = async () => {
     if (stagedFiles.length === 0) {
       toast.error("Please select at least one file to upload.");
       return;
     }
 
-    setIsUploading(true);
-    // Simulate upload
-    setTimeout(() => {
-      onUploadSuccess?.(stagedFiles);
+    const formData = new FormData();
+    stagedFiles.forEach((file) => {
+      formData.append("files", file);
+    });
+
+    try {
+      await uploadMedia(formData).unwrap();
       toast.success("Assets uploaded successfully!");
-      setIsUploading(false);
       setStagedFiles([]);
       onClose();
-    }, 1500);
+    } catch (err: any) {
+      console.error("UPLOAD ERROR:", err);
+      toast.error(err?.data?.message || "Failed to upload assets. Please try again.");
+    }
   };
 
   return (
@@ -162,12 +169,14 @@ export function UploadMediaModal({ isOpen, onClose, onUploadSuccess }: UploadMed
 
       <ModalFooter className="flex justify-end gap-3 border-t border-gray-50 pt-8 mt-4">
         <Button
+          shape="rounded-sm"
           variant="outline"
           onClick={onClose}
         >
           Cancel
         </Button>
         <Button
+          shape="rounded-sm"
           variant="primary"
           onClick={handleUpload}
           disabled={isUploading || stagedFiles.length === 0}

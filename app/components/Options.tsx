@@ -22,14 +22,14 @@ const industryOptions = [
 
 
 // NoRecordFound
-const NoRecordFound = ({ colSpan, asTable = true }: { colSpan?: number; asTable?: boolean }) => {
+const NoRecordFound = ({ colSpan, text = "No record found", asTable = true }: { colSpan?: number; text?: string; asTable?: boolean }) => {
 	const content = (
 		<div className="center-content flex flex-col justify-center items-center h-full">
 			<RxFace className="w-16 h-16" color={'var(--text-primary)'} />
 			<p
 				id="mt-3 !underline-none"
 				style={{ color: 'var(--text-primary)' }}>
-				No record found
+				{text}
 			</p>
 		</div>
 	);

@@ -10,6 +10,10 @@ import { Icon } from "../Icon";
 import Checkbox from "../Checkbox";
 import { motion, AnimatePresence } from "framer-motion";
 
+import { useCreateCategoryMutation } from "@/lib/redux/services/categoryApi";
+import { toast } from "sonner";
+import { MediaSelectionModal } from "./MediaSelectionModal";
+
 interface AddCategoryModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -20,6 +24,8 @@ const ML_OPTIONS = ["50ml", "100ml", "250ml", "500ml", "750ml", "1L"];
 const SEX_OPTIONS = ["Male", "Female", "Kids", "Unisex"];
 
 export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
+  const [createCategory, { isLoading }] = useCreateCategoryMutation();
+  const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     image: "",
@@ -41,22 +47,27 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Creating new category:", formData);
-    // Reset form
-    setFormData({
-      name: "",
-      image: "",
-      description: "",
-      hasSize: false,
-      hasML: false,
-      hasSex: false,
-      selectedSizes: [],
-      selectedMLs: [],
-      selectedSexes: [],
-    });
-    onClose();
+    try {
+      await createCategory(formData).unwrap();
+      toast.success("Category created successfully");
+      // Reset form
+      setFormData({
+        name: "",
+        image: "",
+        description: "",
+        hasSize: false,
+        hasML: false,
+        hasSex: false,
+        selectedSizes: [],
+        selectedMLs: [],
+        selectedSexes: [],
+      });
+      onClose();
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Failed to create category");
+    }
   };
 
   return (
@@ -66,7 +77,7 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
           <div className="flex flex-col gap-2">
             <label className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Category Name</label>
             <Input
-              placeholder="e.g. Electronics, Fashion, etc."
+              placeholder="e.g. Perfume Brand"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               className="h-12 border-gray-200 font-bold"
@@ -90,7 +101,8 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
                 type="button"
                 variant="outline"
                 shape="rounded-sm"
-                className="w-12 h-12 p-0 flex-shrink-0"
+                className="w-12 h-12 p-0 flex-shrink-0 hover:bg-brand-gold hover:text-white hover:border-brand-gold transition-all"
+                onClick={() => setIsMediaModalOpen(true)}
               >
                 <Icon name="photo" folder="icon" size="sm" />
               </Button>
@@ -111,7 +123,7 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
 
           <div className="flex flex-col gap-6 p-4 bg-gray-50/50 rounded-[6px] border border-gray-100">
             <label className="text-[9px] sm:text-[10px] font-black text-brand-gold uppercase tracking-[0.15em]">Enabled Product Attributes</label>
-            
+
             <div className="flex flex-col gap-6">
               {/* Size Attribute */}
               <div className="flex flex-col gap-4">
@@ -237,11 +249,18 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
             variant="primary"
             type="submit"
             shape="rounded-sm"
+            disabled={isLoading}
           >
-            Create Category
+            {isLoading ? "Creating..." : "Create Category"}
           </Button>
         </ModalFooter>
       </form>
+
+      <MediaSelectionModal 
+        isOpen={isMediaModalOpen}
+        onClose={() => setIsMediaModalOpen(false)}
+        onSelect={(url) => setFormData({ ...formData, image: url })}
+      />
     </Modal>
   );
 }

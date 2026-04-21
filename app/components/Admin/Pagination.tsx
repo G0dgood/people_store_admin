@@ -16,9 +16,48 @@ export const Pagination: React.FC<PaginationProps> = ({
   onPageChange,
   className = "",
 }) => {
-  // Generate page numbers to display
-  // For now, mirroring the [1, 2, 3, 4, 5, "...", total] pattern from the designs
-  const pages = [1, 2, 3, 4, 5, "...", totalPages];
+  // Generate page numbers dynamically to avoid showing non-existent pages
+  const getPageNumbers = () => {
+    const pages: (number | string)[] = [];
+    const maxVisible = 7;
+
+    if (totalPages <= maxVisible) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      // Always show first page
+      pages.push(1);
+
+      if (currentPage > 3) {
+        pages.push("...");
+      }
+
+      // Show neighbors of current page
+      const start = Math.max(2, currentPage - 1);
+      const end = Math.min(totalPages - 1, currentPage + 1);
+
+      for (let i = start; i <= end; i++) {
+        if (!pages.includes(i)) {
+          pages.push(i);
+        }
+      }
+
+      if (currentPage < totalPages - 2) {
+        if (!pages.includes("...")) {
+          pages.push("...");
+        }
+      }
+
+      // Always show last page
+      if (!pages.includes(totalPages)) {
+        pages.push(totalPages);
+      }
+    }
+    return pages;
+  };
+
+  const pages = getPageNumbers();
 
   return (
     <div className={`admin-pagination-footer !p-4 sm:!p-8 flex-col sm:flex-row gap-4 sm:gap-0 ${className}`}>

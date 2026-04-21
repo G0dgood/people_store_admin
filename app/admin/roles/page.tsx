@@ -17,7 +17,7 @@ import { BulkActionsDrawer } from "../../components/Admin/BulkActionsDrawer";
 import { motion, AnimatePresence } from "framer-motion";
 import { Select } from "@/app/components/Form";
 import Dropdown from "@/app/components/Form/Dropdown";
-import { HiUsers, HiPencil } from "react-icons/hi2";
+import { HiUsers, HiPencil, HiArrowPath } from "react-icons/hi2";
 import { NoRecordFound, SVGLoaderFetch } from "@/app/components/Options";
 import { useGetRolesQuery, useDeleteRoleMutation, Role } from "@/lib/redux/services/roleApi";
 import { toast } from "sonner";
@@ -36,7 +36,7 @@ export default function RolesManagement() {
   const [isSyncConfirmOpen, setIsSyncConfirmOpen] = useState(false);
 
   // RTK Query hooks
-  const { data: roles = [], isLoading, refetch } = useGetRolesQuery();
+  const { data: roles = [], isLoading, refetch, isFetching } = useGetRolesQuery();
   const [deleteRole, { isLoading: isDeleting }] = useDeleteRoleMutation();
 
   const toggleAll = () => {
@@ -75,12 +75,12 @@ export default function RolesManagement() {
       {/* Action Bar */}
       <div className="flex justify-end items-center gap-3">
         <Button shape="rounded-sm" variant="outline" 
-          className="border-gray-200 text-gray-500"
-          iconLeft={<Icon name="refresh" folder="dashboardIcon" size="sm" />}
+          className="border-gray-200 text-gray-500 group"
+          iconLeft={<HiArrowPath size={16} className={`${isFetching ? 'animate-spin text-brand-gold' : 'text-gray-400 group-hover:text-white'} transition-colors`} />}
           onClick={() => refetch()}
-          disabled={isLoading}
+          disabled={isLoading || isFetching}
         >
-          Refresh List
+          {isFetching ? "Refreshing..." : "Refresh List"}
         </Button>
         <Button shape="rounded-sm" variant="primary"
           className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold"

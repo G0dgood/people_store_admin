@@ -10,26 +10,26 @@ import ModalBody from "../../components/Modal/ModalBody";
 import ModalFooter from "../../components/Modal/ModalFooter";
 import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import { SecurityHelpDrawer } from "../../components/Admin/SecurityHelpDrawer";
-import { HiLockClosed, HiKey, HiShieldCheck, HiEye, HiEyeSlash, HiCalendarDays, HiUser } from "react-icons/hi2";
+import { HiLockClosed, HiKey, HiShieldCheck, HiEye, HiEyeSlash } from "react-icons/hi2";
 import { useAppSelector, useAppDispatch } from "@/lib/redux/hooks";
 import { selectCurrentUser, updateUser } from "@/lib/redux/features/authSlice";
 import { useGetCurrentUserQuery, useUpdateAccountMutation, useUpdateAvatarMutation, useChangePasswordMutation } from "@/lib/redux/services/authApi";
 import { toast } from "sonner";
+import { ProfileSkeleton } from "../../components/Skeleton/ProfileSkeleton";
 
 export default function ProfilePage() {
  const dispatch = useAppDispatch();
  const user = useAppSelector(selectCurrentUser);
 
- // Get the refetch function to ensure we can force a refresh immediately
- const { refetch } = useGetCurrentUserQuery(undefined);
+ // Get the loading states to show the skeleton
+ const { refetch, isLoading } = useGetCurrentUserQuery(undefined);
 
  const [updateAccount, { isLoading: isUpdatingAccount }] = useUpdateAccountMutation();
  const [updateAvatar, { isLoading: isUpdatingAvatar }] = useUpdateAvatarMutation();
  const [changePassword, { isLoading: isChangingPassword }] = useChangePasswordMutation();
 
  const [formData, setFormData] = useState({
-  firstName: "",
-  lastName: "",
+  fullName: "",
   email: "",
   phoneNumber: "",
   location: "",
@@ -47,8 +47,7 @@ export default function ProfilePage() {
  React.useEffect(() => {
   if (user) {
    setFormData({
-    firstName: user.firstName || "",
-    lastName: user.lastName || "",
+    fullName: user.fullName || "",
     email: user.email || "",
     phoneNumber: user.phoneNumber || "",
     location: user.location || "",
@@ -66,6 +65,10 @@ export default function ProfilePage() {
  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
  const [isEditMode, setIsEditMode] = useState(false);
  const [isHelpDrawerOpen, setIsHelpDrawerOpen] = useState(false);
+
+ if (isLoading) {
+  return <ProfileSkeleton />;
+ }
 
  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   const { name, value } = e.target;
@@ -156,9 +159,6 @@ export default function ProfilePage() {
 
  return (
   <div className="flex flex-col gap-8 max-w-[1600px] mx-auto pb-12">
-   {/* Page Title */}
-   {/* <h1 className="text-xl font-bold text-[#1D3557]">About section</h1> */}
-
    <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
     {/* Left Column (33%) */}
     <div className="xl:col-span-4 flex flex-col gap-6">
@@ -300,7 +300,7 @@ export default function ProfilePage() {
        </div>
 
        <Button shape="rounded-sm" variant="primary"
-        className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold w-full h-12 mt-2 shadow-lg shadow-brand-gold/10 text-[11px] font-black uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all"
+        className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold w-full h-12 mt-2 shadow-lg shadow-brand-gold/10 text-[11px] font-black uppercase tracking-widest hover:scale-[1.02] active:scale-95 shadow-sm"
         disabled={isChangingPassword}
         onClick={handleChangePassword}
        >
@@ -372,23 +372,12 @@ export default function ProfilePage() {
 
       {/* Update Form */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-       <div className="flex flex-col gap-2">
-        <label className="text-xs font-bold text-[#1D3557]">First Name</label>
+       <div className="md:col-span-2 flex flex-col gap-2">
+        <label className="text-xs font-bold text-[#1D3557]">Full Name</label>
         <Input shape="rounded-sm"
          type="text"
-         name="firstName"
-         value={formData.firstName}
-         onChange={handleInputChange}
-         readOnly={!isEditMode}
-         className={`${!isEditMode ? "bg-gray-50/50" : "bg-white"} border-gray-50 text-xs font-bold text-gray-900 transition-colors`}
-        />
-       </div>
-       <div className="flex flex-col gap-2">
-        <label className="text-xs font-bold text-[#1D3557]">Last Name</label>
-        <Input shape="rounded-sm"
-         type="text"
-         name="lastName"
-         value={formData.lastName}
+         name="fullName"
+         value={formData.fullName}
          onChange={handleInputChange}
          readOnly={!isEditMode}
          className={`${!isEditMode ? "bg-gray-50/50" : "bg-white"} border-gray-50 text-xs font-bold text-gray-900 transition-colors`}
@@ -431,7 +420,7 @@ export default function ProfilePage() {
         />
        </div>
 
-       <div className="md:col-span-2 flex flex-col gap-2">
+       <div className="md:col-span-1 flex flex-col gap-2">
         <label className="text-xs font-bold text-[#1D3557]">Location</label>
         <Input shape="rounded-sm"
          type="text"

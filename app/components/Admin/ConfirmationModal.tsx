@@ -14,6 +14,7 @@ interface ConfirmationModalProps {
   confirmText?: string;
   cancelText?: string;
   type?: "danger" | "warning" | "success" | "info";
+  isLoading?: boolean;
 }
 
 export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
@@ -25,6 +26,7 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   confirmText = "Confirm",
   cancelText = "Cancel",
   type = "danger",
+  isLoading = false,
 }) => {
   const typeConfig = {
     danger: {
@@ -90,10 +92,8 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
           <Button
             shape="rounded-sm"
             className={`flex-1 h-10 sm:h-12 font-black text-white border-transparent shadow-lg ${config.shadow} transition-all active:scale-95 ${config.buttonBg}`}
-            onClick={() => {
-              onConfirm();
-              onClose();
-            }}
+            onClick={onConfirm}
+            isLoading={isLoading}
           >
             {confirmText}
           </Button>

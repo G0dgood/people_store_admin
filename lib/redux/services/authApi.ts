@@ -15,7 +15,21 @@ export const authApi = baseApi.injectEndpoints({
         method: 'POST',
       }),
     }),
-    getCurrentUser: builder.query({
+    getUsers: builder.query<{ users: any[], pagination: any }, { page?: number, limit?: number }>({
+      query: ({ page = 1, limit = 10 } = {}) => ({
+        url: `/v1/users?page=${page}&limit=${limit}`,
+        method: 'GET',
+      }),
+      transformResponse: (response: any) => response.data,
+      providesTags: (result) =>
+        result?.users
+          ? [
+              ...result.users.map(({ _id }: any) => ({ type: 'User' as const, id: _id })),
+              { type: 'User', id: 'LIST' },
+            ]
+          : [{ type: 'User', id: 'LIST' }],
+    }),
+    getCurrentUser: builder.query<any, void>({
       query: () => ({
         url: '/v1/users/current-user',
         method: 'GET',
@@ -49,14 +63,44 @@ export const authApi = baseApi.injectEndpoints({
         body: passwords,
       }),
     }),
+    onboardUser: builder.mutation({
+      query: (userData) => ({
+        url: '/v1/users/onboard',
+        method: 'POST',
+        body: userData,
+      }),
+      invalidatesTags: [{ type: 'User', id: 'LIST' }],
+    }),
+    updateStaff: builder.mutation({
+      query: ({ userId, data }) => ({
+        url: `/v1/users/${userId}`,
+        method: 'PATCH',
+        body: data,
+      }),
+      invalidatesTags: (result, error, { userId }) => [
+        { type: 'User', id: userId },
+        { type: 'User', id: 'LIST' }
+      ],
+    }),
+    deleteStaff: builder.mutation({
+      query: (userId) => ({
+        url: `/v1/users/${userId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: [{ type: 'User', id: 'LIST' }],
+    }),
   }),
 });
 
 export const { 
   useLoginMutation, 
   useLogoutMutation, 
+  useGetUsersQuery,
   useGetCurrentUserQuery,
   useUpdateAccountMutation,
   useUpdateAvatarMutation,
-  useChangePasswordMutation
+  useChangePasswordMutation,
+  useOnboardUserMutation,
+  useUpdateStaffMutation,
+  useDeleteStaffMutation
 } = authApi;

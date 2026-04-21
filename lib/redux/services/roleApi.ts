@@ -11,6 +11,25 @@ export interface Role {
   updatedAt: string;
 }
 
+export interface RoleModulePermission {
+  id: string; // moduleId/slug
+  moduleName: string;
+  access: boolean;
+  permissions: {
+    view: boolean;
+    edit: boolean;
+    delete: boolean;
+    create: boolean;
+  };
+}
+
+export interface UserRole {
+  roleName: string;
+  permissions: RoleModulePermission[];
+  id?: string;
+  description?: string;
+}
+
 interface ApiResponse<T> {
   statusCode: number;
   data: T;
@@ -52,10 +71,15 @@ export const roleApi = baseApi.injectEndpoints({
     }),
     deleteRole: builder.mutation<void, string>({
       query: (roleId) => ({
-        url: `/v1/roles/${roleId}`, // No comma here, just string interpolation
+        url: `/v1/roles/${roleId}`,
         method: "DELETE",
       }),
       invalidatesTags: [{ type: "Role", id: "LIST" }],
+    }),
+    getRolePrivileges: builder.query<UserRole, string>({
+      query: (roleId) => `/v1/roles/${roleId}/privileges`,
+      transformResponse: (response: ApiResponse<UserRole>) => response.data,
+      providesTags: (result, error, roleId) => [{ type: "Role", id: roleId }],
     }),
   }),
   overrideExisting: false,
@@ -66,4 +90,5 @@ export const {
   useCreateRoleMutation,
   useUpdateRoleMutation,
   useDeleteRoleMutation,
+  useGetRolePrivilegesQuery,
 } = roleApi;

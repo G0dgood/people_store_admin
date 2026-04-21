@@ -6,6 +6,8 @@ import { Button } from "../Button";
 import { Icon } from "../Icon";
 import Checkbox from "@/app/components/Checkbox";
 import { Role, useUpdateRoleMutation } from "@/lib/redux/services/roleApi";
+import { useGetModulesQuery, Module } from "@/lib/redux/services/moduleApi";
+import { SVGLoaderFetch } from "@/app/components/Options";
 import { toast } from "sonner";
 
 interface EditRoleDrawerProps {
@@ -13,15 +15,6 @@ interface EditRoleDrawerProps {
   onClose: () => void;
   role: Role | null;
 }
-
-const modules = [
-  { id: "products", label: "Products & Inventory" },
-  { id: "orders", label: "Orders & Shipping" },
-  { id: "customers", label: "Customer Management" },
-  { id: "reviews", label: "Reviews & Feedback" },
-  { id: "transactions", label: "Financial Data" },
-  { id: "settings", label: "System Settings" },
-];
 
 const accessTypes = [
   { id: "view", label: "View" },
@@ -31,42 +24,41 @@ const accessTypes = [
 ];
 
 export function EditRoleDrawer({ isOpen, onClose, role }: EditRoleDrawerProps) {
+  const { data: modules = [], isLoading: isLoadingModules } = useGetModulesQuery();
   const [updateRole, { isLoading }] = useUpdateRoleMutation();
-  // permissionState[moduleId][accessTypeId] = boolean
+  // permissionState[moduleSlug][accessTypeId] = boolean
   const [permissionState, setPermissionState] = useState<Record<string, Record<string, boolean>>>({});
 
   useEffect(() => {
-    if (role) {
+    if (role && modules.length > 0) {
       const initial: Record<string, Record<string, boolean>> = {};
       const currentPermissions = new Set(role.permissions || []);
 
       modules.forEach(m => {
-        initial[m.id] = {};
+        initial[m.slug] = {};
         accessTypes.forEach(a => {
-           // If permission exists in backend, check it. 
-           // Format assumed: "module_access" e.g. "products_view"
-           initial[m.id][a.id] = currentPermissions.has(`${m.id}_${a.id}`);
+           initial[m.slug][a.id] = currentPermissions.has(`${m.slug}_${a.id}`);
         });
       });
       setPermissionState(initial);
     }
-  }, [role, isOpen]);
+  }, [role, modules, isOpen]);
 
-  const togglePermission = (moduleId: string, accessId: string) => {
+  const togglePermission = (moduleSlug: string, accessId: string) => {
     setPermissionState(prev => ({
       ...prev,
-      [moduleId]: {
-        ...prev[moduleId],
-        [accessId]: !prev[moduleId][accessId]
+      [moduleSlug]: {
+        ...prev[moduleSlug],
+        [accessId]: !prev[moduleSlug][accessId]
       }
     }));
   };
 
-  const toggleRow = (moduleId: string) => {
-    const allOn = accessTypes.every(a => permissionState[moduleId]?.[a.id]);
+  const toggleRow = (moduleSlug: string) => {
+    const allOn = accessTypes.every(a => permissionState[moduleSlug]?.[a.id]);
     setPermissionState(prev => ({
       ...prev,
-      [moduleId]: accessTypes.reduce((acc, a) => ({ ...acc, [a.id]: !allOn }), {})
+      [moduleSlug]: accessTypes.reduce((acc, a) => ({ ...acc, [a.id]: !allOn }), {})
     }));
   };
 
@@ -76,10 +68,10 @@ export function EditRoleDrawer({ isOpen, onClose, role }: EditRoleDrawerProps) {
 
     // Flatten selected permissions into an array
     const permissions: string[] = [];
-    Object.entries(permissionState).forEach(([moduleId, actions]) => {
+    Object.entries(permissionState).forEach(([moduleSlug, actions]) => {
       Object.entries(actions).forEach(([actionId, isAllowed]) => {
         if (isAllowed) {
-          permissions.push(`${moduleId}_${actionId}`);
+          permissions.push(`${moduleSlug}_${actionId}`);
         }
       });
     });
@@ -104,7 +96,7 @@ export function EditRoleDrawer({ isOpen, onClose, role }: EditRoleDrawerProps) {
   if (!role) return null;
 
   return (
-    <Drawer isOpen={isOpen} onClose={onClose} title="Administrative Access Matrix">
+    <Drawer isOpen={isOpen} onClose={onClose} title="Administrative Access Matrix" width="max-w-2xl">
       <form onSubmit={handleSubmit} className="flex flex-col h-full gap-8">
         <div className="flex flex-col gap-8">
           {/* Header Card */}
@@ -128,35 +120,42 @@ export function EditRoleDrawer({ isOpen, onClose, role }: EditRoleDrawerProps) {
             </div>
 
             <div className="flex flex-col gap-2">
-              {modules.map((module) => (
-                <div 
-                  key={module.id} 
-                  className="grid grid-cols-12 gap-2 items-center p-3 sm:p-4 bg-white border border-gray-200 rounded-2xl hover:border-brand-gold/20 hover:shadow-md transition-all group"
-                >
-                  <div className="col-span-5 flex flex-col gap-0.5">
-                    <span className="text-[13px] font-black text-[#1D3557] group-hover:text-brand-gold transition-colors">{module.label}</span>
-                  </div>
-                  
-                  {accessTypes.map(a => (
-                    <div key={a.id} className="col-span-1.5 flex justify-center">
-                       <Checkbox 
-                         checked={permissionState[module.id]?.[a.id] || false}
-                         onChange={() => togglePermission(module.id, a.id)}
-                       />
-                    </div>
-                  ))}
-
-                  <div className="col-span-1 flex justify-end">
-                     <button 
-                       type="button" 
-                       onClick={() => toggleRow(module.id)}
-                       className="w-6 h-6 rounded-sm bg-gray-50 flex items-center justify-center text-gray-300 hover:bg-brand-gold/10 hover:text-brand-gold transition-all"
-                     >
-                        <Icon name="verified" folder="icon" size="xs" />
-                     </button>
-                  </div>
+              {isLoadingModules ? (
+                <div className="py-20 flex justify-center items-center">
+                  <SVGLoaderFetch colSpan={1} text="Loading system sectors..." asTable={false} />
                 </div>
-              ))}
+              ) : (
+                modules.map((module) => (
+                  <div 
+                    key={module._id} 
+                    className="grid grid-cols-12 gap-2 items-center p-3 sm:p-4 bg-white border border-gray-200 rounded-2xl hover:border-brand-gold/20 hover:shadow-md transition-all group"
+                  >
+                    <div className="col-span-5 flex flex-col gap-0.5">
+                      <span className="text-[13px] font-black text-[#1D3557] group-hover:text-brand-gold transition-colors">{module.label}</span>
+                      <span className="text-[9px] font-bold text-gray-300 uppercase tracking-widest">{module.category} Sector</span>
+                    </div>
+                    
+                    {accessTypes.map(a => (
+                      <div key={a.id} className="col-span-1.5 flex justify-center">
+                         <Checkbox 
+                           checked={permissionState[module.slug]?.[a.id] || false}
+                           onChange={() => togglePermission(module.slug, a.id)}
+                         />
+                      </div>
+                    ))}
+
+                    <div className="col-span-1 flex justify-end">
+                       <button 
+                         type="button" 
+                         onClick={() => toggleRow(module.slug)}
+                         className="w-6 h-6 rounded-sm bg-gray-50 flex items-center justify-center text-gray-300 hover:bg-brand-gold/10 hover:text-brand-gold transition-all"
+                       >
+                          <Icon name="verified" folder="icon" size="xs" />
+                       </button>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
 
@@ -179,7 +178,7 @@ export function EditRoleDrawer({ isOpen, onClose, role }: EditRoleDrawerProps) {
             shape="rounded-sm"
             variant="primary" 
             type="submit"
-            disabled={isLoading}
+            disabled={isLoading || isLoadingModules}
             className="w-full h-12 text-[11px] font-black uppercase tracking-widest shadow-xl shadow-brand-gold/10 transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold animate-pulse-subtle"
           >
             {isLoading ? "Synchronizing..." : "Deploy Governance Update"}

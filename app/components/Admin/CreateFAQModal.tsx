@@ -7,10 +7,15 @@ import { Input, Textarea } from "../Form/Inputs";
 import { Select } from "../Form/Select";
 import { HiOutlineQuestionMarkCircle } from "react-icons/hi2";
 
+import {
+  useCreateFaqMutation,
+  useUpdateFaqMutation,
+} from "@/lib/redux/services/faqApi";
+import { toast } from "sonner";
+
 interface CreateFAQModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (faq: any) => void;
   initialData?: any;
 }
 
@@ -24,9 +29,11 @@ const CATEGORIES = [
 export function CreateFAQModal({
   isOpen,
   onClose,
-  onSave,
   initialData,
 }: CreateFAQModalProps) {
+  const [createFaq, { isLoading: isCreating }] = useCreateFaqMutation();
+  const [updateFaq, { isLoading: isUpdating }] = useUpdateFaqMutation();
+
   const [formData, setFormData] = useState({
     category: CATEGORIES[0],
     question: "",
@@ -54,15 +61,23 @@ export function CreateFAQModal({
     }
   }, [initialData, isOpen]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSave({
-      ...formData,
-      id: initialData?.id || Date.now(),
-      status: "Active",
-      lastUpdated: new Date().toLocaleDateString(),
-    });
-    onClose();
+    try {
+      if (initialData) {
+        await updateFaq({
+          faqId: initialData._id,
+          body: formData,
+        }).unwrap();
+        toast.success("FAQ updated successfully");
+      } else {
+        await createFaq(formData).unwrap();
+        toast.success("FAQ created successfully");
+      }
+      onClose();
+    } catch (error) {
+      toast.error(initialData ? "Failed to update FAQ" : "Failed to create FAQ");
+    }
   };
 
   return (
@@ -125,6 +140,7 @@ export function CreateFAQModal({
             type="submit"
             variant="primary"
             className="transition-all duration-300 hover:bg-brand-gold hover:text-white"
+            isLoading={initialData ? isUpdating : isCreating}
           >
             {initialData ? "Update FAQ" : "Publish FAQ"}
           </Button>

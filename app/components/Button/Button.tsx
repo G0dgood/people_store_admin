@@ -1,6 +1,7 @@
-import React from "react";
-import { Icon } from "../Icon";
+import React, { forwardRef } from "react";
+import { SVGLoader } from "../SVGLoader";
 import { motion } from "framer-motion";
+import { Icon } from "../Icon";
 
 type ButtonVariant = "primary" | "secondary" | "emerald" | "rose" | "outline" | "ghost";
 type ButtonSize = "sm" | "md" | "lg";
@@ -76,11 +77,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       >
         {isLoading && (
-          <motion.span
-            animate={{ rotate: 360 }}
-            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-            className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full mr-2"
-          />
+          <div className="flex items-center justify-center mr-2">
+            <SVGLoader width={16} height={16} color="currentColor" />
+          </div>
         )}
         {!isLoading && iconLeft && (
           <span className="flex justify-center items-center shrink-0">

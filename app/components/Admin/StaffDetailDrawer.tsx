@@ -1,9 +1,12 @@
 "use client";
 
 import React from "react";
+import moment from "moment";
+import { FiShoppingCart, FiUsers, FiCreditCard } from "react-icons/fi";
+import { MdOutlineInventory2 } from "react-icons/md";
 import Drawer from "../Drawer/Drawer";
-import { Icon } from "../Icon";
 import { Button } from "../Button";
+import { Avatar } from "../Other/Avatar";
 
 interface StaffDetailDrawerProps {
  isOpen: boolean;
@@ -15,10 +18,10 @@ export function StaffDetailDrawer({ isOpen, onClose, staff }: StaffDetailDrawerP
  if (!staff) return null;
 
  const permissions = [
-  { label: "Orders Management", status: "Full Access", icon: "Cart" },
-  { label: "Product Inventory", status: "Edit Only", icon: "inventory_2" },
-  { label: "Customer Data", status: "View Only", icon: "person" },
-  { label: "Financials", status: "Restricted", icon: "payments" },
+  { label: "Orders Management", status: "Full Access", icon: <FiShoppingCart size={14} /> },
+  { label: "Product Inventory", status: "Edit Only", icon: <MdOutlineInventory2 size={14} /> },
+  { label: "Customer Data", status: "View Only", icon: <FiUsers size={14} /> },
+  { label: "Financials", status: "Restricted", icon: <FiCreditCard size={14} /> },
  ];
 
  const recentActivity = [
@@ -34,12 +37,15 @@ export function StaffDetailDrawer({ isOpen, onClose, staff }: StaffDetailDrawerP
     <div className="bg-white rounded-2xl border border-gray-200 p-6 flex flex-col items-center text-center gap-4 relative overflow-hidden group shadow-sm">
      <div className="absolute top-0 inset-x-0 h-20 bg-[#1D3557] opacity-[0.03] group-hover:opacity-[0.05] transition-opacity duration-500" />
 
-     <div className="w-24 h-24 rounded-full border-4 border-white shadow-xl overflow-hidden relative z-10 -mt-2 group-hover:scale-105 transition-transform duration-500">
-      <img src={staff.avatar} alt={staff.name} className="w-full h-full object-cover" />
-     </div>
+     <Avatar
+      src={staff.avatar}
+      name={staff.fullName}
+      size="xl"
+      className="border-4 border-white shadow-xl relative z-10 -mt-2 group-hover:scale-105 transition-transform duration-500"
+     />
 
      <div className="flex flex-col gap-1 relative z-10">
-      <h3 className="text-xl font-black text-[#1D3557] tracking-tight">{staff.name}</h3>
+      <h3 className="text-xl font-black text-[#1D3557] tracking-tight">{staff.fullName}</h3>
       <p className="text-xs font-bold text-gray-400 truncate max-w-[200px]">{staff.email}</p>
      </div>
 
@@ -47,9 +53,20 @@ export function StaffDetailDrawer({ isOpen, onClose, staff }: StaffDetailDrawerP
       <span className="px-3 py-1 bg-gray-100 rounded-[6px] text-[10px] font-black uppercase tracking-widest text-gray-500">
        {staff.role}
       </span>
-      <span className={`px-3 py-1 rounded-[6px] text-[10px] font-black uppercase tracking-widest ${staff.status === 'Active' ? 'bg-emerald-50 text-emerald-500' : 'bg-rose-50 text-rose-500'}`}>
-       {staff.status}
-      </span>
+      {(() => {
+        const statuses: Record<string, string> = {
+          Active: "bg-emerald-50 text-emerald-500 border-emerald-100/50",
+          Inactive: "bg-rose-50 text-rose-500 border-rose-100",
+          Pending: "bg-amber-50 text-amber-600 border-amber-100",
+          Suspended: "bg-rose-50 text-rose-500 border-rose-100",
+        };
+        const statusStyle = statuses[staff.status] || statuses.Inactive;
+        return (
+          <span className={`px-3 py-1 rounded-[6px] text-[10px] font-black uppercase tracking-widest border ${statusStyle}`}>
+            {staff.status || "Inactive"}
+          </span>
+        );
+      })()}
      </div>
     </div>
 
@@ -57,11 +74,11 @@ export function StaffDetailDrawer({ isOpen, onClose, staff }: StaffDetailDrawerP
     <div className="grid grid-cols-2 gap-4">
      <div className="p-4 rounded-2xl bg-gray-50/50 border border-gray-200 flex flex-col gap-1">
       <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Department</span>
-      <span className="text-sm font-black text-[#1D3557]">{staff.department}</span>
+      <span className="text-sm font-black text-[#1D3557]">{staff.department || "General"}</span>
      </div>
      <div className="p-4 rounded-2xl bg-gray-50/50 border border-gray-200 flex flex-col gap-1">
       <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Employee ID</span>
-      <span className="text-sm font-black text-[#1D3557]">STF-{staff.id?.toString().padStart(4, '0')}</span>
+      <span className="text-sm font-black text-[#1D3557]">STF-{staff.id?.toString().substr(-4).toUpperCase() || staff._id?.toString().substr(-4).toUpperCase()}</span>
      </div>
     </div>
 
@@ -69,11 +86,13 @@ export function StaffDetailDrawer({ isOpen, onClose, staff }: StaffDetailDrawerP
     <div className="grid grid-cols-2 gap-4">
      <div className="p-4 rounded-2xl bg-gray-50/50 border border-gray-200 flex flex-col gap-1">
       <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Gender</span>
-      <span className="text-sm font-black text-[#1D3557]">{staff.gender || "Not Specified"}</span>
+      <span className="text-sm font-black text-[#1D3557]">{staff.gender || "Other"}</span>
      </div>
      <div className="p-4 rounded-2xl bg-gray-50/50 border border-gray-200 flex flex-col gap-1">
       <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Date of Birth</span>
-      <span className="text-sm font-black text-[#1D3557]">{staff.dob || "Not Specified"}</span>
+      <span className="text-sm font-black text-[#1D3557]">
+       {staff.dob ? moment(staff.dob).format('MMM DD, YYYY') : "Not Specified"}
+      </span>
      </div>
     </div>
 
@@ -88,11 +107,24 @@ export function StaffDetailDrawer({ isOpen, onClose, staff }: StaffDetailDrawerP
        <div key={i} className="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-2xl hover:border-brand-gold/20 hover:shadow-md transition-all group">
         <div className="flex items-center gap-3">
          <div className="w-9 h-9 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-brand-gold/10 group-hover:text-brand-gold transition-colors">
-          <Icon name={perm.icon} folder={perm.icon === 'Cart' ? 'dashboardIcon' : 'icon'} size="xs" />
+          {perm.icon}
          </div>
          <span className="text-[13px] font-bold text-[#1D3557]">{perm.label}</span>
         </div>
-        <span className="text-[10px] font-black text-gray-400 uppercase bg-gray-50 px-2 py-1 rounded">{perm.status}</span>
+        {(() => {
+          const statusColors: Record<string, string> = {
+            "Full Access": "bg-emerald-50 text-emerald-500",
+            "Edit Only": "bg-amber-50 text-amber-600",
+            "View Only": "bg-blue-50 text-blue-500",
+            "Restricted": "bg-rose-50 text-rose-500",
+          };
+          const colorClass = statusColors[perm.status] || "bg-gray-50 text-gray-400";
+          return (
+            <span className={`text-[10px] font-black uppercase px-3 py-1 rounded ${colorClass}`}>
+              {perm.status}
+            </span>
+          );
+        })()}
        </div>
       ))}
      </div>
@@ -108,7 +140,7 @@ export function StaffDetailDrawer({ isOpen, onClose, staff }: StaffDetailDrawerP
          <div className="absolute left-[7px] top-4 bottom-[-20px] w-[2px] bg-gray-100" />
         )}
         <div className="w-[16px] h-[16px] rounded-full bg-white border-2 border-brand-gold shadow-sm mt-1 z-10 shrink-0" />
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5" >
          <span className="text-[11px] font-black text-[#1D3557] leading-tight">
           {act.action} <span className="text-gray-400 font-bold ml-1">{act.target}</span>
          </span>

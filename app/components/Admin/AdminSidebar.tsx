@@ -293,9 +293,9 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
             onMouseLeave={() => setHoveredItem(null)}
           >
             <div className="w-10 h-10 rounded-full border border-gray-200 overflow-hidden shadow-sm flex-shrink-0 group-hover:border-brand-gold-light group-hover:shadow-md transition-all">
-              <img 
-                src={user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.fullName || "A")}&background=C5A028&color=fff`} 
-                alt="User" 
+              <img
+                src={user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.fullName || "A")}&background=C5A028&color=fff`}
+                alt="User"
                 className="w-full h-full object-cover"
               />
             </div>

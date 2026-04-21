@@ -10,18 +10,20 @@ interface CategoriesMoreActionsDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   onCleanEmpty: () => void;
-  selectedIds: number[];
+  selectedIds: any[];
   items: any[];
   onClearSelection: () => void;
+  idProp?: string;
 }
 
-export function CategoriesMoreActionsDrawer({ 
-  isOpen, 
-  onClose, 
+export function CategoriesMoreActionsDrawer({
+  isOpen,
+  onClose,
   onCleanEmpty,
   selectedIds,
   items,
-  onClearSelection
+  onClearSelection,
+  idProp = "id"
 }: CategoriesMoreActionsDrawerProps) {
   const actions = [
     {
@@ -69,6 +71,7 @@ export function CategoriesMoreActionsDrawer({
           selectedIds={selectedIds}
           items={items}
           onClear={onClearSelection}
+          idProp={idProp}
           title="Categories Selected"
           labelProp="name"
         />

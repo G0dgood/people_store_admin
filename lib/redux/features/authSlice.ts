@@ -2,10 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface User {
   _id: string;
-  username: string;
   email: string;
-  firstName?: string;
-  lastName?: string;
   fullName: string;
   avatar?: string;
   role: string;
@@ -13,6 +10,8 @@ interface User {
   location?: string;
   biography?: string;
   dob?: string | null;
+  gender?: string;
+  department?: string;
 }
 
 interface AuthState {
@@ -57,5 +56,5 @@ export const { setCredentials, logOut, updateUser } = authSlice.actions;
 
 export default authSlice.reducer;
 
-export const selectCurrentUser = (state: { auth: AuthState }) => state.auth.user;
-export const selectIsAuthenticated = (state: { auth: AuthState }) => state.auth.isAuthenticated;
+export const selectCurrentUser = (state: any) => state.auth?.user;
+export const selectIsAuthenticated = (state: any) => state.auth?.isAuthenticated;
