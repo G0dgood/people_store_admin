@@ -116,13 +116,20 @@ const ListingControlBar: React.FC<ListingControlBarProps> = ({
         </div>
 
         <div className="flex items-center gap-4">
+          <button 
+            onClick={onFilterClick}
+            className="flex lg:hidden items-center gap-3 px-6 h-10 border border-gray-200 bg-white hover:bg-gray-50 transition-colors group"
+          >
+            <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 group-hover:text-gray-900">Filter</span>
+            <Icon name="filter_alt" size="xs" className="text-gray-300 group-hover:text-brand-gold" />
+          </button>
           <SortSelector />
           <ViewSwitcher mode={viewMode} onChange={onViewModeChange} />
         </div>
       </div>
 
       {/* Mobile Bar */}
-      <div className="flex md:hidden flex-col gap-3 px-1">
+      <div className="flex md:hidden flex-col gap-3 px-4">
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
             <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-400">Discovering</span>

@@ -23,6 +23,18 @@ const ProductsPage = () => {
 
   const categories = ["Signature Fragrance", "Luxury Skincare", "Boutique Gift Sets", "Body & Bath", "Home Fragrance", "Men's Grooming"];
 
+  // Lock body scroll when mobile filter drawer is open
+  React.useEffect(() => {
+    if (isFilterDrawerOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isFilterDrawerOpen]);
+
   const products = [
     {
       id: "1",
@@ -288,15 +300,16 @@ const ProductsPage = () => {
               </div>
               <div className="flex-1 overflow-y-auto p-4">
                 <FilterSidebar filters={filters} setFilters={setFilters} />
+                <div className="p-4 border-t border-gray-200 flex gap-3">
+                  <button
+                    onClick={() => setIsFilterDrawerOpen(false)}
+                    className="flex-1 py-3 bg-brand-gold text-white font-bold hover:bg-brand-gold/90"
+                  >
+                    Show Results
+                  </button>
+                </div>
               </div>
-              <div className="p-4 border-t border-gray-200 flex gap-3">
-                <button
-                  onClick={() => setIsFilterDrawerOpen(false)}
-                  className="flex-1 py-3 bg-brand-blue text-white font-bold hover:bg-brand-blue/90"
-                >
-                  Show Results
-                </button>
-              </div>
+              jnvjnk
             </motion.div>
           </>
         )}
