@@ -17,9 +17,8 @@ export const ProfileSidebar: React.FC = () => {
   const navItems: NavItem[] = [
     { label: "Personal Info", href: "/profile", icon: "profile" },
     // { label: "My Orders", href: "/orders", icon: "favorite" },
-    // { label: "Messages", href: "/messages", icon: "message_header", badge: 2 },
-    { label: "My Wishlist", href: "/wishlist", icon: "favorite" },
-    { label: "Settings", href: "/settings", icon: "Settings" },
+    // { label: "Messages", href: "/messages", icon: "message_header", badge: 2 }, 
+    { label: "Password", href: "/profile/password", icon: "lock" },
   ];
 
   return (
@@ -80,13 +79,7 @@ export const ProfileSidebar: React.FC = () => {
         })}
       </nav>
 
-      {/* Footer Action */}
-      <div className="p-6 pt-2 border-t border-gray-50 bg-gray-50/30">
-        <button className="flex items-center gap-3 px-4 py-3 text-red-500 transition-all w-full rounded-xl font-bold text-sm hover:bg-red-50 hover:text-red-700">
-          <Icon name="logout" size="sm" />
-          Log Out
-        </button>
-      </div>
+
     </aside>
   );
 };

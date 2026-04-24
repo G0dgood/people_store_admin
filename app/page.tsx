@@ -58,6 +58,7 @@ const Home = () => {
      title="Signature Fragrance"
      bannerImage="/brandImage/brand_banner.png"
      products={fragranceProducts}
+     priority={true}
     />
 
     <CategorySection

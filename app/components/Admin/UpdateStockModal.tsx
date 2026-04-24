@@ -33,12 +33,12 @@ export const UpdateStockModal: React.FC<UpdateStockModalProps> = ({
     try {
       await updateProduct({
         productId: product._id,
-        data: { 
+        data: {
           stock,
           stockStatus: stock === 0 ? "Out of Stock" : stock < 10 ? "Low Stock" : "In Stock"
         }
       }).unwrap();
-      
+
       toast.success("Stock Updated", {
         description: `${product.name} stock is now ${stock} units.`
       });
@@ -52,11 +52,11 @@ export const UpdateStockModal: React.FC<UpdateStockModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-      <div 
+      <div
         className="absolute inset-0 bg-brand-charcoal/40 backdrop-blur-sm transition-opacity"
         onClick={onClose}
       />
-      
+
       <div className="relative bg-white w-full max-w-md rounded-[12px] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200">
         <div className="p-6 border-b border-gray-50 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -74,7 +74,7 @@ export const UpdateStockModal: React.FC<UpdateStockModalProps> = ({
         </div>
 
         <div className="p-6 flex flex-col gap-6">
-          <div className="flex items-center gap-4 p-3 bg-gray-50 rounded-[8px] border border-gray-100">
+          <div className="flex items-center gap-4 p-3 bg-gray-50 rounded-[8px] border border-gray-200">
             <div className="w-12 h-12 rounded-[4px] border border-gray-200 overflow-hidden bg-white shadow-sm">
               <img src={product.productImage} alt={product.name} className="w-full h-full object-contain" />
             </div>
@@ -87,7 +87,7 @@ export const UpdateStockModal: React.FC<UpdateStockModalProps> = ({
           <div className="flex flex-col gap-2">
             <label className="text-xs font-bold text-gray-500 uppercase tracking-widest px-1">New Stock Level</label>
             <div className="flex items-center gap-3">
-              <button 
+              <button
                 onClick={() => setStock(Math.max(0, stock - 1))}
                 className="w-12 h-12 rounded-[8px] border border-gray-200 flex items-center justify-center hover:bg-brand-charcoal hover:text-white hover:border-brand-charcoal transition-all text-xl font-light"
               >
@@ -101,7 +101,7 @@ export const UpdateStockModal: React.FC<UpdateStockModalProps> = ({
                 containerClassName="flex-1"
                 min="0"
               />
-              <button 
+              <button
                 onClick={() => setStock(stock + 1)}
                 className="w-12 h-12 rounded-[8px] border border-gray-200 flex items-center justify-center hover:bg-brand-charcoal hover:text-white hover:border-brand-charcoal transition-all text-xl font-light"
               >

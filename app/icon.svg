@@ -1,0 +1,10 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Perfume Bottle Body -->
+  <rect x="4" y="8" width="24" height="20" rx="1" fill="#111111" />
+  <!-- Bottle Cap -->
+  <rect x="12" y="4" width="8" height="4" rx="0.5" fill="#C5A028" />
+  <!-- 'B' for Bloom in gold -->
+  <text x="16" y="22" font-family="serif" font-style="italic" font-weight="bold" font-size="14" fill="#D4AF37" text-anchor="middle">B</text>
+  <!-- Subtle Border Glow -->
+  <rect x="4.5" y="8.5" width="23" height="19" rx="0.5" stroke="#C5A028" stroke-opacity="0.3" stroke-width="0.5" />
+</svg>

@@ -307,7 +307,7 @@ export default function PermissionsAccordion() {
             </table>
 
             {roleHasChanges && (
-             <div className="p-6 bg-gray-50/30 border-t border-gray-100 flex justify-end gap-3">
+             <div className="p-6 bg-gray-50/30 border-t border-gray-200 flex justify-end gap-3">
               <Button
                variant="outline"
                shape="rounded-sm"

@@ -198,7 +198,7 @@ export default function FAQManagementPage() {
             </tbody>
           </table>
         </div>
-        <div className="p-4 bg-gray-50/30 border-t border-gray-50">
+        <div  >
           <Pagination
             currentPage={currentPage}
             totalPages={Math.ceil(filteredFAQs.length / rowsPerPage) || 1}

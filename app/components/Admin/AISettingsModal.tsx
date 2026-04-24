@@ -85,7 +85,7 @@ export const AISettingsModal: React.FC<AISettingsModalProps> = ({
         </div>
 
         {/* Feature Toggles */}
-        <div className="flex flex-col gap-4 p-4 bg-gray-50 rounded-[6px] border border-gray-100">
+        <div className="flex flex-col gap-4 p-4 bg-gray-50 rounded-[6px] border border-gray-200">
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-1">
               <span className="text-xs font-bold text-[#1D3557]">
@@ -123,7 +123,7 @@ export const AISettingsModal: React.FC<AISettingsModalProps> = ({
         </div>
       </ModalBody>
 
-      <ModalFooter className="flex gap-3 pt-6 border-t border-gray-100">
+      <ModalFooter className="flex gap-3 pt-6 border-t border-gray-200">
         <Button
           shape="rounded-sm"
           variant="outline"

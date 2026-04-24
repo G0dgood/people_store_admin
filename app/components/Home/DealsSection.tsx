@@ -65,7 +65,7 @@ const DealsSection = () => {
 
   return (
     <section className="w-full bg-white flex flex-col md:flex-row overflow-hidden rounded-md border border-gray-200">
-      <div className="w-full md:w-80 p-8 border-b md:border-b-0 md:border-r border-gray-100 flex md:flex-col justify-between md:justify-center items-center md:items-start gap-6 bg-gray-50/50">
+      <div className="w-full md:w-80 p-8 border-b md:border-b-0 md:border-r border-gray-200 flex md:flex-col justify-between md:justify-center items-center md:items-start gap-6 bg-gray-50/50">
         <div className="flex flex-col gap-1">
           <h3 className="text-xl md:text-2xl font-outfit font-bold text-gray-900 uppercase tracking-wider">Limited <span className="text-brand-gold">Offers</span></h3>
           <p className="text-gray-500 text-xs md:text-sm font-medium tracking-wide">Curated Luxury Fragrances</p>
@@ -97,7 +97,7 @@ const DealsSection = () => {
                 whileHover={{ y: -5, transition: { type: "spring", stiffness: 300, damping: 15 } }}
                 className="w-[160px] md:w-[220px] p-6 md:p-8 flex flex-col items-center gap-4 hover:bg-gray-50/80 transition-all duration-500 cursor-pointer h-full"
               >
-                <div className="w-28 h-28 md:w-40 md:h-40 relative bg-white rounded-xl shadow-sm p-4 flex items-center justify-center group-hover:shadow-md transition-shadow">
+                <div className="w-28 h-28 md:w-40 md:h-40 relative bg-white p-4 flex items-center justify-center transition-shadow">
                   <div className="absolute top-2 right-2 z-10 bg-brand-gold text-white text-[9px] font-black px-2 py-1 rounded-full uppercase tracking-widest">
                     {prod.discount}
                   </div>

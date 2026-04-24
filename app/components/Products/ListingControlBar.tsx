@@ -17,7 +17,7 @@ interface ListingControlBarProps {
  * ViewSwitcher Sub-component
  */
 const ViewSwitcher = ({ mode, onChange }: { mode: ViewMode; onChange: (mode: ViewMode) => void }) => (
-  <div className="flex items-center border border-gray-100 bg-white">
+  <div className="flex items-center border border-gray-200 bg-white">
     <button
       onClick={() => onChange("grid")}
       className={`w-10 h-10 flex items-center justify-center transition-all duration-300 ${mode === "grid" ? "bg-gray-50 text-brand-gold" : "text-gray-400 hover:text-gray-900"
@@ -28,7 +28,7 @@ const ViewSwitcher = ({ mode, onChange }: { mode: ViewMode; onChange: (mode: Vie
     </button>
     <button
       onClick={() => onChange("list")}
-      className={`w-10 h-10 flex items-center justify-center border-l border-gray-100 transition-all duration-300 ${mode === "list" ? "bg-gray-50 text-brand-gold" : "text-gray-400 hover:text-gray-900"
+      className={`w-10 h-10 flex items-center justify-center border-l border-gray-200 transition-all duration-300 ${mode === "list" ? "bg-gray-50 text-brand-gold" : "text-gray-400 hover:text-gray-900"
         }`}
       aria-label="List View"
     >
@@ -41,7 +41,7 @@ const ViewSwitcher = ({ mode, onChange }: { mode: ViewMode; onChange: (mode: Vie
  * SortSelector Sub-component
  */
 const SortSelector = ({ className = "" }: { className?: string }) => (
-  <div className={`flex items-center border border-gray-100 px-4 h-10 bg-white cursor-pointer hover:bg-gray-50 transition-colors group ${className}`}>
+  <div className={`flex items-center border border-gray-200 px-4 h-10 bg-white cursor-pointer hover:bg-gray-50 transition-colors group ${className}`}>
     <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-500 group-hover:text-gray-900">Sort: Featured</span>
     <Icon name="expand_more" size="xs" className="text-gray-300 ml-8 group-hover:text-brand-gold transition-colors" />
   </div>
@@ -53,7 +53,7 @@ const SortSelector = ({ className = "" }: { className?: string }) => (
 const FilterTag = ({ label, onRemove }: { label: string; onRemove: () => void }) => (
   <div
     onClick={onRemove}
-    className="flex items-center gap-3 px-4 py-2 border border-gray-100 bg-white cursor-pointer hover:border-brand-gold transition-all duration-300 group"
+    className="flex items-center gap-3 px-4 py-2 border border-gray-200 bg-white cursor-pointer hover:border-brand-gold transition-all duration-300 group"
   >
     <span className="text-[10px] font-bold uppercase tracking-widest text-gray-600 group-hover:text-gray-900">{label}</span>
     <Icon name="close" size="xs" className="text-gray-300 group-hover:text-brand-gold" />
@@ -104,7 +104,7 @@ const ListingControlBar: React.FC<ListingControlBarProps> = ({
   return (
     <div className="w-full flex flex-col gap-6">
       {/* Desktop Bar */}
-      <div className="hidden md:flex w-full bg-white border border-gray-100 h-20 items-center justify-between px-8">
+      <div className="hidden md:flex w-full bg-white border border-gray-200 h-20 items-center justify-between px-8">
         <div className="flex items-center gap-6">
           <div className="flex flex-col">
             <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-400 mb-1">Curation</span>
@@ -133,14 +133,14 @@ const ListingControlBar: React.FC<ListingControlBarProps> = ({
 
         <div className="flex items-center gap-2">
           {/* Mobile Sort/Filter Buttons */}
-          <button className="flex-1 flex items-center justify-between px-4 py-3 bg-white border border-gray-100 group hover:border-brand-gold transition-colors">
+          <button className="flex-1 flex items-center justify-between px-4 py-3 bg-white border border-gray-200 group hover:border-brand-gold transition-colors">
             <span className="text-[10px] font-bold uppercase tracking-widest text-gray-600">Sort</span>
             <Icon name="expand_more" size="xs" className="text-gray-300 group-hover:text-brand-gold" />
           </button>
 
           <button
             onClick={onFilterClick}
-            className="flex-1 flex items-center justify-between px-4 py-3 bg-white border border-gray-100 group hover:border-brand-gold transition-colors"
+            className="flex-1 flex items-center justify-between px-4 py-3 bg-white border border-gray-200 group hover:border-brand-gold transition-colors"
           >
             <div className="flex items-center gap-3">
               <span className="text-[10px] font-bold uppercase tracking-widest text-gray-600">Filter</span>

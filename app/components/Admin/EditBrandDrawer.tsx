@@ -93,7 +93,7 @@ export function EditBrandDrawer({ isOpen, onClose, brand }: EditBrandDrawerProps
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Inventory No</label>
-              <div className="h-12 bg-gray-50 border border-gray-100 rounded-sm px-4 flex items-center">
+              <div className="h-12 bg-gray-50 border border-gray-200 rounded-sm px-4 flex items-center">
                 <span className="text-xs font-black text-brand-gold uppercase tracking-wider">{brand.inventoryCount || 0} items in stock</span>
               </div>
             </div>

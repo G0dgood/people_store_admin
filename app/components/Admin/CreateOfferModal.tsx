@@ -191,7 +191,7 @@ export function CreateOfferModal({ isOpen, onClose, onSave, initialSelections }:
                       <HiXMark size={16} />
                     </button>
                   </div>
-                  <div className="flex items-center gap-3 bg-gray-50 p-2 rounded-sm border border-gray-100">
+                  <div className="flex items-center gap-3 bg-gray-50 p-2 rounded-sm border border-gray-200">
                     <RiPercentLine className="text-brand-gold" />
                     <input
                       type="number"

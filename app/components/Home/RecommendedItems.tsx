@@ -32,6 +32,7 @@ const RecommendedItems = () => {
                 alt={item.title}
                 fill
                 className="object-contain group-hover:scale-110 transition-transform duration-500"
+                sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
               />
             </div>
             <div className="flex flex-col gap-2">

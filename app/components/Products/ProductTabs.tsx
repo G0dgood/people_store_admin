@@ -9,15 +9,15 @@ const ProductTabs = () => {
   return (
     <div className="flex-1 bg-white flex flex-col min-h-[500px]">
       {/* Tab Headers */}
-      <div className="flex gap-12 border-b border-gray-100 bg-white mb-8">
+      <div className="flex gap-12 border-b border-gray-200 bg-white mb-8">
         {tabs.map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`
               pb-4 text-[11px] uppercase tracking-[0.2em] font-bold transition-all duration-300 relative
-              ${activeTab === tab 
-                ? "text-black border-b-2 border-brand-gold" 
+              ${activeTab === tab
+                ? "text-black border-b-2 border-brand-gold"
                 : "text-gray-400 hover:text-black"}
             `}
           >

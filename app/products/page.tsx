@@ -146,9 +146,9 @@ const ProductsPage = () => {
       </div>
 
       {/* Mobile Header */}
-      <ProductMobileHeader title={filters.category || "Mobile accessory"} />
+      <ProductMobileHeader title={filters.category || ""} />
 
-      <div className="flex-1 max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 py-0 md:py-6 flex flex-col gap-0 md:gap-6 w-full">
+      <div className="flex-1 max-w-[1440px] mx-auto px-4 md:px-10 lg:px-16 py-0 md:py-6 flex flex-col gap-0 md:gap-6 w-full">
         {/* Category Chips (Mobile only) */}
         <CategoryChips
           categories={categories}
@@ -158,7 +158,7 @@ const ProductsPage = () => {
         />
 
         {/* Breadcrumbs */}
-        <div className="hidden md:flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-400 overflow-x-auto whitespace-nowrap scrollbar-none pb-2 px-4 md:px-0 border-b border-gray-100">
+        <div className="hidden md:flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-400 overflow-x-auto whitespace-nowrap scrollbar-none pb-2 px-4 md:px-0 border-b border-gray-200">
           <Link href="/" className="hover:text-brand-gold transition-colors font-bold">Home</Link>
           <Icon name="chevron_right" size="xs" />
           <Link href="/products" className="hover:text-brand-gold transition-colors font-bold">Fragrances</Link>
@@ -166,9 +166,9 @@ const ProductsPage = () => {
           <span className="text-gray-900 font-bold">All Collections</span>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-6 items-start px-4 md:px-0 mt-3 md:mt-0">
+        <div className="flex flex-col lg:flex-row gap-6 items-start px-0 md:px-0 mt-3 md:mt-0">
           {/* Sidebar (Desktop only) */}
-          <div className="hidden lg:block w-full lg:w-64">
+          <div className="hidden lg:block w-full lg:w-64 sticky top-24 self-start max-h-[calc(100vh-120px)] overflow-y-auto pr-2">
             <FilterSidebar filters={filters} setFilters={setFilters} />
           </div>
 
@@ -203,7 +203,7 @@ const ProductsPage = () => {
                     <h3 className="text-xl font-bold text-gray-900 tracking-tight">No products found</h3>
                     <p className="text-gray-400 text-sm mt-1">Try adjusting your search or filters to find what you're looking for.</p>
                   </div>
-                  <button 
+                  <button
                     onClick={() => {
                       setFilters(DEFAULT_FILTERS);
                       if (typeof window !== "undefined") {
@@ -228,27 +228,27 @@ const ProductsPage = () => {
               products={[
                 {
                   id: "r1",
-                  title: "Solid Backpack blue jeans large size",
-                  price: "₦10.30",
-                  image: "/images/bag.jpg"
+                  title: "Aura Pink Blossom - Mini Edition",
+                  price: "₦12,500.00",
+                  image: "/web_images/perfume_product_1_square_1777031387712.png"
                 },
                 {
                   id: "r2",
-                  title: "T-shirts with multiple colors, for men",
-                  price: "₦10.30",
-                  image: "/images/shirt.jpg"
+                  title: "Aurore Noire Intense - Sample Set",
+                  price: "₦8,500.00",
+                  image: "/web_images/perfume_product_2_square_1777031402357.png"
                 },
                 {
                   id: "r3",
-                  title: "Smart watch premium edition",
-                  price: "₦10.30",
-                  image: "/images/watch.jpg"
+                  title: "Oceania Fresh Mist Travel Size",
+                  price: "₦15,000.00",
+                  image: "/web_images/perfume_product_3_square_1777031417355.png"
                 },
                 {
                   id: "r4",
-                  title: "Leather wallet for men",
-                  price: "₦10.30",
-                  image: "/images/wallet.jpg"
+                  title: "Royale Luxe Parfum Collection",
+                  price: "₦45,000.00",
+                  image: "/web_images/perfume_product_4_square_1777031431419.png"
                 }
               ]}
             />

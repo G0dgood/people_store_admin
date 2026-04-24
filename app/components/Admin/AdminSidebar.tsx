@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon } from "../Icon";
+import { Logo } from "../Logo";
 import { ConfirmationModal } from "./ConfirmationModal";
 import { motion, AnimatePresence } from "framer-motion";
 import { HiChevronDown, HiOutlineQuestionMarkCircle, HiShieldCheck, HiXMark, HiBars3BottomLeft } from "react-icons/hi2";
@@ -199,36 +200,24 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
 
   return (
     <aside id="sidenav"
-      className={`${isCollapsed ? "w-20" : "w-64"} h-full shrink-0 flex-col justify-between bg-white transition-transform duration-300 ease-in-out sm:flex sm:translate-x-0 border-r border-gray-100 ${isOpen ? "fixed inset-y-0 left-0 z-50 flex translate-x-0" : "hidden -translate-x-full sm:flex"
+      className={`${isCollapsed ? "w-20" : "w-64"} h-full shrink-0 flex-col justify-between bg-white transition-transform duration-300 ease-in-out sm:flex sm:translate-x-0 border-r border-gray-200 ${isOpen ? "fixed inset-y-0 left-0 z-50 flex translate-x-0" : "hidden -translate-x-full sm:flex"
         }`}
     >
       {/* Brand */}
       <div className={`p-6 flex items-center ${isCollapsed ? "justify-center px-4" : "justify-between"}`}>
-        <div className="flex items-center gap-1">
-          <div className="h-8 overflow-hidden">
-            <img src="/brand_logo/logo-symbol.svg" alt="Bloom & Mist" className="h-full object-contain" />
-          </div>
-          {!isCollapsed && (
-            <span className="font-outfit font-light text-xl tracking-[0.1em] text-brand-gold uppercase whitespace-nowrap animate-in fade-in slide-in-from-left-2 duration-500">
-              Bloom <span className="font-bold">Mist</span>
-            </span>
-          )}
-        </div>
-        {!isCollapsed && (
+        <Logo size="md" variant="on-light" short={isCollapsed} type="cms" />
+        {!isCollapsed ? (
           <button
             onClick={() => setIsCollapsed(true)}
             className="text-gray-400 hover:text-gray-900 transition-colors cursor-pointer"
           >
             <Icon name="menu-close" folder="dashboardIcon" size="md" />
           </button>
-        )}
-        {isCollapsed && (
+        ) : (
           <button
             onClick={() => setIsCollapsed(false)}
-            className="text-gray-400 hover:text-brand-gold transition-colors p-1 cursor-pointer"
-          >
-            <HiXMark size={20} />
-          </button>
+            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          />
         )}
       </div>
 

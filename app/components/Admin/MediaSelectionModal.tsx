@@ -19,8 +19,8 @@ export function MediaSelectionModal({ isOpen, onClose, onSelect }: MediaSelectio
   const mediaData = response?.data || [];
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredMedia = mediaData.filter(item => 
-    item.type === "image" && 
+  const filteredMedia = mediaData.filter(item =>
+    item.type === "image" &&
     item.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -29,7 +29,7 @@ export function MediaSelectionModal({ isOpen, onClose, onSelect }: MediaSelectio
       <ModalBody className="flex flex-col gap-6 py-4">
         {/* Search Bar */}
         <div className="flex flex-col gap-2">
-          <Input 
+          <Input
             shape="rounded-sm"
             type="text"
             placeholder="Search images..."
@@ -49,18 +49,18 @@ export function MediaSelectionModal({ isOpen, onClose, onSelect }: MediaSelectio
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-1">
               {filteredMedia.map((item) => (
-                <div 
+                <div
                   key={item._id}
                   onClick={() => {
                     onSelect(item.url);
                     onClose();
                   }}
-                  className="group relative aspect-square bg-gray-50 rounded-xl border border-gray-100 overflow-hidden cursor-pointer hover:border-brand-gold hover:shadow-lg transition-all"
+                  className="group relative aspect-square bg-gray-50 rounded-xl border border-gray-200 overflow-hidden cursor-pointer hover:border-brand-gold hover:shadow-lg transition-all"
                 >
-                  <img 
-                    src={item.url} 
-                    alt={item.name} 
-                    className="w-full h-full object-cover transition-transform group-hover:scale-110" 
+                  <img
+                    src={item.url}
+                    alt={item.name}
+                    className="w-full h-full object-cover transition-transform group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <span className="text-[10px] font-black text-white uppercase tracking-widest bg-brand-gold px-3 py-1 rounded-full">Select</span>

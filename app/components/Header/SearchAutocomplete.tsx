@@ -15,7 +15,7 @@ export const SearchAutocomplete: React.FC<SearchAutocompleteProps> = ({ searchQu
     <AnimatePresence>
       {isVisible && (
         <div className="absolute top-full left-0 pt-3 w-full z-[100]">
-          <DropdownMenu width="100%" className="shadow-2xl border border-gray-100 rounded-xl overflow-hidden">
+          <DropdownMenu width="100%" className="shadow-2xl border border-gray-200 rounded-xl overflow-hidden">
             {searchQuery.length > 0 ? (
               <>
                 <div className="px-5 py-3 text-[10px] font-black text-gray-400 border-b border-gray-50 uppercase tracking-[0.2em]">
@@ -24,10 +24,10 @@ export const SearchAutocomplete: React.FC<SearchAutocompleteProps> = ({ searchQu
                 <DropdownItem label={`${searchQuery} in Fragrances`} subtext="Collection 2024" icon="search" />
                 <DropdownItem label={`${searchQuery} Luxury Set`} subtext="New Arrivals" icon="search" />
                 <DropdownItem label={`Boutique ${searchQuery}`} subtext="Exclusive" icon="search" />
-                <DropdownFooterAction 
-                  label={`Explore all results for ${searchQuery}`} 
-                  onClick={() => router.push('/products')} 
-                  icon="arrow_forward" 
+                <DropdownFooterAction
+                  label={`Explore all results for ${searchQuery}`}
+                  onClick={() => router.push('/products')}
+                  icon="arrow_forward"
                 />
               </>
             ) : (

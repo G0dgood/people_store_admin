@@ -57,7 +57,7 @@ export const ProfileSkeleton = () => {
 
             {/* Avatar Management Skeleton */}
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-full bg-gray-100 border border-gray-100" />
+              <div className="w-16 h-16 rounded-full bg-gray-100 border border-gray-200" />
               <div className="flex gap-2">
                 <div className="h-9 w-28 bg-gray-200 rounded-[6px]" />
                 <div className="h-9 w-20 bg-gray-50 rounded-[6px]" />

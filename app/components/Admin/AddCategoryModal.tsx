@@ -121,7 +121,7 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
             />
           </div>
 
-          <div className="flex flex-col gap-6 p-4 bg-gray-50/50 rounded-[6px] border border-gray-100">
+          <div className="flex flex-col gap-6 p-4 bg-gray-50/50 rounded-[6px] border border-gray-200">
             <label className="text-[9px] sm:text-[10px] font-black text-brand-gold uppercase tracking-[0.15em]">Enabled Product Attributes</label>
 
             <div className="flex flex-col gap-6">
@@ -256,7 +256,7 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
         </ModalFooter>
       </form>
 
-      <MediaSelectionModal 
+      <MediaSelectionModal
         isOpen={isMediaModalOpen}
         onClose={() => setIsMediaModalOpen(false)}
         onSelect={(url) => setFormData({ ...formData, image: url })}

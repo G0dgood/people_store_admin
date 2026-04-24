@@ -5,13 +5,10 @@ import Image from "next/image";
 
 const ProductGallery = () => {
   const images = [
-    "/web_detail_images/image_main.png",
-    "/web_detail_images/Image.png",
-    "/web_detail_images/Image copy.png",
-    "/web_detail_images/Image copy 2.png",
-    "/web_detail_images/Image copy 3.png",
-    "/web_detail_images/Image copy 4.png",
-    "/web_detail_images/Image copy 5.png",
+    "/web_images/royal_oud_front_view_1777031871485.png",
+    "/web_images/royal_oud_with_box_view_1777031887393.png",
+    "/web_images/royal_oud_cap_closeup_view_1777031904499.png",
+    "/web_images/royal_oud_atmospheric_shot_view_1777031932066.png",
   ];
 
   const [activeImage, setActiveImage] = useState(images[0]);
@@ -19,7 +16,7 @@ const ProductGallery = () => {
   return (
     <div className="flex flex-col gap-6 w-full">
       {/* Main Image */}
-      <div className="relative w-full aspect-square bg-white border border-gray-100 overflow-hidden flex items-center justify-center p-8 rounded-2xl shadow-sm group">
+      <div className="relative w-full aspect-square bg-white border border-gray-200 overflow-hidden flex items-center justify-center p-8 group">
         <Image
           src={activeImage}
           alt="Product View"
@@ -36,8 +33,8 @@ const ProductGallery = () => {
             key={idx}
             onClick={() => setActiveImage(img)}
             className={`
-               relative w-20 h-20 flex-shrink-0 border overflow-hidden bg-white p-2 transition-all duration-300 rounded-xl
-               ${activeImage === img ? "border-brand-gold shadow-md" : "border-gray-100 hover:border-brand-gold/30"}
+               relative w-20 h-20 flex-shrink-0 border overflow-hidden bg-white p-2 transition-all duration-300
+               ${activeImage === img ? "border-brand-gold shadow-md" : "border-gray-200 hover:border-brand-gold/30"}
              `}
           >
             <div className="relative w-full h-full">

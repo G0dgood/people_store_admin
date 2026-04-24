@@ -51,7 +51,7 @@ export function TransactionTable() {
           </thead>
           <tbody>
             {transactionData.map((tx, i) => (
-              <tr key={i} className="group border-b border-gray-100 last:border-0">
+              <tr key={i} className="group border-b border-gray-200 last:border-0">
                 <td className="text-[13px] font-black text-brand-charcoal">{i + 1}.</td>
                 <td className="text-[13px] font-black text-brand-charcoal">#{tx.id}</td>
                 <td className="text-[11px] font-bold text-gray-600">{tx.date}</td>

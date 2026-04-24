@@ -85,6 +85,7 @@ const HeroSection = () => {
           fill
           className="object-cover"
           priority
+          sizes="(max-width: 768px) 100vw, 80vw"
         />
         <div className="absolute inset-0 p-6 md:p-12 lg:p-24 flex flex-col justify-center gap-8 md:gap-12 bg-black/30">
           <motion.div

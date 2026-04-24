@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Icon } from "./Icon";
 import { StoreButtons } from "./Other/Misc";
 import { Newsletter } from "./Home/Newsletter";
+import { Logo } from "./Logo";
 
 import { useAuthModal } from "@/app/context/AuthModalContext";
 
@@ -55,13 +56,8 @@ const Footer = () => {
         <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-12 mb-20">
           {/* Brand Column */}
           <div className="lg:col-span-2">
-            <div className="flex items-center gap-3 mb-8">
-              <div className="h-10 overflow-hidden invert">
-                <img src="/brand_logo/logo-symbol.svg" alt="Bloom & Mist" className="h-full object-contain" />
-              </div>
-              <span className="font-outfit font-light text-2xl tracking-[0.2em] text-white uppercase whitespace-nowrap">
-                Bloom <span className="text-brand-gold">&</span> Mist
-              </span>
+            <div className="mb-8">
+              <Logo size="md" variant="on-dark" />
             </div>
             <p className="text-gray-400 text-[13px] leading-relaxed max-w-[280px] font-light tracking-wide">
               The premier destination for Signature Fragrances, Luxury Skincare, and bespoke Boutique Gifts. Experience elegance in every detail.

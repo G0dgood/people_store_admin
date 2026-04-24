@@ -20,12 +20,12 @@ export const RelatedProducts: React.FC<RelatedProductsProps> = ({ products }) =>
       <h3 className="text-xl md:text-2xl font-outfit font-light uppercase tracking-widest text-gray-900">Related <span className="font-bold">products</span></h3>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
         {products.map((item, idx) => (
-          <Link 
-            key={idx} 
-            href="/products/detail" 
+          <Link
+            key={idx}
+            href="/products/detail"
             className="bg-white flex flex-col gap-4 transition-all cursor-pointer group"
           >
-            <div className="w-full aspect-square relative bg-gray-50/50 rounded-xl flex items-center justify-center p-6 group-hover:bg-gray-100 transition-colors">
+            <div className="w-full aspect-square relative bg-gray-50/50 flex items-center justify-center p-6 group-hover:bg-gray-100 transition-colors">
               <div className="relative w-full h-full transition-transform duration-700 group-hover:scale-110">
                 <Image src={item.image} alt={item.name} fill className="object-contain p-2" />
               </div>

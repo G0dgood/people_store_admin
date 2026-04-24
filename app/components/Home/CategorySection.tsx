@@ -44,13 +44,15 @@ interface CategorySectionProps {
   bannerImage: string;
   products: CategoryProduct[];
   reverse?: boolean;
+  priority?: boolean;
 }
 
 const CategorySection: React.FC<CategorySectionProps> = ({
   title,
   bannerImage,
   products,
-  reverse = false
+  reverse = false,
+  priority = false
 }) => {
   const { addToCart } = useCart();
 
@@ -75,6 +77,8 @@ const CategorySection: React.FC<CategorySectionProps> = ({
           alt={title}
           fill
           className="object-cover group-hover:scale-110 transition-transform duration-1000"
+          sizes="(max-width: 768px) 100vw, 320px"
+          priority={priority}
         />
         <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors"></div>
         <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-10">
@@ -104,7 +108,7 @@ const CategorySection: React.FC<CategorySectionProps> = ({
           <div key={idx} className="flex h-full relative group">
             <Link
               href="/products/detail"
-              className="flex flex-col p-4 md:p-6 gap-3 hover:bg-gray-50 transition-all duration-500 cursor-pointer w-full h-full pb-16 border-r border-b border-gray-100"
+              className="flex flex-col p-4 md:p-6 gap-3 hover:bg-gray-50 transition-all duration-500 cursor-pointer w-full h-full pb-16 border-r border-b border-gray-200"
             >
               <motion.div variants={itemVariants} className="flex flex-col gap-4 h-full">
                 <div className="w-full aspect-square relative flex-shrink-0 bg-gray-50/50 rounded-xl overflow-hidden">
@@ -114,6 +118,7 @@ const CategorySection: React.FC<CategorySectionProps> = ({
                       alt={item.name}
                       fill
                       className="object-contain p-4 group-hover:scale-110 transition-transform duration-700"
+                      sizes="(max-width: 768px) 50vw, (max-width: 1024px) 25vw, 20vw"
                     />
                   )}
                 </div>

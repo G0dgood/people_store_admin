@@ -132,9 +132,9 @@ export function EditCategoryDrawer({ isOpen, onClose, category }: EditCategoryDr
               </div>
 
               {/* Attributes Section */}
-              <div className="flex flex-col gap-6 p-5 bg-gray-50/50 rounded-xl border border-gray-100">
+              <div className="flex flex-col gap-6 p-5 bg-gray-50/50 rounded-xl border border-gray-200">
                 <label className="text-[10px] font-black text-brand-gold uppercase tracking-[0.2em]">Enabled Product Attributes</label>
-                
+
                 <div className="flex flex-col gap-8">
                   {/* Size Attribute */}
                   <div className="flex flex-col gap-4">
@@ -247,7 +247,7 @@ export function EditCategoryDrawer({ isOpen, onClose, category }: EditCategoryDr
               </div>
             </div>
 
-            <div className="flex flex-col gap-3 mt-auto pt-6 border-t border-gray-100">
+            <div className="flex flex-col gap-3 mt-auto pt-6 border-t border-gray-200">
               <Button
                 shape="rounded-sm"
                 variant="primary"
@@ -271,7 +271,7 @@ export function EditCategoryDrawer({ isOpen, onClose, category }: EditCategoryDr
         </div>
       </Drawer>
 
-      <MediaSelectionModal 
+      <MediaSelectionModal
         isOpen={isMediaModalOpen}
         onClose={() => setIsMediaModalOpen(false)}
         onSelect={(url) => setFormData({ ...formData, image: url })}

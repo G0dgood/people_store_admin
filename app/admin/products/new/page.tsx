@@ -297,7 +297,7 @@ export default function CreateProduct() {
          }
         />
         {isCurrencyDropdownOpen && (
-         <div className="absolute right-0 top-full mt-2 w-44 bg-white border border-gray-100 rounded-[6px] shadow-xl z-50 py-1 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+         <div className="absolute right-0 top-full mt-2 w-44 bg-white border border-gray-200 rounded-[6px] shadow-xl z-50 py-1 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
           {currencies.map((curr) => (
            <div
             key={curr.code}
@@ -346,7 +346,7 @@ export default function CreateProduct() {
           containerClassName="w-full"
          />
          {isDiscountDropdownOpen && (
-          <div className="absolute right-0 top-full mt-2 w-44 bg-white border border-gray-100 rounded-[6px] shadow-xl z-50 py-1 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="absolute right-0 top-full mt-2 w-44 bg-white border border-gray-200 rounded-[6px] shadow-xl z-50 py-1 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
            {currencies.map((curr) => (
             <div
              key={curr.code}

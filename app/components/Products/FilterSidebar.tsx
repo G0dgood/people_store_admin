@@ -14,11 +14,11 @@ interface FilterSectionProps {
   defaultOpen?: boolean;
 }
 
-const FilterSection: React.FC<FilterSectionProps> = ({ title, children, defaultOpen = true }) => {
+const FilterSection: React.FC<FilterSectionProps> = ({ title, children, defaultOpen = false }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <div className="border-t border-gray-100 py-6 first:border-t-0">
+    <div className="border-t border-gray-200 py-6 first:border-t-0">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-full flex items-center justify-between mb-5 group"
@@ -26,7 +26,7 @@ const FilterSection: React.FC<FilterSectionProps> = ({ title, children, defaultO
         <h4 className="font-outfit font-bold text-gray-900 text-xs uppercase tracking-widest group-hover:text-brand-gold transition-colors">{title}</h4>
         <Icon
           name="expand_more"
-          size="xs"
+          size="md"
           className={`text-gray-300 transform transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
         />
       </button>
@@ -83,7 +83,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilters }) =>
   }, [setFilters]);
 
   return (
-    <aside className="w-64 flex-shrink-0 flex flex-col gap-4">
+    <aside className="w-full lg:w-64 flex-shrink-0 flex flex-col gap-4">
       {/* Categories */}
       <FilterSection title="Category">
         <ul className="flex flex-col gap-3 text-[11px] uppercase tracking-widest font-bold">
@@ -133,7 +133,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilters }) =>
               type="number"
               value={filters.priceRange[0]}
               onChange={handleMinPriceChange}
-              className="w-full border border-gray-100 px-3 py-2 text-[10px] font-bold uppercase tracking-widest outline-none focus:border-brand-gold bg-gray-50/50"
+              className="w-full border border-gray-200 px-3 py-2 text-[10px] font-bold uppercase tracking-widest outline-none focus:border-brand-gold bg-gray-50/50"
             />
           </div>
           <div className="flex flex-col gap-1 flex-1">
@@ -142,7 +142,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({ filters, setFilters }) =>
               type="number"
               value={filters.priceRange[1]}
               onChange={handleMaxPriceChange}
-              className="w-full border border-gray-100 px-3 py-2 text-[10px] font-bold uppercase tracking-widest outline-none focus:border-brand-gold bg-gray-50/50"
+              className="w-full border border-gray-200 px-3 py-2 text-[10px] font-bold uppercase tracking-widest outline-none focus:border-brand-gold bg-gray-50/50"
             />
           </div>
         </div>
