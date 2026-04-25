@@ -9,6 +9,7 @@ import { Input } from "../../components/Form/Inputs";
 import { motion, AnimatePresence } from "framer-motion";
 import { CustomerSideCard } from "../../components/Admin/CustomerSideCard";
 import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
+import { HiUser } from "react-icons/hi2";
 import { CustomerMessageDrawer } from "../../components/Admin/CustomerMessageDrawer";
 import { AdminChart } from "../../components/Admin/AdminChart";
 import { RowsPerPage } from "@/app/components/rows-per-page";
@@ -16,126 +17,48 @@ import Checkbox from "@/app/components/Checkbox";
 import { Button } from "../../components/Button";
 import { BulkActionsDrawer } from "../../components/Admin/BulkActionsDrawer";
 import { CustomerMetrics, MetricType } from "../../components/Admin/CustomerMetrics";
-
-const customersData = [
- {
-  id: "#CUST001",
-  name: "John Doe",
-  email: "john.doe@example.com",
-  phone: "+1234567890",
-  address: "123 Main St, NY",
-  orderCount: 25,
-  totalSpend: "3,450.00",
-  status: "Active",
-  registration: "15.01.2025",
-  lastPurchase: "10.01.2025"
- },
- {
-  id: "#CUST002",
-  name: "Jane Smith",
-  email: "jane.smith@example.com",
-  phone: "+1234567890",
-  address: "456 Oak Ave, CA",
-  orderCount: 5,
-  totalSpend: "250.00",
-  status: "Inactive",
-  registration: "12.01.2025",
-  lastPurchase: "08.01.2025"
- },
- {
-  id: "#CUST003",
-  name: "Emily Davis",
-  email: "emily.davis@example.com",
-  phone: "+1234567890",
-  address: "789 Pine Rd, TX",
-  orderCount: 30,
-  totalSpend: "4,600.00",
-  status: "VIP",
-  registration: "20.12.2024",
-  lastPurchase: "12.01.2025"
- },
- {
-  id: "#CUST004",
-  name: "John Doe",
-  email: "john.doe@example.com",
-  phone: "+1234567890",
-  address: "123 Main St, NY",
-  orderCount: 25,
-  totalSpend: "3,450.00",
-  status: "Active",
-  registration: "15.01.2025",
-  lastPurchase: "10.01.2025"
- },
- {
-  id: "#CUST005",
-  name: "John Doe",
-  email: "john.doe@example.com",
-  phone: "+1234567890",
-  address: "123 Main St, NY",
-  orderCount: 25,
-  totalSpend: "3,450.00",
-  status: "Active",
-  registration: "15.01.2025",
-  lastPurchase: "10.01.2025"
- },
- {
-  id: "#CUST006",
-  name: "John Doe",
-  email: "john.doe@example.com",
-  phone: "+1234567890",
-  address: "123 Main St, NY",
-  orderCount: 25,
-  totalSpend: "3,450.00",
-  status: "Active",
-  registration: "15.01.2025",
-  lastPurchase: "10.01.2025"
- },
- {
-  id: "#CUST007",
-  name: "John Doe",
-  email: "john.doe@example.com",
-  phone: "+1234567890",
-  address: "123 Main St, NY",
-  orderCount: 25,
-  totalSpend: "3,450.00",
-  status: "Active",
-  registration: "15.01.2025",
-  lastPurchase: "10.01.2025"
- },
-];
-
-const statusStyles = {
- Active: "text-brand-gold",
- Inactive: "text-rose-500",
- VIP: "text-amber-500",
-};
-
-const statusDots = {
- Active: "bg-brand-gold",
- Inactive: "bg-rose-500",
- VIP: "bg-amber-500",
-};
+import { useGetAllCustomersQuery, useDeleteCustomerMutation } from "@/lib/redux/services/customerApi";
+import { toast } from "sonner";
 
 export default function CustomersListing() {
- const [activeMetric, setActiveMetric] = useState<MetricType>("active");
- const [chartTab, setChartTab] = useState("This week");
- const [rowsPerPage, setRowsPerPage] = useState(10);
- const [selectedIds, setSelectedIds] = useState<string[]>([]);
- const [activeTab, setActiveTab] = useState("All customer (240)");
- const [selectedCustomer, setSelectedCustomer] = useState<any>(null);
- const [currentPage, setCurrentPage] = useState(1);
- const [customerToDelete, setCustomerToDelete] = useState<any>(null);
- const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
- const [isMessageDrawerOpen, setIsMessageDrawerOpen] = useState(false);
- const [customerToMessage, setCustomerToMessage] = useState<any>(null);
+  const { data: customersResponse, isLoading: isFetching } = useGetAllCustomersQuery(undefined);
+  const [deleteCustomer, { isLoading: isDeleting }] = useDeleteCustomerMutation();
 
- const toggleAll = () => {
-  if (selectedIds.length === customersData.length) {
-   setSelectedIds([]);
-  } else {
-   setSelectedIds(customersData.map(c => c.id));
-  }
- };
+  const customersData = customersResponse?.data || [];
+
+  const [activeMetric, setActiveMetric] = useState<MetricType>("active");
+  const [chartTab, setChartTab] = useState("This week");
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [activeTab, setActiveTab] = useState("All customer");
+  const [selectedCustomer, setSelectedCustomer] = useState<any>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [customerToDelete, setCustomerToDelete] = useState<any>(null);
+  const [isMessageDrawerOpen, setIsMessageDrawerOpen] = useState(false);
+  const [customerToMessage, setCustomerToMessage] = useState<any>(null);
+
+  const handleDelete = async () => {
+    if (!customerToDelete) return;
+    try {
+      await deleteCustomer(customerToDelete._id).unwrap();
+      toast.success("Customer Deleted", {
+        description: `${customerToDelete.fullName} has been removed successfully.`
+      });
+      setCustomerToDelete(null);
+    } catch (err: any) {
+      toast.error("Deletion Failed", {
+        description: err?.data?.message || "Could not delete customer."
+      });
+    }
+  };
+
+  const toggleAll = () => {
+    if (selectedIds.length === customersData.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(customersData.map((c: any) => c._id));
+    }
+  };
 
  const toggleItem = (id: string) => {
   setSelectedIds(prev =>
@@ -255,41 +178,53 @@ export default function CustomersListing() {
           />
          </th>
          <th>Customer Id</th>
-         <th>Name</th>
+         <th>Customer</th>
          <th>Phone</th>
          <th className="text-center">Order Count</th>
          <th>Total Spend</th>
          <th>Status</th>
-         <th className="text-right">Action</th>
+          <th className="text-right">Action</th>
         </tr>
        </thead>
        <tbody>
-        {customersData.map((customer, idx) => (
+        {customersData.map((customer: any, idx: number) => (
          <tr
-          key={customer.id}
+          key={customer._id}
           onClick={() => setSelectedCustomer(customer)}
-          className={`group cursor-pointer ${selectedCustomer?.id === customer.id ? "bg-gray-50/40" : ""}`}
+          className={`group cursor-pointer ${selectedCustomer?._id === customer._id ? "bg-gray-50/40" : ""}`}
          >
           <td className="w-10 pl-6" onClick={(e) => e.stopPropagation()}>
            <Checkbox
-            checked={selectedIds.includes(customer.id)}
-            onChange={() => toggleItem(customer.id)}
+            checked={selectedIds.includes(customer._id)}
+            onChange={() => toggleItem(customer._id)}
            />
           </td>
           <td>
-           <span className="text-sm font-semibold text-gray-900">{customer.id}</span>
+           <span className="text-sm font-semibold text-gray-900">#{customer._id.slice(-6).toUpperCase()}</span>
           </td>
           <td className="whitespace-nowrap">
-           <span className="text-sm font-semibold text-gray-700">{customer.name}</span>
+           <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full border border-gray-100 overflow-hidden bg-gray-50 flex items-center justify-center shrink-0">
+             {customer.avatar ? (
+              <img src={customer.avatar} alt={customer.fullName} className="w-full h-full object-cover" />
+             ) : (
+              <HiUser className="text-gray-300 w-6 h-6" />
+             )}
+            </div>
+            <div className="flex flex-col">
+             <span className="text-sm font-black text-brand-charcoal">{customer.fullName}</span>
+             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{customer.email}</span>
+            </div>
+           </div>
           </td>
-          <td>{customer.phone}</td>
-          <td>{customer.orderCount}</td>
-          <td>{customer.totalSpend}</td>
+          <td>{customer.phoneNumber || "N/A"}</td>
+          <td>{customer.orderCount || 0}</td>
+          <td>{customer.totalSpend || "0.00"}</td>
           <td>
            <div className="flex items-center gap-2">
-            <span className={`w-1.5 h-1.5 rounded-full ${statusDots[customer.status as keyof typeof statusDots]}`}></span>
-            <span className={`text-sm font-bold ${statusStyles[customer.status as keyof typeof statusStyles]}`}>
-             {customer.status}
+            <span className={`w-1.5 h-1.5 rounded-full bg-brand-gold`}></span>
+            <span className={`text-sm font-bold text-brand-gold`}>
+             Active
             </span>
            </div>
           </td>
@@ -310,7 +245,6 @@ export default function CustomersListing() {
              onClick={(e) => {
               e.stopPropagation();
               setCustomerToDelete(customer);
-              setIsDeleteModalOpen(true);
              }}
             >
              <Icon name="Delete" folder="dashboardIcon" size="sm" />
@@ -325,7 +259,7 @@ export default function CustomersListing() {
 
      <Pagination
       currentPage={currentPage}
-      totalPages={24}
+      totalPages={1}
       onPageChange={setCurrentPage}
      />
     </motion.div>
@@ -344,12 +278,10 @@ export default function CustomersListing() {
    <ConfirmationModal
     isOpen={!!customerToDelete}
     onClose={() => setCustomerToDelete(null)}
-    onConfirm={() => {
-     console.log(`Deleting customer ${customerToDelete?.name}...`);
-     setCustomerToDelete(null);
-    }}
+    onConfirm={handleDelete}
+    isLoading={isDeleting}
     title="Delete Customer"
-    message={`Are you sure you want to delete ${customerToDelete?.name}? This will remove all their data from the platform permanently.`}
+    message={`Are you sure you want to delete ${customerToDelete?.fullName}? This will remove all their data from the platform permanently.`}
     confirmText="Yes, delete customer"
     type="danger"
    />
@@ -378,7 +310,12 @@ export default function CustomersListing() {
       icon: "Delete",
       folder: "dashboardIcon",
       variant: "danger",
-      onClick: () => setIsDeleteModalOpen(true),
+      onClick: () => {
+        console.log("Bulk deleting customers:", selectedIds);
+        toast.info("Bulk delete coming soon", {
+          description: "We are currently orchestrating this high-fidelity feature."
+        });
+      },
      },
     ]}
    />

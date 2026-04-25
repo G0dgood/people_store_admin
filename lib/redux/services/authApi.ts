@@ -4,20 +4,43 @@ export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     login: builder.mutation({
       query: (credentials) => ({
-        url: '/v1/users/login',
+        url: '/users/login',
         method: 'POST',
         body: credentials,
       }),
     }),
+    register: builder.mutation({
+      query: (userData) => {
+        const formData = new FormData();
+        formData.append('fullName', userData.fullName);
+        formData.append('email', userData.email);
+        formData.append('password', userData.password);
+        if (userData.avatar) {
+          formData.append('avatar', userData.avatar);
+        }
+        return {
+          url: '/users/register',
+          method: 'POST',
+          body: formData,
+        };
+      },
+    }),
+    socialLogin: builder.mutation({
+      query: (data) => ({
+        url: '/users/social-login',
+        method: 'POST',
+        body: data,
+      }),
+    }),
     logout: builder.mutation({
       query: () => ({
-        url: '/v1/users/logout',
+        url: '/users/logout',
         method: 'POST',
       }),
     }),
     getUsers: builder.query<{ users: any[], pagination: any }, { page?: number, limit?: number }>({
       query: ({ page = 1, limit = 10 } = {}) => ({
-        url: `/v1/users?page=${page}&limit=${limit}`,
+        url: `/users?page=${page}&limit=${limit}`,
         method: 'GET',
       }),
       transformResponse: (response: any) => response.data,
@@ -31,14 +54,14 @@ export const authApi = baseApi.injectEndpoints({
     }),
     getCurrentUser: builder.query<any, void>({
       query: () => ({
-        url: '/v1/users/current-user',
+        url: '/users/current-user',
         method: 'GET',
       }),
       providesTags: ['User'],
     }),
     updateAccount: builder.mutation({
       query: (details) => ({
-        url: '/v1/users/update-account',
+        url: '/users/update-account',
         method: 'PATCH',
         body: details,
       }),
@@ -49,7 +72,7 @@ export const authApi = baseApi.injectEndpoints({
         const formData = new FormData();
         formData.append('avatar', file);
         return {
-          url: '/v1/users/avatar',
+          url: '/users/avatar',
           method: 'PATCH',
           body: formData,
         };
@@ -58,14 +81,14 @@ export const authApi = baseApi.injectEndpoints({
     }),
     changePassword: builder.mutation({
       query: (passwords) => ({
-        url: '/v1/users/change-password',
+        url: '/users/change-password',
         method: 'POST',
         body: passwords,
       }),
     }),
     onboardUser: builder.mutation({
       query: (userData) => ({
-        url: '/v1/users/onboard',
+        url: '/users/onboard',
         method: 'POST',
         body: userData,
       }),
@@ -73,7 +96,7 @@ export const authApi = baseApi.injectEndpoints({
     }),
     updateStaff: builder.mutation({
       query: ({ userId, data }) => ({
-        url: `/v1/users/${userId}`,
+        url: `/users/${userId}`,
         method: 'PATCH',
         body: data,
       }),
@@ -84,16 +107,19 @@ export const authApi = baseApi.injectEndpoints({
     }),
     deleteStaff: builder.mutation({
       query: (userId) => ({
-        url: `/v1/users/${userId}`,
+        url: `/users/${userId}`,
         method: 'DELETE',
       }),
       invalidatesTags: [{ type: 'User', id: 'LIST' }],
     }),
   }),
+  overrideExisting: true,
 });
 
 export const { 
   useLoginMutation, 
+  useRegisterMutation,
+  useSocialLoginMutation,
   useLogoutMutation, 
   useGetUsersQuery,
   useGetCurrentUserQuery,

@@ -10,6 +10,7 @@ interface CheckboxProps {
 	onChange?: (checked: boolean) => void;
 	label?: React.ReactNode;
 	disabled?: boolean;
+	required?: boolean;
 	size?: 'sm' | 'md' | 'lg';
 	variant?: 'default' | 'error';
 	className?: string;

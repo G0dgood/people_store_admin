@@ -43,16 +43,16 @@ export interface Product {
 export const productApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getProducts: builder.query<ApiResponse<Product[]>, void>({
-      query: () => '/v1/products',
+      query: () => '/products',
       providesTags: ['Product'],
     }),
     getProductById: builder.query<ApiResponse<Product>, string>({
-      query: (id) => `/v1/products/${id}`,
+      query: (id) => `/products/${id}`,
       providesTags: (result, error, id) => [{ type: 'Product', id }],
     }),
     addProduct: builder.mutation<ApiResponse<Product>, FormData>({
       query: (formData) => ({
-        url: '/v1/products',
+        url: '/products',
         method: 'POST',
         body: formData,
       }),
@@ -60,7 +60,7 @@ export const productApi = baseApi.injectEndpoints({
     }),
     updateProduct: builder.mutation<ApiResponse<Product>, { productId: string; data: Partial<Product> }>({
       query: ({ productId, data }) => ({
-        url: `/v1/products/${productId}`,
+        url: `/products/${productId}`,
         method: 'PATCH',
         body: data,
       }),
@@ -68,12 +68,13 @@ export const productApi = baseApi.injectEndpoints({
     }),
     deleteProduct: builder.mutation<ApiResponse<{}>, string>({
       query: (id) => ({
-        url: `/v1/products/${id}`,
+        url: `/products/${id}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Product'],
     }),
   }),
+  overrideExisting: true,
 });
 
 export const {

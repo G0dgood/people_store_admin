@@ -20,7 +20,7 @@ interface ApiResponse<T> {
 export const moduleApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getModules: builder.query<Module[], void>({
-      query: () => "/v1/modules",
+      query: () => "/modules",
       transformResponse: (response: ApiResponse<Module[]>) => response.data,
       providesTags: (result) =>
         result
@@ -32,14 +32,14 @@ export const moduleApi = baseApi.injectEndpoints({
     }),
     createModule: builder.mutation<Module, Partial<Module>>({
       query: (body) => ({
-        url: "/v1/modules",
+        url: "/modules",
         method: "POST",
         body,
       }),
       invalidatesTags: [{ type: "Module", id: "LIST" }],
     }),
   }),
-  overrideExisting: false,
+  overrideExisting: true,
 });
 
 export const {

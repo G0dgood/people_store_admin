@@ -20,7 +20,7 @@ export interface CategoryItem {
 export const categoryApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getCategories: builder.query<ApiResponse<CategoryItem[]>, void>({
-      query: () => '/v1/categories',
+      query: () => '/categories',
       providesTags: (result) =>
         result
           ? [
@@ -31,7 +31,7 @@ export const categoryApi = baseApi.injectEndpoints({
     }),
     createCategory: builder.mutation<ApiResponse<CategoryItem>, Partial<CategoryItem>>({
       query: (body) => ({
-        url: '/v1/categories',
+        url: '/categories',
         method: 'POST',
         body,
       }),
@@ -39,7 +39,7 @@ export const categoryApi = baseApi.injectEndpoints({
     }),
     updateCategory: builder.mutation<ApiResponse<CategoryItem>, { categoryId: string; body: Partial<CategoryItem> }>({
       query: ({ categoryId, body }) => ({
-        url: `/v1/categories/${categoryId}`,
+        url: `/categories/${categoryId}`,
         method: 'PATCH',
         body,
       }),
@@ -47,7 +47,7 @@ export const categoryApi = baseApi.injectEndpoints({
     }),
     deleteCategory: builder.mutation<ApiResponse<{}>, string>({
       query: (categoryId) => ({
-        url: `/v1/categories/${categoryId}`,
+        url: `/categories/${categoryId}`,
         method: 'DELETE',
       }),
       invalidatesTags: [{ type: 'Category', id: 'LIST' }],

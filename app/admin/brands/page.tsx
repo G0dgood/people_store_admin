@@ -15,17 +15,9 @@ import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import { BrandsMoreActionsDrawer } from "../../components/Admin/BrandsMoreActionsDrawer";
 import { Tooltip } from "../../components/Tooltip";
 
-
-const brandsData = [
-  { id: 1, name: "Apple", logo: "/dashboardImage/Electronics.png", category: "Electronics", rating: 4.8, status: "Active", inventoryCount: 1420 },
-  { id: 2, name: "Nike", logo: "/dashboardImage/Fashion.png", category: "Fashion", rating: 4.5, status: "Active", inventoryCount: 856 },
-  { id: 3, name: "Samsung", logo: "/dashboardImage/Frame 4259 copy.png", category: "Electronics", rating: 4.6, status: "Active", inventoryCount: 1105 },
-  { id: 4, name: "Adidas", logo: "/dashboardImage/T-Shirt.png", category: "Fashion", rating: 4.4, status: "Inactive", inventoryCount: 642 },
-  { id: 5, name: "Sony", logo: "/dashboardImage/Accessories.png", category: "Electronics", rating: 4.7, status: "Active", inventoryCount: 423 },
-  { id: 6, name: "Logitech", logo: "/dashboardImage/Webcam.png", category: "Accessories", rating: 4.3, status: "Active", inventoryCount: 312 },
-  { id: 7, name: "Beats", logo: "/dashboardImage/Headphones.png", category: "Electronics", rating: 4.5, status: "Active", inventoryCount: 156 },
-  { id: 8, name: "Dyson", logo: "/dashboardImage/Home & Kitchen.png", category: "Home Appliance", rating: 4.9, status: "Inactive", inventoryCount: 89 },
-];
+import { useGetBrandsQuery, useDeleteBrandMutation } from "@/lib/redux/services/brandApi";
+import { toast } from "sonner";
+import { SVGLoaderFetch, NoRecordFound } from "@/app/components/Options";
 
 const statusConfig = {
   Active: "text-brand-gold bg-brand-gold/10",
@@ -33,23 +25,39 @@ const statusConfig = {
 };
 
 export default function BrandsListing() {
-  const [activeTab, setActiveTab] = useState("All brands");
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeTab, setActiveTab] = useState("All brands");
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [brandToEdit, setBrandToEdit] = useState<any>(null);
+
+  const { data: response, isLoading } = useGetBrandsQuery({
+    page: currentPage,
+    limit: rowsPerPage,
+    search: searchQuery,
+    status: activeTab
+  });
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    setCurrentPage(1);
+  };
+  const [deleteBrand, { isLoading: isDeleting }] = useDeleteBrandMutation();
+  const brandsData = response?.data || [];
+  const totalPages = response?.meta?.totalPages || 1;
 
   const toggleAll = () => {
     if (selectedIds.length === brandsData.length) {
       setSelectedIds([]);
     } else {
-      setSelectedIds(brandsData.map(b => b.id));
+      setSelectedIds(brandsData.map(b => b._id));
     }
   };
 
-  const toggleItem = (id: number) => {
+  const toggleItem = (id: string) => {
     setSelectedIds(prev =>
       prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
     );
@@ -87,7 +95,7 @@ export default function BrandsListing() {
           <TabFilter
             tabs={["All brands", "Active", "Inactive"]}
             activeTab={activeTab}
-            onChange={setActiveTab} id={""} />
+            onChange={handleTabChange} id={""} />
 
           <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
             <Input shape="rounded-sm"
@@ -95,6 +103,11 @@ export default function BrandsListing() {
               placeholder="Search brand name"
               containerClassName="w-full lg:w-80 xl:w-96"
               className="bg-white border-gray-200 placeholder:text-gray-400 text-xs font-medium"
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1);
+              }}
               suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
             />
             <div className="flex items-center gap-3 w-full sm:w-auto">
@@ -134,70 +147,80 @@ export default function BrandsListing() {
               </tr>
             </thead>
             <tbody>
-              {brandsData.map((brand, index) => (
-                <tr key={brand.id} className="group">
-                  <td>
-                    <Checkbox
-                      checked={selectedIds.includes(brand.id)}
-                      onChange={() => toggleItem(brand.id)}
-                    />
-                  </td>
-                  <td>
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-[6px] border border-gray-200 overflow-hidden bg-white p-1 ring-1 ring-gray-100 flex items-center justify-center">
-                        <img src={brand.logo} alt={brand.name} className="w-full h-full object-contain" />
+              {isLoading ? (
+                <SVGLoaderFetch asTable={true} text="Loading brands..." colSpan={7} />
+              ) : brandsData.length === 0 ? (
+                <NoRecordFound asTable={true} text="No brands found." colSpan={7} />
+              ) : (
+                brandsData.map((brand, index) => (
+                  <tr key={brand._id} className="group">
+                    <td>
+                      <Checkbox
+                        checked={selectedIds.includes(brand._id)}
+                        onChange={() => toggleItem(brand._id)}
+                      />
+                    </td>
+                    <td>
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-[6px] border border-gray-200 overflow-hidden bg-white p-1 ring-1 ring-gray-100 flex items-center justify-center">
+                          {brand.logo ? (
+                            <img src={brand.logo} alt={brand.name} className="w-full h-full object-contain" />
+                          ) : (
+                            <Icon name="Image" folder="dashboardIcon" size="sm" className="text-gray-300" />
+                          )}
+                        </div>
+                        <span className="text-sm font-bold text-[#1D3557] group-hover:text-brand-gold transition-colors">
+                          {brand.name}
+                        </span>
                       </div>
-                      <span className="text-sm font-bold text-[#1D3557] group-hover:text-brand-gold transition-colors">
-                        {brand.name}
+                    </td>
+                    <td className="text-sm font-bold text-gray-500">{brand.category}</td>
+                    <td>
+                      <span className="text-xs font-black text-brand-gold bg-brand-gold/5 px-2.5 py-1 rounded-[4px] uppercase tracking-wider">
+                        {brand.inventoryCount || 0} items
                       </span>
-                    </div>
-                  </td>
-                  <td className="text-sm font-bold text-gray-500">{brand.category}</td>
-                  <td>
-                    <span className="text-xs font-black text-brand-gold bg-brand-gold/5 px-2.5 py-1 rounded-[4px] uppercase tracking-wider">
-                      {brand.inventoryCount} items
-                    </span>
-                  </td>
-                  <td>
-                    <div className="flex items-center gap-1.5">
-                      <Icon name="star" folder="dashboardIcon" size="xs" className="text-amber-400" />
-                      <span className="text-xs font-bold text-[#1D3557]">{brand.rating}</span>
-                    </div>
-                  </td>
-                  <td>
-                    <span className={`px-3 py-1.5 rounded-[6px] text-[10px] font-bold ${statusConfig[brand.status as keyof typeof statusConfig]}`}>
-                      {brand.status}
-                    </span>
-                  </td>
-                  <td className="text-right">
-                    <div className="flex justify-end items-center gap-4">
-                      <Tooltip text="Edit Brand" position="top">
-                        <Button shape="rounded-sm" variant="outline"
-                          className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
-                          onClick={() => {
-                            setBrandToEdit(brand);
-                            setIsEditDrawerOpen(true);
-                          }}
-                        >
-                          <Icon name="settings" folder="dashboardIcon" size="sm" />
-                        </Button>
-                      </Tooltip>
-                      <Tooltip text="Delete Brand" position="top">
-                        <Button shape="rounded-sm" variant="outline"
-                          className="!p-1.5 text-gray-400 hover:text-white hover:bg-rose-500 hover:border-rose-500 transition-all"
-                          onClick={() => {
-                            setBrandToDelete(brand);
-                            setIsDeleteModalOpen(true);
-                          }}
-                        >
-                          <Icon name="Delete" folder="dashboardIcon" size="sm" />
-                        </Button>
-                      </Tooltip>
-                    </div>
+                    </td>
+                    <td>
+                      <div className="flex items-center gap-1.5">
+                        <Icon name="star" folder="dashboardIcon" size="xs" className="text-amber-400" />
+                        <span className="text-xs font-bold text-[#1D3557]">{brand.rating || 0}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <span className={`px-3 py-1.5 rounded-[6px] text-[10px] font-bold ${statusConfig[brand.status as keyof typeof statusConfig]}`}>
+                        {brand.status}
+                      </span>
+                    </td>
+                    <td className="text-right">
+                      <div className="flex justify-end items-center gap-4">
+                        <Tooltip text="Edit Brand" position="top">
+                          <Button shape="rounded-sm" variant="outline"
+                            className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
+                            onClick={() => {
+                              setBrandToEdit(brand);
+                              setIsEditDrawerOpen(true);
+                            }}
+                          >
+                            <Icon name="settings" folder="dashboardIcon" size="sm" />
+                          </Button>
+                        </Tooltip>
+                        <Tooltip text="Delete Brand" position="top">
+                          <Button shape="rounded-sm" variant="outline"
+                            className="!p-1.5 text-gray-400 hover:text-white hover:bg-rose-500 hover:border-rose-500 transition-all"
+                            onClick={() => {
+                              setBrandToDelete(brand);
+                              setIsDeleteModalOpen(true);
+                            }}
+                          >
+                            <Icon name="Delete" folder="dashboardIcon" size="sm" />
+                          </Button>
+                        </Tooltip>
+                      </div>
 
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -205,7 +228,7 @@ export default function BrandsListing() {
         {/* Pagination Area */}
         <Pagination
           currentPage={currentPage}
-          totalPages={24}
+          totalPages={totalPages}
           onPageChange={setCurrentPage}
         />
       </div>
@@ -224,9 +247,20 @@ export default function BrandsListing() {
       <ConfirmationModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={() => {
-          console.log("Deleting brand:", brandToDelete?.name);
-          setIsDeleteModalOpen(false);
+        onConfirm={async () => {
+          if (brandToDelete) {
+            try {
+              await deleteBrand(brandToDelete._id).unwrap();
+              toast.success("Brand Deleted", {
+                description: `${brandToDelete.name} has been removed from the library.`
+              });
+              setIsDeleteModalOpen(false);
+            } catch (err: any) {
+              toast.error("Deletion Failed", {
+                description: err?.data?.message || "Failed to delete brand."
+              });
+            }
+          }
         }}
         title="Delete Brand"
         message={`Are you sure you want to delete the brand "${brandToDelete?.name}"? This action will remove it from the storefront and cannot be undone.`}

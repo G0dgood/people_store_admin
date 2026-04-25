@@ -7,9 +7,15 @@ import { Button } from "../Button";
 interface TermsModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onAccept?: () => void;
 }
 
-export const TermsModal: React.FC<TermsModalProps> = ({ isOpen, onClose }) => {
+export const TermsModal: React.FC<TermsModalProps> = ({ isOpen, onClose, onAccept }) => {
+  const handleAccept = () => {
+    if (onAccept) onAccept();
+    onClose();
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -62,9 +68,10 @@ export const TermsModal: React.FC<TermsModalProps> = ({ isOpen, onClose }) => {
       </div>
 
       <div className="mt-8 flex justify-end">
-        <Button 
-          className="w-full md:w-auto px-8 h-11 font-bold" 
-          onClick={onClose}
+        <Button
+          shape="rounded-sm"
+          className="w-full md:w-auto px-8 h-11 font-bold"
+          onClick={handleAccept}
         >
           I Understand
         </Button>

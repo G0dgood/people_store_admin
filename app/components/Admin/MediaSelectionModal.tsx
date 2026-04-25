@@ -7,25 +7,30 @@ import { Icon } from "../Icon";
 import { Input } from "../Form/Inputs";
 import { useGetMediaItemsQuery, MediaItem } from "@/lib/redux/services/mediaApi";
 import { SVGLoaderFetch, NoRecordFound } from "@/app/components/Options";
+import { UploadMediaModal } from "./UploadMediaModal";
+import { Button } from "../Button";
 
 interface MediaSelectionModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSelect: (url: string) => void;
+  title?: string;
+  onUploadClick?: () => void;
 }
 
-export function MediaSelectionModal({ isOpen, onClose, onSelect }: MediaSelectionModalProps) {
+export function MediaSelectionModal({ isOpen, onClose, onSelect, title = "Select Image", onUploadClick }: MediaSelectionModalProps) {
   const { data: response, isLoading } = useGetMediaItemsQuery();
   const mediaData = response?.data || [];
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredMedia = mediaData.filter(item =>
-    item.type === "image" &&
-    item.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredMedia = mediaData.filter(item => {
+    const isImage = item.type === "image" || 
+                    /\.(jpeg|jpg|gif|png|webp|avif|svg)$/i.test(item.url);
+    return isImage && item.name.toLowerCase().includes(searchQuery.toLowerCase());
+  });
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Select Category Image" size="lg">
+    <Modal isOpen={isOpen} onClose={onClose} title={title} size="lg">
       <ModalBody className="flex flex-col gap-6 py-4">
         {/* Search Bar */}
         <div className="flex flex-col gap-2">
@@ -45,7 +50,20 @@ export function MediaSelectionModal({ isOpen, onClose, onSelect }: MediaSelectio
           {isLoading ? (
             <SVGLoaderFetch asTable={false} text="Loading media library..." />
           ) : filteredMedia.length === 0 ? (
-            <NoRecordFound asTable={false} text="No images found in your library." />
+            <div className="flex flex-col items-center justify-center gap-6 py-12 bg-gray-50/50 rounded-2xl border border-dashed border-gray-200">
+              <NoRecordFound asTable={false} text="No images found in your library." />
+              {onUploadClick && (
+                <Button
+                  onClick={onUploadClick}
+                  variant="primary"
+                  shape="rounded-sm"
+                  className="px-8 h-10 font-bold uppercase tracking-widest text-[10px]"
+                  iconLeft={<Icon name="upload-01" folder="dashboardIcon" size="sm" />}
+                >
+                  Upload New Image
+                </Button>
+              )}
+            </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-1">
               {filteredMedia.map((item) => (

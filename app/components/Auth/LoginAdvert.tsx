@@ -139,7 +139,7 @@ export const LoginAdvert = () => {
                   </div>
 
                   <div className="w-16 h-16 rounded-[6px] bg-white/10 backdrop-blur-xl flex items-center justify-center border border-white/20 group-hover:bg-white/20 group-hover:scale-110 transition-all overflow-hidden p-2 shadow-2xl">
-                    <img src={item.image} alt={item.name} className="w-full h-full object-contain drop-shadow-lg" />
+                    <img src={item.productImage || item.image} alt={item.name} className="w-full h-full object-contain drop-shadow-lg" />
                   </div>
                 </motion.div>
               ))}
@@ -161,7 +161,7 @@ export const LoginAdvert = () => {
                   className="p-3 rounded-[6px] bg-white/10 backdrop-blur-md border border-white/20 flex flex-col gap-2 group cursor-pointer"
                 >
                   <div className="aspect-[4/3] bg-white/10 rounded-[4px] p-2 flex items-center justify-center overflow-hidden">
-                    <img src={item.image} alt={item.name} className="w-full h-full object-contain group-hover:scale-125 transition-transform duration-500" />
+                    <img src={item.productImage || item.image} alt={item.name} className="w-full h-full object-contain group-hover:scale-125 transition-transform duration-500" />
                   </div>
                   <div className="flex flex-col text-right">
                     <span className="text-[8px] font-black text-brand-gold uppercase tracking-widest">{item.category}</span>
@@ -188,7 +188,7 @@ export const LoginAdvert = () => {
                     className="flex items-center gap-3 px-4 py-2 hover:bg-white/10 rounded-full transition-colors cursor-pointer group"
                   >
                     <div className="w-8 h-8 rounded-full bg-white/20 p-1 flex items-center justify-center overflow-hidden text-center">
-                      <img src={item.image} alt={item.name} className="w-full h-full object-contain" />
+                      <img src={item.productImage || item.image} alt={item.name} className="w-full h-full object-contain" />
                     </div>
                     <div className="flex flex-col">
                       <span className="text-[10px] font-bold text-white group-hover:text-brand-gold transition-colors">{item.name}</span>

@@ -4,7 +4,8 @@ import React from "react";
 import { motion } from "framer-motion";
 import Modal from "../Modal/Modal";
 import { Button } from "../Button";
-import { BackgroundAsset } from "../../utils/advertState";
+import { BackgroundAsset } from "@/lib/redux/services/advertApi";
+import { MockBrowserOverlay } from "./MockBrowserOverlay";
 
 interface CinematicFocalPointModalProps {
   isOpen: boolean;
@@ -39,15 +40,7 @@ export default function CinematicFocalPointModal({
         </div>
 
         <div className="relative aspect-[16/9] bg-gray-900 rounded-[12px] overflow-hidden shadow-2xl group cursor-move">
-          {/* Mock Browser UI Overlay */}
-          <div className="absolute top-0 inset-x-0 h-8 bg-black/40 backdrop-blur-md z-20 flex items-center px-4 gap-2">
-            <div className="flex gap-1.5">
-              <div className="w-2 h-2 rounded-full bg-red-400/50" />
-              <div className="w-2 h-2 rounded-full bg-amber-400/50" />
-              <div className="w-2 h-2 rounded-full bg-emerald-400/50" />
-            </div>
-            <div className="flex-1 max-w-[400px] h-4 bg-white/10 rounded-[4px] mx-auto" />
-          </div>
+          <MockBrowserOverlay />
 
           <motion.div
             className="absolute inset-0 z-10 select-none"

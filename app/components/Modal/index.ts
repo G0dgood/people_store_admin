@@ -8,3 +8,4 @@ export { ClearWishlistModal } from "./ClearWishlistModal";
 export { RemoveItemModal } from "./RemoveItemModal";
 export { ReviewModal } from "./ReviewModal";
 export { ClearCartModal } from "./ClearCartModal";
+export * from "./LogoutConfirmationModal";

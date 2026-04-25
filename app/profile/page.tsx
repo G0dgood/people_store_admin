@@ -9,6 +9,9 @@ import { Input } from "@/app/components/Form";
 import { Icon } from "@/app/components/Icon";
 import { ProfileSidebar } from "@/app/components/Profile/ProfileSidebar";
 import { Breadcrumbs } from "@/app/components/Breadcrumbs";
+import { useGetCurrentCustomerQuery, useUpdateCustomerProfileMutation } from "@/lib/redux/services/customerApi";
+import { toast } from "sonner";
+import { ProfileSkeleton } from "@/app/components/Skeleton/ProfileSkeleton";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
@@ -28,50 +31,60 @@ const itemVariants: Variants = {
 };
 
 export default function ProfilePage() {
+  const { data: customerResponse, isLoading: isProfileLoading } = useGetCurrentCustomerQuery();
+  const [updateProfile, { isLoading: isUpdating }] = useUpdateCustomerProfileMutation();
+  const [formData, setFormData] = React.useState({
+    fullName: "",
+    email: "",
+    phoneNumber: "",
+    address: ""
+  });
+
+  const customer = (customerResponse as any)?.data;
+
+  React.useEffect(() => {
+    if (customer) {
+      setFormData({
+        fullName: customer.fullName || "",
+        email: customer.email || "",
+        phoneNumber: customer.phoneNumber || "",
+        address: customer.address || ""
+      });
+    }
+  }, [customer]);
+
+  const handleUpdate = async () => {
+    try {
+      await updateProfile(formData).unwrap();
+      toast.success("Profile updated successfully");
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Failed to update profile");
+    }
+  };
+
+  if (isProfileLoading) {
+    return <ProfileSkeleton />;
+  }
+
   return (
     <div className="min-h-screen bg-[#F7FAFC] flex flex-col font-inter">
       <Header />
 
       <div className="flex-1 max-w-[1440px] w-full mx-auto px-6 md:px-10 lg:px-16 py-6 md:py-8">
-        {/* Breadcrumbs */}
         <Breadcrumbs
           items={[{ label: "User Dashboard", href: "/profile" }, { label: "Personal Info" }]}
           className="mb-6 md:mb-8"
         />
 
         <div className="flex flex-col lg:flex-row gap-8 items-start">
-          {/* Enhanced Sidebar */}
           <ProfileSidebar />
 
-          {/* Main Dashboard Content */}
           <motion.div
             variants={containerVariants}
             initial="hidden"
             animate="visible"
             className="flex-1 w-full flex flex-col gap-6 md:gap-8"
           >
-            {/* Page Header */}
-            {/* <motion.div variants={itemVariants} className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 md:p-8 rounded-2xl border border-gray-200 shadow-sm">
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-1">My Dashboard</h1>
-                <p className="text-sm font-medium text-gray-400">Manage your profile, orders, and account settings from one place.</p>
-              </div>
-              <div className="flex items-center gap-3">
-                 <Button variant="outline" className="border-gray-200 text-gray-600 font-bold hover:bg-gray-50 h-10 px-5">
-                   Activity Log
-                 </Button>
-                 <Button className="bg-brand-blue text-white shadow-md shadow-brand-blue/20 hover:bg-brand-blue/90 font-bold h-10 px-6">
-                    Settings
-                 </Button>
-              </div>
-            </motion.div> */}
-
-            {/* Stats Overview */}
-            {/* <motion.div variants={itemVariants}>
-              <ProfileStats />
-            </motion.div> */}
-
-            {/* Forms Section */}
             <motion.div variants={itemVariants} className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
               <div className="p-6 md:p-8 border-b border-gray-50">
                 <h2 className="text-xl font-bold text-gray-900">Personal Information</h2>
@@ -80,28 +93,41 @@ export default function ProfilePage() {
 
               <div className="p-6 md:p-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                  <div className="flex flex-col gap-2">
-                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">First Name</label>
-                    <Input placeholder="Alex" defaultValue="Alex" className="h-12 bg-gray-50/50 border-gray-200 focus:bg-white transition-all shadow-none" />
-                  </div>
-                  <div className="flex flex-col gap-2">
-                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Last Name</label>
-                    <Input placeholder="John" defaultValue="John" className="h-12 bg-gray-50/50 border-gray-200 focus:bg-white transition-all shadow-none" />
+                  <div className="flex flex-col gap-2 md:col-span-2">
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Full Name</label>
+                    <Input
+                      placeholder="Enter full name"
+                      value={formData.fullName}
+                      onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                      className="h-12 bg-gray-50/50 border-gray-200 focus:bg-white transition-all shadow-none"
+                    />
                   </div>
                   <div className="flex flex-col gap-2 md:col-span-2">
                     <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Email Address</label>
-                    <Input placeholder="alex.john@example.com" defaultValue="alex.john@example.com" type="email" className="h-12 bg-gray-50/50 border-gray-200 focus:bg-white transition-all shadow-none" />
+                    <Input
+                      placeholder="Email address"
+                      value={formData.email}
+                      disabled
+                      className="h-12 bg-gray-50/5 border-gray-100 text-gray-400 cursor-not-allowed shadow-none"
+                    />
                   </div>
                   <div className="flex flex-col gap-2">
                     <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Phone Number</label>
-                    <Input placeholder="+1 234 567 8900" defaultValue="+1 234 567 8900" className="h-12 bg-gray-50/50 border-gray-200 focus:bg-white transition-all shadow-none" />
+                    <Input
+                      placeholder="Phone number"
+                      value={formData.phoneNumber}
+                      onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
+                      className="h-12 bg-gray-50/50 border-gray-200 focus:bg-white transition-all shadow-none"
+                    />
                   </div>
                   <div className="flex flex-col gap-2">
-                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Country / Region</label>
-                    <div className="flex items-center justify-between px-4 border border-gray-200 rounded-lg bg-gray-50/50 h-12 w-full cursor-pointer hover:border-brand-blue transition-all group">
-                      <span className="text-sm text-gray-900 font-medium">United States</span>
-                      <Icon name="expand_more" size="xs" className="text-gray-400 group-hover:text-brand-blue transition-colors" />
-                    </div>
+                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Delivery Address</label>
+                    <Input
+                      placeholder="Enter address"
+                      value={formData.address}
+                      onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                      className="h-12 bg-gray-50/50 border-gray-200 focus:bg-white transition-all shadow-none"
+                    />
                   </div>
                 </div>
 
@@ -111,10 +137,25 @@ export default function ProfilePage() {
                     Your personal data is encrypted and secure.
                   </div>
                   <div className="flex gap-4">
-                    <Button variant="ghost" className="h-11 px-6 font-bold text-gray-500 hover:text-gray-900">
+                    <Button
+                      shape="rounded-sm"
+                      variant="outline"
+                      className="h-11 px-6 font-bold text-gray-500 hover:text-gray-900"
+                      onClick={() => customer && setFormData({
+                        fullName: customer.fullName || "",
+                        email: customer.email || "",
+                        phoneNumber: customer.phoneNumber || "",
+                        address: customer.address || ""
+                      })}
+                    >
                       Discard
                     </Button>
-                    <Button className="h-11 px-8 bg-brand-blue text-white shadow-lg shadow-brand-blue/20 hover:bg-brand-blue/90 font-bold">
+                    <Button
+                      shape="rounded-sm"
+                      className="h-11 px-8 bg-brand-blue text-white shadow-lg shadow-brand-blue/20 hover:bg-brand-blue/90 font-bold"
+                      onClick={handleUpdate}
+                      isLoading={isUpdating}
+                    >
                       Save Profile
                     </Button>
                   </div>
@@ -122,7 +163,6 @@ export default function ProfilePage() {
               </div>
             </motion.div>
 
-            {/* Newsletter Section - Subtle */}
             <motion.div variants={itemVariants} className="bg-gradient-to-r from-brand-blue to-blue-700 p-8 rounded-2xl shadow-lg flex flex-col md:flex-row items-center justify-between gap-6 text-white overflow-hidden relative">
               <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
               <div className="z-10 text-center md:text-left">

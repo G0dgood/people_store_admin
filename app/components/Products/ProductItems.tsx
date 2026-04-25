@@ -166,7 +166,7 @@ export const ProductListItem: React.FC<{
 
             {/* Actions Section (Right Side) */}
             <div className="hidden md:flex flex-col items-end justify-between py-1 min-w-[160px]">
-               <div className="flex flex-col gap-3 items-end w-full">
+               <div className="flex flex-col h-full justify-between gap-3 items-end w-full">
                   {showFavorite && <FavoriteButton item={product as any} className="flex-shrink-0" />}
                   <Button
                      onClick={handleAddToCart}

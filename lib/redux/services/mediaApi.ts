@@ -19,12 +19,12 @@ export interface MediaItem {
 export const mediaApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getMediaItems: builder.query<ApiResponse<MediaItem[]>, void>({
-      query: () => '/v1/media',
+      query: () => '/media',
       providesTags: ['Media'],
     }),
     uploadMedia: builder.mutation<ApiResponse<MediaItem[]>, FormData>({
       query: (formData) => ({
-        url: '/v1/media',
+        url: '/media',
         method: 'POST',
         body: formData,
       }),
@@ -32,7 +32,7 @@ export const mediaApi = baseApi.injectEndpoints({
     }),
     deleteMedia: builder.mutation<ApiResponse<{}>, string>({
       query: (mediaId) => ({
-        url: `/v1/media/${mediaId}`,
+        url: `/media/${mediaId}`,
         method: 'DELETE',
       }),
       invalidatesTags: ['Media'],

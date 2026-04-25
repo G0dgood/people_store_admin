@@ -15,7 +15,7 @@ export interface FAQItem {
 export const faqApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getFaqs: builder.query<ApiResponse<FAQItem[]>, void>({
-      query: () => '/v1/faqs',
+      query: () => '/faqs',
       providesTags: (result) =>
         result
           ? [
@@ -26,7 +26,7 @@ export const faqApi = baseApi.injectEndpoints({
     }),
     createFaq: builder.mutation<ApiResponse<FAQItem>, Partial<FAQItem>>({
       query: (body) => ({
-        url: '/v1/faqs',
+        url: '/faqs',
         method: 'POST',
         body,
       }),
@@ -34,7 +34,7 @@ export const faqApi = baseApi.injectEndpoints({
     }),
     updateFaq: builder.mutation<ApiResponse<FAQItem>, { faqId: string; body: Partial<FAQItem> }>({
       query: ({ faqId, body }) => ({
-        url: `/v1/faqs/${faqId}`,
+        url: `/faqs/${faqId}`,
         method: 'PATCH',
         body,
       }),
@@ -42,7 +42,7 @@ export const faqApi = baseApi.injectEndpoints({
     }),
     deleteFaq: builder.mutation<ApiResponse<{}>, string>({
       query: (faqId) => ({
-        url: `/v1/faqs/${faqId}`,
+        url: `/faqs/${faqId}`,
         method: 'DELETE',
       }),
       invalidatesTags: [{ type: 'FAQ', id: 'LIST' }],

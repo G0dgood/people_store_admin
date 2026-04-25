@@ -113,10 +113,10 @@ export const UpdateRefundStatusModal: React.FC<UpdateStatusModalProps> = ({
         </div>
 
         {/* Actions */}
-        <div className="flex gap-3 pt-6 border-t border-gray-50">
+        <div className="flex justify-end gap-3 pt-6 border-t border-gray-50">
           <Button
+            shape="rounded-sm"
             variant="ghost"
-            className="flex-1 h-10 text-[10px] font-black uppercase tracking-widest text-gray-400"
             onClick={onClose}
           >
             Cancel
@@ -124,7 +124,6 @@ export const UpdateRefundStatusModal: React.FC<UpdateStatusModalProps> = ({
           <Button
             shape="rounded-sm"
             variant="primary"
-            className="flex-2 h-10 text-[10px] font-black uppercase tracking-widest shadow-md shadow-brand-gold/10 transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold"
             onClick={() => {
               onConfirm(selectedStatus, reason);
               onClose();

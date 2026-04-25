@@ -40,7 +40,7 @@ interface ApiResponse<T> {
 export const roleApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getRoles: builder.query<Role[], void>({
-      query: () => "/v1/roles",
+      query: () => "/roles",
       transformResponse: (response: ApiResponse<Role[]>) => response.data,
       providesTags: (result) =>
         result
@@ -52,7 +52,7 @@ export const roleApi = baseApi.injectEndpoints({
     }),
     createRole: builder.mutation<Role, Partial<Role>>({
       query: (body) => ({
-        url: "/v1/roles",
+        url: "/roles",
         method: "POST",
         body,
       }),
@@ -60,7 +60,7 @@ export const roleApi = baseApi.injectEndpoints({
     }),
     updateRole: builder.mutation<Role, { roleId: string; data: Partial<Role> }>({
       query: ({ roleId, data }) => ({
-        url: `/v1/roles/${roleId}`,
+        url: `/roles/${roleId}`,
         method: "PATCH",
         body: data,
       }),
@@ -71,18 +71,18 @@ export const roleApi = baseApi.injectEndpoints({
     }),
     deleteRole: builder.mutation<void, string>({
       query: (roleId) => ({
-        url: `/v1/roles/${roleId}`,
+        url: `/roles/${roleId}`,
         method: "DELETE",
       }),
       invalidatesTags: [{ type: "Role", id: "LIST" }],
     }),
     getRolePrivileges: builder.query<UserRole, string>({
-      query: (roleId) => `/v1/roles/${roleId}/privileges`,
+      query: (roleId) => `/roles/${roleId}/privileges`,
       transformResponse: (response: ApiResponse<UserRole>) => response.data,
       providesTags: (result, error, roleId) => [{ type: "Role", id: roleId }],
     }),
   }),
-  overrideExisting: false,
+  overrideExisting: true,
 });
 
 export const {

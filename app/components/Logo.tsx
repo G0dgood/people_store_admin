@@ -102,7 +102,7 @@ const Logo: React.FC<LogoProps> = ({
       )}
 
       {/* Trailing Text (Mist or CMS) */}
-      <div className="pb-1 -ml-1">
+      <div className={`pb-1 ${isCMS ? 'ml-1' : '-ml-1'}`}>
         <span className={`
           ${isCMS ? "font-outfit font-black tracking-widest" : "font-outfit font-light tracking-[0.4em]"}
           uppercase whitespace-nowrap transition-all duration-300

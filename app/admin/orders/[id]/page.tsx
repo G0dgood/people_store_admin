@@ -73,7 +73,7 @@ export default function OrderDetails() {
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-4">
             <h1 className="text-3xl font-black text-gray-900 tracking-tight">{order.id}</h1>
-            <span className={`px-3 py-1.5 rounded-lg text-[10px] font-black border uppercase tracking-tighter ${currentStatus === "Delivered" ? "bg-emerald-50 text-emerald-500 border-emerald-100" :
+            <span className={`px-3 py-1.5 rounded-lg text-[10px] font-black border uppercase tracking-tighter ${currentStatus === "Delivered" ? "bg-blue-50 text-blue-500 border-blue-100" :
               currentStatus === "Shipped" ? "bg-brand-gold/10 text-brand-gold border-brand-gold/20" :
                 "bg-orange-50 text-brand-orange border-orange-100"
               }`}>

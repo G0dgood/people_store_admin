@@ -6,6 +6,12 @@ import { Input } from "../Form/Inputs";
 import { Select } from "../Form/Select";
 import { Button } from "../Button";
 import { Icon } from "../Icon";
+import { useUpdateBrandMutation } from "@/lib/redux/services/brandApi";
+import { useGetCategoriesQuery } from "@/lib/redux/services/categoryApi";
+import { toast } from "sonner";
+import { MediaSelectionModal } from "./MediaSelectionModal";
+import { UploadCouponAssetModal } from "./UploadCouponAssetModal";
+import { FiImage } from "react-icons/fi";
 
 interface EditBrandDrawerProps {
   isOpen: boolean;
@@ -13,12 +19,6 @@ interface EditBrandDrawerProps {
   brand: any;
 }
 
-const categoryOptions = [
-  { value: "Electronics", label: "Electronics" },
-  { value: "Fashion", label: "Fashion" },
-  { value: "Accessories", label: "Accessories" },
-  { value: "Home Appliance", label: "Home Appliance" },
-];
 
 const statusOptions = [
   { value: "Active", label: "Active" },
@@ -29,7 +29,7 @@ export function EditBrandDrawer({ isOpen, onClose, brand }: EditBrandDrawerProps
   const [formData, setFormData] = useState({
     name: "",
     logo: "",
-    category: "Electronics",
+    category: "",
     status: "Active",
   });
 
@@ -44,10 +44,26 @@ export function EditBrandDrawer({ isOpen, onClose, brand }: EditBrandDrawerProps
     }
   }, [brand]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [updateBrand, { isLoading: isUpdating }] = useUpdateBrandMutation();
+  const { data: categoriesData } = useGetCategoriesQuery();
+  const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
+  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Saving brand changes:", formData);
-    onClose();
+    if (!brand?._id) return;
+
+    try {
+      await updateBrand({ id: brand._id, data: formData }).unwrap();
+      toast.success("Brand Updated Successfully", {
+        description: `Changes to ${formData.name} saved.`
+      });
+      onClose();
+    } catch (err: any) {
+      toast.error("Update Failed", {
+        description: err?.data?.message || "Failed to update brand."
+      });
+    }
   };
 
   if (!brand) return null;
@@ -69,25 +85,39 @@ export function EditBrandDrawer({ isOpen, onClose, brand }: EditBrandDrawerProps
           </div>
 
           <div className="flex flex-col gap-2">
-            <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Brand Logo Path</label>
-            <div className="flex gap-4">
-              <Input
-                shape="rounded-sm"
-                placeholder="/dashboardImage/example.png"
-                value={formData.logo}
-                onChange={(e) => setFormData({ ...formData, logo: e.target.value })}
-                className="h-12 border-gray-200 font-bold flex-1 rounded-sm"
-                required
-              />
-              <Button
+            <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Brand Logo</label>
+            {formData.logo ? (
+              <div className="relative w-full h-32 rounded-xl overflow-hidden border border-gray-200 group">
+                <img src={formData.logo} alt="Brand Preview" className="w-full h-full object-contain p-4 bg-gray-50" />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setIsMediaModalOpen(true)}
+                    className="bg-white text-black px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-brand-gold hover:text-white transition-all"
+                  >
+                    Change
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, logo: "" })}
+                    className="bg-red-500 text-white px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-red-600 transition-all"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button
                 type="button"
-                variant="outline"
-                shape="rounded-sm"
-                className="w-12 h-12 p-0 flex-shrink-0"
+                onClick={() => setIsMediaModalOpen(true)}
+                className="w-full h-32 rounded-xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center gap-2 hover:border-brand-gold hover:bg-gray-50 transition-all group"
               >
-                <Icon name="photo" folder="icon" size="sm" />
-              </Button>
-            </div>
+                <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-white transition-colors">
+                  <FiImage className="text-gray-400 text-xl" />
+                </div>
+                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest group-hover:text-brand-gold">Select Brand Logo</span>
+              </button>
+            )}
           </div>
 
           <div className="flex flex-col gap-4">
@@ -102,7 +132,7 @@ export function EditBrandDrawer({ isOpen, onClose, brand }: EditBrandDrawerProps
               <Select
                 className="rounded-sm"
                 shape="rounded-sm"
-                options={categoryOptions}
+                options={categoriesData?.data?.map(cat => ({ value: cat.name, label: cat.name })) || []}
                 value={formData.category}
                 onChange={(val) => setFormData({ ...formData, category: val })}
               />
@@ -126,6 +156,7 @@ export function EditBrandDrawer({ isOpen, onClose, brand }: EditBrandDrawerProps
             variant="primary"
             type="submit"
             className="w-full h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-brand-gold/10 transition-all duration-300 hover:bg-brand-gold hover:text-white"
+            isLoading={isUpdating}
           >
             Update Brand
           </Button>
@@ -140,6 +171,19 @@ export function EditBrandDrawer({ isOpen, onClose, brand }: EditBrandDrawerProps
           </Button>
         </div>
       </form>
+
+      <MediaSelectionModal
+        isOpen={isMediaModalOpen}
+        onClose={() => setIsMediaModalOpen(false)}
+        onSelect={(url) => setFormData({ ...formData, logo: url })}
+        title="Select Brand Logo"
+        onUploadClick={() => setIsUploadModalOpen(true)}
+      />
+
+      <UploadCouponAssetModal
+        isOpen={isUploadModalOpen}
+        onClose={() => setIsUploadModalOpen(false)}
+      />
     </Drawer>
   );
 }

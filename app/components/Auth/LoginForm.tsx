@@ -6,39 +6,43 @@ import { motion } from "framer-motion";
 import { Input } from "../Form/Inputs";
 import { Button } from "../Button";
 import { Checkbox } from "../Form/Checkbox";
-
+import { Logo } from "../Logo";
+import { LuEye, LuEyeOff } from "react-icons/lu";
 import { useLoginMutation } from "@/lib/redux/services/authApi";
 import { setCredentials } from "@/lib/redux/features/authSlice";
 import { useAppDispatch } from "@/lib/redux/hooks";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-export const LoginForm = () => {
+interface LoginFormProps {
+}
+
+export const LoginForm = ({ }: LoginFormProps) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [login, { isLoading }] = useLoginMutation();
-  
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [showAccessKey, setShowAccessKey] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       const response = await login({ email, password }).unwrap();
-      
-      // The API response matches ApiResponse(200, { user, accessToken, refreshToken }, "...")
+
       if (response?.success && response?.data) {
         dispatch(setCredentials({
           user: response.data.user,
           accessToken: response.data.accessToken
         }));
-        
+
         toast.success("Log-in Successful", {
-          description: "Welcome to the Administrative Portal."
+          description: "Welcome back to the boutique."
         });
-        
+
         router.push("/admin");
       }
     } catch (err: any) {
@@ -57,26 +61,18 @@ export const LoginForm = () => {
     >
       <div className="p-8 sm:p-10 flex flex-col gap-6">
         {/* Form Logo & Header */}
-        <div className="flex flex-col gap-4">
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="w-10 h-10 rounded-xl bg-brand-gold flex items-center justify-center p-2 shadow-lg shadow-brand-gold/20"
-          >
-            <img src="/dashboardIcon/dashboardLogo.svg" alt="Logo" className="brightness-0 invert w-full h-full object-contain" />
-          </motion.div>
-
-
+        <div className="flex flex-col items-start gap-2 text-center">
+          <Logo size="md" variant="on-light" type="cms" />
         </div>
 
         {/* Login Fields */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <div className="flex flex-col gap-1">
-            <label className="text-[9px] font-black text-gray-500 uppercase tracking-widest ml-1">Administrative Email</label>
+            <label className="text-[9px] font-black text-gray-500 uppercase tracking-widest ml-1">Email Address</label>
             <Input
+              shape="rounded-sm"
               type="email"
-              placeholder="mark@dealport.com"
+              placeholder="mark@example.com"
               className="bg-white/50 border-white/40 h-11 text-sm"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -90,12 +86,22 @@ export const LoginForm = () => {
               <Link href="#" className="text-[9px] font-black text-brand-gold uppercase tracking-widest hover:text-brand-charcoal transition-colors">Recovery</Link>
             </div>
             <Input
-              type="password"
+              shape="rounded-sm"
+              type={showAccessKey ? "text" : "password"}
               placeholder="••••••••••••"
-              className="bg-white/50 border-white/40 h-11 text-sm"
+              className="bg-white/50 border-white/40 h-11 text-sm pr-12"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+              suffixElement={
+                <button
+                  type="button"
+                  onClick={() => setShowAccessKey(!showAccessKey)}
+                  className="text-gray-400 hover:text-brand-gold transition-colors focus:outline-none mr-2"
+                >
+                  {showAccessKey ? <LuEyeOff size={16} /> : <LuEye size={16} />}
+                </button>
+              }
             />
           </div>
 
@@ -117,15 +123,7 @@ export const LoginForm = () => {
             Login
           </Button>
         </form>
-
-        {/* Footer */}
-        <p className="text-center text-xs font-medium text-gray-400 mt-4">
-          Don't have an administrative account? <br />
-          <Link href="#" className="text-brand-gold font-black uppercase tracking-widest text-[10px] ml-1 hover:underline">Contact System Admin</Link>
-        </p>
       </div>
-
-
     </motion.div>
   );
 };

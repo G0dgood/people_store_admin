@@ -1,0 +1,96 @@
+import { baseApi } from '../baseApi';
+
+export const customerApi = baseApi.injectEndpoints({
+  endpoints: (builder) => ({
+    registerCustomer: builder.mutation({
+      query: (userData) => {
+        const formData = new FormData();
+        formData.append('fullName', userData.fullName);
+        formData.append('email', userData.email);
+        formData.append('password', userData.password);
+        if (userData.avatar) {
+          formData.append('avatar', userData.avatar);
+        }
+        return {
+          url: '/customers/register',
+          method: 'POST',
+          body: formData,
+        };
+      },
+    }),
+    loginCustomer: builder.mutation({
+      query: (credentials) => ({
+        url: '/customers/login',
+        method: 'POST',
+        body: credentials,
+      }),
+    }),
+    socialLoginCustomer: builder.mutation({
+      query: (data) => ({
+        url: '/customers/social-login',
+        method: 'POST',
+        body: data,
+      }),
+    }),
+    updateCustomerAvatar: builder.mutation({
+      query: (file) => {
+        const formData = new FormData();
+        formData.append('avatar', file);
+        return {
+          url: '/customers/avatar',
+          method: 'PATCH',
+          body: formData,
+        };
+      },
+    }),
+    getCurrentCustomer: builder.query<any, void>({
+      query: () => ({
+        url: '/customers/current-customer',
+        method: 'GET',
+      }),
+      providesTags: ['Customers'],
+    }),
+    updateCustomerProfile: builder.mutation({
+      query: (data) => ({
+        url: '/customers/update-profile',
+        method: 'PATCH',
+        body: data,
+      }),
+      invalidatesTags: ['Customers'],
+    }),
+    getAllCustomers: builder.query<any, void>({
+      query: () => ({
+        url: '/customers',
+        method: 'GET',
+      }),
+      providesTags: ['Customers'],
+    }),
+    logoutCustomer: builder.mutation<any, void>({
+      query: () => ({
+        url: '/customers/logout',
+        method: 'POST',
+      }),
+      invalidatesTags: ['Customers'],
+    }),
+    deleteCustomer: builder.mutation({
+      query: (id) => ({
+        url: `/customers/${id}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Customers'],
+    }),
+  }),
+  overrideExisting: true,
+});
+
+export const { 
+  useRegisterCustomerMutation,
+  useLoginCustomerMutation,
+  useSocialLoginCustomerMutation,
+  useUpdateCustomerAvatarMutation,
+  useGetCurrentCustomerQuery,
+  useUpdateCustomerProfileMutation,
+  useLogoutCustomerMutation,
+  useGetAllCustomersQuery,
+  useDeleteCustomerMutation
+} = customerApi;

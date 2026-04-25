@@ -26,7 +26,7 @@ const transactionsData = [
 ];
 
 const statusStyles = {
-	Complete: { color: "text-brand-gold", bg: "bg-brand-gold" },
+	Complete: { color: "text-emerald-500", bg: "bg-emerald-500" },
 	Canceled: { color: "text-rose-500", bg: "bg-rose-500" },
 	Pending: { color: "text-orange-400", bg: "bg-orange-400" },
 };

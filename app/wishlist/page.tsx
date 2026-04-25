@@ -9,13 +9,20 @@ import { ProductListItem } from "@/app/components/Products/ProductItems";
 import { ClearWishlistModal, RemoveItemModal } from "@/app/components/Modal";
 import Link from "next/link";
 import { useWishlist } from "@/app/context/WishlistContext";
+import Modal from "@/app/components/Modal/Modal";
+import { Button } from "@/app/components/Button";
+import { useCart } from "@/app/context/CartContext";
+import { toast } from "sonner";
 
 const WishlistPage = () => {
   const { wishlistItems, removeFromWishlist, clearWishlist } = useWishlist();
+  const { addToCart } = useCart();
 
   const [isClearModalOpen, setIsClearModalOpen] = useState(false);
   const [isRemoveOneModalOpen, setIsRemoveOneModalOpen] = useState(false);
   const [itemToRemove, setItemToRemove] = useState<any>(null);
+  const [selectedQuickViewItem, setSelectedQuickViewItem] = useState<any>(null);
+  const [isQuickViewModalOpen, setIsQuickViewModalOpen] = useState(false);
 
   const handleClearWishlist = () => {
     clearWishlist();
@@ -33,6 +40,24 @@ const WishlistPage = () => {
       setItemToRemove(null);
       setIsRemoveOneModalOpen(false);
     }
+  };
+
+  const handleQuickView = (e: React.MouseEvent, item: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSelectedQuickViewItem(item);
+    setIsQuickViewModalOpen(true);
+  };
+
+  const handleAddToCart = (item: any) => {
+    addToCart({
+      id: `rv-${item.id}`,
+      title: item.title,
+      price: item.price,
+      image: item.image,
+    });
+    toast.success(`${item.title} added to cart`);
+    setIsQuickViewModalOpen(false);
   };
 
   return (
@@ -162,6 +187,16 @@ const WishlistPage = () => {
                       className="object-contain"
                     />
                   </div>
+                  
+                  {/* Quick View Button Overlay */}
+                  <div className="absolute bottom-0 left-0 right-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-10">
+                    <button 
+                      onClick={(e) => handleQuickView(e, item)}
+                      className="w-full py-2 bg-black/80 backdrop-blur-md text-white text-[9px] font-bold uppercase tracking-[0.2em] hover:bg-brand-gold transition-all"
+                    >
+                      Quick View
+                    </button>
+                  </div>
                 </div>
                 <div className="flex flex-col gap-1">
                   <span className="font-bold text-gray-900 text-sm md:text-md">
@@ -189,6 +224,65 @@ const WishlistPage = () => {
         onConfirm={confirmRemoveOne}
         productTitle={itemToRemove?.title}
       />
+
+      {/* Quick View Modal */}
+      <Modal 
+        isOpen={isQuickViewModalOpen} 
+        onClose={() => setIsQuickViewModalOpen(false)}
+        size="lg"
+      >
+        {selectedQuickViewItem && (
+          <div className="flex flex-col md:flex-row gap-8 py-2">
+            {/* Image Section */}
+            <div className="w-full md:w-1/2 aspect-square relative bg-gray-50 border border-gray-100 p-8 rounded-xl overflow-hidden">
+              <Image
+                src={selectedQuickViewItem.image}
+                alt={selectedQuickViewItem.title}
+                fill
+                className="object-contain"
+              />
+            </div>
+
+            {/* Info Section */}
+            <div className="w-full md:w-1/2 flex flex-col gap-6">
+              <div className="flex flex-col gap-2">
+                <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-brand-gold">History Collection</span>
+                <h2 className="text-2xl font-outfit font-light uppercase tracking-widest text-gray-900 leading-tight">
+                  {selectedQuickViewItem.title.split(' ').map((word: string, i: number) => 
+                    i === selectedQuickViewItem.title.split(' ').length - 1 ? <span key={i} className="font-bold">{word}</span> : word + ' '
+                  )}
+                </h2>
+                <span className="text-2xl font-black text-gray-900 mt-2">{selectedQuickViewItem.price}</span>
+              </div>
+
+              <div className="h-px w-full bg-gray-100" />
+
+              <div className="flex flex-col gap-3">
+                <h4 className="text-[10px] uppercase tracking-widest font-bold text-gray-400">About this item</h4>
+                <p className="text-sm text-gray-500 leading-relaxed">
+                  A masterpiece you recently admired. Rediscover its sophisticated notes and artisanal craftsmanship that captured your attention.
+                </p>
+              </div>
+
+              <div className="mt-auto flex flex-col gap-4">
+                <Button 
+                  onClick={() => handleAddToCart(selectedQuickViewItem)}
+                  className="w-full bg-black text-white h-12 font-bold uppercase tracking-[0.2em] text-[11px] hover:bg-brand-gold transition-all"
+                >
+                  Add to Cart
+                </Button>
+                <Link 
+                  href="/products/detail"
+                  className="text-center text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-brand-gold transition-colors"
+                  onClick={() => setIsQuickViewModalOpen(false)}
+                >
+                  View Full Details
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+      </Modal>
 
       <Footer />
     </div>

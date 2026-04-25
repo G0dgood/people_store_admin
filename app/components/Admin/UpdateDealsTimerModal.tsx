@@ -124,12 +124,11 @@ export function UpdateDealsTimerModal({ isOpen, onClose, initialValues, onUpdate
         </div>
 
         {/* Actions */}
-        <div className="flex gap-3 pt-6 border-t border-gray-50">
+        <div className="flex flex-row justify-end gap-3 pt-6 border-t border-gray-50">
           <Button
             shape="rounded-sm"
             variant="outline"
             onClick={onClose}
-            className="flex-1 h-11 text-[11px] font-black uppercase tracking-widest border-gray-200 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
           >
             Cancel
           </Button>
@@ -137,7 +136,6 @@ export function UpdateDealsTimerModal({ isOpen, onClose, initialValues, onUpdate
             shape="rounded-sm"
             type="submit"
             variant="primary"
-            className="flex-[2] h-11 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-brand-gold/10 transition-all duration-300 hover:bg-brand-gold hover:text-white"
           >
             Establish Timer
           </Button>

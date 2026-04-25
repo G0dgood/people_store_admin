@@ -1,17 +1,19 @@
 "use client";
 
 export interface AdvertItem {
-  id: number;
+  id: any;
+  _id: string;
   name: string;
-  category: string;
-  price: string;
-  image: string;
+  category: any;
+  price: number | string;
+  productImage: string;
+  image?: string; // Fallback for legacy/static data
 }
 
 export interface BackgroundAsset {
   url: string;
-  positionX: number; // 0 to 100 percentage
-  positionY: number; // 0 to 100 percentage
+  positionX: number;
+  positionY: number;
   linkedCategory?: string;
   title?: string;
   titleHighlight?: string;
@@ -19,14 +21,15 @@ export interface BackgroundAsset {
   stats?: string;
   duration?: number;
   featuredItems?: AdvertItem[];
-  inventoryLayout?: "list" | "grid" | "strip";
+  inventoryLayout?: "list" | "grid" | "strip" | "";
 }
 
 export interface AdvertConfig {
+  _id?: string;
   backgroundImages: BackgroundAsset[];
   featuredItems: AdvertItem[];
-  layout: "left-form" | "right-form";
-  inventoryLayout: "list" | "grid" | "strip";
+  layout: "left-form" | "right-form" | "";
+  inventoryLayout: "list" | "grid" | "strip" | "";
   showTitle: boolean;
   showHighlight: boolean;
   showDescription: boolean;
@@ -35,26 +38,22 @@ export interface AdvertConfig {
   titleHighlight: string;
   description: string;
   stats: string;
-  cycleDuration: number; // in seconds
+  cycleDuration: number;
 }
 
 const DEFAULT_CONFIG: AdvertConfig = {
-  backgroundImages: [{ url: "/images/login-hero.png", positionX: 50, positionY: 50 }],
-  featuredItems: [
-    { id: 1, name: "Premium Wireless Headphones", category: "Electronics", price: "₦35,000", image: "/dashboardImage/Headphones.png" },
-    { id: 2, name: "Smart Fitness Watch", category: "Electronics", price: "₦18,500", image: "/dashboardImage/Electronics.png" },
-    { id: 7, name: "Ergonomic Gaming Mouse", category: "Electronics", price: "₦22,000", image: "/dashboardImage/Accessories.png" },
-  ],
-  layout: "right-form",
-  inventoryLayout: "list",
-  showTitle: true,
-  showHighlight: true,
-  showDescription: true,
-  showStats: true,
-  title: "Master Your",
-  titleHighlight: "Command.",
-  description: "The ultimate administrative OS for modern e-commerce. Precision control, real-time insights, and infinite scalability.",
-  stats: "Currently powering 12,400+ global stores with 99.9% uptime and centralized governance.",
+  backgroundImages: [],
+  featuredItems: [],
+  layout: "",
+  inventoryLayout: "",
+  showTitle: false,
+  showHighlight: false,
+  showDescription: false,
+  showStats: false,
+  title: "",
+  titleHighlight: "",
+  description: "",
+  stats: "",
   cycleDuration: 8,
 };
 
@@ -97,6 +96,18 @@ export const getAdvertConfig = (): AdvertConfig => {
 
 export const saveAdvertConfig = (config: AdvertConfig) => {
   if (typeof window === "undefined") return;
+  localStorage.setItem("advert_config", JSON.stringify(config));
+  window.dispatchEvent(new Event("advertConfigUpdated"));
+};
+
+/**
+ * Initializes the local advert state from an API response.
+ * This ensures the login page can display live data even if the user hasn't visited the admin dashboard.
+ */
+export const initializeAdvertConfig = (config: AdvertConfig) => {
+  if (typeof window === "undefined") return;
+  
+  // Optional: Check if the new config is different from the saved one to avoid unnecessary re-renders
   localStorage.setItem("advert_config", JSON.stringify(config));
   window.dispatchEvent(new Event("advertConfigUpdated"));
 };

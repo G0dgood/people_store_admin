@@ -181,7 +181,7 @@ export function UploadMediaModal({ isOpen, onClose, onUploadSuccess }: UploadMed
           onClick={handleUpload}
           disabled={isUploading || stagedFiles.length === 0}
         >
-          {isUploading ? "Uploading..." : "Start Upload"}
+          {isUploading ? "Compressing & Uploading..." : "Start Upload"}
         </Button>
       </ModalFooter>
     </Modal>
