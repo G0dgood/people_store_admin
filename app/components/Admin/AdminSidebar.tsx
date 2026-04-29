@@ -196,15 +196,76 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
   const user = useAppSelector(selectCurrentUser);
 
   const dynamicNavData = React.useMemo(() => {
-    // 1. If we have real permissions from the DB, use them
+    const isSuperAdmin = user?.role === "SUPER_ADMIN";
+
+    // 1. If we are a SUPER_ADMIN, provide all tabs immediately (Total Bypass)
+    if (isSuperAdmin) {
+      return {
+        coreItems: [
+          { name: "Dashboard Overview", href: "/admin", icon: moduleIconMap["dashboard"], moduleId: "dashboard" as any },
+          { name: "Orders", href: "/admin/orders", icon: moduleIconMap["orders"], moduleId: "orders" as any },
+        ],
+        navGroups: [
+          {
+            title: "Commerce",
+            items: [
+              { name: "Products", href: "/admin/products", icon: moduleIconMap["products"], moduleId: "products" as any },
+              { name: "Categories", href: "/admin/categories", icon: moduleIconMap["categories"], moduleId: "categories" as any },
+              { name: "Brands", href: "/admin/brands", icon: moduleIconMap["brands"], moduleId: "brands" as any },
+              { name: "Deals", href: "/admin/deals", icon: moduleIconMap["deals"], moduleId: "deals" as any },
+              { name: "Reviews", href: "/admin/reviews", icon: moduleIconMap["reviews"], moduleId: "reviews" as any },
+            ]
+          },
+          {
+            title: "Inventory",
+            items: [
+              { name: "Media Library", href: "/admin/products/media", icon: moduleIconMap["media"], moduleId: "media" as any },
+              { name: "Gift Boxes", href: "/admin/gift-boxes", icon: <HiOutlineGift size={16} />, moduleId: "gift-boxes" as any },
+              { name: "Gift Cards", href: "/admin/gift-cards", icon: <HiCreditCard size={16} />, moduleId: "gift-cards" as any },
+            ]
+          },
+          {
+            title: "Marketing",
+            items: [
+              { name: "Coupon Codes", href: "/admin/coupons", icon: moduleIconMap["marketing"], moduleId: "marketing" as any },
+              { name: "Adverts", href: "/admin/advert", icon: moduleIconMap["advert"], moduleId: "advert" as any },
+            ]
+          },
+          {
+            title: "Finance",
+            items: [
+              { name: "Transactions", href: "/admin/transactions", icon: moduleIconMap["transactions"], moduleId: "transactions" as any },
+              { name: "Refunds", href: "/admin/refunds", icon: moduleIconMap["refunds"], moduleId: "refunds" as any },
+            ]
+          },
+          {
+            title: "Users",
+            items: [
+              { name: "Customers", href: "/admin/customers", icon: moduleIconMap["customers"], moduleId: "customers" as any },
+              { name: "Staff Management", href: "/admin/users", icon: moduleIconMap["users"], moduleId: "users" as any },
+              { name: "Roles", href: "/admin/roles", icon: moduleIconMap["roles"], moduleId: "roles" as any },
+              { name: "Permissions", href: "/admin/permissions", icon: <HiShieldCheck size={14} />, moduleId: "permissions" as any },
+            ]
+          },
+          {
+            title: "System",
+            items: [
+              { name: "Support", href: "/admin/support", icon: moduleIconMap["support"], moduleId: "support" as any },
+              { name: "FAQ", href: "/admin/faq", icon: <HiOutlineQuestionMarkCircle size={14} />, moduleId: "faq" as any },
+              { name: "Notifications", href: "/admin/notifications", icon: moduleIconMap["notifications"], moduleId: "notifications" as any },
+            ]
+          }
+        ]
+      };
+    }
+
+    // 2. If we have real permissions from the DB, use them (For other roles)
     if (userPrivileges?.role?.permissions && userPrivileges.role.permissions.length > 0) {
       const categoryOrder = ["System", "Commerce", "Inventory", "Finance", "Marketing", "Users", "Admin"];
       const coreModuleIds = ["dashboard", "orders"];
 
-      const isSuperAdmin = user?.role === "SUPER_ADMIN";
-
       const coreItems = userPrivileges.role.permissions
-        .filter(p => (p.access || isSuperAdmin) && coreModuleIds.includes(p.id))
+        .filter(p => p.access && coreModuleIds.includes(p.id))
         .sort((a, b) => {
           if (a.id === "dashboard") return -1;
           if (b.id === "dashboard") return 1;
@@ -221,7 +282,7 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
         });
 
       const grouped = userPrivileges.role.permissions.reduce((acc, p) => {
-        if ((!p.access && !isSuperAdmin) || coreModuleIds.includes(p.id)) return acc;
+        if (!p.access || coreModuleIds.includes(p.id)) return acc;
 
         const category = p.category || "General";
         if (!acc[category]) acc[category] = [];
