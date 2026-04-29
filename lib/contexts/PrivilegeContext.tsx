@@ -58,16 +58,21 @@ export const PrivilegeProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const isSuperAdmin = useSelector(selectIsSuperAdmin);
 
   // 1. Fetch all roles to find the ID for the current user's role name
-  const { data: allRoles = [] } = useGetRolesQuery();
+  const { data: allRoles = [], isLoading: isRolesLoading } = useGetRolesQuery();
   
-  // 2. Find the roleId for the user's current role string (e.g. "SUPER_ADMIN")
-  const currentRole = allRoles.find(r => r.name === user?.role);
+  // 2. Find the roleId for the user's current role string
+  // Smart matching: lowercase, remove spaces and underscores
+  const normalize = (s: string) => s?.toLowerCase().replace(/[\s_]/g, "") || "";
+  
+  const currentRole = allRoles.find(r => normalize(r.name) === normalize(user?.role));
   const roleId = currentRole?._id;
 
   // 3. Fetch structured privileges for this role
   const { data: rolePrivileges, isLoading: isQueryLoading, refetch: refetchPrivileges } = useGetRolePrivilegesQuery(roleId!, {
     skip: !roleId
   });
+
+  const isLoading = isRolesLoading || (!!roleId && isQueryLoading);
 
   const { refetch: refetchRoles } = useGetRolesQuery();
 
