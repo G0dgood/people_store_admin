@@ -19,6 +19,7 @@ import { AISettingsModal } from "../../../components/Admin/AISettingsModal";
 import { useUpdateProductMutation, useGetProductByIdQuery } from "@/lib/redux/services/productApi";
 import { useGetCategoriesQuery } from "@/lib/redux/services/categoryApi";
 import { toast } from "sonner";
+import { useSocket } from "@/app/context/SocketContext";
 import { SVGLoaderFetch } from "@/app/components/Options";
 
 export default function EditProduct() {
@@ -29,6 +30,7 @@ export default function EditProduct() {
  const { data: productResponse, isLoading: isLoadingProduct } = useGetProductByIdQuery(productId);
  const [updateProduct, { isLoading: isSubmitting }] = useUpdateProductMutation();
  const { data: categoriesResponse, isLoading: isLoadingCategories } = useGetCategoriesQuery();
+ const { emit } = useSocket();
 
  const product = productResponse?.data;
  const categories = categoriesResponse?.data || [];
@@ -211,6 +213,7 @@ export default function EditProduct() {
    }).unwrap();
 
    if (response.success) {
+    emit("PRODUCT_UPDATED", { type: "update", product: response.data });
     if (submitStatus === "Published") {
      setIsPublishSuccessOpen(true);
     } else {

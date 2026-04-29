@@ -19,12 +19,14 @@ import { AISettingsModal } from "../../../components/Admin/AISettingsModal";
 import { useAddProductMutation } from "@/lib/redux/services/productApi";
 import { useGetCategoriesQuery } from "@/lib/redux/services/categoryApi";
 import { toast } from "sonner";
+import { useSocket } from "@/app/context/SocketContext";
 
 
 export default function CreateProduct() {
  const router = useRouter();
  const [addProduct, { isLoading: isSubmitting }] = useAddProductMutation();
  const { data: categoriesResponse, isLoading: isLoadingCategories } = useGetCategoriesQuery();
+ const { emit } = useSocket();
 
  const categories = categoriesResponse?.data || [];
 
@@ -166,6 +168,7 @@ export default function CreateProduct() {
    const response = await addProduct(postData).unwrap();
 
    if (response.success) {
+    emit("PRODUCT_UPDATED", { type: "create", product: response.data });
     if (submitStatus === "Published") {
      setIsPublishSuccessOpen(true);
     } else {
