@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { usePrivilege, ModuleId } from "@/lib/contexts/PrivilegeContext";
 import Image from "next/image";
+import { SidebarSkeleton } from "./SidebarSkeleton";
 
 interface NavGroup {
   title: string;
@@ -200,8 +201,10 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
       const categoryOrder = ["System", "Commerce", "Inventory", "Finance", "Marketing", "Users", "Admin"];
       const coreModuleIds = ["dashboard", "orders"];
 
+      const isSuperAdmin = user?.role === "SUPER_ADMIN";
+
       const coreItems = userPrivileges.role.permissions
-        .filter(p => p.access && coreModuleIds.includes(p.id))
+        .filter(p => (p.access || isSuperAdmin) && coreModuleIds.includes(p.id))
         .sort((a, b) => {
           if (a.id === "dashboard") return -1;
           if (b.id === "dashboard") return 1;
@@ -218,7 +221,7 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
         });
 
       const grouped = userPrivileges.role.permissions.reduce((acc, p) => {
-        if (!p.access || coreModuleIds.includes(p.id)) return acc;
+        if ((!p.access && !isSuperAdmin) || coreModuleIds.includes(p.id)) return acc;
 
         const category = p.category || "General";
         if (!acc[category]) acc[category] = [];
@@ -271,43 +274,6 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
       return { coreItems, navGroups };
     }
 
-    // 2. FAIL-SAFE: If no permissions found but user is an ADMIN, show defaults
-    const isActuallyAdmin = user?.role === "ADMIN" || user?.role === "SUPER_ADMIN";
-    
-    if (isActuallyAdmin) {
-      return {
-        coreItems: [
-          { name: "Dashboard Overview", href: "/admin", icon: moduleIconMap["dashboard"], moduleId: "dashboard" as any },
-          { name: "Orders", href: "/admin/orders", icon: moduleIconMap["orders"], moduleId: "orders" as any },
-        ],
-        navGroups: [
-          {
-            title: "Commerce",
-            items: [
-              { name: "Products", href: "/admin/products", icon: moduleIconMap["products"], moduleId: "products" as any },
-              { name: "Categories", href: "/admin/categories", icon: moduleIconMap["categories"], moduleId: "categories" as any },
-              { name: "Brands", href: "/admin/brands", icon: moduleIconMap["brands"], moduleId: "brands" as any },
-            ]
-          },
-          {
-            title: "Inventory",
-            items: [
-              { name: "Gift Boxes", href: "/admin/gift-boxes", icon: <HiOutlineGift size={16} />, moduleId: "gift-boxes" as any },
-              { name: "Gift Cards", href: "/admin/gift-cards", icon: <HiCreditCard size={16} />, moduleId: "gift-cards" as any },
-            ]
-          },
-          {
-            title: "Users",
-            items: [
-              { name: "Customers", href: "/admin/customers", icon: moduleIconMap["customers"], moduleId: "customers" as any },
-              { name: "Staff Management", href: "/admin/users", icon: moduleIconMap["users"], moduleId: "users" as any },
-              { name: "Roles", href: "/admin/roles", icon: moduleIconMap["roles"], moduleId: "roles" as any },
-            ]
-          }
-        ]
-      };
-    }
-
     return { coreItems: [], navGroups: [] };
   }, [userPrivileges, user]);
 
@@ -351,6 +317,10 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
   };
 
   const displayRole = user?.role?.replace(/_/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "Store Management";
+
+  if (isLoading && !userPrivileges) {
+    return <SidebarSkeleton />;
+  }
 
   return (
     <aside id="sidenav"
