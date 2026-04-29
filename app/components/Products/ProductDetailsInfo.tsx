@@ -8,6 +8,7 @@ import { PriceTiers, SpecsTable, ProtectionWarranty } from "./ProductDetailSpecs
 
 import { useCart } from "@/app/context/CartContext";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface ProductDetailsInfoProps {
   product: any;
@@ -16,6 +17,7 @@ interface ProductDetailsInfoProps {
 const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
   const { addToCart } = useCart();
   const [selectedSize, setSelectedSize] = React.useState(0);
+  const router = useRouter();
 
   if (!product) return null;
 
@@ -46,15 +48,25 @@ const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
     toast.success("Added to Boutique Bag");
   };
 
+  const handleBuyNow = () => {
+    addToCart({
+      id: product._id,
+      title: product.name,
+      price: `₦${product.price.toLocaleString()}`,
+      image: product.productImage,
+    });
+    router.push("/checkout");
+  };
+
   return (
     <div className="flex-1 flex flex-col gap-8">
       {/* Header Info */}
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-2">
-          <Icon 
-            name={product.stockStatus === "Out of Stock" ? "close" : "check"} 
-            size="sm" 
-            className={product.stockStatus === "Out of Stock" ? "text-rose-500" : "text-brand-gold"} 
+          <Icon
+            name={product.stockStatus === "Out of Stock" ? "close" : "check"}
+            size="sm"
+            className={product.stockStatus === "Out of Stock" ? "text-rose-500" : "text-brand-gold"}
           />
           <span className={`text-[10px] font-bold uppercase tracking-widest ${product.stockStatus === "Out of Stock" ? "text-rose-500" : "text-brand-gold"}`}>
             {product.stockStatus || "In Stock"} & Ready to Ship
@@ -94,7 +106,7 @@ const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
                 <span className="text-gray-900">{product.stock} units left</span>
               </div>
               <div className="h-1 w-full bg-gray-100 rounded-full overflow-hidden">
-                <div 
+                <div
                   className={`h-full transition-all duration-1000 ${product.stock <= 5 ? "bg-rose-500" : "bg-brand-gold"}`}
                   style={{ width: `${Math.min((product.stock / 20) * 100, 100)}%` }}
                 />
@@ -132,11 +144,11 @@ const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
 
       <div className="flex flex-col gap-4">
         <div className="flex gap-4">
-          <button 
+          <button
             onClick={handleAddToCart}
             className="flex-1 bg-black text-white h-14 font-bold uppercase tracking-[0.2em] text-[11px] hover:bg-brand-gold transition-all shadow-xl active:scale-95"
           >
-            Add to Bag
+            Add to Cart
           </button>
           <FavoriteButton
             item={{
@@ -151,7 +163,10 @@ const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
             <span className="text-[10px] font-bold uppercase tracking-widest hidden md:inline">Save for later</span>
           </FavoriteButton>
         </div>
-        <button className="w-full border-2 border-brand-gold text-brand-gold h-14 font-bold uppercase tracking-[0.2em] text-[11px] hover:bg-brand-gold hover:text-white transition-all active:scale-95">
+        <button 
+          onClick={handleBuyNow}
+          className="w-full border-2 border-brand-gold text-brand-gold h-14 font-bold uppercase tracking-[0.2em] text-[11px] hover:bg-brand-gold hover:text-white transition-all active:scale-95"
+        >
           Buy Now
         </button>
       </div>

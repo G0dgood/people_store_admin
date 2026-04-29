@@ -107,7 +107,7 @@ export const LoginForm = ({ }: LoginFormProps) => {
 
           <div className="flex items-center justify-between mt-1 px-1">
             <Checkbox
-              label={<span className="text-[9px] font-black text-gray-500 uppercase tracking-[0.1em]">Remember for 30 days</span>}
+              label={<span className="text-[9px] font-black text-gray-500 uppercase tracking-[0.1em]">Remember Me</span>}
               checked={rememberMe}
               onChange={() => setRememberMe(!rememberMe)}
             />
