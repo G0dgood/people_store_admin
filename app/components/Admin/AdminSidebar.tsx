@@ -189,89 +189,127 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
   const [hoveredItem, setHoveredItem] = useState<{ name: string; rect: DOMRect } | null>(null);
   const [mounted, setMounted] = useState(false);
   const { canAccess, isLoading, userPrivileges } = usePrivilege();
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const [logout] = useLogoutMutation();
+  const user = useAppSelector(selectCurrentUser);
 
   const dynamicNavData = React.useMemo(() => {
-    if (!userPrivileges?.role?.permissions) return { coreItems: [], navGroups: [] };
+    // 1. If we have real permissions from the DB, use them
+    if (userPrivileges?.role?.permissions && userPrivileges.role.permissions.length > 0) {
+      const categoryOrder = ["System", "Commerce", "Inventory", "Finance", "Marketing", "Users", "Admin"];
+      const coreModuleIds = ["dashboard", "orders"];
 
+      const coreItems = userPrivileges.role.permissions
+        .filter(p => p.access && coreModuleIds.includes(p.id))
+        .sort((a, b) => {
+          if (a.id === "dashboard") return -1;
+          if (b.id === "dashboard") return 1;
+          return 0;
+        })
+        .map(p => {
+          const metadata = moduleMetadata[p.id] || {};
+          return {
+            name: metadata.name || p.moduleName,
+            href: metadata.href || `/admin/${p.id}`,
+            icon: moduleIconMap[p.id] || "Frame",
+            moduleId: p.id as ModuleId
+          };
+        });
 
+      const grouped = userPrivileges.role.permissions.reduce((acc, p) => {
+        if (!p.access || coreModuleIds.includes(p.id)) return acc;
 
-    // Sorting categories to match original order if possible
-    // Sorting categories to match backend and prioritize core modules
-    const categoryOrder = ["System", "Commerce", "Inventory", "Finance", "Marketing", "Users", "Admin"];
+        const category = p.category || "General";
+        if (!acc[category]) acc[category] = [];
 
-    // Separate core modules from grouped modules
-    const coreModuleIds = ["dashboard", "orders"];
-
-    const coreItems = userPrivileges.role.permissions
-      .filter(p => p.access && coreModuleIds.includes(p.id))
-      .sort((a, b) => {
-        if (a.id === "dashboard") return -1;
-        if (b.id === "dashboard") return 1;
-        return 0;
-      })
-      .map(p => {
         const metadata = moduleMetadata[p.id] || {};
-        return {
+
+        acc[category].push({
           name: metadata.name || p.moduleName,
           href: metadata.href || `/admin/${p.id}`,
           icon: moduleIconMap[p.id] || "Frame",
           moduleId: p.id as ModuleId
-        };
-      });
+        });
 
-    const grouped = userPrivileges.role.permissions.reduce((acc, p) => {
-      if (!p.access || coreModuleIds.includes(p.id)) return acc;
+        return acc;
+      }, {} as Record<string, any[]>);
 
-      const category = p.category || "General";
-      if (!acc[category]) acc[category] = [];
+      // Inject new modules
+      if (!grouped["Inventory"]) grouped["Inventory"] = [];
+      if (!grouped["Inventory"].some(item => item.href === "/admin/gift-boxes")) {
+        grouped["Inventory"].push({
+          name: "Gift Boxes",
+          href: "/admin/gift-boxes",
+          icon: moduleIconMap["gift-boxes"] || <HiOutlineGift size={16} />,
+          moduleId: "gift-boxes" as any,
+        });
+      }
+      if (!grouped["Inventory"].some(item => item.href === "/admin/gift-cards")) {
+        grouped["Inventory"].push({
+          name: "Gift Cards",
+          href: "/admin/gift-cards",
+          icon: <HiCreditCard size={16} />,
+          moduleId: "gift-cards" as any,
+        });
+      }
 
-      const metadata = moduleMetadata[p.id] || {};
+      const navGroups = Object.entries(grouped)
+        .sort(([a], [b]) => {
+          const indexA = categoryOrder.indexOf(a);
+          const indexB = categoryOrder.indexOf(b);
+          if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+          if (indexA !== -1) return -1;
+          if (indexB !== -1) return 1;
+          return a.localeCompare(b);
+        })
+        .map(([title, items]) => ({
+          title: title === "General" ? "" : title,
+          items
+        }));
 
-      acc[category].push({
-        name: metadata.name || p.moduleName,
-        href: metadata.href || `/admin/${p.id}`,
-        icon: moduleIconMap[p.id] || "Frame",
-        moduleId: p.id as ModuleId
-      });
-
-      return acc;
-    }, {} as Record<string, any[]>);
-
-    // Inject new modules that might not be in the DB yet
-    if (!grouped["Inventory"]) grouped["Inventory"] = [];
-    if (!grouped["Inventory"].some(item => item.href === "/admin/gift-boxes")) {
-      grouped["Inventory"].push({
-        name: "Gift Boxes",
-        href: "/admin/gift-boxes",
-        icon: moduleIconMap["gift-boxes"] || <HiOutlineGift size={16} />,
-        moduleId: "gift-boxes" as any,
-      });
+      return { coreItems, navGroups };
     }
-    if (!grouped["Inventory"].some(item => item.href === "/admin/gift-cards")) {
-      grouped["Inventory"].push({
-        name: "Gift Cards",
-        href: "/admin/gift-cards",
-        icon: <HiCreditCard size={16} />,
-        moduleId: "gift-cards" as any,
-      });
+
+    // 2. FAIL-SAFE: If no permissions found but user is an ADMIN, show defaults
+    const isActuallyAdmin = user?.role === "ADMIN" || user?.role === "SUPER_ADMIN";
+    
+    if (isActuallyAdmin) {
+      return {
+        coreItems: [
+          { name: "Dashboard Overview", href: "/admin", icon: moduleIconMap["dashboard"], moduleId: "dashboard" as any },
+          { name: "Orders", href: "/admin/orders", icon: moduleIconMap["orders"], moduleId: "orders" as any },
+        ],
+        navGroups: [
+          {
+            title: "Commerce",
+            items: [
+              { name: "Products", href: "/admin/products", icon: moduleIconMap["products"], moduleId: "products" as any },
+              { name: "Categories", href: "/admin/categories", icon: moduleIconMap["categories"], moduleId: "categories" as any },
+              { name: "Brands", href: "/admin/brands", icon: moduleIconMap["brands"], moduleId: "brands" as any },
+            ]
+          },
+          {
+            title: "Inventory",
+            items: [
+              { name: "Gift Boxes", href: "/admin/gift-boxes", icon: <HiOutlineGift size={16} />, moduleId: "gift-boxes" as any },
+              { name: "Gift Cards", href: "/admin/gift-cards", icon: <HiCreditCard size={16} />, moduleId: "gift-cards" as any },
+            ]
+          },
+          {
+            title: "Users",
+            items: [
+              { name: "Customers", href: "/admin/customers", icon: moduleIconMap["customers"], moduleId: "customers" as any },
+              { name: "Staff Management", href: "/admin/users", icon: moduleIconMap["users"], moduleId: "users" as any },
+              { name: "Roles", href: "/admin/roles", icon: moduleIconMap["roles"], moduleId: "roles" as any },
+            ]
+          }
+        ]
+      };
     }
 
-    const navGroups = Object.entries(grouped)
-      .sort(([a], [b]) => {
-        const indexA = categoryOrder.indexOf(a);
-        const indexB = categoryOrder.indexOf(b);
-        if (indexA !== -1 && indexB !== -1) return indexA - indexB;
-        if (indexA !== -1) return -1;
-        if (indexB !== -1) return 1;
-        return a.localeCompare(b);
-      })
-      .map(([title, items]) => ({
-        title: title === "General" ? "" : title,
-        items
-      }));
-
-    return { coreItems, navGroups };
-  }, [userPrivileges]);
+    return { coreItems: [], navGroups: [] };
+  }, [userPrivileges, user]);
 
   const { coreItems, navGroups } = dynamicNavData;
 
@@ -296,11 +334,6 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
       prev.includes(title) ? prev.filter(t => t !== title) : [...prev, title]
     );
   };
-
-  const router = useRouter();
-  const dispatch = useAppDispatch();
-  const user = useAppSelector(selectCurrentUser);
-  const [logout] = useLogoutMutation();
 
   const handleLogout = async () => {
     try {
