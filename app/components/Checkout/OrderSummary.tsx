@@ -86,7 +86,8 @@ export const OrderSummary: React.FC = () => {
         email: customer.email,
         amount: Math.round(total * 100), // in kobo
         currency: 'NGN',
-        ref: `ORD_${Math.floor(Math.random() * 1000000000 + 1)}`,
+        ref: `ORD_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
+        reference: `ORD_${Date.now()}_${Math.floor(Math.random() * 1000)}`,
         onClose: () => {
           toast.warning("Payment cancelled");
         },
