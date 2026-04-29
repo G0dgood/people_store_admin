@@ -50,10 +50,10 @@ export default function BrandsListing() {
   const totalPages = response?.meta?.totalPages || 1;
 
   const toggleAll = () => {
-    if (selectedIds.length === brandsData.length) {
+    if (selectedIds.length === brandsData.length && brandsData.length > 0) {
       setSelectedIds([]);
     } else {
-      setSelectedIds(brandsData.map(b => b._id));
+      setSelectedIds(brandsData.map(b => String(b._id)));
     }
   };
 

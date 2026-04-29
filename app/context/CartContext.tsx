@@ -11,6 +11,7 @@ import {
   useRemoveFromCartMutation, 
   useClearCartMutation 
 } from "@/lib/redux/services/cartApi";
+import { useSocket } from "./SocketContext";
 
 export interface CartItem {
   id: string;
@@ -50,6 +51,20 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [updateCartItemMut, { isError: isUpdateError, error: updateError }] = useUpdateCartItemMutation();
   const [removeFromCartMut, { isError: isRemoveError, error: removeError }] = useRemoveFromCartMutation();
   const [clearCartMut, { isError: isClearError, error: clearError }] = useClearCartMutation();
+  
+  const { on, off } = useSocket();
+
+  // Listen for product updates to refresh cart prices/info
+  useEffect(() => {
+    const handleProductUpdate = () => {
+      if (isAuthenticated) {
+        refetch();
+      }
+    };
+
+    on("PRODUCT_UPDATED", handleProductUpdate);
+    return () => off("PRODUCT_UPDATED", handleProductUpdate);
+  }, [on, off, isAuthenticated, refetch]);
 
   // Handle API Errors
   useApiError(isSyncError, syncError, "Failed to sync cart", { hideInAdmin: true });

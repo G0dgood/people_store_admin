@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import Link from "next/link";
 import { Header } from "@/app/components/Header";
 import { Footer } from "@/app/components/Footer";
@@ -15,7 +16,7 @@ import { useSearchParams } from "next/navigation";
 import { useGetPublicProductByIdQuery, useGetPublicRelatedProductsQuery } from "@/lib/redux/services/boutiqueApi";
 import { ProductDetailSkeleton } from "@/app/components/Skeleton/ProductDetailSkeleton";
 
-export default function ProductDetailPage() {
+function ProductDetailContent() {
    const searchParams = useSearchParams();
    const id = searchParams.get("id");
 
@@ -112,5 +113,21 @@ export default function ProductDetailPage() {
 
          <Footer />
       </div>
+   );
+}
+
+export default function ProductDetailPage() {
+   return (
+      <Suspense fallback={
+         <div className="flex flex-col min-h-screen bg-white">
+            <Header />
+            <div className="flex-1 max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 py-4 md:py-8 w-full">
+               <ProductDetailSkeleton />
+            </div>
+            <Footer />
+         </div>
+      }>
+         <ProductDetailContent />
+      </Suspense>
    );
 }

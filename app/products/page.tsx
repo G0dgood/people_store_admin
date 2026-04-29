@@ -21,6 +21,8 @@ import { useGetPublicProductsQuery, useGetPublicCategoriesQuery, useGetPublicBra
 import { useFilter } from "@/app/context/FilterContext";
 import { DEFAULT_FILTERS } from "@/app/types/products";
 import { ViewMode } from "../types/products";
+import { useSocket } from "@/app/context/SocketContext";
+import { toast } from "sonner";
 
 const ProductsPage = () => {
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
@@ -56,13 +58,35 @@ const ProductsPage = () => {
   const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
   const searchBarQuery = searchParams?.get("search")?.toLowerCase() || "";
 
-  const { data: productsResponse, isLoading: isLoadingProducts } = useGetPublicProductsQuery({
+  const { data: productsResponse, isLoading: isLoadingProducts, refetch: refetchProducts } = useGetPublicProductsQuery({
     category: filters.category || undefined,
     search: searchBarQuery,
     page: currentPage,
     limit: rowsPerPage,
     sort: sortBy
   });
+
+  const { on, off } = useSocket();
+
+  React.useEffect(() => {
+    const handleProductUpdate = (data: any) => {
+      refetchProducts();
+      if (data?.type === 'update') {
+        toast.info(`Product Updated: ${data.product?.name}`, {
+          description: "Prices and stock levels have been refreshed.",
+          icon: <Icon name="arrow-refresh-01" folder="dashboardIcon" size="sm" className="text-brand-gold" />
+        });
+      } else if (data?.type === 'create') {
+        toast.success(`New Product: ${data.product?.name}`, {
+          description: "Check out our latest arrival!",
+          icon: <Icon name="circle-plus" folder="dashboardIcon" size="sm" className="text-emerald-500" />
+        });
+      }
+    };
+
+    on("PRODUCT_UPDATED", handleProductUpdate);
+    return () => off("PRODUCT_UPDATED", handleProductUpdate);
+  }, [on, off, refetchProducts]);
 
   const products = productsResponse?.data?.products || [];
   const pagination = productsResponse?.data?.pagination;

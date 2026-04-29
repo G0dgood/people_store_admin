@@ -27,24 +27,24 @@ export const brandApi = baseApi.injectEndpoints({
       query: (id) => `/brands/${id}`,
       providesTags: (result, error, id) => [{ type: 'Brand', id }],
     }),
-    createBrand: builder.mutation<ApiResponse<Brand>, Partial<Brand>>({
-      query: (data) => ({
+    createBrand: builder.mutation({
+      query: (data: Partial<Brand>) => ({
         url: '/brands',
         method: 'POST',
         body: data,
       }),
       invalidatesTags: ['Brand'],
     }),
-    updateBrand: builder.mutation<ApiResponse<Brand>, { id: string; data: Partial<Brand> }>({
-      query: ({ id, data }) => ({
+    updateBrand: builder.mutation({
+      query: ({ id, data }: { id: string; data: Partial<Brand> }) => ({
         url: `/brands/${id}`,
         method: 'PUT',
         body: data,
       }),
-      invalidatesTags: (result, error, { id }) => [{ type: 'Brand', id }, 'Brand'],
+      invalidatesTags: (result, error, { id }) => [{ type: 'Brand', id: id as any }, 'Brand'],
     }),
-    deleteBrand: builder.mutation<ApiResponse<{}>, string>({
-      query: (id) => ({
+    deleteBrand: builder.mutation({
+      query: (id: string) => ({
         url: `/brands/${id}`,
         method: 'DELETE',
       }),
