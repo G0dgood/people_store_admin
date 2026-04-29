@@ -7,6 +7,12 @@ import { MdOutlineInventory2 } from "react-icons/md";
 import Drawer from "../Drawer/Drawer";
 import { Button } from "../Button";
 import { Avatar } from "../Other/Avatar";
+import { useGetRolesQuery, useGetRolePrivilegesQuery } from "@/lib/redux/services/roleApi";
+import { useDeleteStaffMutation, useLockStaffSessionMutation, useResetStaffPasswordMutation, useGetUserByIdQuery } from "@/lib/redux/services/authApi";
+import { ConfirmationModal } from "./ConfirmationModal";
+import { toast } from "sonner";
+import { HiOutlineCube, HiOutlineUserGroup, HiOutlineShieldCheck, HiOutlineShoppingBag, HiLockClosed, HiLockOpen, HiKey } from "react-icons/hi2";
+import { BiLoaderAlt } from "react-icons/bi";
 
 interface StaffDetailDrawerProps {
  isOpen: boolean;
@@ -15,20 +21,101 @@ interface StaffDetailDrawerProps {
 }
 
 export function StaffDetailDrawer({ isOpen, onClose, staff }: StaffDetailDrawerProps) {
+ // 1. Fetch all roles to find the ID for the staff member's role name
+ const { data: allRoles = [] } = useGetRolesQuery();
+ const staffRole = allRoles.find(r => r.name === staff?.role);
+ const roleId = staffRole?._id;
+
+ // 2. Fetch structured privileges for this role
+ const { data: rolePrivileges, isLoading: isPrivilegeLoading } = useGetRolePrivilegesQuery(roleId!, {
+  skip: !roleId || !isOpen
+ });
+
+ // 3. Fetch latest staff status to ensure Lock/Unlock toggle is accurate
+ const { data: liveStaffData } = useGetUserByIdQuery(staff?._id, {
+  skip: !staff?._id || !isOpen
+ });
+
+ const currentStaff = liveStaffData || staff;
+
+ const [deleteStaff, { isLoading: isDeleting }] = useDeleteStaffMutation();
+ const [lockStaff, { isLoading: isLocking }] = useLockStaffSessionMutation();
+ const [resetPassword, { isLoading: isResetting }] = useResetStaffPasswordMutation();
+
+ const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
+ const [isLockModalOpen, setIsLockModalOpen] = React.useState(false);
+ const [isResetModalOpen, setIsResetModalOpen] = React.useState(false);
+
+ const handleRevokeAccess = async () => {
+  try {
+   await deleteStaff(staff._id).unwrap();
+   toast.success("Access Revoked", {
+    description: `${staff.fullName} has been removed from the system.`
+   });
+   setIsDeleteModalOpen(false);
+   onClose();
+  } catch (err: any) {
+   toast.error("Action Failed", {
+    description: err.data?.message || "Could not revoke access."
+   });
+  }
+ };
+
+ const handleLockSession = async () => {
+  try {
+   const isCurrentlySuspended = currentStaff.status === "Suspended";
+   await lockStaff(staff._id).unwrap();
+   toast.success(isCurrentlySuspended ? "Account Unlocked" : "Session Locked", {
+    description: `${staff.fullName}'s account has been ${isCurrentlySuspended ? "reactivated" : "suspended and session terminated"}.`
+   });
+   setIsLockModalOpen(false);
+  } catch (err: any) {
+   toast.error("Action Failed", {
+    description: err.data?.message || "Could not modify session status."
+   });
+  }
+ };
+
+ const handleResetPassword = async () => {
+  try {
+   const result = await resetPassword(staff._id).unwrap();
+   toast.success("Password Reset Successfully", {
+    description: `New Temporary Password: ${result.data.tempPassword}. Please share this with the staff member.`
+   });
+   setIsResetModalOpen(false);
+  } catch (err: any) {
+   toast.error("Reset Failed", {
+    description: err.data?.message || "Could not reset password."
+   });
+  }
+ };
+
  if (!staff) return null;
 
- const permissions = [
-  { label: "Orders Management", status: "Full Access", icon: <FiShoppingCart size={14} /> },
-  { label: "Product Inventory", status: "Edit Only", icon: <MdOutlineInventory2 size={14} /> },
-  { label: "Customer Data", status: "View Only", icon: <FiUsers size={14} /> },
-  { label: "Financials", status: "Restricted", icon: <FiCreditCard size={14} /> },
- ];
+ const getAccessLabel = (perms: { view: boolean, create: boolean, edit: boolean, delete: boolean }) => {
+  if (perms.view && perms.create && perms.edit && perms.delete) return "Full Access";
+  if (perms.view && perms.edit) return "Edit Only";
+  if (perms.view) return "View Only";
+  return "Restricted";
+ };
 
- const recentActivity = [
-  { action: "Updated Product Price", target: "iPhone 15 Pro", time: "2 hours ago" },
-  { action: "Resolved Ticket", target: "#TK-4421", time: "5 hours ago" },
-  { action: "Login Verified", target: "Office IP: 192.168.1.1", time: "Today, 09:12 AM" },
- ];
+ const getModuleIcon = (moduleName: string) => {
+  const name = moduleName.toLowerCase();
+  if (name.includes("order")) return <FiShoppingCart size={14} />;
+  if (name.includes("product") || name.includes("invent")) return <MdOutlineInventory2 size={14} />;
+  if (name.includes("customer") || name.includes("user")) return <FiUsers size={14} />;
+  if (name.includes("financial") || name.includes("transaction")) return <FiCreditCard size={14} />;
+  if (name.includes("perm") || name.includes("role") || name.includes("govern")) return <HiOutlineShieldCheck size={14} />;
+  return <HiOutlineCube size={14} />;
+ };
+
+ const permissions = rolePrivileges?.permissions?.map(p => ({
+  label: p.moduleName,
+  status: getAccessLabel(p.permissions),
+  icon: getModuleIcon(p.moduleName)
+ })) || [];
+
+ const recentActivity: any[] = []; // Hidden for now as requested
 
  return (
   <Drawer isOpen={isOpen} onClose={onClose} title="Staff Member Profile">
@@ -51,7 +138,7 @@ export function StaffDetailDrawer({ isOpen, onClose, staff }: StaffDetailDrawerP
 
      <div className="flex gap-2 relative z-10">
       <span className="px-3 py-1 bg-gray-100 rounded-[6px] text-[10px] font-black uppercase tracking-widest text-gray-500">
-       {staff.role}
+       {currentStaff.role}
       </span>
       {(() => {
         const statuses: Record<string, string> = {
@@ -60,10 +147,10 @@ export function StaffDetailDrawer({ isOpen, onClose, staff }: StaffDetailDrawerP
           Pending: "bg-amber-50 text-amber-600 border-amber-100",
           Suspended: "bg-rose-50 text-rose-500 border-rose-100",
         };
-        const statusStyle = statuses[staff.status] || statuses.Inactive;
+        const statusStyle = statuses[currentStaff.status] || statuses.Inactive;
         return (
           <span className={`px-3 py-1 rounded-[6px] text-[10px] font-black uppercase tracking-widest border ${statusStyle}`}>
-            {staff.status || "Inactive"}
+            {currentStaff.status || "Inactive"}
           </span>
         );
       })()}
@@ -130,37 +217,98 @@ export function StaffDetailDrawer({ isOpen, onClose, staff }: StaffDetailDrawerP
      </div>
     </div>
 
-    {/* Recent Activity Timeline */}
-    <div className="flex flex-col gap-4">
-     <h4 className="text-[12px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Recent Activity</h4>
-     <div className="flex flex-col gap-5 pl-2">
-      {recentActivity.map((act, i) => (
-       <div key={i} className="flex gap-4 relative">
-        {i !== recentActivity.length - 1 && (
-         <div className="absolute left-[7px] top-4 bottom-[-20px] w-[2px] bg-gray-100" />
-        )}
-        <div className="w-[16px] h-[16px] rounded-full bg-white border-2 border-brand-gold shadow-sm mt-1 z-10 shrink-0" />
-        <div className="flex flex-col gap-0.5" >
-         <span className="text-[11px] font-black text-[#1D3557] leading-tight">
-          {act.action} <span className="text-gray-400 font-bold ml-1">{act.target}</span>
-         </span>
-         <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">{act.time}</span>
+    {/* Recent Activity Timeline - Hidden until backend supports audit logging */}
+    {recentActivity.length > 0 && (
+     <div className="flex flex-col gap-4">
+      <h4 className="text-[12px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Recent Activity</h4>
+      <div className="flex flex-col gap-5 pl-2">
+       {recentActivity.map((act, i) => (
+        <div key={i} className="flex gap-4 relative">
+         {i !== recentActivity.length - 1 && (
+          <div className="absolute left-[7px] top-4 bottom-[-20px] w-[2px] bg-gray-100" />
+         )}
+         <div className="w-[16px] h-[16px] rounded-full bg-white border-2 border-brand-gold shadow-sm mt-1 z-10 shrink-0" />
+         <div className="flex flex-col gap-0.5" >
+          <span className="text-[11px] font-black text-[#1D3557] leading-tight">
+           {act.action} <span className="text-gray-400 font-bold ml-1">{act.target}</span>
+          </span>
+          <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">{act.time}</span>
+         </div>
         </div>
-       </div>
-      ))}
+       ))}
+      </div>
      </div>
-    </div>
+    )}
 
     {/* Footer Actions */}
-    <div className="mt-auto flex gap-3 pt-4">
-     <Button shape="rounded-sm" variant="outline" className="flex-1 font-black text-xs h-12 uppercase tracking-widest transition-all duration-300 hover:text-brand-gold hover:border-brand-gold">
-      Lock Session
-     </Button>
-     <Button shape="rounded-sm" variant="outline" className="flex-1 font-black text-xs h-12 uppercase tracking-widest text-rose-500 border-rose-100 bg-rose-50/30 hover:bg-rose-100">
-      Revoke Access
+    <div className="mt-auto flex flex-col gap-3 pt-4 no-invert">
+     <div className="flex gap-3 w-full">
+      <Button 
+        shape="rounded-sm" 
+        variant="outline" 
+        className={`flex-1 font-black text-xs h-12 uppercase tracking-widest transition-all duration-300 
+          ${currentStaff.status === "Suspended" ? "text-emerald-500 border-emerald-100 bg-emerald-50/30 hover:bg-emerald-100" : "hover:text-brand-gold hover:border-brand-gold"}`}
+        disabled={isLocking}
+        onClick={() => setIsLockModalOpen(true)}
+        iconLeft={isLocking ? <BiLoaderAlt className="animate-spin" size={14} /> : (currentStaff.status === "Suspended" ? <HiLockOpen size={14} /> : <HiLockClosed size={14} />)}
+      >
+        {isLocking ? "Processing..." : (currentStaff.status === "Suspended" ? "Unlock Session" : "Lock Session")}
+      </Button>
+      <Button 
+        shape="rounded-sm" 
+        variant="outline" 
+        className="flex-1 font-black text-xs h-12 uppercase tracking-widest text-rose-500 border-rose-100 bg-rose-50/30 hover:bg-rose-100"
+        disabled={isDeleting}
+        onClick={() => setIsDeleteModalOpen(true)}
+        iconLeft={isDeleting && <BiLoaderAlt className="animate-spin" size={14} />}
+      >
+        {isDeleting ? "Revoking..." : "Revoke Access"}
+      </Button>
+     </div>
+     <Button 
+      shape="rounded-sm" 
+      variant="outline" 
+      className="w-full font-black text-xs h-12 uppercase tracking-widest text-brand-gold border-brand-gold/20 bg-brand-gold/5 hover:bg-brand-gold/10"
+      disabled={isResetting}
+      onClick={() => setIsResetModalOpen(true)}
+      iconLeft={isResetting ? <BiLoaderAlt className="animate-spin" size={14} /> : <HiKey size={14} />}
+     >
+      {isResetting ? "Resetting..." : "Reset Password"}
      </Button>
     </div>
    </div>
+
+   <ConfirmationModal
+    isOpen={isDeleteModalOpen}
+    onClose={() => setIsDeleteModalOpen(false)}
+    onConfirm={handleRevokeAccess}
+    title="Revoke Administrative Access"
+    message={`Are you sure you want to permanently remove ${staff.fullName}? This will delete their account and immediately terminate all active sessions.`}
+    confirmText="Yes, Revoke Permanently"
+    type="danger"
+   />
+
+   <ConfirmationModal
+    isOpen={isLockModalOpen}
+    onClose={() => setIsLockModalOpen(false)}
+    onConfirm={handleLockSession}
+    title={currentStaff.status === "Suspended" ? "Unlock Staff Account" : "Lock Staff Session"}
+    message={currentStaff.status === "Suspended" 
+      ? `Are you sure you want to reactivate ${staff.fullName}'s account? They will be able to log in again.`
+      : `Are you sure you want to lock ${staff.fullName}'s session? They will be forcibly logged out and their status will be set to Suspended.`}
+    confirmText={currentStaff.status === "Suspended" ? "Yes, Unlock" : "Yes, Lock Session"}
+    type={currentStaff.status === "Suspended" ? "warning" : "danger"}
+   />
+
+   <ConfirmationModal
+    isOpen={isResetModalOpen}
+    onClose={() => setIsResetModalOpen(false)}
+    onConfirm={handleResetPassword}
+    title="Reset Staff Password"
+    message={`Are you sure you want to reset the password for ${staff.fullName}? This will generate a new temporary password and log them out of all active sessions.`}
+    confirmText="Yes, Reset Password"
+    type="warning"
+   />
   </Drawer>
  );
 }

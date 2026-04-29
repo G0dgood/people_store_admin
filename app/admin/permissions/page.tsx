@@ -14,6 +14,7 @@ import { useGetRolesQuery, useUpdateRoleMutation, Role } from "@/lib/redux/servi
 import { useGetModulesQuery, Module } from "@/lib/redux/services/moduleApi";
 import { SVGLoaderFetch, NoRecordFound } from "@/app/components/Options";
 import { toast } from "sonner";
+import { PermissionsSkeleton } from "@/app/components/Skeleton/PermissionsSkeleton";
 
 const privileges = [
  { id: "view", label: "View" },
@@ -204,9 +205,7 @@ export default function PermissionsAccordion() {
    {/* Role Accordion List */}
    <div className="flex flex-col gap-4">
     {isLoading ? (
-     <div className="bg-white rounded-[6px] border border-[#1C1C1C1A] p-12">
-      <SVGLoaderFetch colSpan={1} text="Synchronizing administrative permissions..." asTable={false} />
-     </div>
+      <PermissionsSkeleton />
     ) : roles.length === 0 ? (
      <NoRecordFound text="No administrative roles found." asTable={false} />
     ) : (

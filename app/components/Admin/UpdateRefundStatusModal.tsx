@@ -7,6 +7,8 @@ import { Radio } from "../Form/Radio";
 import { Icon } from "../Icon";
 import { Textarea } from "../Form/Inputs";
 
+import { getStatusConfigs } from "@/app/utils/statusRegistry";
+
 interface UpdateStatusModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -20,12 +22,13 @@ export const UpdateRefundStatusModal: React.FC<UpdateStatusModalProps> = ({
   onConfirm,
   target,
 }) => {
-  const [selectedStatus, setSelectedStatus] = useState("Completed");
+  const [selectedStatus, setSelectedStatus] = useState("Approved");
   const [reason, setReason] = useState("");
 
   if (!target) return null;
 
   const isBulk = !!target.count;
+  const refundStatuses = getStatusConfigs("refund");
 
   return (
     <Modal
@@ -43,7 +46,7 @@ export const UpdateRefundStatusModal: React.FC<UpdateStatusModalProps> = ({
           <div className="flex flex-col">
             <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Target Selection</span>
             <span className="text-sm font-black text-[#1D3557]">
-              {isBulk ? `${target.count} Refund Requests` : `Refund for ${target.name}`}
+              {isBulk ? `${target.count} Refund Requests` : `Refund for ${target.customer?.fullName || 'Guest'}`}
             </span>
           </div>
         </div>
@@ -52,51 +55,38 @@ export const UpdateRefundStatusModal: React.FC<UpdateStatusModalProps> = ({
         <div className="flex flex-col gap-4">
           <label className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Select New Status</label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div
-              onClick={() => setSelectedStatus("Completed")}
-              className={`w-full p-4 rounded-2xl border-2 transition-all cursor-pointer flex flex-col gap-3
-                 ${selectedStatus === "Completed" ? "border-emerald-500 bg-emerald-50/30" : "border-gray-200 bg-white hover:border-gray-200"}
-               `}
-            >
-              <div className="w-full flex  items-center justify-between">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${selectedStatus === "Completed" ? "bg-emerald-500 text-white" : "bg-gray-100 text-gray-400"}`}>
-                  <Icon name="verified" folder="icon" size="xs" />
+            {refundStatuses.map((status) => (
+              <div
+                key={status.value}
+                onClick={() => setSelectedStatus(status.value)}
+                className={`w-full p-4 rounded-2xl border-2 transition-all cursor-pointer flex flex-col gap-3
+                   ${selectedStatus === status.value ? "bg-opacity-10 shadow-sm" : "border-gray-200 bg-white hover:border-gray-300"}
+                 `}
+                style={{
+                  borderColor: selectedStatus === status.value ? status.color : undefined,
+                  backgroundColor: selectedStatus === status.value ? `${status.color}15` : undefined,
+                }}
+              >
+                <div className="w-full flex items-center justify-between">
+                  <div 
+                    className="w-8 h-8 rounded-full flex items-center justify-center text-white"
+                    style={{ backgroundColor: selectedStatus === status.value ? status.color : "#f3f4f6", color: selectedStatus === status.value ? "white" : "#9ca3af" }}
+                  >
+                    <Icon name={status.icon} folder={status.iconFolder} size="xs" />
+                  </div>
+                  <Radio
+                    checked={selectedStatus === status.value}
+                    onChange={() => setSelectedStatus(status.value)}
+                    activeColor={status.color}
+                    className="w-auto"
+                  />
                 </div>
-                <Radio
-                  checked={selectedStatus === "Completed"}
-                  onChange={() => setSelectedStatus("Completed")}
-                  activeColor="#10b981" // emerald-500
-                  className="w-auto"
-                />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xs font-black text-[#1D3557]">Approve</span>
-                <p className="text-[10px] font-medium text-gray-500">Refund funds to customer</p>
-              </div>
-            </div>
-
-            <div
-              onClick={() => setSelectedStatus("Canceled")}
-              className={`w-full p-4 rounded-2xl border-2 transition-all cursor-pointer flex flex-col gap-3
-                 ${selectedStatus === "Canceled" ? "border-rose-500 bg-rose-50/30" : "border-gray-200 bg-white hover:border-gray-200"}
-               `}
-            >
-              <div className="w-full flex items-center justify-between">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${selectedStatus === "Canceled" ? "bg-rose-500 text-white" : "bg-gray-100 text-gray-400"}`}>
-                  <Icon name="Delete" folder="dashboardIcon" size="xs" />
+                <div className="flex flex-col">
+                  <span className="text-xs font-black text-[#1D3557]">{status.label}</span>
+                  <p className="text-[10px] font-medium text-gray-500">{status.description}</p>
                 </div>
-                <Radio
-                  checked={selectedStatus === "Canceled"}
-                  onChange={() => setSelectedStatus("Canceled")}
-                  activeColor="#f43f5e" // rose-500
-                  className="w-auto"
-                />
               </div>
-              <div className="flex flex-col">
-                <span className="text-xs font-black text-[#1D3557]">Reject</span>
-                <p className="text-[10px] font-medium text-gray-500">Deny refund request</p>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
 
@@ -126,7 +116,6 @@ export const UpdateRefundStatusModal: React.FC<UpdateStatusModalProps> = ({
             variant="primary"
             onClick={() => {
               onConfirm(selectedStatus, reason);
-              onClose();
             }}
           >
             Confirm Status Update

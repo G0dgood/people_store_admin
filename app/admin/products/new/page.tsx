@@ -17,12 +17,16 @@ import { HiPhoto, HiArrowPath, HiXCircle, HiXMark, HiPencil } from "react-icons/
 import { Tooltip } from "../../../components/Tooltip";
 import { AISettingsModal } from "../../../components/Admin/AISettingsModal";
 import { useAddProductMutation } from "@/lib/redux/services/productApi";
+import { useGetCategoriesQuery } from "@/lib/redux/services/categoryApi";
 import { toast } from "sonner";
 
 
 export default function CreateProduct() {
  const router = useRouter();
  const [addProduct, { isLoading: isSubmitting }] = useAddProductMutation();
+ const { data: categoriesResponse, isLoading: isLoadingCategories } = useGetCategoriesQuery();
+
+ const categories = categoriesResponse?.data || [];
 
  // Unified Form State
  const [formData, setFormData] = useState({
@@ -39,7 +43,10 @@ export default function CreateProduct() {
   taxIncluded: true,
   expiryStart: "",
   expiryEnd: "",
-  colors: [] as string[]
+  colors: [] as string[],
+  size: "",
+  volume: "",
+  gender: "Unisex"
  });
 
  const handleInputChange = (field: string, value: any) => {
@@ -117,7 +124,8 @@ export default function CreateProduct() {
    const {
     name, description, price, category, discountPrice,
     stockStatus, stockQuantity, isUnlimited, isFeatured,
-    taxIncluded, expiryStart, expiryEnd, tag, colors
+    taxIncluded, expiryStart, expiryEnd, tag, colors,
+    size, volume, gender
    } = formData;
 
    if (!name || !description || !price || !category) {
@@ -146,6 +154,9 @@ export default function CreateProduct() {
    postData.append("expiryEnd", expiryEnd);
    postData.append("tags", JSON.stringify(tag ? [tag] : []));
    postData.append("colors", JSON.stringify(colors));
+   postData.append("size", size);
+   postData.append("volume", volume);
+   postData.append("gender", gender);
 
    // Append all media files
    stagedMedia.forEach((item) => {
@@ -225,6 +236,41 @@ export default function CreateProduct() {
         className="bg-gray-50/80 border-gray-50 text-sm font-medium text-gray-700"
         placeholder="Enter product name"
        />
+      </div>      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+       <div className="flex flex-col gap-2.5">
+        <label className="text-xs font-bold text-[#1D3557]">Gender <span className="text-red-500">*</span></label>
+        <Select
+         shape="rounded-sm"
+         value={formData.gender}
+         onChange={(val) => handleInputChange("gender", val as string)}
+         options={[
+          { label: "Men", value: "Men" },
+          { label: "Women", value: "Women" },
+          { label: "Unisex", value: "Unisex" },
+          { label: "Kids", value: "Kids" },
+         ]}
+        />
+       </div>
+
+       <div className="flex flex-col gap-2.5">
+        <label className="text-xs font-bold text-[#1D3557]">Size</label>
+        <Input shape="rounded-sm" type="text"
+         value={formData.size}
+         onChange={(e) => handleInputChange("size", e.target.value)}
+         className="bg-gray-50/80 border-gray-50 text-sm font-medium text-gray-700"
+         placeholder="e.g. XL, 42, 10"
+        />
+       </div>
+
+       <div className="flex flex-col gap-2.5">
+        <label className="text-xs font-bold text-[#1D3557]">Volume</label>
+        <Input shape="rounded-sm" type="text"
+         value={formData.volume}
+         onChange={(e) => handleInputChange("volume", e.target.value)}
+         className="bg-gray-50/80 border-gray-50 text-sm font-medium text-gray-700"
+         placeholder="e.g. 100ml, 50ml"
+        />
+       </div>
       </div>
 
       <div className="flex flex-col gap-2.5 relative">
@@ -578,14 +624,10 @@ export default function CreateProduct() {
          value={formData.category}
          onChange={(val) => handleInputChange("category", val as string)}
          placeholder="Select your product"
-         options={[
-          { label: "PERFUME", value: "PERFUME" },
-          { label: "SKINCARE", value: "SKINCARE" },
-          { label: "MAKE UP", value: "MAKE UP" },
-          { label: "GIFT", value: "GIFT" },
-          { label: "BODY SPRAY", value: "BODY SPRAY" },
-          { label: "BODY MIST", value: "BODY MIST" },
-         ]}
+         options={categories?.map(c => ({
+          label: c?.name?.toUpperCase(),
+          value: c?.name
+         }))}
         />
        </div>
 
@@ -599,6 +641,11 @@ export default function CreateProduct() {
          options={[
           { label: "New Arrival", value: "New Arrival" },
           { label: "Best Seller", value: "Best Seller" },
+          { label: "Limited Edition", value: "Limited Edition" },
+          { label: "Hot", value: "Hot" },
+          { label: "Flash Sale", value: "Flash Sale" },
+          { label: "Exclusive", value: "Exclusive" },
+          { label: "Discount", value: "Discount" },
          ]}
         />
        </div>
@@ -883,6 +930,7 @@ export default function CreateProduct() {
     isOpen={isUploadModalOpen}
     onClose={() => setIsUploadModalOpen(false)}
     onUploadSuccess={handleMediaUpload}
+    onlyStaging
    />
   </div >
  );

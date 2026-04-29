@@ -5,8 +5,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { Rating, FavoriteButton } from "../Other";
 import { Button } from "../Button/Button";
+import { HiEye } from "react-icons/hi2";
 import { useCart } from "@/app/context/CartContext";
+import { useRecentlyViewed } from "@/app/context/RecentlyViewedContext";
 import { toast } from "sonner";
+import { Icon } from "../Icon";
 
 interface ProductProps {
    id: string;
@@ -18,10 +21,14 @@ interface ProductProps {
    shipping: string;
    description: string;
    image: string;
+   stock: number;
+   isUnlimited: boolean;
+   onQuickView?: (product: any) => void;
 }
 
 export const ProductGridItem: React.FC<{ product: ProductProps }> = ({ product }) => {
    const { addToCart } = useCart();
+   const { addToRecentlyViewed } = useRecentlyViewed();
 
    const handleAddToCart = (e: React.MouseEvent) => {
       e.preventDefault();
@@ -37,17 +44,35 @@ export const ProductGridItem: React.FC<{ product: ProductProps }> = ({ product }
 
    return (
       <div className="bg-white border border-gray-200 overflow-hidden transition-all group flex flex-col h-full relative">
-         <Link href="/products/detail" className="flex flex-col flex-1">
+         <Link
+            href={`/products/detail?id=${product.id}`}
+            className="flex flex-col flex-1"
+            onClick={() => addToRecentlyViewed({
+               id: product.id,
+               title: product.title,
+               price: product.price,
+               image: product.image
+            })}
+         >
             <div className="relative w-full aspect-square p-5 border-b border-gray-200 flex items-center justify-center">
                <div className="relative w-full h-full transition-transform duration-300 group-hover:scale-110">
-                  <Image src={product.image} alt={product.title} fill className="object-contain" />
+                  <Image src={product.image} alt={product.title} fill className="object-contain" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
                </div>
-               {/* Heart Icon (Overlay) */}
-               <div className="absolute top-3 right-3 z-10 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <FavoriteButton item={product as any} variant="outline" size="sm" />
+               {/* Quick View Overlay */}
+               <div className="absolute top-3 right-3 z-10 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">
+                  <button
+                     onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        product.onQuickView?.(product);
+                     }}
+                     className="w-10 h-10 bg-white border border-gray-100 shadow-sm flex items-center justify-center text-gray-400 hover:text-brand-gold hover:border-brand-gold transition-all"
+                  >
+                     <HiEye size={20} />
+                  </button>
                </div>
             </div>
-            <div className="p-5 flex flex-col gap-2 pb-16"> {/* Add padding for buttons */}
+            <div className="p-5 flex flex-col gap-2">
                <div className="flex items-center justify-between">
                   <span className="font-outfit font-bold text-lg text-gray-900">{product.price}</span>
                </div>
@@ -58,20 +83,30 @@ export const ProductGridItem: React.FC<{ product: ProductProps }> = ({ product }
                <span className="text-gray-600 text-[13px] uppercase tracking-wider leading-relaxed line-clamp-2 group-hover:text-brand-gold transition-colors font-bold">
                   {product.title}
                </span>
+               <p className="text-gray-400 text-[11px] line-clamp-1 leading-relaxed font-medium">
+                  {product.description}
+               </p>
+               <div className="flex items-center gap-1.5 mt-1">
+                  <div className={`w-1 h-1 rounded-full ${product.stock > 0 || product.isUnlimited ? "bg-brand-gold" : "bg-rose-500"}`} />
+                  <span className={`text-[9px] font-bold uppercase tracking-widest ${product.stock > 0 || product.isUnlimited ? "text-gray-400" : "text-rose-500"}`}>
+                     {product.isUnlimited ? "Always Available" : product.stock > 0 ? `${product.stock} units left` : "Out of Stock"}
+                  </span>
+               </div>
             </div>
          </Link>
 
          {/* Actions Footer */}
          <div className="absolute bottom-0 left-0 right-0 p-3 bg-white border-t border-gray-50 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0 duration-200">
-            <Link href="/products/detail" className="flex-1">
-               <Button variant="secondary" size="sm" className="w-full text-[10px] uppercase tracking-widest font-bold py-2 border-gray-200 rounded-none">
-                  Details
-               </Button>
-            </Link>
+            <FavoriteButton
+               item={product as any}
+               variant="outline"
+               size="sm"
+               className="!w-10 !h-10 border-gray-200"
+            />
             <Button
                onClick={handleAddToCart}
                size="sm"
-               className="flex-1 bg-black text-white hover:bg-brand-gold text-[10px] uppercase tracking-widest font-bold py-2 shadow-none rounded-none"
+               className="flex-1 bg-brand-charcoal text-white hover:bg-brand-gold text-[10px] uppercase tracking-widest font-bold py-2 shadow-none rounded-none"
             >
                Add to cart
             </Button>
@@ -90,6 +125,7 @@ export const ProductListItem: React.FC<{
    showFavorite = true
 }) => {
       const { addToCart } = useCart();
+      const { addToRecentlyViewed } = useRecentlyViewed();
 
       const handleAddToCart = (e: React.MouseEvent) => {
          e.preventDefault();
@@ -106,16 +142,34 @@ export const ProductListItem: React.FC<{
       return (
          <div className="bg-white border border-gray-200 p-3 md:p-5 flex gap-3 md:gap-6 transition-all relative group">
             {/* Product Image */}
-            <Link href="/products/detail" className="w-24 h-24 md:w-48 md:h-48 flex-shrink-0 border border-gray-200 flex items-center justify-center p-2 md:p-4 bg-white cursor-pointer overflow-hidden">
+            <Link
+               href={`/products/detail?id=${product.id}`}
+               className="w-24 h-24 md:w-48 md:h-48 flex-shrink-0 border border-gray-200 flex items-center justify-center p-2 md:p-4 bg-white cursor-pointer overflow-hidden"
+               onClick={() => addToRecentlyViewed({
+                  id: product.id,
+                  title: product.title,
+                  price: product.price,
+                  image: product.image
+               })}
+            >
                <div className="relative w-full h-full transition-transform duration-300 hover:scale-110">
-                  <Image src={product.image} alt={product.title} fill className="object-contain" />
+                  <Image src={product.image} alt={product.title} fill className="object-contain" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
                </div>
             </Link>
 
             {/* Product Content */}
             <div className="flex-1 flex flex-col gap-1 md:gap-3 pr-8 md:pr-0">
                <div className="flex items-start justify-between">
-                  <Link href="/products/detail" className="text-[13px] md:text-base font-bold uppercase tracking-wider text-gray-900 leading-snug hover:text-brand-gold cursor-pointer transition-colors line-clamp-2 md:line-clamp-none">
+                  <Link
+                     href={`/products/detail?id=${product.id}`}
+                     className="text-[13px] md:text-base font-bold uppercase tracking-wider text-gray-900 leading-snug hover:text-brand-gold cursor-pointer transition-colors line-clamp-2 md:line-clamp-none"
+                     onClick={() => addToRecentlyViewed({
+                        id: product.id,
+                        title: product.title,
+                        price: product.price,
+                        image: product.image
+                     })}
+                  >
                      {product.title}
                   </Link>
                </div>
@@ -138,6 +192,12 @@ export const ProductListItem: React.FC<{
                         <div className="w-1 h-1 md:w-1.5 md:h-1.5 bg-gray-300" />
                         <span className="uppercase tracking-widest text-[10px]">{product.orders} orders</span>
                      </div>
+                     <div className="flex items-center gap-1.5">
+                        <div className={`w-1 h-1 md:w-1.5 md:h-1.5 rounded-full ${product.stock > 0 || product.isUnlimited ? "bg-brand-gold" : "bg-rose-500"}`} />
+                        <span className={`font-bold uppercase tracking-widest text-[10px] ${product.stock > 0 || product.isUnlimited ? "text-gray-400" : "text-rose-500"}`}>
+                           {product.isUnlimited ? "Always Available" : product.stock > 0 ? `${product.stock} units left` : "Out of Stock"}
+                        </span>
+                     </div>
                      {/* Shipping Info */}
                      <div className="flex items-center gap-1.5 text-brand-gold">
                         <div className="w-1 h-1 md:w-1.5 md:h-1.5 bg-brand-gold" />
@@ -152,9 +212,20 @@ export const ProductListItem: React.FC<{
                </p>
 
                <div className="flex items-center gap-4 mt-auto pt-2">
-                  <Link href="/products/detail" className="text-black hover:text-brand-gold font-bold text-[10px] uppercase tracking-widest cursor-pointer flex items-center gap-1 transition-colors">
+                  <Link href={`/products/detail?id=${product.id}`} className="text-black hover:text-brand-gold font-bold text-[10px] uppercase tracking-widest cursor-pointer flex items-center gap-1 transition-colors">
                      View details
                   </Link>
+                  <button
+                     onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        product.onQuickView?.(product);
+                     }}
+                     className="text-gray-400 hover:text-brand-gold font-bold text-[10px] uppercase tracking-widest cursor-pointer flex items-center gap-1 transition-colors"
+                  >
+                     <HiEye size={16} />
+                     Quick View
+                  </button>
                   <button
                      onClick={handleAddToCart}
                      className="md:hidden text-brand-gold font-bold text-[10px] uppercase tracking-widest cursor-pointer"
@@ -167,11 +238,15 @@ export const ProductListItem: React.FC<{
             {/* Actions Section (Right Side) */}
             <div className="hidden md:flex flex-col items-end justify-between py-1 min-w-[160px]">
                <div className="flex flex-col h-full justify-between gap-3 items-end w-full">
-                  {showFavorite && <FavoriteButton item={product as any} className="flex-shrink-0" />}
+                  {showFavorite && (
+                     <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <FavoriteButton item={product as any} className="flex-shrink-0" />
+                     </div>
+                  )}
                   <Button
                      onClick={handleAddToCart}
                      size="sm"
-                     className="w-full bg-black text-white hover:bg-brand-gold font-bold mt-2 shadow-none rounded-none text-[10px] uppercase tracking-widest h-10"
+                     className="w-full bg-brand-charcoal text-white hover:bg-brand-gold font-bold mt-2 shadow-none rounded-none text-[10px] uppercase tracking-widest h-10"
                   >
                      Add to cart
                   </Button>
@@ -192,7 +267,9 @@ export const ProductListItem: React.FC<{
 
             {/* Heart Icon (Mobile) */}
             {showFavorite && (
-               <FavoriteButton item={product as any} variant="ghost" className="md:hidden absolute top-3 right-3" />
+               <div className="md:hidden absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <FavoriteButton item={product as any} variant="ghost" />
+               </div>
             )}
          </div>
       );

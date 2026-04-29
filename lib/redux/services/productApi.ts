@@ -15,6 +15,10 @@ export interface CategoryRef {
 }
 
 export interface Product {
+  brand: any;
+  gender: string;
+  volume: string;
+  size: string;
   sku: ReactNode;
   image: string | Blob | undefined;
   _id: string;
@@ -42,8 +46,11 @@ export interface Product {
 
 export const productApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getProducts: builder.query<ApiResponse<Product[]>, void>({
-      query: () => '/products',
+    getProducts: builder.query<ApiResponse<{ products: Product[], pagination: any }>, { limit?: number, category?: string, search?: string, page?: number, status?: string } | void>({
+      query: (params) => ({
+        url: '/products',
+        params: params || {}
+      }),
       providesTags: ['Product'],
     }),
     getProductById: builder.query<ApiResponse<Product>, string>({
@@ -73,6 +80,18 @@ export const productApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Product'],
     }),
+    getBestSellingProducts: builder.query<ApiResponse<any[]>, void>({
+      query: () => '/products/best-selling',
+      providesTags: ['Product'],
+    }),
+    getProductStats: builder.query<ApiResponse<{ totalProducts: number, stockProducts: number, outOfStock: number }>, void>({
+      query: () => '/products/stats',
+      providesTags: ['Product'],
+    }),
+    getRecommendedProducts: builder.query<ApiResponse<Product[]>, void>({
+      query: () => '/products/recommended',
+      providesTags: ['Product'],
+    }),
   }),
   overrideExisting: true,
 });
@@ -83,4 +102,7 @@ export const {
   useAddProductMutation,
   useUpdateProductMutation,
   useDeleteProductMutation,
+  useGetBestSellingProductsQuery,
+  useGetProductStatsQuery,
+  useGetRecommendedProductsQuery,
 } = productApi;

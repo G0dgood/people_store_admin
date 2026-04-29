@@ -16,7 +16,7 @@ interface AuthModalContextType {
 
 const AuthModalContext = createContext<AuthModalContextType | undefined>(undefined);
 
-export const AuthModalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthModalProvider = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [view, setView] = useState<AuthView>("login");
 

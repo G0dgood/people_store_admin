@@ -10,6 +10,7 @@ import { Button } from "../Button";
 import { Icon } from "../Icon";
 import { useGetRolesQuery } from "@/lib/redux/services/roleApi";
 import { useOnboardUserMutation } from "@/lib/redux/services/authApi";
+import { useApiError } from "@/app/hooks/useApiError";
 import { toast } from "sonner";
 
 interface AddUserModalProps {
@@ -37,7 +38,9 @@ const genderOptions = [
 
 export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
   const { data: roles = [], isLoading: isLoadingRoles } = useGetRolesQuery();
-  const [onboardUser, { isLoading: isOnboarding }] = useOnboardUserMutation();
+  const [onboardUser, { isLoading: isOnboarding, isError, error }] = useOnboardUserMutation();
+
+  useApiError(isError, error, "Onboarding Failed");
 
   const roleOptions = useMemo(() => {
     return roles.map(role => ({
@@ -88,10 +91,8 @@ export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
         role: roles.length > 0 ? roles[0].name : "",
         department: "",
       });
-    } catch (err: any) {
-      toast.error("Onboarding Failed", {
-        description: err.data?.message || "Something went wrong while creating the staff account."
-      });
+    } catch (err) {
+      // Error handled by useApiError hook
     }
   };
 

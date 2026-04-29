@@ -27,7 +27,7 @@ export const StatCard: React.FC<StatCardProps> = ({
   periodLabel = "Last 7 days",
   trendValue,
   trendIsUp = true,
-  chartData = [30, 45, 35, 60, 40, 70, 55], // Fallback trend
+  chartData = [],
   onViewDetails,
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);

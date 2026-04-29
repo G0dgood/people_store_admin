@@ -20,6 +20,7 @@ import { FiEdit3 } from "react-icons/fi";
 import { useGetUsersQuery, useDeleteStaffMutation } from "@/lib/redux/services/authApi";
 import { SVGLoaderFetch, NoRecordFound } from "@/app/components/Options";
 import { toast } from "sonner";
+import { usePrivilege } from "@/lib/contexts/PrivilegeContext";
 
 const roleColors: Record<string, string> = {
   "Super Admin": "text-[#1D3557] bg-gray-100",
@@ -53,6 +54,8 @@ export default function UsersManagement() {
     page: currentPage, 
     limit: rowsPerPage 
   });
+
+  const { canAccess } = usePrivilege();
 
   // Extract users and pagination metadata
   const users = data?.users || [];
@@ -117,12 +120,14 @@ export default function UsersManagement() {
         >
           {isFetching ? "Refreshing..." : "Refresh List"}
         </Button>
-        <Button shape="rounded-sm" variant="primary"
-          iconLeft={<Icon name="circle-plus" folder="dashboardIcon" size="sm" />}
-          onClick={() => setIsAddUserModalOpen(true)}
-        >
-          Add User
-        </Button>
+        {canAccess("users", "create") && (
+          <Button shape="rounded-sm" variant="primary"
+            iconLeft={<Icon name="circle-plus" folder="dashboardIcon" size="sm" />}
+            onClick={() => setIsAddUserModalOpen(true)}
+          >
+            Add User
+          </Button>
+        )}
       </div>
       <div className="bg-white rounded-[6px] border border-[#1C1C1C1A] overflow-hidden flex flex-col min-h-[600px]">
         {/* Filter Controls Bar */}
@@ -235,24 +240,28 @@ export default function UsersManagement() {
                         >
                           <Icon name="settings" folder="dashboardIcon" size="sm" />
                         </Button>
-                        <Button shape="rounded-sm" variant="outline"
-                          className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold border-gray-200 transition-all"
-                          onClick={() => {
-                            setUserToEdit(user);
-                            setIsEditModalOpen(true);
-                          }}
-                        >
-                          <FiEdit3 size={14} />
-                        </Button>
-                        <Button shape="rounded-sm" variant="outline"
-                          className="!p-1.5 text-gray-400 hover:text-white hover:bg-rose-500 hover:border-rose-500 border-gray-200 transition-all"
-                          onClick={() => {
-                            setUserToDelete(user);
-                            setIsDeleteModalOpen(true);
-                          }}
-                        >
-                          <Icon name="Delete" folder="dashboardIcon" size="sm" />
-                        </Button>
+                        {canAccess("users", "edit") && (
+                          <Button shape="rounded-sm" variant="outline"
+                            className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold border-gray-200 transition-all"
+                            onClick={() => {
+                              setUserToEdit(user);
+                              setIsEditModalOpen(true);
+                            }}
+                          >
+                            <FiEdit3 size={14} />
+                          </Button>
+                        )}
+                        {canAccess("users", "delete") && (
+                          <Button shape="rounded-sm" variant="outline"
+                            className="!p-1.5 text-gray-400 hover:text-white hover:bg-rose-500 hover:border-rose-500 border-gray-200 transition-all"
+                            onClick={() => {
+                              setUserToDelete(user);
+                              setIsDeleteModalOpen(true);
+                            }}
+                          >
+                            <Icon name="Delete" folder="dashboardIcon" size="sm" />
+                          </Button>
+                        )}
                       </div>
                     </td>
                   </tr>

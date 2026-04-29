@@ -44,7 +44,13 @@ const CartItem: React.FC<CartItemProps> = ({ id, title, price, image, quantity, 
          {/* Item Image */}
          <div className="w-24 h-24 flex-shrink-0 border border-gray-200 p-3 flex items-center justify-center bg-white shadow-none">
             <div className="relative w-full h-full">
-               <Image src={image} alt={title} fill className="object-contain" />
+               {image ? (
+                  <Image src={image} alt={title} fill className="object-contain" sizes="96px" />
+               ) : (
+                  <div className="w-full h-full bg-gray-50 flex items-center justify-center text-gray-300 text-[10px] font-bold uppercase tracking-widest text-center">
+                     No<br />Image
+                  </div>
+               )}
             </div>
          </div>
 

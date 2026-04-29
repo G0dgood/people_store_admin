@@ -5,6 +5,16 @@ import { motion } from "framer-motion";
 import { Button } from "@/app/components/Button";
 import { Icon } from "@/app/components/Icon";
 import { useCart } from "@/app/context/CartContext";
+import { formatPrice } from "@/app/utils/formatPrice";
+import { useCustomerAuth } from "@/app/context/CustomerAuthContext";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+
+declare global {
+  interface Window {
+    PaystackPop: any;
+  }
+}
 
 const itemVariants = {
   hidden: { opacity: 0, x: 20 },
@@ -15,7 +25,8 @@ export const OrderSummary: React.FC = () => {
   const { cartItems } = useCart();
 
   const parsePrice = (priceStr: string) => {
-    return parseFloat(priceStr.replace(/[^0-9.]/g, "")) || 0;
+    const p = parseFloat(priceStr.replace(/[^0-9.]/g, "")) || 0;
+    return p;
   };
 
   const subtotal = cartItems.reduce((acc, item) => {
@@ -24,6 +35,102 @@ export const OrderSummary: React.FC = () => {
 
   const estimatedTax = subtotal * 0.05; // 5% tax
   const total = subtotal + estimatedTax;
+  const { customer, isAuthenticated } = useCustomerAuth();
+  const router = useRouter();
+
+  const handleCompleteOrder = async () => {
+    if (!isAuthenticated || !customer) {
+      toast.error("Please log in to complete your purchase");
+      return;
+    }
+
+    if (cartItems.length === 0) return;
+
+    // 1. Create a "Pending" order first (Mocking here, usually you call an API)
+    const orderData = {
+      customer: customer._id,
+      items: cartItems.map(item => ({
+        product: item.id,
+        quantity: item.quantity,
+        price: parsePrice(item.price)
+      })),
+      totalAmount: total,
+      shippingAddress: customer.address || "Main Street, Lagos", // Fallback for testing
+    };
+
+    try {
+      // Create the order on the backend
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/orders/create`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify(orderData)
+      });
+      const orderResult = await response.json();
+      
+      if (!orderResult.success) {
+        throw new Error(orderResult.message || "Failed to create order");
+      }
+
+      const orderId = orderResult.data._id;
+
+      // 2. Initialize Paystack
+      if (!window.PaystackPop) {
+        throw new Error("Paystack is not loaded. Please refresh the page.");
+      }
+
+      const handler = window.PaystackPop.setup({
+        key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
+        email: customer.email,
+        amount: Math.round(total * 100), // in kobo
+        currency: 'NGN',
+        ref: `ORD_${Math.floor(Math.random() * 1000000000 + 1)}`,
+        onClose: () => {
+          toast.warning("Payment cancelled");
+        },
+        callback: (response: any) => {
+          const loadingToast = toast.loading("Verifying payment...");
+          
+          // Use an IIFE to handle the async verification
+          (async () => {
+            try {
+              // 3. Verify on backend
+              const verifyResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/transactions/verify-paystack`, {
+                method: 'POST',
+                headers: { 
+                  'Content-Type': 'application/json'
+                },
+                credentials: 'include',
+                body: JSON.stringify({
+                  reference: response.reference,
+                  orderId: orderId
+                })
+              });
+              
+              const verifyResult = await verifyResponse.json();
+              
+              if (verifyResult.success) {
+                toast.dismiss(loadingToast);
+                toast.success("Payment successful!");
+                router.push(`/checkout/success?orderId=${orderId}`);
+              } else {
+                throw new Error("Payment verification failed");
+              }
+            } catch (err: any) {
+              toast.dismiss(loadingToast);
+              toast.error(err.message || "Something went wrong during verification");
+            }
+          })();
+        }
+      });
+
+      handler.openIframe();
+    } catch (err: any) {
+      toast.error(err.message || "Failed to initiate payment");
+    }
+  };
 
   return (
     <div className="w-full lg:w-[400px] xl:w-[450px] shrink-0 sticky top-28">
@@ -47,7 +154,7 @@ export const OrderSummary: React.FC = () => {
               cartItems.map((item) => (
                 <motion.div key={item.id} variants={itemVariants} className="flex gap-4 group">
                   <div className="w-20 h-20 bg-white rounded-2xl border border-gray-200 flex-shrink-0 relative overflow-hidden shadow-sm group-hover:shadow-md transition-all duration-300">
-                    <Image src={item.image} alt={item.title} fill className="object-contain p-2 group-hover:scale-110 transition-transform duration-500" />
+                    <Image src={item.image} alt={item.title} fill className="object-contain p-2 group-hover:scale-110 transition-transform duration-500" sizes="80px" />
                   </div>
                   <div className="flex-1 flex flex-col justify-between py-1">
                     <div>
@@ -58,7 +165,7 @@ export const OrderSummary: React.FC = () => {
                       </Link>
                       <span className="text-[11px] font-black text-gray-400 uppercase tracking-widest mt-1.5 block">Qty: {item.quantity}</span>
                     </div>
-                    <span className="font-bold text-brand-blue text-sm tracking-tight">₦{(parsePrice(item.price) * item.quantity).toFixed(2)}</span>
+                    <span className="font-bold text-brand-blue text-sm tracking-tight">{formatPrice(parsePrice(item.price) * item.quantity)}</span>
                   </div>
                 </motion.div>
               ))
@@ -73,15 +180,15 @@ export const OrderSummary: React.FC = () => {
           <div className="space-y-4 mb-8 bg-gray-50/50 p-6 rounded-2xl border border-gray-200/50">
             <div className="flex justify-between text-[13px]">
               <span className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">Subtotal</span>
-              <span className="text-gray-900 font-bold">₦{subtotal.toFixed(2)}</span>
+              <span className="text-gray-900 font-bold">{formatPrice(subtotal)}</span>
             </div>
             <div className="flex justify-between text-[13px]">
               <span className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">Shipping</span>
-              <span className="text-blue-600 font-bold uppercase tracking-widest text-[11px]">{subtotal > 0 ? "Free" : "₦0.00"}</span>
+              <span className="text-blue-600 font-bold uppercase tracking-widest text-[11px]">{subtotal > 0 ? "Free" : formatPrice(0)}</span>
             </div>
             <div className="flex justify-between text-[13px]">
               <span className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">Estimated Tax</span>
-              <span className="text-gray-900 font-bold">₦{estimatedTax.toFixed(2)}</span>
+              <span className="text-gray-900 font-bold">{formatPrice(estimatedTax)}</span>
             </div>
 
             <div className="h-px bg-gray-200/50 my-2"></div>
@@ -91,11 +198,13 @@ export const OrderSummary: React.FC = () => {
                 <span className="text-xs font-black text-gray-400 uppercase tracking-[0.2em]">Total</span>
                 <span className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Incl. VAT</span>
               </div>
-              <span className="text-3xl font-black text-brand-blue leading-none tracking-tighter">₦{total.toFixed(2)}</span>
+              <span className="text-3xl font-black text-brand-blue leading-none tracking-tighter">{formatPrice(total)}</span>
             </div>
           </div>
 
           <Button
+            shape="rounded-sm"
+            onClick={handleCompleteOrder}
             className={`w-full text-base h-[60px] text-white shadow-xl transition-all font-black rounded-2xl flex items-center justify-center gap-3 ${cartItems.length > 0
               ? "bg-brand-blue shadow-brand-blue/20 hover:shadow-2xl hover:translate-y-[-2px] active:scale-[0.98]"
               : "bg-gray-400 cursor-not-allowed opacity-50"
@@ -103,7 +212,7 @@ export const OrderSummary: React.FC = () => {
             disabled={cartItems.length === 0}
           >
             <span>Complete Order</span>
-            <Icon name="arrow_forward" size="xs" className="opacity-60" />
+            <Icon name="arrow_forward" size="md" className="opacity-60" />
           </Button>
 
           <div className="mt-8 flex flex-col gap-4">

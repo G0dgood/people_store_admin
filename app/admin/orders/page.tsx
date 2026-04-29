@@ -18,127 +18,86 @@ import { HiOutlineEye } from "react-icons/hi2";
 import { Tooltip } from "../../components/Tooltip";
 
 
-const ordersData = [
- {
-  id: "#ORD0001",
-  customer: "James Wilson",
-  product: "Wireless Bluetooth Headphones", image: "/dashboardImage/Headphones.png", date: "01-01-2025", price: "49.99", payment: "Paid", status: "Delivered"
- },
- {
-  id: "#ORD0002",
-  customer: "Sarah Jenkins",
-  product: "Men's T-Shirt", image: "/dashboardImage/T-Shirt.png", date: "01-01-2025", price: "14.99", payment: "Unpaid", status: "Pending"
- },
- {
-  id: "#ORD0003",
-  customer: "Michael Chen",
-  product: "Men's Leather Wallet", image: "/dashboardImage/Wallet.png", date: "01-01-2025", price: "49.99", payment: "Paid", status: "Delivered"
- },
- {
-  id: "#ORD0004",
-  customer: "Emily Davis",
-  product: "Memory Foam Pillow", image: "/dashboardImage/Pillow.png", date: "01-01-2025", price: "39.99", payment: "Paid", status: "Shipped"
- },
- {
-  id: "#ORD0005",
-  customer: "Robert Brown",
-  product: "Adjustable Dumbbells",
-  image: "/dashboardImage/Dumbbells.png",
-  date: "01-01-2025",
-  price: "14.99",
-  payment: "Unpaid",
-  status: "Pending"
- },
- {
-  id: "#ORD0006",
-  customer: "Lisa Thompson",
-  product: "Coffee Maker",
-  image: "/dashboardImage/Coffee Maker.png",
-  date: "01-01-2025",
-  price: "79.99",
-  payment: "Unpaid",
-  status: "Cancelled"
- },
- {
-  id: "#ORD0007",
-  customer: "David Miller",
-  product: "Casual Baseball Cap",
-  image: "/dashboardImage/Cap.png",
-  date: "01-01-2025",
-  price: "49.99",
-  payment: "Paid",
-  status: "Delivered"
- },
- {
-  id: "#ORD0008",
-  customer: "Sophia Garcia",
-  product: "Full HD Webcam",
-  image: "/dashboardImage/Webcam.png",
-  date: "01-01-2025",
-  price: "39.99",
-  payment: "Paid",
-  status: "Delivered"
- },
- {
-  id: "#ORD0009",
-  customer: "Andrew Taylor",
-  product: "Smart LED Color Bulb",
-  image: "/dashboardImage/Bulb.png",
-  date: "01-01-2025",
-  price: "79.99",
-  payment: "Unpaid",
-  status: "Delivered"
- },
- {
-  id: "#ORD0010",
-  customer: "Olivia Martin",
-  product: "Men's T-Shirt", image: "/dashboardImage/T-Shirt.png", date: "01-01-2025", price: "14.99", payment: "Unpaid", status: "Delivered"
- },
-];
+import { useGetOrdersQuery, useGetOrderStatsQuery, useUpdateOrderStatusMutation, useDeleteOrderMutation } from "@/lib/redux/services/orderApi";
+import { SVGLoaderFetch, NoRecordFound } from "../../components/Options";
+import { toast } from "sonner";
+import { formatPrice } from "@/app/utils/formatPrice";
 
 const statusConfig = {
- Delivered: { color: "text-blue-500", icon: "Delivered" },
- Shipped: { color: "text-gray-500", icon: "Shipped" },
- Pending: { color: "text-orange-400", icon: "Pending" },
- Cancelled: { color: "text-rose-500", icon: "Cancelled" },
+  Delivered: { color: "text-blue-500", icon: "Delivered" },
+  Shipped: { color: "text-gray-500", icon: "Shipped" },
+  Pending: { color: "text-orange-400", icon: "Pending" },
+  Cancelled: { color: "text-rose-500", icon: "Cancelled" },
+  Processing: { color: "text-emerald-500", icon: "arrow-refresh-06" },
+  Refunded: { color: "text-brand-gold", icon: "arrow-refresh-06" },
 };
 
 export default function OrderListing() {
- const [activeTab, setActiveTab] = useState("All order (240)");
- const [rowsPerPage, setRowsPerPage] = useState(10);
- const [currentPage, setCurrentPage] = useState(1);
- const [isAddOrderModalOpen, setIsAddOrderModalOpen] = useState(false);
- const [isMoreActionDrawerOpen, setIsMoreActionDrawerOpen] = useState(false);
- const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
- const [orderToDelete, setOrderToDelete] = useState<string | null>(null);
- const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isAddOrderModalOpen, setIsAddOrderModalOpen] = useState(false);
+  const [isMoreActionDrawerOpen, setIsMoreActionDrawerOpen] = useState(false);
+  const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
+  const [orderToDelete, setOrderToDelete] = useState<string | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
- const toggleAll = () => {
-  if (selectedOrders.length === ordersData.length) {
-   setSelectedOrders([]);
-  } else {
-   setSelectedOrders(ordersData.map(o => o.id));
-  }
- };
+  const { data: statsResponse, isLoading: isLoadingStats } = useGetOrderStatsQuery();
+  const { data: ordersResponse, isLoading: isLoadingOrders } = useGetOrdersQuery({
+    page: currentPage,
+    limit: rowsPerPage,
+    status: activeTab === "All" ? "" : activeTab,
+    search: searchQuery
+  });
 
- const toggleOrder = (id: string) => {
-  setSelectedOrders(prev =>
-   prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
-  );
- };
+  const [deleteOrder, { isLoading: isDeleting }] = useDeleteOrderMutation();
+
+  const orders = ordersResponse?.data.orders || [];
+  const stats = statsResponse?.data;
+  const pagination = ordersResponse?.data.pagination;
+
+  const toggleAll = () => {
+    if (selectedOrders.length === orders.length) {
+      setSelectedOrders([]);
+    } else {
+      setSelectedOrders(orders.map(o => o._id));
+    }
+  };
+
+  const toggleOrder = (id: string) => {
+    setSelectedOrders(prev =>
+      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+    );
+  };
+
+  const handleDeleteOrder = async (id: string) => {
+    try {
+      await deleteOrder(id).unwrap();
+      toast.success("Order deleted successfully");
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Failed to delete order");
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    try {
+      for (const id of selectedOrders) {
+        await deleteOrder(id).unwrap();
+      }
+      toast.success(`${selectedOrders.length} orders deleted successfully`);
+      setSelectedOrders([]);
+      setIsDeleteModalOpen(false);
+    } catch (err: any) {
+      toast.error("An error occurred during bulk deletion");
+    }
+  };
 
  return (
   <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
    {/* Header Area */}
    <div className="flex flex-col sm:flex-row justify-end items-center gap-3">
     <div className="flex gap-3 w-full sm:w-auto">
-     {/* <Button shape="rounded-sm" variant="primary"
-      className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold flex-1 sm:flex-initial"
-      iconLeft={<Icon name="circle-plus" folder="dashboardIcon" size="sm" />}
-      onClick={() => setIsAddOrderModalOpen(true)}
-     >
-      Add Order
-     </Button> */}
      <Button shape="rounded-sm" variant="outline"
       className="flex-1 sm:flex-initial"
       iconRight={<Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" className="text-gray-400" />}
@@ -149,148 +108,157 @@ export default function OrderListing() {
     </div>
    </div>
 
-   {/* Stats Cards */}
-   <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-    <StatCard title="Total Orders" value="1,240" trendValue="14.4%" trendIsUp={true} />
-    <StatCard title="New Orders" value="240" trendValue="20%" trendIsUp={true} />
-    <StatCard title="Completed Orders" value="960" trendValue="85%" trendIsUp={true} />
-    <StatCard title="Canceled Orders" value="87" trendValue="5%" trendIsUp={false} />
-   </div>
+    {/* Stats Cards */}
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+     <StatCard title="Total Orders" value={isLoadingStats ? "..." : stats?.totalOrders || "0"} trendValue="14.4%" trendIsUp={true} />
+     <StatCard title="Total Revenue" value={isLoadingStats ? "..." : formatPrice(stats?.totalRevenue || 0)} trendValue="20%" trendIsUp={true} />
+     <StatCard title="Pending Orders" value={isLoadingStats ? "..." : stats?.pendingOrders || "0"} trendValue="85%" trendIsUp={true} />
+     <StatCard title="Completed Orders" value={isLoadingStats ? "..." : stats?.completedOrders || "0"} trendValue="5%" trendIsUp={true} />
+    </div>
 
-   <div className="bg-white border border-[#1C1C1C1A] rounded-[6px] overflow-hidden flex flex-col">
-    {/* Filter Controls Row */}
-    <div className="p-4 sm:p-6 flex flex-col lg:flex-row gap-6 items-center justify-between border-b border-gray-50">
-     <TabFilter
-      tabs={["All order (240)", "Completed", "Pending", "Canceled"]}
-      activeTab={activeTab}
-      onChange={setActiveTab} id={""} />
+    <div className="bg-white border border-[#1C1C1C1A] rounded-[6px] overflow-hidden flex flex-col">
+     {/* Filter Controls Row */}
+     <div className="p-4 sm:p-6 flex flex-col lg:flex-row gap-6 items-center justify-between border-b border-gray-50">
+      <TabFilter
+       tabs={["All", "Pending", "Processing", "Shipped", "Delivered", "Cancelled"]}
+       activeTab={activeTab}
+       onChange={setActiveTab} id={""} />
 
-     <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
-      <Input shape="rounded-sm"
-       type="text"
-       placeholder="Search order report"
-       containerClassName="w-full lg:w-80 xl:w-96"
-       className="bg-white border-gray-200 placeholder:text-gray-400 text-xs font-medium"
-       suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
-      />
+      <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
+       <Input shape="rounded-sm"
+        type="text"
+        placeholder="Search order ID"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        containerClassName="w-full lg:w-80 xl:w-96"
+        className="bg-white border-gray-200 placeholder:text-gray-400 text-xs font-medium"
+        suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
+       />
 
-      <div className="flex items-center gap-3 w-full sm:w-auto">
-       <RowsPerPage value={rowsPerPage} onChange={setRowsPerPage} />
+       <div className="flex items-center gap-3 w-full sm:w-auto">
+        <RowsPerPage value={rowsPerPage} onChange={setRowsPerPage} />
 
-       <div className="flex gap-2 ml-auto sm:ml-0">
-        <Button shape="rounded-sm" variant="outline"
-         className="!p-2.5 text-gray-400">
-         <Icon name="sort" folder="dashboardIcon" size="sm" />
-        </Button>
-        <Button shape="rounded-sm" variant="outline"
-         className="!p-2.5 text-gray-400">
-         <Icon name="flowbite_arrow-up-down-outline" folder="dashboardIcon" size="sm" />
-        </Button>
+        <div className="flex gap-2 ml-auto sm:ml-0">
+         <Button shape="rounded-sm" variant="outline"
+          className="!p-2.5 text-gray-400">
+          <Icon name="sort" folder="dashboardIcon" size="sm" />
+         </Button>
+        </div>
        </div>
       </div>
      </div>
-    </div>
 
-    {/* Table Area */}
-    <div className="admin-table-container">
-     <table>
-      <thead>
-       <tr>
-        <th className="w-12">
-         <Checkbox
-          checked={selectedOrders.length === ordersData.length && ordersData.length > 0}
-          onChange={toggleAll}
-         />
-        </th>
-        <th>Order Id</th>
-        <th>Customer</th>
-        <th >Product</th>
-        <th>Date</th>
-        <th>Price</th>
-        <th>Payment</th>
-        <th>Status</th>
-        <th className="text-right">Action</th>
-       </tr>
-      </thead>
-      <tbody>
-       {ordersData?.map((order, idx) => (
-        <tr key={idx} className="group">
-         <td>
+     {/* Table Area */}
+     <div className="admin-table-container">
+      <table>
+       <thead>
+        <tr>
+         <th className="w-12">
           <Checkbox
-           checked={selectedOrders.includes(order.id)}
-           onChange={() => toggleOrder(order.id)}
+           checked={selectedOrders.length === orders.length && orders.length > 0}
+           onChange={toggleAll}
           />
-         </td>
-         <td>
-          <span className="text-sm font-semibold text-gray-900">{order.id}</span>
-         </td>
-         <td>
-          <span className="text-sm font-bold text-gray-900">{(order as any).customer}</span>
-         </td>
-         <td>
-          <div className="flex items-center gap-3 min-w-[200px]">
-           <div className="w-10 h-10 rounded-[6px] overflow-hidden border border-gray-50 bg-gray-50 flex-shrink-0">
-            <img src={order.image} alt={order.product} className="w-full h-full object-cover" />
-           </div>
-           <span className="text-sm font-semibold text-gray-700 leading-tight">{order.product}</span>
-          </div>
-         </td>
-
-         <td className="admin-table-td text-sm font-medium text-gray-500">{order.date}</td>
-         <td className="admin-table-td text-sm font-bold text-gray-900">{order.price}</td>
-         <td>
-          <div className="flex items-center gap-2">
-           <span className={`w-1.5 h-1.5 rounded-full ${order.payment === "Paid" ? "bg-brand-gold" : "bg-rose-500"}`}></span>
-           <span className="text-sm font-medium text-gray-700">{order.payment}</span>
-          </div>
-         </td>
-         <td className="admin-table-td">
-          <div className={`flex items-center gap-2 font-bold text-sm ${statusConfig[order.status as keyof typeof statusConfig].color}`}>
-           <Icon
-            name={statusConfig[order.status as keyof typeof statusConfig].icon}
-            folder="dashboardIcon"
-            size="sm"
-           />
-           {order.status}
-          </div>
-         </td>
-         <td className="text-right">
-          <div className="flex justify-end items-center gap-4">
-           <Tooltip text="View Details" position="top">
-            <Link href={`/admin/orders/${order.id.replace("#", "")}`}>
-             <Button shape="rounded-sm" variant="outline"
-              className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all">
-              <HiOutlineEye className="text-lg" />
-             </Button>
-            </Link>
-           </Tooltip>
-           <Tooltip text="Delete Order" position="top">
-            <Button shape="rounded-sm" variant="outline"
-             className="!p-1.5 text-gray-400 hover:text-white hover:bg-rose-500 hover:border-rose-500 transition-all"
-             onClick={() => setOrderToDelete(order.id)}
-            >
-             <Icon name="Delete" folder="dashboardIcon" size="sm" />
-            </Button>
-           </Tooltip>
-          </div>
-
-         </td>
+         </th>
+         <th>Order Id</th>
+         <th>Customer</th>
+         <th >Product</th>
+         <th>Date</th>
+         <th>Total</th>
+         <th>Payment</th>
+         <th>Status</th>
+         <th className="text-right">Action</th>
         </tr>
-       ))}
-      </tbody>
-     </table>
-    </div>
+       </thead>
+       <tbody>
+        {isLoadingOrders ? (
+          <SVGLoaderFetch colSpan={9} text="Fetching orders..." />
+        ) : orders.length === 0 ? (
+          <NoRecordFound colSpan={9} text="No orders found." />
+        ) : orders.map((order: any, idx: number) => (
+         <tr key={order._id} className="group">
+          <td>
+           <Checkbox
+            checked={selectedOrders.includes(order._id)}
+            onChange={() => toggleOrder(order._id)}
+           />
+          </td>
+          <td>
+           <span className="text-sm font-semibold text-gray-900">{order.orderId}</span>
+          </td>
+          <td>
+           <div className="flex flex-col">
+             <span className="text-sm font-bold text-gray-900">{order.customer?.fullName || "Guest"}</span>
+             <span className="text-[10px] text-gray-400">{order.customer?.email}</span>
+           </div>
+          </td>
+          <td>
+           <div className="flex items-center gap-3 min-w-[200px]">
+            <div className="w-10 h-10 rounded-[6px] overflow-hidden border border-gray-50 bg-gray-50 flex-shrink-0">
+             <img src={order.items[0]?.product?.productImage || "/dashboardImage/Headphones.png"} alt="" className="w-full h-full object-cover" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sm font-semibold text-gray-700 leading-tight">{order.items[0]?.product?.name || "Product"}</span>
+              {order.items.length > 1 && <span className="text-[10px] text-brand-gold">+{order.items.length - 1} more items</span>}
+            </div>
+           </div>
+          </td>
 
-    {/* Improved Pagination Footer */}
-    <Pagination
-     currentPage={currentPage}
-     totalPages={24}
-     onPageChange={setCurrentPage}
-    />
-    {/* <AddOrderModal
-     isOpen={isAddOrderModalOpen}
-     onClose={() => setIsAddOrderModalOpen(false)}
-    /> */}
+          <td className="admin-table-td text-sm font-medium text-gray-500">{new Date(order.createdAt).toLocaleDateString()}</td>
+          <td className="admin-table-td text-sm font-bold text-gray-900">{formatPrice(order.totalAmount)}</td>
+          <td>
+           <div className="flex items-center gap-2">
+            <span className={`w-1.5 h-1.5 rounded-full ${order.paymentStatus === "Paid" ? "bg-emerald-500" : "bg-rose-500"}`}></span>
+            <span className="text-sm font-medium text-gray-700">{order.paymentStatus}</span>
+           </div>
+          </td>
+          <td className="admin-table-td">
+           <div className={`flex items-center gap-2 font-bold text-sm ${statusConfig[order.status as keyof typeof statusConfig]?.color || "text-gray-400"}`}>
+            <Icon
+             name={statusConfig[order.status as keyof typeof statusConfig]?.icon || "Pending"}
+             folder="dashboardIcon"
+             size="sm"
+            />
+            {order.status}
+           </div>
+          </td>
+          <td className="text-right">
+           <div className="flex justify-end items-center gap-4">
+            <Tooltip text="View Details" position="top">
+             <Link href={`/admin/orders/${order._id}`}>
+              <Button shape="rounded-sm" variant="outline"
+               className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all">
+               <HiOutlineEye className="text-lg" />
+              </Button>
+             </Link>
+            </Tooltip>
+            <Tooltip text="Delete Order" position="top">
+              <Button 
+                shape="rounded-sm" 
+                variant="outline"
+                className="!p-1.5 text-rose-400 hover:text-white hover:bg-rose-500 hover:border-rose-500 transition-all"
+                onClick={() => {
+                  setOrderToDelete(order.orderId);
+                  setIsDeleteModalOpen(true);
+                }}
+              >
+                <Icon name="Delete" folder="dashboardIcon" size="sm" />
+              </Button>
+            </Tooltip>
+           </div>
+
+          </td>
+         </tr>
+        ))}
+       </tbody>
+      </table>
+     </div>
+
+     {/* Improved Pagination Footer */}
+     <Pagination
+      currentPage={currentPage}
+      totalPages={pagination?.totalPages || 1}
+      onPageChange={setCurrentPage}
+     />
 
     <OrdersMoreActionsDrawer
      isOpen={isMoreActionDrawerOpen && selectedOrders.length === 0}
@@ -302,7 +270,7 @@ export default function OrderListing() {
      isOpen={selectedOrders.length > 0}
      onClose={() => setSelectedOrders([])}
      selectedIds={selectedOrders}
-     items={ordersData}
+     items={orders}
      onClearSelection={() => setSelectedOrders([])}
      title="Orders Selected"
      actions={[
@@ -332,16 +300,17 @@ export default function OrderListing() {
     />
 
     <ConfirmationModal
-     isOpen={!!orderToDelete || isDeleteModalOpen}
+     isOpen={isDeleteModalOpen}
      onClose={() => { setOrderToDelete(null); setIsDeleteModalOpen(false); }}
-     onConfirm={() => {
-      console.log(`Deleting order(s)...`);
-      setOrderToDelete(null);
-      setIsDeleteModalOpen(false);
-      setSelectedOrders([]);
-     }}
+     onConfirm={orderToDelete ? () => {
+       const orderObj = orders.find(o => o.orderId === orderToDelete);
+       if (orderObj) handleDeleteOrder(orderObj._id);
+       setIsDeleteModalOpen(false);
+       setOrderToDelete(null);
+     } : handleBulkDelete}
+     isLoading={isDeleting}
      title="Delete Order"
-     message={`Are you sure you want to delete order ${orderToDelete}? This action cannot be undone.`}
+     message={orderToDelete ? `Are you sure you want to delete order ${orderToDelete}? This action cannot be undone.` : `Are you sure you want to delete ${selectedOrders.length} selected orders? This action cannot be undone.`}
      confirmText="Yes, delete order"
      type="danger"
     />
@@ -349,3 +318,4 @@ export default function OrderListing() {
   </div>
  );
 }
+

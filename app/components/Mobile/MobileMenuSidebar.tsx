@@ -5,23 +5,34 @@ import Link from "next/link";
 import Image from "next/image";
 import { Icon } from "../Icon";
 import { useMobileMenu } from "@/app/context/MobileMenuContext";
+import { useCustomerAuth } from "@/app/context/CustomerAuthContext";
+import { useAuthModal } from "@/app/context/AuthModalContext";
+import { useCart } from "@/app/context/CartContext";
 
 interface MenuItem {
   label: string;
   icon?: string;
   href: string;
+  badge?: number;
 }
 
 const MobileMenuSidebar = () => {
   const { isOpen, closeMenu } = useMobileMenu();
+  const { customer, isAuthenticated } = useCustomerAuth();
+  const { openLogin } = useAuthModal();
+  const { cartItems } = useCart();
+  
+  const cartCount = cartItems.length;
 
   const menuGroups: { items: MenuItem[] }[] = [
     {
       items: [
         { label: "Home", icon: "home", href: "/" },
         { label: "Categories", icon: "list", href: "/products" },
-        { label: "Favorites", icon: "favorite_border", href: "/products" },
-        { label: "My orders", icon: "inventory_2", href: "/products" },
+        { label: "My Cart", icon: "shopping_cart", href: "/cart", badge: cartCount },
+        { label: "Favorites", icon: "favorite_border", href: "/wishlist" },
+        { label: "My orders", icon: "inventory_2", href: "/orders" },
+        { label: "My Profile", icon: "person", href: "/profile" },
       ]
     },
     {
@@ -58,10 +69,28 @@ const MobileMenuSidebar = () => {
          
          <div className="flex flex-col gap-3">
             <div className="w-12 h-12 rounded-full overflow-hidden bg-white border border-gray-200">
-               <Image src="/avatars/avatar=pic1.jpg" alt="User" width={48} height={48} />
+               <Image 
+                 src={isAuthenticated && customer?.avatar ? customer.avatar : "/avatars/avatar=pic1.jpg"} 
+                 alt="User" 
+                 width={48} 
+                 height={48} 
+                 className="w-full h-full object-cover"
+               />
             </div>
             <div className="flex flex-col">
-               <span className="text-sm">Sign in | Register</span>
+               {isAuthenticated ? (
+                 <span className="text-sm font-bold text-gray-900">{customer?.fullName}</span>
+               ) : (
+                 <button 
+                   onClick={() => {
+                     closeMenu();
+                     openLogin();
+                   }}
+                   className="text-sm text-left font-bold text-gray-900 hover:text-brand-blue transition-colors"
+                 >
+                   Sign in | Register
+                 </button>
+               )}
             </div>
          </div>
       </div>
@@ -85,6 +114,11 @@ const MobileMenuSidebar = () => {
                      />
                    )}
                    <span className={!item.icon ? "ml-9" : ""}>{item.label}</span>
+                   {item.badge !== undefined && item.badge > 0 && (
+                     <span className="ml-auto bg-[#C30000] text-white text-[10px] font-bold min-w-[20px] h-[20px] flex items-center justify-center rounded-full border-2 border-white shadow-sm">
+                       {item.badge}
+                     </span>
+                   )}
                 </Link>
               ))}
            </div>

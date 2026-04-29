@@ -59,6 +59,14 @@ export const authApi = baseApi.injectEndpoints({
       }),
       providesTags: ['User'],
     }),
+    getUserById: builder.query<any, string>({
+      query: (userId) => ({
+        url: `/users/${userId}`,
+        method: 'GET',
+      }),
+      providesTags: (result, error, userId) => [{ type: 'User', id: userId }],
+      transformResponse: (response: any) => response.data,
+    }),
     updateAccount: builder.mutation({
       query: (details) => ({
         url: '/users/update-account',
@@ -112,6 +120,22 @@ export const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [{ type: 'User', id: 'LIST' }],
     }),
+    lockStaffSession: builder.mutation({
+      query: (userId) => ({
+        url: `/users/${userId}/lock-session`,
+        method: 'PATCH',
+      }),
+      invalidatesTags: (result, error, userId) => [
+        { type: 'User', id: userId },
+        { type: 'User', id: 'LIST' }
+      ],
+    }),
+    resetStaffPassword: builder.mutation({
+      query: (userId) => ({
+        url: `/users/${userId}/reset-password`,
+        method: 'PATCH',
+      }),
+    }),
   }),
   overrideExisting: true,
 });
@@ -123,10 +147,13 @@ export const {
   useLogoutMutation, 
   useGetUsersQuery,
   useGetCurrentUserQuery,
+  useGetUserByIdQuery,
   useUpdateAccountMutation,
   useUpdateAvatarMutation,
   useChangePasswordMutation,
   useOnboardUserMutation,
   useUpdateStaffMutation,
-  useDeleteStaffMutation
+  useDeleteStaffMutation,
+  useLockStaffSessionMutation,
+  useResetStaffPasswordMutation
 } = authApi;

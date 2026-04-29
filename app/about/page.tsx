@@ -67,6 +67,7 @@ const AboutPage = () => {
               fill
               className="object-cover"
               priority
+              sizes="100vw"
             />
           </motion.div>
           <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px]" />
@@ -111,7 +112,7 @@ const AboutPage = () => {
               viewport={{ once: true }}
               className="relative aspect-square overflow-hidden border border-gray-200"
             >
-              <Image src="/brandImage/serene_story.png" alt="Aesthetic" fill className="object-cover" />
+              <Image src="/brandImage/serene_story.png" alt="Aesthetic" fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
             </motion.div>
           </div>
 
@@ -122,7 +123,7 @@ const AboutPage = () => {
               viewport={{ once: true }}
               className="relative aspect-square overflow-hidden border border-gray-200 order-2 lg:order-1"
             >
-              <Image src="/brandImage/product_2.png" alt="Quality" fill className="object-cover" />
+              <Image src="/brandImage/product_2.png" alt="Quality" fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
             </motion.div>
             <motion.div
               initial={{ opacity: 0, x: 30 }}
@@ -197,7 +198,7 @@ const AboutPage = () => {
                   className="flex flex-col gap-4 group"
                 >
                   <div className="relative aspect-[3/4] overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-500 border border-gray-200">
-                    <Image src={member.image} alt={member.name} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
+                    <Image src={member.image} alt={member.name} fill className="object-cover group-hover:scale-110 transition-transform duration-700" sizes="(max-width: 768px) 50vw, 20vw" />
                     <div className="absolute inset-0 bg-neutral-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
                       <div className="flex gap-3 text-white">
                         <button className="hover:scale-120 transition-transform"><HiStar size={18} /></button>

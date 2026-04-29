@@ -3,10 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import Modal from "../Modal/Modal";
 import { Button } from "../Button";
+import { FavoriteButton } from "../Other";
 import { useCart } from "@/app/context/CartContext";
 import { toast } from "sonner";
 
 interface RelatedProduct {
+  id: string;
   name: string;
   price: string;
   image: string;
@@ -46,7 +48,7 @@ export const RelatedProducts: React.FC<RelatedProductsProps> = ({ products }) =>
         {products.map((item, idx) => (
           <Link
             key={idx}
-            href="/products/detail"
+            href={`/products/detail?id=${item.id}`}
             className="bg-white flex flex-col gap-4 transition-all cursor-pointer group"
           >
             <div className="w-full aspect-square relative bg-gray-50/50 flex items-center justify-center p-6 group-hover:bg-gray-100 transition-colors overflow-hidden">
@@ -99,7 +101,21 @@ export const RelatedProducts: React.FC<RelatedProductsProps> = ({ products }) =>
                     i === selectedItem.name.split(' ').length - 1 ? <span key={i} className="font-bold">{word}</span> : word + ' '
                   )}
                 </h2>
-                <span className="text-2xl font-black text-gray-900 mt-2">{selectedItem.price}</span>
+                <div className="flex items-center justify-between mt-2">
+                  <span className="text-2xl font-black text-gray-900">{selectedItem.price}</span>
+                  <FavoriteButton 
+                    item={{
+                      id: selectedItem.id,
+                      title: selectedItem.name,
+                      price: selectedItem.price,
+                      image: selectedItem.image,
+                    } as any}
+                    variant="outline"
+                    className="border-gray-200 !w-auto px-4 h-10 flex items-center gap-2"
+                  >
+                    <span className="text-[10px] font-bold uppercase tracking-widest">Save for later</span>
+                  </FavoriteButton>
+                </div>
               </div>
 
               <div className="h-px w-full bg-gray-100" />
@@ -119,7 +135,7 @@ export const RelatedProducts: React.FC<RelatedProductsProps> = ({ products }) =>
                   Add to Cart
                 </Button>
                 <Link 
-                  href="/products/detail"
+                  href={`/products/detail?id=${selectedItem.id}`}
                   className="text-center text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-brand-gold transition-colors"
                   onClick={() => setIsModalOpen(false)}
                 >

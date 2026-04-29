@@ -2,18 +2,21 @@ import { HiUser } from "react-icons/hi2";
 import { Icon } from "../Icon";
 import { DropdownMenu, DropdownFooterAction } from "../Dropdown/DropdownMenu";
 import { useState } from "react";
+import Image from "next/image";
 import { ConfirmationModal } from "./ConfirmationModal";
 import { useLogoutMutation } from "@/lib/redux/services/authApi";
 import { logOut, selectCurrentUser } from "@/lib/redux/features/authSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { usePrivilege } from "@/lib/contexts/PrivilegeContext";
 
 export const AdminProfileDropdown: React.FC = () => {
  const router = useRouter();
  const dispatch = useAppDispatch();
  const user = useAppSelector(selectCurrentUser);
- const [logout] = useLogoutMutation();
+ const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
+ const { canAccess } = usePrivilege();
 
  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
@@ -37,9 +40,9 @@ export const AdminProfileDropdown: React.FC = () => {
    <DropdownMenu width={280} className="shadow-2xl border-gray-200 p-0 overflow-hidden">
     {/* User Summary */}
     <div className="px-6 py-5 bg-gray-50/50 border-b border-gray-50 flex items-center gap-3">
-     <div className="w-12 h-12 rounded-full border-2 border-white shadow-sm overflow-hidden shrink-0 bg-white flex items-center justify-center">
+     <div className="w-12 h-12 rounded-full border-2 border-white shadow-sm overflow-hidden shrink-0 bg-white flex items-center justify-center relative">
       {user?.avatar ? (
-       <img src={user.avatar} alt="Admin" className="w-full h-full object-cover" />
+       <Image src={user.avatar} alt="Admin" fill className="object-cover" sizes="48px" />
       ) : (
        <div className="w-full h-full bg-brand-gold flex items-center justify-center text-white font-black text-sm uppercase">
         {user?.fullName?.charAt(0) || "A"}
@@ -58,27 +61,47 @@ export const AdminProfileDropdown: React.FC = () => {
 
     {/* Action List */}
     <div className="p-2 flex flex-col">
-     <button className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-brand-blue-light hover:text-brand-blue transition-all group text-[#1D3557]">
-      <Icon name="user-profile-circle" folder="dashboardIcon" size="sm" className="text-gray-400 group-hover:text-brand-blue" />
-      <span className="text-[13px] font-bold">View Profile</span>
-     </button>
+     {canAccess("profile", "view") && (
+      <button 
+       onClick={() => router.push("/admin/profile")}
+       className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-brand-blue-light hover:text-brand-blue transition-all group text-[#1D3557]"
+      >
+       <Icon name="user-profile-circle" folder="dashboardIcon" size="sm" className="text-gray-400 group-hover:text-brand-blue" />
+       <span className="text-[13px] font-bold">View Profile</span>
+      </button>
+     )}
 
-     <button className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-brand-blue-light hover:text-brand-blue transition-all group text-[#1D3557]">
-      <Icon name="settings" folder="dashboardIcon" size="sm" className="text-gray-400 group-hover:text-brand-blue" />
-      <span className="text-[13px] font-bold">Account Settings</span>
-     </button>
+     {canAccess("profile", "view") && (
+      <button 
+       onClick={() => router.push("/admin/profile")}
+       className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-brand-blue-light hover:text-brand-blue transition-all group text-[#1D3557]"
+      >
+       <Icon name="settings" folder="dashboardIcon" size="sm" className="text-gray-400 group-hover:text-brand-blue" />
+       <span className="text-[13px] font-bold">Account Settings</span>
+      </button>
+     )}
 
-     <button className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-brand-blue-light hover:text-brand-blue transition-all group text-[#1D3557]">
-      <Icon name="security" folder="icon" size="sm" className="text-gray-400 group-hover:text-brand-blue" />
-      <span className="text-[13px] font-bold">Security & Audit</span>
-     </button>
+     {canAccess("permissions", "view") && (
+      <button 
+       onClick={() => router.push("/admin/permissions")}
+       className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-brand-blue-light hover:text-brand-blue transition-all group text-[#1D3557]"
+      >
+       <Icon name="security" folder="icon" size="sm" className="text-gray-400 group-hover:text-brand-blue" />
+       <span className="text-[13px] font-bold">Security & Audit</span>
+      </button>
+     )}
 
      <div className="h-px bg-gray-50 my-2 mx-4"></div>
 
-     <button className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-blue-50 hover:text-brand-blue transition-all group text-[#1D3557]">
-      <Icon name="info-circle" folder="dashboardIcon" size="sm" className="text-gray-400 group-hover:text-brand-blue" />
-      <span className="text-[13px] font-bold">Help & Support</span>
-     </button>
+     {canAccess("support", "view") && (
+      <button 
+       onClick={() => router.push("/admin/support")}
+       className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-blue-50 hover:text-brand-blue transition-all group text-[#1D3557]"
+      >
+       <Icon name="info-circle" folder="dashboardIcon" size="sm" className="text-gray-400 group-hover:text-brand-blue" />
+       <span className="text-[13px] font-bold">Help & Support</span>
+      </button>
+     )}
     </div>
 
     {/* Footer Logout */}
@@ -99,6 +122,7 @@ export const AdminProfileDropdown: React.FC = () => {
     confirmText="Yes, Logout Now"
     cancelText="Stay Logged In"
     type="danger"
+    isLoading={isLoggingOut}
    />
   </div>
  );

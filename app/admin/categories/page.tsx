@@ -14,6 +14,7 @@ import { EditCategoryDrawer } from "../../components/Admin/EditCategoryDrawer";
 import { BulkActionsDrawer } from "../../components/Admin/BulkActionsDrawer";
 import { RowsPerPage } from "@/app/components/rows-per-page";
 import { Tooltip } from "../../components/Tooltip";
+import { AttributeDetailModal } from "../../components/Admin/AttributeDetailModal";
 
 
 import {
@@ -23,10 +24,12 @@ import {
 import { toast } from "sonner";
 import { NoRecordFound, SVGLoaderFetch } from "@/app/components/Options";
 import moment from "moment";
+import { usePrivilege } from "@/lib/contexts/PrivilegeContext";
 
 export default function CategoriesPage() {
   const { data: categoriesData, isLoading } = useGetCategoriesQuery();
   const [deleteCategory] = useDeleteCategoryMutation();
+  const { canAccess } = usePrivilege();
 
   const categories = categoriesData?.data || [];
 
@@ -39,6 +42,8 @@ export default function CategoriesPage() {
   const [categoryToEdit, setCategoryToEdit] = useState<any>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState<any>(null);
+  const [isAttributeModalOpen, setIsAttributeModalOpen] = useState(false);
+  const [selectedCategoryForAttributes, setSelectedCategoryForAttributes] = useState<any>(null);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -48,12 +53,12 @@ export default function CategoriesPage() {
   const filteredCategories = categories.filter((cat: any) => {
     // Search filter
     const matchesSearch = cat.name.toLowerCase().includes(searchQuery.toLowerCase());
-    
+
     // Tab filter (if needed - currently we only have "All Categories")
-    const matchesTab = activeTab.includes("All Categories") || 
-                      (activeTab === "Active" && cat.isActive) || 
-                      (activeTab === "Inactive" && !cat.isActive);
-    
+    const matchesTab = activeTab.includes("All Categories") ||
+      (activeTab === "Active" && cat.isActive) ||
+      (activeTab === "Inactive" && !cat.isActive);
+
     return matchesSearch;
   });
 
@@ -109,13 +114,15 @@ export default function CategoriesPage() {
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row justify-end items-center gap-3">
         <div className="flex gap-3 w-full sm:w-auto">
-          <Button shape="rounded-sm" variant="primary"
-            className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold flex-1 sm:flex-initial"
-            iconLeft={<Icon name="add" folder="icon" size="md" />}
-            onClick={() => setIsAddModalOpen(true)}
-          >
-            Add Category
-          </Button>
+          {canAccess("categories", "create") && (
+            <Button shape="rounded-sm" variant="primary"
+              className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold flex-1 sm:flex-initial"
+              iconLeft={<Icon name="add" folder="icon" size="md" />}
+              onClick={() => setIsAddModalOpen(true)}
+            >
+              Add Category
+            </Button>
+          )}
           <Button shape="rounded-sm" variant="outline"
             className="flex-1 sm:flex-initial"
             iconRight={<Icon name="more_vert" folder="icon" size="xs" />}
@@ -208,10 +215,10 @@ export default function CategoriesPage() {
             <tbody>
               {isLoading ? (
                 <SVGLoaderFetch colSpan={5} text="Fetching Categories..." />
-              ) : categories.length === 0 ? (
+              ) : categories?.length === 0 ? (
                 <NoRecordFound colSpan={5} text="No categories found" />
               ) : (
-                paginatedCategories.map((c: any, idx: number) => (
+                paginatedCategories?.map((c: any, idx: number) => (
                   <tr key={idx} className="group">
                     <td className="pl-6">
                       <Checkbox
@@ -232,7 +239,13 @@ export default function CategoriesPage() {
                       {c.createdAt ? moment(c.createdAt).format('MMM DD, YYYY') : "-"}
                     </td>
                     <td className="py-5">
-                      <div className="flex gap-1 flex-wrap">
+                      <div
+                        className="flex gap-1 flex-wrap cursor-pointer hover:opacity-80 transition-opacity"
+                        onClick={() => {
+                          setSelectedCategoryForAttributes(c);
+                          setIsAttributeModalOpen(true);
+                        }}
+                      >
                         {c.hasSize && <span className="px-2 py-0.5 bg-blue-50 text-blue-500 text-[9px] font-black rounded uppercase">Size</span>}
                         {c.hasML && <span className="px-2 py-0.5 bg-emerald-50 text-emerald-500 text-[9px] font-black rounded uppercase">Volume</span>}
                         {c.hasSex && <span className="px-2 py-0.5 bg-purple-50 text-purple-500 text-[9px] font-black rounded uppercase">Gender</span>}
@@ -240,29 +253,33 @@ export default function CategoriesPage() {
                       </div>
                     </td>
                     <td className="text-right">
-                      <div className="flex justify-end gap-2 px-6">
-                        <Tooltip text="Edit Category" position="top">
-                          <Button shape="rounded-sm" variant="outline"
-                            className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
-                            onClick={() => {
-                              setCategoryToEdit(c);
-                              setIsEditDrawerOpen(true);
-                            }}
-                          >
-                            <Icon name="settings" folder="dashboardIcon" size="sm" />
-                          </Button>
-                        </Tooltip>
-                        <Tooltip text="Delete Category" position="top">
-                          <Button shape="rounded-sm" variant="outline"
-                            className="!p-1.5 text-gray-400 hover:text-white hover:bg-rose-500 hover:border-rose-500 transition-all"
-                            onClick={() => {
-                              setCategoryToDelete(c);
-                              setIsDeleteModalOpen(true);
-                            }}
-                          >
-                            <Icon name="Delete" folder="dashboardIcon" size="sm" />
-                          </Button>
-                        </Tooltip>
+                      <div className="flex justify-end gap-2">
+                        {canAccess("categories", "edit") && (
+                          <Tooltip text="Edit Category" position="top">
+                            <Button shape="rounded-sm" variant="outline"
+                              className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
+                              onClick={() => {
+                                setCategoryToEdit(c);
+                                setIsEditDrawerOpen(true);
+                              }}
+                            >
+                              <Icon name="settings" folder="dashboardIcon" size="sm" />
+                            </Button>
+                          </Tooltip>
+                        )}
+                        {canAccess("categories", "delete") && (
+                          <Tooltip text="Delete Category" position="top">
+                            <Button shape="rounded-sm" variant="outline"
+                              className="!p-1.5 text-gray-400 hover:text-white hover:bg-rose-500 hover:border-rose-500 transition-all"
+                              onClick={() => {
+                                setCategoryToDelete(c);
+                                setIsDeleteModalOpen(true);
+                              }}
+                            >
+                              <Icon name="Delete" folder="dashboardIcon" size="sm" />
+                            </Button>
+                          </Tooltip>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -353,6 +370,15 @@ export default function CategoriesPage() {
         message={`Are you sure you want to delete the category "${categoryToDelete?.name}"? This will remove it from all associated products.`}
         confirmText="Yes, delete category"
         type="danger"
+      />
+
+      <AttributeDetailModal
+        isOpen={isAttributeModalOpen}
+        onClose={() => {
+          setIsAttributeModalOpen(false);
+          setSelectedCategoryForAttributes(null);
+        }}
+        category={selectedCategoryForAttributes}
       />
     </div>
   );

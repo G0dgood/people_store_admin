@@ -10,6 +10,7 @@ import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import { UploadMediaModal } from "../../../components/Admin/UploadMediaModal";
 import { MediaMoreActionsDrawer } from "../../../components/Admin/MediaMoreActionsDrawer";
 import { EditMediaDrawer } from "../../../components/Admin/EditMediaDrawer";
+import { MediaPreviewModal } from "../../../components/Admin/MediaPreviewModal";
 import { useGetMediaItemsQuery, useDeleteMediaMutation, MediaItem } from "@/lib/redux/services/mediaApi";
 import { toast } from "sonner";
 import { SVGLoaderFetch, NoRecordFound } from "@/app/components/Options";
@@ -34,6 +35,8 @@ export default function ProductMediaListing() {
  const [viewType, setViewType] = useState<"grid" | "list">("grid");
  const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
  const [mediaToEdit, setMediaToEdit] = useState<MediaItem | null>(null);
+ const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
+ const [mediaToPreview, setMediaToPreview] = useState<MediaItem | null>(null);
  const [searchQuery, setSearchQuery] = useState("");
 
  const filteredMedia = mediaData.filter(item => {
@@ -149,8 +152,14 @@ export default function ProductMediaListing() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
        {paginatedMedia.map((item) => (
         <div key={item._id} className="group relative bg-white border border-gray-200 rounded-[6px] overflow-hidden hover:shadow-md hover:border-brand-gold/20 transition-all">
-         <div className="relative aspect-video bg-gray-50 flex items-center justify-center p-4">
-          <img src={item.url} alt={item.name} className="w-full h-full object-contain transition-transform group-hover:scale-105" />
+         <div 
+          className="relative aspect-video bg-gray-50 flex items-center justify-center p-4 cursor-pointer"
+          onClick={() => {
+            setMediaToPreview(item);
+            setIsPreviewModalOpen(true);
+          }}
+         >
+          <img src={item.thumbnailUrl || item.url} alt={item.name} className="w-full h-full object-contain transition-transform group-hover:scale-105" />
 
           {item.type === "video" && (
            <div className="absolute inset-0 flex items-center justify-center bg-black/5 group-hover:bg-black/10 transition-colors">
@@ -159,41 +168,41 @@ export default function ProductMediaListing() {
             </div>
            </div>
           )}
-
-          <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0">
-           <Button shape="rounded-sm" variant="outline"
-            className="w-8 h-8 text-gray-500 bg-white/95 shadow-sm hover:text-white hover:bg-brand-gold hover:border-brand-gold !p-0 transition-all cursor-pointer"
-            onClick={() => {
-             setMediaToEdit(item);
-             setIsEditDrawerOpen(true);
-            }}
-           >
-            <Icon name="settings" folder="dashboardIcon" size="xs" />
-           </Button>
-           <Button shape="rounded-sm" variant="outline"
-            className="w-8 h-8 bg-white/95 shadow-sm text-gray-500 hover:text-white hover:bg-rose-500 hover:border-rose-500 !p-0 transition-all cursor-pointer"
-            onClick={() => {
-             setMediaToDelete(item);
-             setIsDeleteModalOpen(true);
-            }}
-           >
-            <Icon name="Delete" folder="dashboardIcon" size="xs" />
-           </Button>
+           <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0">
+            <Button shape="rounded-sm" variant="outline"
+             className="w-8 h-8 text-gray-500 bg-white/95 shadow-sm hover:text-white hover:bg-brand-gold hover:border-brand-gold !p-0 transition-all cursor-pointer"
+             onClick={(e) => {
+              e.stopPropagation();
+              setMediaToEdit(item);
+              setIsEditDrawerOpen(true);
+             }}
+            >
+             <Icon name="settings" folder="dashboardIcon" size="xs" />
+            </Button>
+            <Button shape="rounded-sm" variant="outline"
+             className="w-8 h-8 bg-white/95 shadow-sm text-gray-500 hover:text-white hover:bg-rose-500 hover:border-rose-500 !p-0 transition-all cursor-pointer"
+             onClick={(e) => {
+              e.stopPropagation();
+              setMediaToDelete(item);
+              setIsDeleteModalOpen(true);
+             }}
+            >
+             <Icon name="Delete" folder="dashboardIcon" size="xs" />
+            </Button>
+           </div>
+          </div>
+          <div className="p-4 border-t border-gray-50 bg-white">
+           <h3 className="text-sm font-bold text-[#1D3557] truncate mb-1" title={item.name}>
+            {item.name}
+           </h3>
+           <div className="flex items-center justify-between">
+            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{item.size}</span>
+            <span className="text-[10px] font-medium text-gray-300">{new Date(item.createdAt).toLocaleDateString()}</span>
+           </div>
           </div>
          </div>
-
-         <div className="p-4 border-t border-gray-50 bg-white">
-          <h3 className="text-sm font-bold text-[#1D3557] truncate mb-1" title={item.name}>
-           {item.name}
-          </h3>
-          <div className="flex items-center justify-between">
-           <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{item.size}</span>
-           <span className="text-[10px] font-medium text-gray-300">{new Date(item.createdAt).toLocaleDateString()}</span>
-          </div>
-         </div>
-        </div>
-       ))}
-      </div>
+        ))}
+       </div>
      ) : (
       <div className="admin-table-container">
        <table>
@@ -211,8 +220,14 @@ export default function ProductMediaListing() {
          {paginatedMedia.map((item) => (
           <tr key={item._id} className="group">
            <td>
-            <div className="w-16 h-10 rounded-[4px] border border-gray-200 overflow-hidden bg-white p-0.5 shadow-sm relative shrink-0">
-             <img src={item.url} alt={item.name} className="w-full h-full object-contain" />
+            <div 
+              className="w-16 h-10 rounded-[4px] border border-gray-200 overflow-hidden bg-white p-0.5 shadow-sm relative shrink-0 cursor-pointer"
+              onClick={() => {
+                setMediaToPreview(item);
+                setIsPreviewModalOpen(true);
+              }}
+            >
+             <img src={item.thumbnailUrl || item.url} alt={item.name} className="w-full h-full object-contain" />
              {item.type === "video" && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/5">
                <Icon name="play_circle" folder="icon" size="xs" className="text-[#1D3557]" />
@@ -295,6 +310,12 @@ export default function ProductMediaListing() {
     isOpen={isEditDrawerOpen}
     onClose={() => setIsEditDrawerOpen(false)}
     media={mediaToEdit}
+   />
+
+   <MediaPreviewModal
+    isOpen={isPreviewModalOpen}
+    onClose={() => setIsPreviewModalOpen(false)}
+    media={mediaToPreview}
    />
 
    <ConfirmationModal

@@ -23,7 +23,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       className = "",
       variant = "primary",
       size = "md",
-      shape = "rounded",
+      shape = "",
       iconLeft,
       iconRight,
       showChevron,

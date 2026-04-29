@@ -80,7 +80,7 @@ const DropdownItem: React.FC<DropdownItemProps> = ({
       </div>
 
       {hasSubmenu && (
-        <Icon name="chevron_right" size="xs" className="text-gray-400 ml-2" />
+        <Icon name="chevron_right" size="sm" className="text-gray-400 ml-2" />
       )}
     </div>
   );

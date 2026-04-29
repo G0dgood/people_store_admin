@@ -7,24 +7,49 @@ import { TabFilter } from "./TabFilter";
 import { DropdownMenu, DropdownItem } from "../Dropdown/DropdownMenu";
 import { HiPrinter, HiPhoto, HiCog6Tooth } from "react-icons/hi2";
 
+import { useGetOrderStatsQuery, useGetRevenueHistoryQuery } from "@/lib/redux/services/orderApi";
+import { useGetCustomerStatsQuery } from "@/lib/redux/services/customerApi";
+import { useGetProductStatsQuery } from "@/lib/redux/services/productApi";
+
 export const AnalyticsOverview: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [chartTab, setChartTab] = useState("This week");
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Handle click outside to close dropdown
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false);
-      }
-    };
+  const { data: orderStatsResponse, isLoading: isLoadingOrders } = useGetOrderStatsQuery();
+  const { data: customerStatsResponse, isLoading: isLoadingCustomers } = useGetCustomerStatsQuery();
+  const { data: productStatsResponse, isLoading: isLoadingProducts } = useGetProductStatsQuery();
+  const { data: revenueHistoryResponse } = useGetRevenueHistoryQuery();
 
-    if (isDropdownOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isDropdownOpen]);
+  const orderStats = orderStatsResponse?.data;
+  const customerStats = customerStatsResponse?.data;
+  const productStats = productStatsResponse?.data;
+  const revenueHistory = revenueHistoryResponse?.data || [];
+
+  // ... (handleClickOutside effect) ...
+
+  const stats = [
+    {
+      label: "Customers",
+      val: isLoadingCustomers ? "..." : (customerStats?.totalCustomers || 0).toLocaleString()
+    },
+    {
+      label: "Total Products",
+      val: isLoadingProducts ? "..." : (productStats?.totalProducts || 0).toLocaleString()
+    },
+    {
+      label: "Stock Products",
+      val: isLoadingProducts ? "..." : (productStats?.stockProducts || 0).toLocaleString()
+    },
+    {
+      label: "Out of Stock",
+      val: isLoadingProducts ? "..." : (productStats?.outOfStock || 0).toLocaleString()
+    },
+    {
+      label: "Revenue",
+      val: isLoadingOrders ? "..." : "₦" + (orderStats?.totalRevenue || 0).toLocaleString()
+    },
+  ];
 
   return (
     <div className="bg-white p-6 sm:p-8 rounded-[6px] border border-gray-200 shadow-sm flex flex-col gap-8">
@@ -72,13 +97,7 @@ export const AnalyticsOverview: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-y-6 gap-x-4">
-        {[
-          { label: "Customers", val: "52k" },
-          { label: "Total Products", val: "3.5k" },
-          { label: "Stock Products", val: "2.5k" },
-          { label: "Out of Stock", val: "0.5k" },
-          { label: "Revenue", val: "250k" },
-        ].map((stat) => (
+        {stats.map((stat) => (
           <div key={stat.label} className="flex flex-col gap-1 lg:border-gray-200 lg:border-l lg:pl-4 first:border-l-0 first:pl-0">
             <span className="text-[22px] font-black text-brand-charcoal leading-none">{stat.val}</span>
             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{stat.label}</span>
@@ -86,20 +105,20 @@ export const AnalyticsOverview: React.FC = () => {
         ))}
       </div>
 
-      <div className="h-72 w-full mt-4">
+      <div className="h-[300px] w-full mt-4">
         <AdminChart
           type="line"
           data={{
-            labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+            labels: revenueHistory.slice(-7).map((h: any) => new Date(h.date).toLocaleDateString('en-US', { weekday: 'short' })),
             datasets: [{
-              label: 'Revenue',
-              data: [18, 18.5, 17, 16, 11, 12, 11],
+              label: 'Daily Revenue',
+              data: revenueHistory.slice(-7).map((h: any) => h.revenue / 1000), // Display in 'k'
               borderColor: '#222222',
               borderWidth: 3,
               fill: true,
               backgroundColor: 'rgba(34, 34, 34, 0.05)',
               tension: 0.4,
-              pointRadius: (context: any) => context.dataIndex === 4 ? 6 : 0,
+              pointRadius: 4,
               pointBackgroundColor: '#222222',
               pointBorderColor: '#fff',
               pointBorderWidth: 2,
@@ -108,10 +127,7 @@ export const AnalyticsOverview: React.FC = () => {
           options={{
             scales: {
               y: {
-                min: 0,
-                max: 50,
                 ticks: {
-                  stepSize: 10,
                   callback: (value: any) => `${value}k`
                 }
               }

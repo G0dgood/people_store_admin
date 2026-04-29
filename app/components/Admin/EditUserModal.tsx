@@ -10,6 +10,7 @@ import { Button } from "../Button";
 import { Icon } from "../Icon";
 import { useGetRolesQuery } from "@/lib/redux/services/roleApi";
 import { useUpdateStaffMutation } from "@/lib/redux/services/authApi";
+import { useApiError } from "@/app/hooks/useApiError";
 import { toast } from "sonner";
 import { Avatar } from "../Other/Avatar";
 
@@ -38,7 +39,9 @@ const departmentOptions = [
 
 export function EditUserModal({ isOpen, onClose, staff }: EditUserModalProps) {
   const { data: roles = [], isLoading: isLoadingRoles } = useGetRolesQuery();
-  const [updateStaff, { isLoading: isUpdating }] = useUpdateStaffMutation();
+  const [updateStaff, { isLoading: isUpdating, isError, error }] = useUpdateStaffMutation();
+
+  useApiError(isError, error, "Update Failed");
 
   const roleOptions = useMemo(() => {
     return roles.map(role => ({
@@ -90,10 +93,8 @@ export function EditUserModal({ isOpen, onClose, staff }: EditUserModalProps) {
         description: `Successfully updated the administrative profile for ${formData.name}.`
       });
       onClose();
-    } catch (err: any) {
-      toast.error("Update Failed", {
-        description: err.data?.message || "Something went wrong while updating the staff member."
-      });
+    } catch (err) {
+      // Error handled by useApiError hook
     }
   };
 

@@ -17,21 +17,53 @@ import {
 import { RiTimerLine } from "react-icons/ri";
 import { HiOutlineRefresh } from "react-icons/hi";
 
+import {
+ useGetDealsQuery,
+ useGetTimerQuery,
+ useUpdateTimerMutation,
+ useDeleteOfferMutation,
+ useGetDealStatsQuery
+} from "@/lib/redux/services/dealApi";
+import { useSocket } from "@/app/context/SocketContext";
+import { toast } from "sonner";
+import { SVGLoaderFetch } from "../../components/Options";
+
 export default function DealsPage() {
+ const { data: timerResponse, isLoading: isLoadingTimer, refetch: refetchTimer } = useGetTimerQuery();
+ const { data: dealsResponse, isLoading: isLoadingDeals } = useGetDealsQuery();
+ const { data: statsResponse, isLoading: isLoadingStats } = useGetDealStatsQuery();
+ const [updateTimer, { isLoading: isUpdatingTimer }] = useUpdateTimerMutation();
+ const [deleteOffer, { isLoading: isDeletingOffer }] = useDeleteOfferMutation();
+ const { on, off } = useSocket();
+
  const [isTimerModalOpen, setIsTimerModalOpen] = useState(false);
  const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
  const [offerToDelete, setOfferToDelete] = useState<any>(null);
  const [offerToEdit, setOfferToEdit] = useState<any>(null);
- const [timerValues, setTimerValues] = useState({
-  days: "04",
-  hours: "13",
-  minutes: "34",
-  seconds: "56",
- });
- const [isRunning, setIsRunning] = useState(true);
 
- // Convert initial values to total seconds
+ const timerValues = timerResponse?.data?.timer || {
+  days: "00",
+  hours: "00",
+  minutes: "00",
+  seconds: "00",
+  isRunning: false
+ };
+
+ const isRunning = timerValues.isRunning;
+ const offers = dealsResponse?.data || [];
+ const dealStats = statsResponse?.data;
+
+ // Real-time timer sync
+ useEffect(() => {
+  const handleTimerUpdate = () => {
+   refetchTimer();
+  };
+
+  on("TIMER_UPDATED", handleTimerUpdate);
+  return () => off("TIMER_UPDATED", handleTimerUpdate);
+ }, [on, off, refetchTimer]);
+
  const initialTotalSeconds = useMemo(() => {
   return (
    parseInt(timerValues.days) * 86400 +
@@ -43,12 +75,10 @@ export default function DealsPage() {
 
  const [totalSeconds, setTotalSeconds] = useState(initialTotalSeconds);
 
- // Update totalSeconds if modal manually updates timerValues
  useEffect(() => {
   setTotalSeconds(initialTotalSeconds);
  }, [initialTotalSeconds]);
 
- // Countdown Interval
  useEffect(() => {
   let interval: NodeJS.Timeout;
   if (isRunning && totalSeconds > 0) {
@@ -59,7 +89,6 @@ export default function DealsPage() {
   return () => clearInterval(interval);
  }, [isRunning, totalSeconds]);
 
- // Derived display values
  const displayValues = useMemo(() => {
   const d = Math.floor(totalSeconds / 86400);
   const h = Math.floor((totalSeconds % 86400) / 3600);
@@ -74,36 +103,65 @@ export default function DealsPage() {
   };
  }, [totalSeconds]);
 
- const [offers, setOffers] = useState<any[]>([]);
+ const handleToggleTimer = async () => {
+  try {
+   await updateTimer({
+    ...displayValues,
+    isRunning: !isRunning
+   }).unwrap();
+   toast.success(isRunning ? "Timer paused" : "Timer resumed");
+  } catch (error) {
+   toast.error("Failed to update timer");
+  }
+ };
+
+ const removeOffer = async (id: string) => {
+  try {
+   await deleteOffer(id).unwrap();
+   toast.success("Offer removed");
+   setIsDeleteModalOpen(false);
+   setOfferToDelete(null);
+  } catch (error) {
+   toast.error("Failed to remove offer");
+  }
+ };
+
+ const initialSelections = useMemo(() => {
+  if (offerToEdit) {
+   return { [offerToEdit.product?._id]: offerToEdit.discount };
+  }
+  return offers.reduce((acc: any, offer: any) => {
+   if (offer.product?._id) acc[offer.product._id] = offer.discount;
+   return acc;
+  }, {});
+ }, [offers, offerToEdit]);
 
  const stats = [
-  { title: "Active Deals", value: offers.length.toString(), icon: <HiOutlineCube size={20} />, color: "blue" },
-  { title: "Total Viewed", value: "1.2k", icon: <HiOutlineUsers size={20} />, color: "emerald" },
-  { title: "Conversion Rate", value: "8.5%", icon: <HiOutlineRefresh size={20} />, color: "orange" },
-  { title: "Offer Revenue", value: "₦4.5M", icon: <HiOutlineCreditCard size={20} />, color: "rose" },
+  {
+   title: "Active Deals",
+   value: isLoadingStats ? "..." : (dealStats?.activeDeals || 0).toString(),
+   icon: <HiOutlineCube size={20} />,
+   color: "blue"
+  },
+  {
+   title: "Total Viewed",
+   value: isLoadingStats ? "..." : (dealStats?.totalViewed || 0).toLocaleString(),
+   icon: <HiOutlineUsers size={20} />,
+   color: "emerald"
+  },
+  {
+   title: "Conversion Rate",
+   value: isLoadingStats ? "..." : (dealStats?.conversionRate || "0%"),
+   icon: <HiOutlineRefresh size={20} />,
+   color: "orange"
+  },
+  {
+   title: "Offer Revenue",
+   value: isLoadingStats ? "..." : "₦" + (dealStats?.offerRevenue || 0).toLocaleString(),
+   icon: <HiOutlineCreditCard size={20} />,
+   color: "rose"
+  },
  ];
-
- const handleSaveOffers = (newDeals: any[]) => {
-  setOffers(prev => {
-   const next = [...prev];
-   newDeals.forEach(deal => {
-    const index = next.findIndex(o => o.id === deal.id);
-    if (index !== -1) {
-     next[index] = deal;
-    } else {
-     next.push(deal);
-    }
-   });
-   return next;
-  });
-  setOfferToEdit(null);
- };
-
- const removeOffer = (id: number) => {
-  setOffers(prev => prev.filter(o => o.id !== id));
-  setIsDeleteModalOpen(false);
-  setOfferToDelete(null);
- };
 
  return (
   <div className="flex flex-col gap-8">
@@ -124,7 +182,6 @@ export default function DealsPage() {
 
    {/* Timer Display Card */}
    <div className="w-full bg-white p-8 flex flex-col md:flex-row items-center justify-between gap-8 border border-[#1C1C1C1A] rounded-[6px] relative overflow-hidden group">
-    {/* Decoration */}
     <div className="absolute top-0 right-0 w-32 h-32 bg-brand-gold/10 rounded-full -mr-16 -mt-16 blur-3xl group-hover:bg-brand-gold/20 transition-colors" />
 
     <div className="flex flex-col gap-4 relative z-10">
@@ -146,7 +203,7 @@ export default function DealsPage() {
         variant={isRunning ? "secondary" : "primary"}
         size="sm"
         className="!py-1.5 !px-4 text-[10px] font-black uppercase tracking-widest border-none shadow-sm transition-all duration-300 hover:bg-brand-gold hover:text-white"
-        onClick={() => setIsRunning(!isRunning)}
+        onClick={handleToggleTimer}
        >
         {isRunning ? "Pause Countdown" : "Resume Countdown"}
        </Button>
@@ -207,13 +264,18 @@ export default function DealsPage() {
      <Button shape="rounded-sm" variant="primary"
       className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold shadow-md shadow-brand-gold/10 h-10 px-6 text-[10px] font-black uppercase tracking-widest"
       iconLeft={<HiOutlinePlusCircle size={16} />}
-      onClick={() => setIsOfferModalOpen(true)}
+      onClick={() => {
+       setOfferToEdit(null);
+       setIsOfferModalOpen(true);
+      }}
      >
       Create New Offer
      </Button>
     </div>
 
-    {offers.length === 0 ? (
+    {isLoadingDeals ? (
+     <div className="p-20 flex justify-center"><SVGLoaderFetch asTable={false} text="Loading deals..." /></div>
+    ) : offers.length === 0 ? (
      <EmptyState
       title="No custom offers active"
       description="Global default deals are currently being displayed. You can add specific offer overrides here."
@@ -231,23 +293,25 @@ export default function DealsPage() {
         </tr>
        </thead>
        <tbody className="divide-y divide-gray-50">
-        {offers.map((offer, idx) => {
-         const dealPrice = offer.price - (offer.price * offer.discount / 100);
+        {offers.map((offer: any, idx: number) => {
+         const p = offer.product;
+         if (!p) return null;
+         const dealPrice = p.price - (p.price * offer.discount / 100);
          return (
           <tr key={idx} className="group hover:bg-brand-gold/5 transition-colors">
            <td className="pl-8 py-5">
             <div className="flex items-center gap-4">
              <div className="w-12 h-12 rounded-xl border border-gray-200 overflow-hidden bg-white p-1 shrink-0 shadow-sm group-hover:border-brand-gold/20 transition-colors">
-              <img src={offer.image} alt="" className="w-full h-full object-contain" />
+              <img src={p.productImage} alt="" className="w-full h-full object-contain" />
              </div>
              <div className="flex flex-col">
-              <span className="text-sm font-black text-[#1D3557] group-hover:text-brand-gold transition-colors">{offer.name}</span>
-              <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider">{offer.category}</span>
+              <span className="text-sm font-black text-[#1D3557] group-hover:text-brand-gold transition-colors">{p.name}</span>
+              <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider">{p.category}</span>
              </div>
             </div>
            </td>
            <td className="py-5">
-            <span className="text-sm font-bold text-gray-400 line-through">₦{offer.price.toLocaleString()}</span>
+            <span className="text-sm font-bold text-gray-400 line-through">₦{p.price.toLocaleString()}</span>
            </td>
            <td className="py-5">
             <span className="px-3 py-1 bg-rose-50 text-rose-500 text-[10px] font-black rounded-full shadow-sm">
@@ -292,8 +356,16 @@ export default function DealsPage() {
     isOpen={isTimerModalOpen}
     onClose={() => setIsTimerModalOpen(false)}
     initialValues={timerValues}
-    onUpdate={(values) => {
-     setTimerValues(values);
+    isLoading={isUpdatingTimer}
+    onUpdate={async (values) => {
+     try {
+      console.log("Frontend sending timer update:", { ...values, isRunning });
+      await updateTimer({ ...values, isRunning }).unwrap();
+      toast.success("Global timer updated");
+      setIsTimerModalOpen(false);
+     } catch (error) {
+      toast.error("Failed to update timer");
+     }
     }}
    />
 
@@ -303,8 +375,11 @@ export default function DealsPage() {
      setIsOfferModalOpen(false);
      setOfferToEdit(null);
     }}
-    onSave={handleSaveOffers}
-    initialSelections={offerToEdit ? { [offerToEdit.id]: offerToEdit.discount } : undefined}
+    onSave={() => {
+     setIsOfferModalOpen(false);
+     setOfferToEdit(null);
+    }}
+    initialSelections={initialSelections}
    />
 
    <ConfirmationModal
@@ -314,12 +389,13 @@ export default function DealsPage() {
      setOfferToDelete(null);
     }}
     onConfirm={() => {
-     if (offerToDelete) removeOffer(offerToDelete.id);
+     if (offerToDelete) removeOffer(offerToDelete._id);
     }}
     title="Remove Promotion"
-    message={`Are you sure you want to end the promotion for "${offerToDelete?.name}"? This product will revert to its original storefront price.`}
+    message={`Are you sure you want to end the promotion for "${offerToDelete?.product?.name || 'this product'}"? This product will revert to its original storefront price.`}
     confirmText="Yes, end promotion"
     type="danger"
+    isLoading={isDeletingOffer}
    />
   </div>
  );

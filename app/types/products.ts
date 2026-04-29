@@ -1,19 +1,25 @@
 export interface FilterState {
-  category: string | null;
-  brands: string[];
-  priceRange: [number, number];
+  category: string;
+  brand: string;
+  minPrice: number | undefined;
+  maxPrice: number | undefined;
   condition: string;
-  ratings: number[];
+  status: string;
+  search: string;
+  rating: number;
 }
 
 export type ViewMode = "grid" | "list";
 
 export const DEFAULT_FILTERS: FilterState = {
-  category: null,
-  brands: ["Bloom & Mist"],
-  priceRange: [150, 850],
-  condition: "Any",
-  ratings: [],
+  category: "",
+  brand: "",
+  minPrice: undefined,
+  maxPrice: undefined,
+  condition: "",
+  status: "All",
+  search: "",
+  rating: 0,
 };
 
 export interface SortOption {

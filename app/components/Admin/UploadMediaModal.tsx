@@ -11,6 +11,7 @@ interface UploadMediaModalProps {
   isOpen: boolean;
   onClose: () => void;
   onUploadSuccess?: (files: File[]) => void;
+  onlyStaging?: boolean;
 }
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
@@ -18,7 +19,7 @@ const ALLOWED_TYPES = ["image/jpeg", "image/png", "video/mp4"];
 
 import { useUploadMediaMutation } from "@/lib/redux/services/mediaApi";
 
-export function UploadMediaModal({ isOpen, onClose, onUploadSuccess }: UploadMediaModalProps) {
+export function UploadMediaModal({ isOpen, onClose, onUploadSuccess, onlyStaging }: UploadMediaModalProps) {
   const [uploadMedia, { isLoading: isUploading }] = useUploadMediaMutation();
   const [stagedFiles, setStagedFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
@@ -72,6 +73,13 @@ export function UploadMediaModal({ isOpen, onClose, onUploadSuccess }: UploadMed
       return;
     }
 
+    if (onlyStaging) {
+      onUploadSuccess?.(stagedFiles);
+      setStagedFiles([]);
+      onClose();
+      return;
+    }
+    
     const formData = new FormData();
     stagedFiles.forEach((file) => {
       formData.append("files", file);
@@ -80,6 +88,7 @@ export function UploadMediaModal({ isOpen, onClose, onUploadSuccess }: UploadMed
     try {
       await uploadMedia(formData).unwrap();
       toast.success("Assets uploaded successfully!");
+      onUploadSuccess?.(stagedFiles);
       setStagedFiles([]);
       onClose();
     } catch (err: any) {

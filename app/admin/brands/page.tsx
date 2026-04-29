@@ -20,7 +20,7 @@ import { toast } from "sonner";
 import { SVGLoaderFetch, NoRecordFound } from "@/app/components/Options";
 
 const statusConfig = {
-  Active: "text-brand-gold bg-brand-gold/10",
+  Active: "text-emerald-500 bg-emerald-50/50",
   Inactive: "text-rose-500 bg-rose-50/50",
 };
 

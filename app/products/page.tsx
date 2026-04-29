@@ -7,21 +7,39 @@ import { Icon } from "@/app/components/Icon";
 import { FilterSidebar } from "@/app/components/Products/FilterSidebar";
 import { ListingControlBar } from "@/app/components/Products/ListingControlBar";
 import { ProductGridItem, ProductListItem } from "@/app/components/Products/ProductItems";
+import { ProductSkeleton } from "@/app/components/Skeleton/ProductSkeleton";
 import { ProductMobileHeader } from "@/app/components/Products/ProductMobileHeader";
 import { CategoryChips } from "@/app/components/Products/CategoryChips";
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
 import { RecommendedProducts } from "@/app/components/Products/RecommendedProducts";
 import { Pagination } from "@/app/components/Navigation/Pagination";
+import { QuickViewModal } from "@/app/components/Products/QuickViewModal";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
+import { useGetPublicProductsQuery, useGetPublicCategoriesQuery, useGetPublicBrandsQuery } from "@/lib/redux/services/boutiqueApi";
 
-import { FilterState, DEFAULT_FILTERS, ViewMode } from "@/app/types/products";
+import { useFilter } from "@/app/context/FilterContext";
+import { DEFAULT_FILTERS } from "@/app/types/products";
+import { ViewMode } from "../types/products";
 
 const ProductsPage = () => {
-  const [viewMode, setViewMode] = useState<ViewMode>("list");
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
-  const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS);
+  const { filters, setFilters } = useFilter();
+  const [sortBy, setSortBy] = useState("featured");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [quickViewProduct, setQuickViewProduct] = useState<any>(null);
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+  const [rowsPerPage, setRowsPerPage] = useState(12);
 
-  const categories = ["Signature Fragrance", "Luxury Skincare", "Boutique Gift Sets", "Body & Bath", "Home Fragrance", "Men's Grooming"];
+  const { data: categoriesResponse, isLoading: isLoadingCategories } = useGetPublicCategoriesQuery();
+  const categories = categoriesResponse?.data || [];
+
+  const { data: brandsResponse, isLoading: isLoadingBrands } = useGetPublicBrandsQuery();
+  const brands = brandsResponse?.data || [];
 
   // Lock body scroll when mobile filter drawer is open
   React.useEffect(() => {
@@ -35,120 +53,42 @@ const ProductsPage = () => {
     };
   }, [isFilterDrawerOpen]);
 
-  const products = [
-    {
-      id: "1",
-      title: "Signature Oud Intense Discovery Set",
-      price: "₦285.00",
-      originalPrice: "₦320.00",
-      rating: 4.9,
-      orders: 842,
-      shipping: "Express Shipping",
-      description: "A profound journey through the heart of artisanal perfumery. This discovery set features our flagship intense Oud, masterfully balanced with midnight bloom and rare spices for an unforgettable sensory trajectory.",
-      image: "/brandImage/product_1.png",
-      category: "Signature Fragrance",
-      brand: "Bloom & Mist",
-      condition: "Intense"
-    },
-    {
-      id: "2",
-      title: "Prada Paradoxe Eau de Parfum - Refillable",
-      price: "₦142.00",
-      rating: 4.8,
-      orders: 2310,
-      shipping: "Free Shipping",
-      description: "A floral ambery fragrance that embraces the paradoxes of iconic ingredients to reveal new scented sensations. Featuring notes of Neroli, Amber, and Musk for a timeless yet avant-garde signature.",
-      image: "/brandImage/product_2.png",
-      category: "Signature Fragrance",
-      brand: "Prada",
-      condition: "Essential"
-    },
-    {
-      id: "3",
-      title: "Radiant Skin Ritual - Hyaluronic & Vitamin C Duo",
-      price: "₦195.00",
-      originalPrice: "₦240.00",
-      rating: 4.7,
-      orders: 1540,
-      shipping: "Fast Shipping",
-      description: "A high-fidelity skincare orchestration designed to materialize absolute radiance. This duo synchronizes the moisture-locking power of Hyaluronic Acid with the brightening intensity of stabilized Vitamin C.",
-      image: "/brandImage/product_3.png",
-      category: "Luxury Skincare",
-      brand: "Bloom & Mist",
-      condition: "Discovery"
-    },
-    {
-      id: "4",
-      title: "Versace Eros Flame - Eau de Parfum Spray",
-      price: "₦110.00",
-      rating: 4.6,
-      orders: 450,
-      shipping: "Free Shipping",
-      description: "A fragrance for a strong, passionate, self-confident man who is deeply in touch with his emotions. Characterized by strong contrasts in which the most noble and elegant ingredients enrich and enhance one another.",
-      image: "/brandImage/product_4.png",
-      category: "Men's Grooming",
-      brand: "Versace",
-      condition: "Essential"
-    },
-    {
-      id: "5",
-      title: "Midnight Noir Body & Bath Collection",
-      price: "₦165.00",
-      originalPrice: "₦185.00",
-      rating: 4.8,
-      orders: 210,
-      shipping: "Express Delivery",
-      description: "Transform your daily ritual into a spa-level experience. Infused with midnight noir essences, this collection features a silk-texture body wash and a deep-hydration luxury lotion.",
-      image: "/brandImage/product_5.png",
-      category: "Body & Bath",
-      brand: "Bloom & Mist",
-      condition: "Essential"
-    },
-    {
-      id: "6",
-      title: "Gucci Guilty Absolute Pour Homme",
-      price: "₦125.00",
-      rating: 4.7,
-      orders: 1200,
-      shipping: "Fast Shipping",
-      description: "Created using a particular blend with a structure that remains unchanged from the first time it is applied to the skin. Leather accord and goldenwood are custom mixed with natural extract of the Nootka Cypress.",
-      image: "/brandImage/product_6.png",
-      category: "Signature Fragrance",
-      brand: "Gucci",
-      condition: "Intense"
-    }
-  ];
-
   const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
   const searchBarQuery = searchParams?.get("search")?.toLowerCase() || "";
 
-  const filteredProducts = React.useMemo(() => {
-    return products.filter(product => {
-      // Search Bar filter
-      if (searchBarQuery && !product.title.toLowerCase().includes(searchBarQuery)) return false;
+  const { data: productsResponse, isLoading: isLoadingProducts } = useGetPublicProductsQuery({
+    category: filters.category || undefined,
+    search: searchBarQuery,
+    page: currentPage,
+    limit: rowsPerPage,
+    sort: sortBy
+  });
 
-      // Category filter
-      if (filters.category && product.category !== filters.category) return false;
+  const products = productsResponse?.data?.products || [];
+  const pagination = productsResponse?.data?.pagination;
+  const totalPages = pagination?.totalPages || 1;
 
-      // Brand filter
-      if (filters.brands.length > 0 && !filters.brands.includes(product.brand)) return false;
-
-      // Price filter
-      const price = parseFloat(product.price.replace(/[₦$,]/g, ""));
-      if (price < filters.priceRange[0] || price > filters.priceRange[1]) return false;
-
-      // Condition filter
-      if (filters.condition !== "Any" && product.condition !== filters.condition) return false;
-
-      // Rating filter (show all if none selected, or match any selected min rating)
-      if (filters.ratings.length > 0) {
-        const minRating = Math.min(...filters.ratings);
-        if (product.rating < minRating) return false;
-      }
-
-      return true;
-    });
-  }, [filters, products]);
+  const formattedProducts = products.map(p => ({
+    id: p._id,
+    title: p.name,
+    price: `\u20A6${p.price.toLocaleString()}`,
+    originalPrice: p.discountPrice ? `\u20A6${p.discountPrice.toLocaleString()}` : undefined,
+    rating: (p as any).ratings || 0,
+    orders: (p as any).soldCount || 0,
+    shipping: "Standard Shipping",
+    description: p.description || "",
+    image: p.productImage || "/placeholder.png",
+    category: p.category?.name,
+    onQuickView: (prod: any) => setQuickViewProduct(prod),
+    brand: p.brand?.name || "Artisanal House",
+    size: p.size || "",
+    volume: p.volume || "",
+    stockStatus: p.stockStatus || "In Stock",
+    stock: p.stock || 0,
+    isUnlimited: p.isUnlimited || false,
+    isNew: new Date(p.createdAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
+    isFeatured: p.isFeatured
+  }));
 
   return (
     <div className="min-h-screen bg-white flex flex-col font-sans text-black">
@@ -163,25 +103,32 @@ const ProductsPage = () => {
       <div className="flex-1 max-w-[1440px] mx-auto px-4 md:px-10 lg:px-16 py-0 md:py-6 flex flex-col gap-0 md:gap-6 w-full">
         {/* Category Chips (Mobile only) */}
         <CategoryChips
-          categories={categories}
+          categories={categories.map(c => c.name)}
           selectedCategory={filters.category}
           onSelect={(cat) => setFilters(prev => ({ ...prev, category: cat }))}
           className="md:hidden"
         />
 
         {/* Breadcrumbs */}
-        <div className="hidden md:flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-400 overflow-x-auto whitespace-nowrap scrollbar-none pb-2 px-4 md:px-0 border-b border-gray-200">
-          <Link href="/" className="hover:text-brand-gold transition-colors font-bold">Home</Link>
-          <Icon name="chevron_right" size="xs" />
-          <Link href="/products" className="hover:text-brand-gold transition-colors font-bold">Fragrances</Link>
-          <Icon name="chevron_right" size="xs" />
-          <span className="text-gray-900 font-bold">All Collections</span>
-        </div>
+        <Breadcrumbs 
+          items={[
+            { label: "Fragrances", href: "/products" },
+            { label: "All Collections" }
+          ]} 
+          className="hidden md:flex text-[10px] uppercase tracking-widest text-gray-400 overflow-x-auto whitespace-nowrap scrollbar-none pb-2 px-4 md:px-0 border-b border-gray-200" 
+        />
 
         <div className="flex flex-col lg:flex-row gap-6 items-start px-0 md:px-0 mt-3 md:mt-0">
           {/* Sidebar (Desktop only) */}
           <div className="hidden lg:block w-full lg:w-64 sticky top-24 self-start max-h-[calc(100vh-120px)] overflow-y-auto pr-2">
-            <FilterSidebar filters={filters} setFilters={setFilters} />
+            <FilterSidebar
+              categories={categories}
+              isLoadingCategories={isLoadingCategories}
+              brands={brands}
+              isLoadingBrands={isLoadingBrands}
+              minPrice={pagination?.minPrice}
+              maxPrice={pagination?.maxPrice}
+            />
           </div>
 
           {/* Listing Area */}
@@ -189,32 +136,47 @@ const ProductsPage = () => {
             <ListingControlBar
               viewMode={viewMode}
               onViewModeChange={setViewMode}
-              count={filteredProducts.length}
+              count={pagination?.total || formattedProducts.length}
               filters={filters}
               onFiltersChange={setFilters}
+              sortBy={sortBy}
+              onSortChange={setSortBy}
               onFilterClick={() => setIsFilterDrawerOpen(true)}
             />
 
-            <div className={`
+            {isLoadingProducts ? (
+              <div className={`
                 ${viewMode === "grid"
-                ? "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 md:gap-5"
-                : "flex flex-col gap-3 md:gap-4"}
+                  ? "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5"
+                  : "flex flex-col gap-3 md:gap-4"}
               `}>
-              {filteredProducts.length > 0 ? (
-                filteredProducts.map(product => (
+                {Array.from({ length: rowsPerPage }).map((_, i) => (
+                  <ProductSkeleton key={i} viewMode={viewMode} />
+                ))}
+              </div>
+            ) : formattedProducts.length > 0 ? (
+              <div className={`
+                ${viewMode === "grid"
+                  ? "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5"
+                  : "flex flex-col gap-3 md:gap-4"}
+              `}>
+                {formattedProducts.map(product => (
                   viewMode === "grid"
                     ? <ProductGridItem key={product.id} product={product} />
                     : <ProductListItem key={product.id} product={product} />
-                ))
-              ) : (
-                <div className="py-20 flex flex-col items-center justify-center gap-4 text-center">
-                  <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center text-gray-300">
-                    <Icon name="search" size="lg" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-900 tracking-tight">No products found</h3>
-                    <p className="text-gray-400 text-sm mt-1">Try adjusting your search or filters to find what you're looking for.</p>
-                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="py-24 flex flex-col items-center justify-center gap-6 text-center w-full min-h-[400px]">
+                <div className="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center text-gray-200 border border-gray-100 shadow-inner">
+                  <Icon name="search" size="xl" />
+                </div>
+                <div className="max-w-md">
+                  <h3 className="text-2xl font-bold text-[#1D3557] tracking-tight">No products found</h3>
+                  <p className="text-gray-400 text-sm mt-2 leading-relaxed">
+                    We couldn't find any artisanal pieces matching your current filters.
+                    Try adjusting your search or clearing some filters to explore our full collection.
+                  </p>
                   <button
                     onClick={() => {
                       setFilters(DEFAULT_FILTERS);
@@ -222,47 +184,34 @@ const ProductsPage = () => {
                         window.history.replaceState({}, "", window.location.pathname);
                       }
                     }}
-                    className="mt-2 text-brand-gold font-bold text-sm hover:underline"
+                    className="mt-8 px-8 py-3 bg-[#1D3557] text-white text-[11px] font-bold uppercase tracking-widest hover:bg-brand-gold transition-all shadow-lg active:scale-95"
                   >
-                    Clear all filters
+                    Clear All Filters
                   </button>
                 </div>
-              )}
-            </div>
+              </div>
+            )}
 
             {/* Bottom Pagination */}
-            <div className="mt-4 flex justify-end px-4 md:px-0">
-              <Pagination totalPages={5} currentPage={1} onPageChange={() => { }} />
+            <div className="mt-8 flex justify-center lg:justify-end px-4 md:px-0">
+              <Pagination
+                totalPages={totalPages}
+                currentPage={currentPage}
+                totalItems={pagination?.total || 0}
+                onPageChange={handlePageChange}
+                showSizeChanger={true}
+                pageSize={rowsPerPage}
+                onPageSizeChange={(size) => {
+                  setRowsPerPage(size);
+                  setCurrentPage(1);
+                }}
+                className="w-full"
+              />
             </div>
 
             {/* Recommended Products */}
             <RecommendedProducts
-              products={[
-                {
-                  id: "r1",
-                  title: "Aura Pink Blossom - Mini Edition",
-                  price: "₦12,500.00",
-                  image: "/web_images/perfume_product_1_square_1777031387712.png"
-                },
-                {
-                  id: "r2",
-                  title: "Aurore Noire Intense - Sample Set",
-                  price: "₦8,500.00",
-                  image: "/web_images/perfume_product_2_square_1777031402357.png"
-                },
-                {
-                  id: "r3",
-                  title: "Oceania Fresh Mist Travel Size",
-                  price: "₦15,000.00",
-                  image: "/web_images/perfume_product_3_square_1777031417355.png"
-                },
-                {
-                  id: "r4",
-                  title: "Royale Luxe Parfum Collection",
-                  price: "₦45,000.00",
-                  image: "/web_images/perfume_product_4_square_1777031431419.png"
-                }
-              ]}
+              products={formattedProducts.slice(0, 4)}
             />
           </div>
         </div>
@@ -299,7 +248,14 @@ const ProductsPage = () => {
                 </button>
               </div>
               <div className="flex-1 overflow-y-auto p-4">
-                <FilterSidebar filters={filters} setFilters={setFilters} />
+                <FilterSidebar
+                  categories={categories}
+                  isLoadingCategories={isLoadingCategories}
+                  brands={brands}
+                  isLoadingBrands={isLoadingBrands}
+                  minPrice={pagination?.minPrice}
+                  maxPrice={pagination?.maxPrice}
+                />
                 <div className="p-4 border-t border-gray-200 flex gap-3">
                   <button
                     onClick={() => setIsFilterDrawerOpen(false)}
@@ -314,6 +270,11 @@ const ProductsPage = () => {
           </>
         )}
       </AnimatePresence>
+      <QuickViewModal
+        isOpen={!!quickViewProduct}
+        onClose={() => setQuickViewProduct(null)}
+        product={quickViewProduct}
+      />
     </div>
   );
 };

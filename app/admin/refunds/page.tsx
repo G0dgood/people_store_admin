@@ -1,39 +1,25 @@
 "use client";
 
-import React, { useState } from "react";
-import { Icon } from "../../components/Icon";
-import { Button } from "../../components/Button";
-import { Input } from "../../components/Form/Inputs";
-import { StatCard } from "../../components/Admin/StatCard";
-import { TabFilter } from "../../components/Admin/TabFilter";
-import { Pagination } from "../../components/Admin/Pagination";
-import { RefundDetailDrawer } from "../../components/Admin/RefundDetailDrawer";
-import { BulkActionsDrawer } from "../../components/Admin/BulkActionsDrawer";
-import { UpdateRefundStatusModal } from "../../components/Admin/UpdateRefundStatusModal";
-import { RowsPerPage } from "@/app/components/rows-per-page";
+import { BulkActionsDrawer } from "@/app/components/Admin/BulkActionsDrawer";
+import { Pagination } from "@/app/components/Admin/Pagination";
+import { RefundDetailDrawer } from "@/app/components/Admin/RefundDetailDrawer";
+import { StatCard } from "@/app/components/Admin/StatCard";
+import { TabFilter } from "@/app/components/Admin/TabFilter";
+import { UpdateRefundStatusModal } from "@/app/components/Admin/UpdateRefundStatusModal";
+import { Button } from "@/app/components/Button";
+import { Input } from "@/app/components/Form";
 import Checkbox from "@/app/components/Checkbox";
-
-const refundsData = [
-  { refundId: "#RFD_001", custId: "#CUST001", name: "John Doe", date: "01-01-2025", total: "₦2,904", method: "CC", status: "Completed", reason: "Defective item" },
-  { refundId: "#RFD_002", custId: "#CUST002", name: "Sarah Connor", date: "02-01-2025", total: "₦5,500", method: "PayPal", status: "Completed", reason: "Accidental purchase" },
-  { refundId: "#RFD_003", custId: "#CUST003", name: "Mike Wazowski", date: "03-01-2025", total: "₦1,200", method: "CC", status: "Pending", reason: "Item not as described" },
-  { refundId: "#RFD_004", custId: "#CUST004", name: "Arthur Morgan", date: "04-01-2025", total: "₦12,000", method: "Bank", status: "Completed", reason: "Found better price" },
-  { refundId: "#RFD_005", custId: "#CUST005", name: "Dutch van der Linde", date: "05-01-2025", total: "₦8,900", method: "CC", status: "Canceled", reason: "Changed mind" },
-  { refundId: "#RFD_006", custId: "#CUST006", name: "John Marston", date: "06-01-2025", total: "₦2,450", method: "PayPal", status: "Completed", reason: "Shipping delay" },
-  { refundId: "#RFD_007", custId: "#CUST007", name: "Sadie Adler", date: "07-01-2025", total: "₦3,100", method: "Bank", status: "Pending", reason: "Sizing issues" },
-  { refundId: "#RFD_008", custId: "#CUST001", name: "John Doe", date: "10-01-2025", total: "₦4,200", method: "CC", status: "Completed", reason: "Late delivery" },
-  { refundId: "#RFD_009", custId: "#CUST008", name: "Charles Smith", date: "11-01-2025", total: "₦1,500", method: "PayPal", status: "Pending", reason: "Wrong item sent" },
-  { refundId: "#RFD_010", custId: "#CUST009", name: "Hosea Matthews", date: "12-01-2025", total: "₦6,700", method: "Bank", status: "Canceled", reason: "Order canceled" },
-];
-
-const statusStyles = {
-  Completed: { color: "text-brand-gold", bg: "bg-brand-gold" },
-  Canceled: { color: "text-rose-500", bg: "bg-rose-500" },
-  Pending: { color: "text-orange-400", bg: "bg-orange-400" },
-};
+import { Icon } from "@/app/components/Icon";
+import { NoRecordFound, SVGLoaderFetch } from "@/app/components/Options";
+import { RowsPerPage } from "@/app/components/rows-per-page";
+import { useGetRefundsQuery, useGetRefundStatsQuery, useUpdateRefundStatusMutation } from "@/lib/redux/services/refundApi";
+import { useState } from "react";
+import { StatusBadge } from "@/app/components/StatusBadge";
+import { toast } from "sonner";
 
 export default function RefundsPage() {
   const [activeTab, setActiveTab] = useState("All refunds");
+  const [searchQuery, setSearchQuery] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -43,11 +29,26 @@ export default function RefundsPage() {
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
   const [actionTarget, setActionTarget] = useState<any>(null);
 
+  const { data: refundsResponse, isLoading } = useGetRefundsQuery({
+    status: activeTab === "All refunds" ? undefined : activeTab,
+    search: searchQuery || undefined,
+    page: currentPage,
+    limit: rowsPerPage
+  });
+
+  const { data: statsResponse, isLoading: isLoadingStats } = useGetRefundStatsQuery();
+
+  const [updateStatus] = useUpdateRefundStatusMutation();
+
+  const refundsData = refundsResponse?.data.refunds || [];
+  const pagination = refundsResponse?.data.pagination;
+  const stats = statsResponse?.data;
+
   const toggleAll = () => {
     if (selectedIds.length === refundsData.length) {
       setSelectedIds([]);
     } else {
-      setSelectedIds(refundsData.map(r => r.refundId));
+      setSelectedIds(refundsData.map(r => r._id));
     }
   };
 
@@ -57,6 +58,19 @@ export default function RefundsPage() {
     );
   };
 
+  const handleUpdateStatus = async (status: string, note: string) => {
+    try {
+      if (actionTarget?._id) {
+        await updateStatus({ id: actionTarget._id, body: { status, adminNote: note } }).unwrap();
+        toast.success("Refund status updated successfully");
+      }
+      setIsStatusModalOpen(false);
+      setSelectedIds([]);
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Failed to update refund status");
+    }
+  };
+
   return (
     <div className="flex flex-col gap-6">
 
@@ -64,30 +78,30 @@ export default function RefundsPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
         <StatCard
           title="Total Refunds"
-          value="₦45,045"
+          value={isLoadingStats ? "..." : `₦${stats?.totalAmount?.toLocaleString() || '0'}`}
           trendValue="8.4%"
           trendIsUp={true}
           periodLabel="Last 7 days"
         />
         <StatCard
           title="Completed Refunds"
-          value="3,150"
+          value={isLoadingStats ? "..." : stats?.completedCount?.toString() || '0'}
           trendValue="12%"
           trendIsUp={true}
           periodLabel="Last 7 days"
         />
         <StatCard
           title="Pending Refunds"
-          value="150"
+          value={isLoadingStats ? "..." : stats?.pendingCount?.toString() || '0'}
           trendValue="5%"
           trendIsUp={false}
           periodLabel="Last 7 days"
         />
         <StatCard
-          title="Canceled Refunds"
-          value="75"
+          title="Approved Refunds"
+          value={isLoadingStats ? "..." : stats?.approvedCount?.toString() || '0'}
           trendValue="2%"
-          trendIsUp={false}
+          trendIsUp={true}
           periodLabel="Last 7 days"
         />
       </div>
@@ -97,14 +111,16 @@ export default function RefundsPage() {
         {/* Controls Bar */}
         <div className="p-4 sm:p-6 flex flex-col lg:flex-row gap-6 items-center justify-between border-b border-gray-50">
           <TabFilter
-            tabs={["All refunds", "Completed", "Pending", "Canceled"]}
+            tabs={["All refunds", "Completed", "Pending", "Approved", "Processing", "Rejected"]}
             activeTab={activeTab}
             onChange={setActiveTab} id={""} />
 
           <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
-            <Input shape="rounded-sm" 
+            <Input shape="rounded-sm"
               type="text"
               placeholder="Search refunds"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               containerClassName="w-full lg:w-80 xl:w-96"
               className="bg-white border-gray-200 placeholder:text-gray-400 text-xs font-medium"
               suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
@@ -130,10 +146,11 @@ export default function RefundsPage() {
 
         {/* Table */}
         <div className="admin-table-container">
+
           <table>
             <thead>
               <tr>
-                <th className="w-10 pl-8">
+                <th className="w-12 pl-6">
                   <Checkbox
                     checked={selectedIds.length === refundsData.length && refundsData.length > 0}
                     onChange={toggleAll}
@@ -143,32 +160,33 @@ export default function RefundsPage() {
                 <th>Customer</th>
                 <th>Date</th>
                 <th>Amount</th>
-                <th>Method</th>
+                <th>Order</th>
                 <th>Status</th>
                 <th className="text-right">Action</th>
               </tr>
             </thead>
             <tbody>
-              {refundsData.map((refund, idx) => (
+              {isLoading ? (
+                <SVGLoaderFetch colSpan={8} text={"Fetching Refunds..."} />
+              ) : refundsData.length === 0 ? (
+                <NoRecordFound colSpan={8} text="No refunds found." />
+              ) : refundsData.map((refund, idx) => (
                 <tr key={idx} className="group">
-                  <td className="w-10 pl-8">
+                  <td className="w-12 pl-6">
                     <Checkbox
-                      checked={selectedIds.includes(refund.refundId)}
-                      onChange={() => toggleItem(refund.refundId)}
+                      checked={selectedIds.includes(refund._id)}
+                      onChange={() => toggleItem(refund._id)}
                     />
                   </td>
                   <td>
                     <span className="text-xs font-bold text-gray-900">{refund.refundId}</span>
                   </td>
-                  <td>{refund.name}</td>
-                  <td>{refund.date}</td>
-                  <td>{refund.total}</td>
-                  <td>{refund.method}</td>
+                  <td>{refund.customer?.fullName || "Guest"}</td>
+                  <td>{new Date(refund.createdAt).toLocaleDateString()}</td>
+                  <td>₦{refund.amount.toLocaleString()}</td>
+                  <td>{refund.order?.orderId || "N/A"}</td>
                   <td>
-                    <div className="flex items-center gap-2">
-                      <span className={`w-1.5 h-1.5 rounded-full ${statusStyles[refund.status as keyof typeof statusStyles].bg}`}></span>
-                      <span className={`text-xs font-bold ${statusStyles[refund.status as keyof typeof statusStyles].color}`}>{refund.status}</span>
-                    </div>
+                    <StatusBadge module="refund" value={refund.status} />
                   </td>
                   <td className="text-right">
                     <div className="flex justify-end items-center gap-2">
@@ -178,7 +196,8 @@ export default function RefundsPage() {
                           setActionTarget(refund);
                           setIsStatusModalOpen(true);
                         }}
-                        title="Update Status"
+                        disabled={refund.status === "Completed"}
+                        title={refund.status === "Completed" ? "Refund Completed" : "Update Status"}
                       >
                         <Icon name="cached" folder="icon" size="sm" />
                       </Button>
@@ -203,7 +222,7 @@ export default function RefundsPage() {
         {/* Pagination Footer */}
         <Pagination
           currentPage={currentPage}
-          totalPages={24}
+          totalPages={pagination?.totalPages || 1}
           onPageChange={setCurrentPage}
         />
       </div>
@@ -224,8 +243,8 @@ export default function RefundsPage() {
         selectedIds={selectedIds}
         items={refundsData}
         onClearSelection={() => setSelectedIds([])}
-        idProp="refundId"
-        labelProp="name"
+        idProp="_id"
+        labelProp="refundId"
         title="Refunds Selected"
         actions={[
           {
@@ -251,10 +270,7 @@ export default function RefundsPage() {
       <UpdateRefundStatusModal
         isOpen={isStatusModalOpen}
         onClose={() => setIsStatusModalOpen(false)}
-        onConfirm={(status, reason) => {
-          console.log(`Updating ${actionTarget?.count ? 'bulk' : 'single'} to ${status} with reason: ${reason}`);
-          setSelectedIds([]);
-        }}
+        onConfirm={handleUpdateStatus}
         target={actionTarget}
       />
     </div>

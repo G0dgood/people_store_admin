@@ -17,62 +17,14 @@ import Modal from "../../components/Modal/Modal";
 import ModalBody from "../../components/Modal/ModalBody";
 import ModalFooter from "../../components/Modal/ModalFooter";
 
-const reviewsData = [
-  {
-    id: 1,
-    customer: { name: "Arlene McCoy", email: "arlene.mccoy@example.com", avatar: "/dashboardImage/Fashion.png" },
-    rating: 5,
-    comment: "The sound quality is exceptional. Best headphones I've owned!",
-    product: { name: "Premium Wireless Headphones", image: "/dashboardImage/Headphones.png" },
-    date: "Oct 24, 2023",
-    status: "Published"
-  },
-  {
-    id: 2,
-    customer: { name: "Brooklyn Simmons", email: "brooklyn.s@example.com", avatar: "/dashboardImage/T-Shirt.png" },
-    rating: 4,
-    comment: "Great fitness tracker, but the strap is a bit stiff initially.",
-    product: { name: "Smart Fitness Watch", image: "/dashboardImage/Electronics.png" },
-    date: "Oct 22, 2023",
-    status: "Pending"
-  },
-  {
-    id: 3,
-    customer: { name: "Cody Fisher", email: "cody.f@example.com", avatar: "/dashboardImage/Cap.png" },
-    rating: 2,
-    comment: "The color is slightly different from the photos. Disappointed.",
-    product: { name: "Organic Cotton T-Shirt", image: "/dashboardImage/T-Shirt.png" },
-    date: "Oct 20, 2023",
-    status: "Published"
-  },
-  {
-    id: 4,
-    customer: { name: "Jane Cooper", email: "jane.c@example.com", avatar: "/dashboardImage/Electronics.png" },
-    rating: 5,
-    comment: "Stunning design and very accurate timekeeping. Love it!",
-    product: { name: "Minimalist Wall Clock", image: "/dashboardImage/Home & Kitchen.png" },
-    date: "Oct 18, 2023",
-    status: "Published"
-  },
-  {
-    id: 5,
-    customer: { name: "Robert Fox", email: "robert.f@example.com", avatar: "/dashboardImage/Accessories.png" },
-    rating: 1,
-    comment: "Item arrived damaged. Customer support was helpful though.",
-    product: { name: "Modern Desk Lamp", image: "/dashboardImage/Bulb.png" },
-    date: "Oct 15, 2023",
-    status: "Spam"
-  },
-  {
-    id: 6,
-    customer: { name: "Esther Howard", email: "esther.h@example.com", avatar: "/dashboardImage/Fashion.png" },
-    rating: 4,
-    comment: "Very comfortable bag for daily commute. Highly recommend.",
-    product: { name: "Leather Travel Bag", image: "/dashboardImage/Fashion.png" },
-    date: "Oct 12, 2023",
-    status: "Published"
-  },
-];
+import {
+  useGetReviewsQuery,
+  useUpdateReviewStatusMutation,
+  useDeleteReviewMutation,
+  useBulkReviewActionMutation
+} from "@/lib/redux/services/reviewApi";
+import { SVGLoaderFetch, NoRecordFound } from "../../components/Options";
+import { toast } from "sonner";
 
 const statusStyles = {
   Published: "text-blue-500 bg-brand-blue-light",
@@ -83,8 +35,24 @@ const statusStyles = {
 export default function ReviewListing() {
   const [activeTab, setActiveTab] = useState("All reviews");
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const { data: response, isLoading } = useGetReviewsQuery({
+    page: currentPage,
+    limit: rowsPerPage,
+    status: activeTab,
+    search: searchQuery
+  });
+
+  const [updateReviewStatus] = useUpdateReviewStatusMutation();
+  const [deleteReview] = useDeleteReviewMutation();
+  const [bulkAction] = useBulkReviewActionMutation();
+
+  const reviewsData = response?.data?.reviews || [];
+  const pagination = response?.data?.pagination;
+
   const [isMoreActionsOpen, setIsMoreActionsOpen] = useState(false);
   const [isReplyDrawerOpen, setIsReplyDrawerOpen] = useState(false);
   const [reviewToReply, setReviewToReply] = useState<any>(null);
@@ -95,23 +63,40 @@ export default function ReviewListing() {
   const [isExportSuccessOpen, setIsExportSuccessOpen] = useState(false);
 
   const toggleAll = () => {
-    if (selectedIds.length === filteredReviews.length && filteredReviews.length > 0) {
+    if (selectedIds.length === reviewsData.length && reviewsData.length > 0) {
       setSelectedIds([]);
     } else {
-      setSelectedIds(filteredReviews.map(r => r.id));
+      setSelectedIds(reviewsData.map(r => r._id));
     }
   };
 
-  const toggleItem = (id: number) => {
+  const toggleItem = (id: string) => {
     setSelectedIds(prev =>
       prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
     );
   };
 
-  const filteredReviews = reviewsData.filter(review => {
-    if (activeTab === "All reviews") return true;
-    return review.status === activeTab;
-  });
+  const handleDeleteReview = async () => {
+    if (!reviewToDelete) return;
+    try {
+      await deleteReview(reviewToDelete._id).unwrap();
+      toast.success("Review deleted");
+      setIsDeleteModalOpen(false);
+    } catch (error) {
+      toast.error("Failed to delete review");
+    }
+  };
+
+  const handleBulkAction = async (action: string, status?: string) => {
+    try {
+      await bulkAction({ ids: selectedIds, action, status }).unwrap();
+      toast.success(`Bulk ${action} successful`);
+      setSelectedIds([]);
+      setIsBulkApproveConfirmOpen(false);
+    } catch (error) {
+      toast.error(`Bulk ${action} failed`);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
@@ -148,6 +133,8 @@ export default function ReviewListing() {
               type="text"
               placeholder="Search reviewer, comment..."
               containerClassName="flex-1 xl:w-96"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               className="bg-white border-gray-200 placeholder:text-gray-400 text-xs font-medium"
               suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
             />
@@ -170,7 +157,7 @@ export default function ReviewListing() {
               <tr>
                 <th className="w-10">
                   <Checkbox
-                    checked={selectedIds.length === filteredReviews.length && filteredReviews.length > 0}
+                    checked={selectedIds.length === reviewsData.length && reviewsData.length > 0}
                     onChange={toggleAll}
                   />
                 </th>
@@ -183,22 +170,26 @@ export default function ReviewListing() {
               </tr>
             </thead>
             <tbody>
-              {filteredReviews.map((review) => (
-                <tr key={review.id} className="group">
+              {isLoading ? (
+                <SVGLoaderFetch colSpan={7} text="Fetching reviews..." />
+              ) : reviewsData.length === 0 ? (
+                <NoRecordFound colSpan={7} text="No reviews found." />
+              ) : reviewsData.map((review: any) => (
+                <tr key={review._id} className="group">
                   <td>
                     <Checkbox
-                      checked={selectedIds.includes(review.id)}
-                      onChange={() => toggleItem(review.id)}
+                      checked={selectedIds.includes(review._id)}
+                      onChange={() => toggleItem(review._id)}
                     />
                   </td>
                   <td>
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-full overflow-hidden bg-gray-100 border border-gray-200">
-                        <img src={review.customer.avatar} alt={review.customer.name} className="w-full h-full object-cover" />
+                        <img src={review.customer?.avatar || "/dashboardImage/Fashion.png"} alt={review.customer?.name} className="w-full h-full object-cover" />
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-sm font-bold text-[#1D3557] leading-tight">{review.customer.name}</span>
-                        <span className="text-[10px] font-medium text-gray-400 mt-0.5">{review.customer.email}</span>
+                        <span className="text-sm font-bold text-[#1D3557] leading-tight">{review.customer?.fullName}</span>
+                        <span className="text-[10px] font-medium text-gray-400 mt-0.5">{review.customer?.email}</span>
                       </div>
                     </div>
                   </td>
@@ -223,13 +214,13 @@ export default function ReviewListing() {
                   <td>
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-[6px] border border-gray-200 overflow-hidden bg-white p-1 shadow-sm">
-                        <img src={review.product.image} alt={review.product.name} className="w-full h-full object-contain" />
+                        <img src={review.product?.mainImage} alt={review.product?.name} className="w-full h-full object-contain" />
                       </div>
-                      <span className="text-xs font-bold text-gray-500 max-w-[120px] truncate">{review.product.name}</span>
+                      <span className="text-xs font-bold text-gray-500 max-w-[120px] truncate">{review.product?.name}</span>
                     </div>
                   </td>
                   <td>
-                    <span className="text-xs font-bold text-gray-400">{review.date}</span>
+                    <span className="text-xs font-bold text-gray-400">{new Date(review.createdAt).toLocaleDateString()}</span>
                   </td>
                   <td>
                     <span className={`px-3 py-1.5 rounded-[6px] text-[10px] font-bold ${statusStyles[review.status as keyof typeof statusStyles]}`}>
@@ -267,7 +258,7 @@ export default function ReviewListing() {
         {/* Pagination Footer */}
         <Pagination
           currentPage={currentPage}
-          totalPages={85}
+          totalPages={pagination?.totalPages || 1}
           onPageChange={setCurrentPage}
         />
       </div>
@@ -275,7 +266,7 @@ export default function ReviewListing() {
       <ReviewsMoreActionsDrawer
         isOpen={isMoreActionsOpen && selectedIds.length === 0}
         onClose={() => setIsMoreActionsOpen(false)}
-        onBulkApprove={() => setIsBulkApproveConfirmOpen(true)}
+        onBulkApprove={() => handleBulkAction("updateStatus", "Published")}
         onExport={() => setIsExportSuccessOpen(true)}
       />
 
@@ -292,7 +283,7 @@ export default function ReviewListing() {
             title: "Approve Selected",
             icon: "verified",
             folder: "icon",
-            onClick: () => setIsBulkApproveConfirmOpen(true),
+            onClick: () => handleBulkAction("updateStatus", "Published"),
           },
           {
             id: "delete",
@@ -300,7 +291,7 @@ export default function ReviewListing() {
             icon: "Delete",
             folder: "dashboardIcon",
             variant: "danger",
-            onClick: () => setIsDeleteModalOpen(true),
+            onClick: () => handleBulkAction("delete"),
           },
         ]}
       />
@@ -314,12 +305,9 @@ export default function ReviewListing() {
       <ConfirmationModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={() => {
-          console.log("Deleting review from:", reviewToDelete?.customer.name);
-          setIsDeleteModalOpen(false);
-        }}
+        onConfirm={handleDeleteReview}
         title="Delete Review"
-        message={`Are you sure you want to delete the review from "${reviewToDelete?.customer.name}"? This action cannot be undone.`}
+        message={`Are you sure you want to delete the review from "${reviewToDelete?.customer?.fullName}"? This action cannot be undone.`}
         confirmText="Yes, delete review"
         type="danger"
       />
@@ -327,10 +315,7 @@ export default function ReviewListing() {
       <ConfirmationModal
         isOpen={isClearSpamConfirmOpen}
         onClose={() => setIsClearSpamConfirmOpen(false)}
-        onConfirm={() => {
-          console.log("Clearing spam queue...");
-          setIsClearSpamConfirmOpen(false);
-        }}
+        onConfirm={() => handleBulkAction("delete")}
         title="Clear Spam Queue"
         message="Are you sure you want to permanently delete all reviews flagged as Spam? This action will free up database space but is irreversible."
         confirmText="Yes, clear queue"
@@ -340,10 +325,7 @@ export default function ReviewListing() {
       <ConfirmationModal
         isOpen={isBulkApproveConfirmOpen}
         onClose={() => setIsBulkApproveConfirmOpen(false)}
-        onConfirm={() => {
-          console.log("Bulk approving pending reviews...");
-          setIsBulkApproveConfirmOpen(false);
-        }}
+        onConfirm={() => handleBulkAction("updateStatus", "Published")}
         title="Bulk Approve"
         message="Are you sure you want to publish all currently pending reviews? This will make them visible on the storefront immediately."
         confirmText="Yes, approve all"

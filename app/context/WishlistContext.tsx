@@ -1,7 +1,15 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useMemo } from "react";
 import { toast } from "sonner";
+import { useCustomerAuth } from "./CustomerAuthContext";
+import { 
+  useGetWishlistQuery, 
+  useToggleWishlistItemMutation, 
+  useClearWishlistMutation 
+} from "@/lib/redux/services/wishlistApi";
+import { useApiError } from "../hooks/useApiError";
+import { usePathname } from "next/navigation";
 
 export interface WishlistItem {
   id: string;
@@ -24,78 +32,123 @@ interface WishlistContextType {
   removeFromWishlist: (id: string) => void;
   clearWishlist: () => void;
   isInWishlist: (id: string) => boolean;
+  isLoading: boolean;
 }
 
 const WishlistContext = createContext<WishlistContextType | undefined>(undefined);
 
-export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [wishlistItems, setWishlistItems] = useState<WishlistItem[]>([]);
+export const WishlistProvider = ({ children }: { children: React.ReactNode }) => {
+  const { isAuthenticated } = useCustomerAuth();
+  const [guestWishlist, setGuestWishlist] = useState<WishlistItem[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // Load from localStorage on mount
+  const pathname = usePathname();
+
+  // Redux API Hooks
+  const { data: backendWishlistData, isLoading: isBackendLoading, isError: isGetError, error: getError } = useGetWishlistQuery(undefined, {
+    skip: !isAuthenticated,
+  });
+  const [toggleBackendItem, { isError: isToggleError, error: toggleError }] = useToggleWishlistItemMutation();
+  const [clearBackendWishlist, { isError: isClearError, error: clearError }] = useClearWishlistMutation();
+
+  // Handle API Errors
+  useApiError(isGetError, getError, "Failed to load wishlist", { hideInAdmin: true });
+  useApiError(isToggleError, toggleError, "Failed to update wishlist", { hideInAdmin: true });
+  useApiError(isClearError, clearError, "Failed to clear wishlist", { hideInAdmin: true });
+
+  // Load guest wishlist from localStorage on mount
   useEffect(() => {
     const savedWishlist = localStorage.getItem("wishlist_items");
     if (savedWishlist) {
-      setWishlistItems(JSON.parse(savedWishlist));
-    } else {
-      // Seed with initial hardcoded data from the WishlistPage
-      setWishlistItems([
-        {
-          id: "w-1",
-          title: "Aura Pink Blossom Luxury Eau de Parfum - 50ml",
-          price: "₦40,000.00",
-          rating: 4.8,
-          orders: 154,
-          shipping: "Free Shipping",
-          description: "A delicate floral fragrance with notes of cherry blossom and pink pepper.",
-          image: "/web_images/perfume_product_1_square_1777031387712.png",
-        },
-        {
-          id: "w-2",
-          title: "Aurore Noire Intense Designer Fragrance - 100ml",
-          price: "₦150,000.00",
-          rating: 4.9,
-          orders: 2310,
-          shipping: "Fast Shipping",
-          description: "A bold, seductive scent featuring black orchid and deep sandalwood.",
-          image: "/web_images/perfume_product_2_square_1777031402357.png",
-        },
-        {
-          id: "w-3",
-          title: "Oceania Fresh Mist Collection - 75ml",
-          price: "₦85,000.00",
-          rating: 4.7,
-          orders: 890,
-          shipping: "Free Shipping",
-          description: "Crisp marine notes blended with citrus and sea salt for a refreshing finish.",
-          image: "/web_images/perfume_product_3_square_1777031417355.png",
-        },
-      ]);
+      setGuestWishlist(JSON.parse(savedWishlist));
     }
     setIsInitialized(true);
   }, []);
 
-  // Save to localStorage when state changes
+  // Sync guest wishlist to backend on login
   useEffect(() => {
-    if (isInitialized) {
-      localStorage.setItem("wishlist_items", JSON.stringify(wishlistItems));
+    if (isAuthenticated && guestWishlist.length > 0 && isInitialized) {
+      const syncItems = async () => {
+        for (const item of guestWishlist) {
+          try {
+            await toggleBackendItem(item.id).unwrap();
+          } catch (err) {
+            console.error("Failed to sync item:", item.title);
+          }
+        }
+        setGuestWishlist([]);
+        localStorage.removeItem("wishlist_items");
+        toast.success("Guest wishlist synchronized with your account");
+      };
+      syncItems();
     }
-  }, [wishlistItems, isInitialized]);
+  }, [isAuthenticated, isInitialized, guestWishlist, toggleBackendItem]);
 
-  const addToWishlist = (item: WishlistItem) => {
-    setWishlistItems(prev => {
-      if (prev.find(i => i.id === item.id)) return prev;
-      toast.success("Added to wishlist");
-      return [...prev, item];
-    });
+  // Save guest wishlist to localStorage when state changes
+  useEffect(() => {
+    if (isInitialized && !isAuthenticated) {
+      localStorage.setItem("wishlist_items", JSON.stringify(guestWishlist));
+    }
+  }, [guestWishlist, isInitialized, isAuthenticated]);
+
+  // Transform backend data to WishlistItem format
+  const backendWishlist = useMemo(() => {
+    if (!backendWishlistData?.data?.products) return [];
+    return backendWishlistData.data.products.map((p: any) => ({
+      id: p._id,
+      title: p.name,
+      price: `\u20A6${p.price.toLocaleString()}`,
+      image: p.productImage || "/placeholder.png",
+      description: p.description,
+      rating: p.ratings || 0,
+      orders: p.soldCount || 0,
+      shipping: "Standard Shipping", // Placeholder
+    }));
+  }, [backendWishlistData]);
+
+  const wishlistItems = isAuthenticated ? backendWishlist : guestWishlist;
+
+  const addToWishlist = async (item: WishlistItem) => {
+    if (isAuthenticated) {
+      try {
+        await toggleBackendItem(item.id).unwrap();
+        toast.success("Added to wishlist");
+      } catch (err) {
+        // Error handled by useApiError
+      }
+    } else {
+      setGuestWishlist((prev: WishlistItem[]) => {
+        if (prev.find(i => i.id === item.id)) return prev;
+        toast.success("Added to wishlist");
+        return [...prev, item];
+      });
+    }
   };
 
-  const removeFromWishlist = (id: string) => {
-    setWishlistItems(prev => prev.filter(i => i.id !== id));
+  const removeFromWishlist = async (id: string) => {
+    if (isAuthenticated) {
+      try {
+        await toggleBackendItem(id).unwrap();
+        toast.success("Removed from wishlist");
+      } catch (err) {
+        // Error handled by useApiError
+      }
+    } else {
+       setGuestWishlist((prev: WishlistItem[]) => prev.filter(i => i.id !== id));
+    }
   };
 
-  const clearWishlist = () => {
-    setWishlistItems([]);
+  const clearWishlist = async () => {
+    if (isAuthenticated) {
+      try {
+        await clearBackendWishlist().unwrap();
+        toast.success("Wishlist cleared");
+      } catch (err) {
+        // Error handled by useApiError
+      }
+    } else {
+      setGuestWishlist([]);
+    }
   };
 
   const isInWishlist = (id: string) => {
@@ -108,7 +161,8 @@ export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       addToWishlist, 
       removeFromWishlist, 
       clearWishlist,
-      isInWishlist
+      isInWishlist,
+      isLoading: isAuthenticated ? isBackendLoading : !isInitialized
     }}>
       {children}
     </WishlistContext.Provider>

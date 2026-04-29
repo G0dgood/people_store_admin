@@ -6,8 +6,11 @@ import { Footer } from "@/app/components/Footer";
 import { HiShieldCheck, HiArrowPath, HiClock, HiReceiptRefund, HiExclamationCircle, HiCheckCircle } from "react-icons/hi2";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { RefundRequestModal } from "../components/Refund/RefundRequestModal";
 
 const RefundPage = () => {
+  const [isRequestModalOpen, setIsRequestModalOpen] = React.useState(false);
+
   const steps = [
     { title: "Initiate Request", desc: "Contact support or use the 'Initiate Return' button in your account dashboard.", icon: <HiReceiptRefund size={24} /> },
     { title: "Quality Check", desc: "Ship the item back to our facility for a professional quality and condition inspection.", icon: <HiShieldCheck size={24} /> },
@@ -138,7 +141,10 @@ const RefundPage = () => {
                 <p className="text-brand-blue/80 font-medium">Our support team is ready to guide you through the process.</p>
               </div>
               <div className="flex items-center gap-4 relative z-10">
-                <button className="bg-brand-blue text-white px-10 py-4 rounded-xl font-black uppercase tracking-widest text-xs shadow-xl shadow-blue-200 hover:scale-105 transition-transform">
+                <button 
+                  onClick={() => setIsRequestModalOpen(true)}
+                  className="bg-brand-blue text-white px-10 py-4 rounded-xl font-black uppercase tracking-widest text-xs shadow-xl shadow-blue-200 hover:scale-105 transition-transform"
+                >
                   Initiate Now
                 </button>
                 <button className="bg-white text-[#1D3557] px-10 py-4 rounded-xl font-black uppercase tracking-widest text-xs border border-blue-100 hover:bg-gray-50 transition-colors">
@@ -151,6 +157,10 @@ const RefundPage = () => {
       </main>
 
 
+      <RefundRequestModal 
+        isOpen={isRequestModalOpen} 
+        onClose={() => setIsRequestModalOpen(false)} 
+      />
       <Footer />
     </div>
   );

@@ -8,6 +8,7 @@ export interface MediaItem {
   _id: string;
   name: string;
   url: string;
+  thumbnailUrl?: string;
   type: 'image' | 'video';
   size: string;
   publicId: string;
@@ -30,6 +31,14 @@ export const mediaApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Media'],
     }),
+    updateMedia: builder.mutation<ApiResponse<MediaItem>, { mediaId: string; name?: string; altText?: string; thumbnailUrl?: string }>({
+      query: ({ mediaId, ...body }) => ({
+        url: `/media/${mediaId}`,
+        method: 'PATCH',
+        body,
+      }),
+      invalidatesTags: ['Media'],
+    }),
     deleteMedia: builder.mutation<ApiResponse<{}>, string>({
       query: (mediaId) => ({
         url: `/media/${mediaId}`,
@@ -44,5 +53,6 @@ export const mediaApi = baseApi.injectEndpoints({
 export const {
   useGetMediaItemsQuery,
   useUploadMediaMutation,
+  useUpdateMediaMutation,
   useDeleteMediaMutation,
 } = mediaApi;

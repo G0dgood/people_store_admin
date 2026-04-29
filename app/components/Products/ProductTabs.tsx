@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ProductReviews } from "./ProductReviews";
 import { ProductDescription } from "./ProductDescription";
 
-const ProductTabs = () => {
+const ProductTabs = ({ product }: { product: any }) => {
   const [activeTab, setActiveTab] = useState("Description");
   const tabs = ["Description", "Reviews"];
 
@@ -27,8 +27,8 @@ const ProductTabs = () => {
       </div>
 
       <div className="py-2">
-        {activeTab === "Description" && <ProductDescription />}
-        {activeTab === "Reviews" && <ProductReviews />}
+        {activeTab === "Description" && <ProductDescription product={product} />}
+        {activeTab === "Reviews" && <ProductReviews product={product} />}
       </div>
     </div>
   );

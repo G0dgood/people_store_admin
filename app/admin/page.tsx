@@ -9,50 +9,59 @@ import { RealtimeUsers } from "../components/Admin/RealtimeUsers";
 import { TopProducts } from "../components/Admin/TopProducts";
 import { QuickAddProduct } from "../components/Admin/QuickAddProduct";
 import { AnalyticsOverview } from "../components/Admin/AnalyticsOverview";
+import { useRouter } from "next/navigation";
+
+import { useGetOrderStatsQuery } from "@/lib/redux/services/orderApi";
+import { useGetCustomerStatsQuery } from "@/lib/redux/services/customerApi";
 
 export default function AdminDashboard() {
- const [activeInsightSection, setActiveInsightSection] = useState<'revenue' | 'funnel' | 'traffic' | null>(null);
+  const router = useRouter();
+  const [activeInsightSection, setActiveInsightSection] = useState<'revenue' | 'funnel' | 'traffic' | null>(null);
 
- return (
-  <div className="flex flex-col gap-6">
-   {/* Drawers */}
-   <DashboardInsightsDrawer
-    isOpen={activeInsightSection !== null}
-    onClose={() => setActiveInsightSection(null)}
-    activeSection={activeInsightSection}
-   />
+  const { data: orderStatsResponse, isLoading: isLoadingOrders } = useGetOrderStatsQuery();
+  const { data: customerStatsResponse, isLoading: isLoadingCustomers } = useGetCustomerStatsQuery();
 
-   {/* Stats Grid */}
-   <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-    <StatCard
-     title="Total Sales"
-     value="$350K"
-     trendLabel="Sales"
-     trendValue="10.4%"
-     trendIsUp={true}
-     previousValue="($235)"
-     onViewDetails={() => setActiveInsightSection('revenue')}
-    />
-    <StatCard
-     title="Total Orders"
-     value="10.7K"
-     trendLabel="order"
-     trendValue="14.4%"
-     trendIsUp={true}
-     previousValue="(7.6k)"
-     onViewDetails={() => setActiveInsightSection('funnel')}
-    />
-    <StatCard
-     title="Pending & Canceled"
-     value="509"
-     trendLabel="user"
-     trendValue="204"
-     trendIsUp={true}
-     previousLabel="Canceled"
-     previousValue="94 (-14.4%)"
-     onViewDetails={() => setActiveInsightSection('traffic')}
-    />
-   </div>
+  const orderStats = orderStatsResponse?.data;
+  const customerStats = customerStatsResponse?.data;
+
+  return (
+    <div className="flex flex-col gap-6">
+      {/* Drawers */}
+      <DashboardInsightsDrawer
+        isOpen={activeInsightSection !== null}
+        onClose={() => setActiveInsightSection(null)}
+        activeSection={activeInsightSection}
+      />
+
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <StatCard
+          title="Total Sales"
+          value={isLoadingOrders ? "..." : "₦" + (orderStats?.totalRevenue || 0).toLocaleString()}
+          trendLabel="Revenue"
+          trendValue="10.4%"
+          trendIsUp={true}
+          onViewDetails={() => setActiveInsightSection('revenue')}
+        />
+        <StatCard
+          title="Total Orders"
+          value={isLoadingOrders ? "..." : (orderStats?.totalOrders || 0).toLocaleString()}
+          trendLabel="Orders"
+          trendValue="14.4%"
+          trendIsUp={true}
+          onViewDetails={() => setActiveInsightSection('funnel')}
+        />
+        <StatCard
+          title="Active Customers"
+          value={isLoadingCustomers ? "..." : (customerStats?.activeCustomers || 0).toLocaleString()}
+          trendLabel="Users"
+          trendValue={isLoadingOrders ? "..." : (orderStats?.pendingOrders || 0).toString()}
+          trendIsUp={true}
+          previousLabel="Pending Orders"
+          previousValue={isLoadingOrders ? "..." : (orderStats?.pendingOrders || 0).toString()}
+          onViewDetails={() => setActiveInsightSection('traffic')}
+        />
+      </div>
 
    <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
     {/* Main Content Area */}
@@ -73,11 +82,11 @@ export default function AdminDashboard() {
      <RealtimeUsers onViewInsight={() => setActiveInsightSection(null)} />
 
      {/* Top Products */}
-     <TopProducts onViewAll={() => console.log("View All Products")} />
+     <TopProducts onViewAll={() => router.push("/admin/products")} />
 
      {/* Add New Product & Quick List */}
      <QuickAddProduct
-      onAddNew={() => console.log("Add New")}
+      onAddNew={() => router.push("/admin/products")}
       onAddProduct={(name) => console.log("Add", name)}
      />
     </div>

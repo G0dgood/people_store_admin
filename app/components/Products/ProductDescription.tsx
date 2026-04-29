@@ -3,46 +3,48 @@
 import React from "react";
 import { Icon } from "../Icon";
 
-const ProductDescription = () => {
+const ProductDescription = ({ product }: { product: any }) => {
+  if (!product) return null;
+
+  const rows = [
+    { label: "Brand", value: product.brand?.name || "Artisanal House" },
+    { label: "Category", value: product.category?.name || "Boutique Collection" },
+    { label: "Gender", value: product.gender || "Unisex" },
+    { label: "Size", value: product.size || "Standard" },
+    { label: "Volume", value: product.volume || "N/A" },
+  ];
+
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-5 max-w-[800px]">
-        <p className="text-gray-600 text-sm leading-relaxed">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+        <p className="text-gray-600 text-sm leading-relaxed whitespace-pre-wrap">
+          {product.description || "No description available for this artisanal piece."}
         </p>
 
-        <table className="w-full border-collapse border border-gray-200 text-sm">
+        <table className="w-full border-collapse border border-gray-200 text-sm mt-4">
           <tbody>
-            {[
-              { label: "Model", value: "#8786867" },
-              { label: "Style", value: "Classic style" },
-              { label: "Certificate", value: "ISO-8989" },
-              { label: "Size", value: "34mm x 450mm x 19mm" },
-              { label: "Memory", value: "36GB RAM" },
-            ].map((row, idx) => (
+            {rows.map((row, idx) => (
               <tr key={idx} className="border-b border-gray-200 last:border-0">
-                <td className="bg-gray-50 text-gray-400 p-3 w-48 font-medium">{row.label}</td>
-                <td className="text-gray-600 p-3">{row.value}</td>
+                <td className="bg-gray-50 text-gray-400 p-3 w-48 font-bold uppercase tracking-widest text-[10px]">{row.label}</td>
+                <td className="text-gray-600 p-3 font-medium">{row.value}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      {/* Feature List */}
-      <div className="flex flex-col gap-3">
-        {[
-          "Some our feature goes here",
-          "Lorem ipsum dolor sit amet, consectetur",
-          "Duis aute irure dolor in reprehenderit",
-          "Some our feature goes here",
-        ].map((feature, idx) => (
-          <div key={idx} className="flex items-center gap-3 text-sm text-gray-600">
-            <Icon name="check" size="xs" className="text-gray-400" />
-            <span>{feature}</span>
-          </div>
-        ))}
-      </div>
+      {/* Tags / Features */}
+      {product.tags && product.tags.length > 0 && (
+        <div className="flex flex-col gap-3">
+          <h4 className="text-[11px] font-bold uppercase tracking-widest text-gray-900">Highlights</h4>
+          {product.tags.map((tag: string, idx: number) => (
+            <div key={idx} className="flex items-center gap-3 text-sm text-gray-600">
+              <Icon name="check" size="xs" className="text-brand-gold" />
+              <span className="font-medium">{tag}</span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

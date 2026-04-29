@@ -8,14 +8,16 @@ import { AdminNotificationDropdown } from "./AdminNotificationDropdown";
 import { AdminProfileDropdown } from "./AdminProfileDropdown";
 import { AdminSearchDropdown } from "./AdminSearchDropdown";
 import { useState, useRef, useEffect } from "react";
-import { HiUser } from "react-icons/hi2";
+import { HiUser, HiOutlineSun, HiOutlineMoon } from "react-icons/hi2";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoMdClose } from "react-icons/io";
 import Modal from "../Modal/Modal";
 import { NotificationList } from "./AdminNotificationDropdown";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { useAppSelector } from "@/lib/redux/hooks";
 import { selectCurrentUser } from "@/lib/redux/features/authSlice";
+import { useAdminTheme } from "@/app/context/AdminThemeContext";
 
 type HeaderProps = {
   onOpenMenu?: () => void;
@@ -27,6 +29,7 @@ type HeaderProps = {
 export const AdminHeader: React.FC<HeaderProps> = ({ onOpenMenu, className, isOpen, role }) => {
   const user = useAppSelector(selectCurrentUser);
   const pathname = usePathname();
+  const { isAdminDark, toggleAdminTheme } = useAdminTheme();
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -93,6 +96,7 @@ export const AdminHeader: React.FC<HeaderProps> = ({ onOpenMenu, className, isOp
     if (pathname.includes("/admin/orders")) return "Order Management";
     if (pathname === "/admin/products") return "Product Inventory";
     if (pathname.includes("/admin/products/media")) return "Media Library";
+    if (pathname.includes("/admin/products/drafts")) return "Product Drafts";
     if (pathname.includes("/admin/products/new")) return "Add New Product";
     if (pathname.includes("/admin/customers")) return "Customer Directory";
     if (pathname.includes("/admin/users")) return "Staff Management";
@@ -191,9 +195,16 @@ export const AdminHeader: React.FC<HeaderProps> = ({ onOpenMenu, className, isOp
 
           {/* Theme Toggle Switch */}
           <div className="flex items-center">
-            <button className="w-12 h-7 bg-brand-gold/20 rounded-full p-1 flex items-center relative transition-colors cursor-pointer">
-              <div className="w-5 h-5 bg-white rounded-full border border-[#1C1C1C1A] flex items-center justify-center transition-all transform">
-                <Icon name="Group" folder="dashboardIcon" size="xs" className="text-gray-400 opacity-60" />
+            <button 
+              onClick={toggleAdminTheme}
+              className={`w-12 h-7 rounded-full p-1 flex items-center relative transition-colors cursor-pointer ${isAdminDark ? 'bg-brand-charcoal' : 'bg-brand-gold/20'}`}
+            >
+              <div className={`w-5 h-5 bg-white rounded-full border border-[#1C1C1C1A] flex items-center justify-center transition-all transform ${isAdminDark ? 'translate-x-5' : 'translate-x-0'}`}>
+                 {isAdminDark ? (
+                   <HiOutlineMoon className="text-gray-600 w-3 h-3" />
+                 ) : (
+                   <HiOutlineSun className="text-gray-400 w-3 h-3" />
+                 )}
               </div>
             </button>
           </div>
@@ -206,16 +217,20 @@ export const AdminHeader: React.FC<HeaderProps> = ({ onOpenMenu, className, isOp
               onClick={toggleProfile}
             >
               {user?.avatar ? (
-                <img
-                  src={user.avatar}
-                  alt="Admin"
-                  className="w-full h-full object-cover"
-                />
+                <div className="relative w-full h-full">
+                  <Image
+                    src={user.avatar}
+                    alt="Admin"
+                    fill
+                    className="object-cover"
+                    priority
+                    sizes="44px"
+                  />
+                </div>
               ) : (
                   <HiUser className="text-brand-gold w-6 h-6" />
               )}
             </div>
-
             {isProfileOpen && <AdminProfileDropdown />}
           </div>
       </div>

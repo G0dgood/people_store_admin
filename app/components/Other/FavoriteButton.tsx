@@ -3,6 +3,9 @@
 import React from "react";
 import { Icon } from "../Icon";
 import { useWishlist, WishlistItem } from "@/app/context/WishlistContext";
+import { useCustomerAuth } from "@/app/context/CustomerAuthContext";
+import { useAuthModal } from "@/app/context/AuthModalContext";
+import { toast } from "sonner";
 
 interface FavoriteButtonProps {
   className?: string;
@@ -24,6 +27,8 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
   showIcon = true,
 }) => {
   const { wishlistItems, addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+  const { isAuthenticated } = useCustomerAuth();
+  const { openLogin } = useAuthModal();
   
   const isFavorite = item ? isInWishlist(item.id) : false;
 
@@ -32,6 +37,17 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
     e.stopPropagation();
     
     if (!item) return;
+
+    if (!isAuthenticated) {
+      toast.error("Please login to save favorites", {
+        action: {
+          label: "Login",
+          onClick: () => openLogin()
+        }
+      });
+      openLogin();
+      return;
+    }
 
     if (isFavorite) {
       removeFromWishlist(item.id);

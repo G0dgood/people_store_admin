@@ -9,13 +9,16 @@ import { ProductListItem } from "@/app/components/Products/ProductItems";
 import { ClearWishlistModal, RemoveItemModal } from "@/app/components/Modal";
 import Link from "next/link";
 import { useWishlist } from "@/app/context/WishlistContext";
+import { useRecentlyViewed, RecentlyViewedItem } from "@/app/context/RecentlyViewedContext";
 import Modal from "@/app/components/Modal/Modal";
 import { Button } from "@/app/components/Button";
+import { FavoriteButton } from "@/app/components/Other";
 import { useCart } from "@/app/context/CartContext";
 import { toast } from "sonner";
 
 const WishlistPage = () => {
   const { wishlistItems, removeFromWishlist, clearWishlist } = useWishlist();
+  const { recentlyViewedItems } = useRecentlyViewed();
   const { addToCart } = useCart();
 
   const [isClearModalOpen, setIsClearModalOpen] = useState(false);
@@ -83,13 +86,32 @@ const WishlistPage = () => {
               <p className="text-gray-500 text-[10px] uppercase tracking-widest font-bold">{wishlistItems.length} items saved</p>
             </div>
             {wishlistItems.length > 0 && (
-              <button
-                onClick={() => setIsClearModalOpen(true)}
-                className="text-[10px] font-bold uppercase tracking-widest text-red-500 hover:text-red-600 transition-colors flex items-center gap-2 cursor-pointer mb-1"
-              >
-                <Icon name="delete_outline" size="sm" />
-                Clear wishlist
-              </button>
+              <div className="flex items-center gap-6 mb-1">
+                <button
+                  onClick={() => {
+                    wishlistItems.forEach(item => {
+                      addToCart({
+                        id: item.id,
+                        title: item.title,
+                        price: item.price,
+                        image: item.image,
+                      });
+                    });
+                    toast.success("All items moved to cart");
+                  }}
+                  className="text-[10px] font-bold uppercase tracking-widest text-brand-blue hover:text-blue-700 transition-colors flex items-center gap-2 cursor-pointer"
+                >
+                  <Icon name="shopping_cart" size="sm" />
+                  Move all to cart
+                </button>
+                <button
+                  onClick={() => setIsClearModalOpen(true)}
+                  className="text-[10px] font-bold uppercase tracking-widest text-red-500 hover:text-red-600 transition-colors flex items-center gap-2 cursor-pointer"
+                >
+                  <Icon name="delete_outline" size="sm" />
+                  Clear wishlist
+                </button>
+              </div>
             )}
           </div>
 
@@ -135,46 +157,9 @@ const WishlistPage = () => {
             Recently <span className="font-bold">viewed</span>
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
-            {[
-              {
-                id: "rv1",
-                title: "Signature Oud Intense Discovery Set",
-                price: "₦285.00",
-                image: "/brandImage/product_1.png",
-              },
-              {
-                id: "rv2",
-                title: "Prada Paradoxe Eau de Parfum",
-                price: "₦142.00",
-                image: "/brandImage/product_2.png",
-              },
-              {
-                id: "rv3",
-                title: "Radiant Skin Ritual Duo",
-                price: "₦195.00",
-                image: "/brandImage/product_3.png",
-              },
-              {
-                id: "rv4",
-                title: "Versace Eros Flame Parfum",
-                price: "₦110.00",
-                image: "/brandImage/product_4.png",
-              },
-              {
-                id: "rv5",
-                title: "Midnight Noir Body Collection",
-                price: "₦165.00",
-                image: "/brandImage/product_5.png",
-              },
-              {
-                id: "rv6",
-                title: "Gucci Guilty Absolute Pour Homme",
-                price: "₦125.00",
-                image: "/brandImage/product_6.png",
-              },
-            ].map((item) => (
+            {recentlyViewedItems.map((item: RecentlyViewedItem) => (
               <Link
-                href="/products/detail"
+                href={`/products/detail?id=${item.id}`}
                 key={item.id}
                 className="bg-white border border-gray-200 p-3 flex flex-col gap-3 transition-all group"
               >
@@ -187,10 +172,10 @@ const WishlistPage = () => {
                       className="object-contain"
                     />
                   </div>
-                  
+
                   {/* Quick View Button Overlay */}
                   <div className="absolute bottom-0 left-0 right-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-10">
-                    <button 
+                    <button
                       onClick={(e) => handleQuickView(e, item)}
                       className="w-full py-2 bg-black/80 backdrop-blur-md text-white text-[9px] font-bold uppercase tracking-[0.2em] hover:bg-brand-gold transition-all"
                     >
@@ -208,6 +193,11 @@ const WishlistPage = () => {
                 </div>
               </Link>
             ))}
+            {recentlyViewedItems.length === 0 && (
+              <div className="col-span-full py-8 text-center text-gray-400 text-[10px] uppercase tracking-widest font-bold">
+                No recently viewed items yet
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -226,8 +216,8 @@ const WishlistPage = () => {
       />
 
       {/* Quick View Modal */}
-      <Modal 
-        isOpen={isQuickViewModalOpen} 
+      <Modal
+        isOpen={isQuickViewModalOpen}
         onClose={() => setIsQuickViewModalOpen(false)}
         size="lg"
       >
@@ -248,11 +238,20 @@ const WishlistPage = () => {
               <div className="flex flex-col gap-2">
                 <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-brand-gold">History Collection</span>
                 <h2 className="text-2xl font-outfit font-light uppercase tracking-widest text-gray-900 leading-tight">
-                  {selectedQuickViewItem.title.split(' ').map((word: string, i: number) => 
+                  {selectedQuickViewItem.title.split(' ').map((word: string, i: number) =>
                     i === selectedQuickViewItem.title.split(' ').length - 1 ? <span key={i} className="font-bold">{word}</span> : word + ' '
                   )}
                 </h2>
-                <span className="text-2xl font-black text-gray-900 mt-2">{selectedQuickViewItem.price}</span>
+                <div className="flex items-center justify-between mt-2">
+                  <span className="text-2xl font-black text-gray-900">{selectedQuickViewItem.price}</span>
+                  <FavoriteButton 
+                    item={selectedQuickViewItem}
+                    variant="outline"
+                    className="border-gray-200 !w-auto px-4 h-10 flex items-center gap-2"
+                  >
+                    <span className="text-[10px] font-bold uppercase tracking-widest">Saved for later</span>
+                  </FavoriteButton>
+                </div>
               </div>
 
               <div className="h-px w-full bg-gray-100" />
@@ -265,14 +264,14 @@ const WishlistPage = () => {
               </div>
 
               <div className="mt-auto flex flex-col gap-4">
-                <Button 
+                <Button
                   onClick={() => handleAddToCart(selectedQuickViewItem)}
                   className="w-full bg-black text-white h-12 font-bold uppercase tracking-[0.2em] text-[11px] hover:bg-brand-gold transition-all"
                 >
                   Add to Cart
                 </Button>
-                <Link 
-                  href="/products/detail"
+                <Link
+                  href={`/products/detail?id=${selectedQuickViewItem.id}`}
                   className="text-center text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-brand-gold transition-colors"
                   onClick={() => setIsQuickViewModalOpen(false)}
                 >

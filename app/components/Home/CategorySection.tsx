@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, Variants } from "framer-motion";
 import { Button } from "@/app/components/Button/Button";
+import { FavoriteButton } from "../Other";
 import { useCart } from "@/app/context/CartContext";
 import { toast } from "sonner";
 
@@ -132,6 +133,21 @@ const CategorySection: React.FC<CategorySectionProps> = ({
                 </div>
               </motion.div>
             </Link>
+            
+            {/* Heart Icon */}
+            <div className="absolute top-6 right-6 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <FavoriteButton 
+                item={{
+                  id: item.id || `cat-${item.name}-${item.price}`,
+                  title: item.name,
+                  price: `₦${item.price}`,
+                  image: item.image,
+                } as any}
+                variant="ghost"
+                size="sm"
+                className="bg-white/60 hover:bg-white backdrop-blur-sm shadow-sm"
+              />
+            </div>
 
             {/* Overlay Actions */}
             <div className="absolute bottom-4 left-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0 duration-300">

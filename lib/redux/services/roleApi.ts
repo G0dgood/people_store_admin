@@ -14,6 +14,7 @@ export interface Role {
 export interface RoleModulePermission {
   id: string; // moduleId/slug
   moduleName: string;
+  category: string;
   access: boolean;
   permissions: {
     view: boolean;

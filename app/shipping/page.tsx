@@ -52,6 +52,7 @@ const ShippingPage = () => {
             fill
             className="object-cover opacity-100"
             priority
+            sizes="100vw"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#1D3557] via-[#1D3557]/80 to-transparent" />
           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-blue rounded-full filter blur-[140px] opacity-10 translate-x-1/2 -translate-y-1/2" />
@@ -133,7 +134,7 @@ const ShippingPage = () => {
               </div>
             </div>
             <div className="w-full lg:w-[400px] aspect-square relative rounded-3xl overflow-hidden shadow-xl">
-              <Image src="/brandImage/regional_visual.png" alt="Distribution Center" fill className="object-cover" />
+              <Image src="/brandImage/regional_visual.png" alt="Distribution Center" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 400px" />
             </div>
           </div>
         </section>
@@ -178,7 +179,7 @@ const ShippingPage = () => {
             <div className="relative group">
               <div className="absolute -inset-4 bg-brand-blue/20 rounded-[50px] blur-2xl group-hover:bg-brand-blue/30 transition-all" />
               <div className="relative rounded-[40px] overflow-hidden border border-white/10 aspect-video shadow-2xl">
-                <Image src="/web_images/Mask group copy 3.png" alt="Tracking Visual" fill className="object-cover" />
+                <Image src="/web_images/Mask group copy 3.png" alt="Tracking Visual" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#1D3557]/80 to-transparent flex items-end p-8">
                   <div className="flex flex-col gap-1">
                     <span className="text-[10px] font-black uppercase tracking-widest text-brand-blue">Real-time Dashboard</span>

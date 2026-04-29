@@ -16,15 +16,28 @@ interface UpdateDealsTimerModalProps {
     seconds: string;
   };
   onUpdate: (values: { days: string; hours: string; minutes: string; seconds: string }) => void;
+  isLoading?: boolean;
 }
 
-export function UpdateDealsTimerModal({ isOpen, onClose, initialValues, onUpdate }: UpdateDealsTimerModalProps) {
+export function UpdateDealsTimerModal({ isOpen, onClose, initialValues, onUpdate, isLoading }: UpdateDealsTimerModalProps) {
   const [formData, setFormData] = useState({
-    days: initialValues?.days || "04",
-    hours: initialValues?.hours || "13",
-    minutes: initialValues?.minutes || "34",
-    seconds: initialValues?.seconds || "56",
+    days: "00",
+    hours: "00",
+    minutes: "00",
+    seconds: "00",
   });
+
+  // Sync state with initialValues when they change or modal opens
+  React.useEffect(() => {
+    if (isOpen && initialValues) {
+      setFormData({
+        days: initialValues.days || "00",
+        hours: initialValues.hours || "00",
+        minutes: initialValues.minutes || "00",
+        seconds: initialValues.seconds || "00",
+      });
+    }
+  }, [isOpen, initialValues]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -136,8 +149,10 @@ export function UpdateDealsTimerModal({ isOpen, onClose, initialValues, onUpdate
             shape="rounded-sm"
             type="submit"
             variant="primary"
+            isLoading={isLoading}
+            disabled={isLoading}
           >
-            Establish Timer
+            {isLoading ? "Synchronizing..." : "Establish Timer"}
           </Button>
         </div>
       </form>

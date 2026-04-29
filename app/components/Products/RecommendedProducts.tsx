@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "../Button/Button";
+import { FavoriteButton } from "../Other";
 import { useCart } from "@/app/context/CartContext";
 import { toast } from "sonner";
 
@@ -61,18 +62,26 @@ export const RecommendedProducts: React.FC<RecommendedProductsProps> = ({ produc
             </Link>
             
             <div className="flex flex-col gap-2">
-               <Link href="/products/detail" className="w-full">
-                  <Button variant="ghost" size="sm" className="w-full text-[10px] h-8 font-bold border border-gray-200 bg-gray-50/50 hover:bg-gray-100">
-                    View Details
-                  </Button>
-               </Link>
+               <div className="flex gap-2 w-full">
+                <FavoriteButton 
+                  item={product as any}
+                  variant="outline"
+                  size="sm"
+                  className="!w-8 !h-8 border-gray-200 shrink-0"
+                />
+                <Link href="/products/detail" className="flex-1">
+                   <Button variant="ghost" size="sm" className="w-full text-[10px] h-8 font-bold border border-gray-200 bg-gray-50/50 hover:bg-gray-100">
+                     Details
+                   </Button>
+                </Link>
+               </div>
                <Button 
                 onClick={(e) => handleAddToCart(e, product)}
                 variant="primary" 
                 size="sm" 
                 className="w-full text-[10px] h-8 font-bold shadow-none"
                >
-                 + Cart
+                 Add to Cart
                </Button>
             </div>
           </div>

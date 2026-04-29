@@ -10,13 +10,14 @@ interface CartItemControlProps {
 }
 
 import { useCart } from "@/app/context/CartContext";
+import { formatPrice } from "@/app/utils/formatPrice";
 
 const CartItemControl: React.FC<CartItemControlProps> = ({ id, price, quantity }) => {
   const { updateQuantity } = useCart();
 
   return (
     <div className="flex flex-col items-end gap-4 min-w-[140px]">
-      <span className="font-outfit font-bold text-lg md:text-xl text-gray-900">{price}</span>
+      <span className="font-outfit font-bold text-lg md:text-xl text-gray-900">{formatPrice(price)}</span>
       <div className="relative w-full">
         <select 
           value={quantity}

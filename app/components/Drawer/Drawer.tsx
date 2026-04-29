@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import { createPortal } from "react-dom";
 import { IoMdClose } from "react-icons/io";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAdminTheme } from "@/app/context/AdminThemeContext";
 
 interface DrawerProps {
   isOpen: boolean;
@@ -12,6 +13,7 @@ interface DrawerProps {
   children: React.ReactNode;
   width?: string;
   rightElement?: React.ReactNode;
+  footer?: React.ReactNode;
 }
 
 export default function Drawer({
@@ -21,8 +23,10 @@ export default function Drawer({
   children,
   width = "max-w-md",
   rightElement,
+  footer,
 }: DrawerProps) {
   const [mounted, setMounted] = React.useState(false);
+  const { isAdminDark } = useAdminTheme();
 
   React.useEffect(() => {
     setMounted(true);
@@ -60,7 +64,7 @@ export default function Drawer({
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-            className={`relative bg-white h-full shadow-2xl z-50 flex flex-col ${width} w-full`}
+            className={`relative bg-white h-full shadow-2xl z-50 flex flex-col ${width} w-full admin-theme ${isAdminDark ? 'admin-dark' : ''}`}
           >
             {/* Header */}
             <div className="flex items-center justify-between px-8 py-6 border-b border-gray-200 flex-shrink-0">
@@ -80,6 +84,13 @@ export default function Drawer({
             <div className="flex-1 overflow-y-auto px-8 py-8">
               {children}
             </div>
+
+            {/* Footer */}
+            {footer && (
+              <div className="px-8 py-4 border-t border-gray-100 flex-shrink-0">
+                {footer}
+              </div>
+            )}
           </motion.div>
         </div>
       )}

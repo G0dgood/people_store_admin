@@ -14,19 +14,20 @@ interface MetricItem {
 interface CustomerMetricsProps {
   activeMetric: MetricType;
   onMetricClick: (metric: MetricType) => void;
+  stats?: any;
 }
 
-const metrics: MetricItem[] = [
-  { id: "active", value: "25k", label: "Active Customers", hasDivider: true },
-  { id: "repeat", value: "5.6k", label: "Repeat Customers", hasDivider: true },
-  { id: "visitor", value: "250k", label: "Shop Visitor", hasDivider: true },
-  { id: "conversion", value: "5.5%", label: "Conversion Rate" },
-];
+export function CustomerMetrics({ activeMetric, onMetricClick, stats }: CustomerMetricsProps) {
+  const metricsData: MetricItem[] = [
+    { id: "active", value: stats?.activeCustomers?.toString() || "0", label: "Active Customers", hasDivider: true },
+    { id: "repeat", value: stats?.repeatCustomers?.toString() || "0", label: "Repeat Customers", hasDivider: true },
+    { id: "visitor", value: stats?.visitorCount?.toString() || "0", label: "Shop Visitor", hasDivider: true },
+    { id: "conversion", value: (stats?.conversionRate || 0).toString() + "%", label: "Conversion Rate" },
+  ];
 
-export function CustomerMetrics({ activeMetric, onMetricClick }: CustomerMetricsProps) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-y-8 gap-x-4 items-start border-b border-gray-50 pb-6 md:pb-4">
-      {metrics.map((metric) => (
+      {metricsData.map((metric) => (
         <button
           key={metric.id}
           onClick={() => onMetricClick(metric.id)}

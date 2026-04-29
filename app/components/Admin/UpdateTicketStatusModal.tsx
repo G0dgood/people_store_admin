@@ -10,7 +10,7 @@ import { Icon } from "../Icon";
 interface UpdateTicketStatusModalProps {
    isOpen: boolean;
    onClose: () => void;
-   onConfirm: (status: string, note: string) => void;
+   onConfirm: (status: "Open" | "Pending" | "Resolved" | "Closed", note: string) => void;
    ticket: any;
 }
 

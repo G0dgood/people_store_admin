@@ -21,6 +21,7 @@ import { HiUsers, HiPencil, HiArrowPath } from "react-icons/hi2";
 import { NoRecordFound, SVGLoaderFetch } from "@/app/components/Options";
 import { useGetRolesQuery, useDeleteRoleMutation, Role } from "@/lib/redux/services/roleApi";
 import { toast } from "sonner";
+import { usePrivilege } from "@/lib/contexts/PrivilegeContext";
 
 export default function RolesManagement() {
   const [activeTab, setActiveTab] = useState("All roles");
@@ -38,6 +39,7 @@ export default function RolesManagement() {
   // RTK Query hooks
   const { data: roles = [], isLoading, refetch, isFetching } = useGetRolesQuery();
   const [deleteRole, { isLoading: isDeleting }] = useDeleteRoleMutation();
+  const { canAccess } = usePrivilege();
 
   const toggleAll = () => {
     if (selectedIds.length === roles.length) {
@@ -82,13 +84,15 @@ export default function RolesManagement() {
         >
           {isFetching ? "Refreshing..." : "Refresh List"}
         </Button>
-        <Button shape="rounded-sm" variant="primary"
-          className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold"
-          iconLeft={<Icon name="circle-plus" folder="dashboardIcon" size="sm" />}
-          onClick={() => setIsAddModalOpen(true)}
-        >
-          Add Role
-        </Button>
+        {canAccess("roles", "create") && (
+          <Button shape="rounded-sm" variant="primary"
+            className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold"
+            iconLeft={<Icon name="circle-plus" folder="dashboardIcon" size="sm" />}
+            onClick={() => setIsAddModalOpen(true)}
+          >
+            Add Role
+          </Button>
+        )}
         <Button shape="rounded-sm" variant="outline"
           onClick={() => setIsMoreActionsOpen(true)}
         >
@@ -189,33 +193,39 @@ export default function RolesManagement() {
                     </td>
                     <td className="py-6 text-right pr-6">
                       <div className="flex justify-end gap-2.5">
-                        <Button shape="rounded-sm" variant="outline"
-                          title="Edit Basic Info"
-                          className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold border-gray-200 transition-all"
-                          onClick={() => {
-                            setRoleToEdit(role);
-                            setIsUpdateModalOpen(true);
-                          }}
-                        >
-                          <HiPencil className="w-3.5 h-3.5" />
-                        </Button>
-                        <Button shape="rounded-sm" variant="outline"
-                          title="Permissions Matrix"
-                          className="!p-1.5 text-gray-400 hover:text-white hover:bg-[#1D3557] hover:border-[#1D3557] border-gray-200 transition-all font-bold"
-                          onClick={() => {
-                            setRoleToEdit(role);
-                            setIsEditDrawerOpen(true);
-                          }}
-                        >
-                          <Icon name="settings" folder="dashboardIcon" size="sm" />
-                        </Button>
-                        <Button shape="rounded-sm" variant="outline"
-                          title="Delete Role"
-                          className="!p-1.5 text-gray-400 hover:text-white hover:bg-rose-500 hover:border-rose-500 border-gray-200 transition-all"
-                          onClick={() => setRoleToDelete(role)}
-                        >
-                          <Icon name="Delete" folder="dashboardIcon" size="sm" />
-                        </Button>
+                        {canAccess("roles", "edit") && (
+                          <Button shape="rounded-sm" variant="outline"
+                            title="Edit Basic Info"
+                            className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold border-gray-200 transition-all"
+                            onClick={() => {
+                              setRoleToEdit(role);
+                              setIsUpdateModalOpen(true);
+                            }}
+                          >
+                            <HiPencil className="w-3.5 h-3.5" />
+                          </Button>
+                        )}
+                        {canAccess("roles", "edit") && (
+                          <Button shape="rounded-sm" variant="outline"
+                            title="Permissions Matrix"
+                            className="!p-1.5 text-gray-400 hover:text-white hover:bg-[#1D3557] hover:border-[#1D3557] border-gray-200 transition-all font-bold"
+                            onClick={() => {
+                              setRoleToEdit(role);
+                              setIsEditDrawerOpen(true);
+                            }}
+                          >
+                            <Icon name="settings" folder="dashboardIcon" size="sm" />
+                          </Button>
+                        )}
+                        {canAccess("roles", "delete") && (
+                          <Button shape="rounded-sm" variant="outline"
+                            title="Delete Role"
+                            className="!p-1.5 text-gray-400 hover:text-white hover:bg-rose-500 hover:border-rose-500 border-gray-200 transition-all"
+                            onClick={() => setRoleToDelete(role)}
+                          >
+                            <Icon name="Delete" folder="dashboardIcon" size="sm" />
+                          </Button>
+                        )}
                       </div>
                     </td>
                   </tr>

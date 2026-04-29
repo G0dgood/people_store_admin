@@ -7,8 +7,41 @@ import { Input, Textarea } from "@/app/components/Form/Inputs";
 import { Button } from "@/app/components/Button";
 import { HiPhone, HiEnvelope, HiMapPin } from "react-icons/hi2";
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { useCreateTicketMutation } from "@/lib/redux/services/ticketApi";
+import { toast } from "sonner";
 
 const ContactPage = () => {
+  const [createTicket, { isLoading }] = useCreateTicketMutation();
+  const [formData, setFormData] = useState({
+    customerName: "",
+    customerEmail: "",
+    subject: "",
+    message: ""
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!formData.customerName || !formData.customerEmail || !formData.subject || !formData.message) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
+    try {
+      await createTicket(formData).unwrap();
+      toast.success("Thank you! Your message has been sent successfully.");
+      setFormData({
+        customerName: "",
+        customerEmail: "",
+        subject: "",
+        message: ""
+      });
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Failed to send message. Please try again.");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#F7FAFC] flex flex-col font-sans text-black">
       <Header />
@@ -55,13 +88,15 @@ const ContactPage = () => {
                 <p className="text-gray-500 text-sm md:text-base">Complete the form below and a member of our Bloom & Mist team will get back to you within 24 hours.</p>
               </div>
 
-              <form className="grid grid-cols-1 md:grid-cols-2 gap-6" onSubmit={(e) => e.preventDefault()}>
+              <form className="grid grid-cols-1 md:grid-cols-2 gap-6" onSubmit={handleSubmit}>
                 <div className="flex flex-col gap-2">
                   <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Full Name</label>
                   <Input
                     type="text"
                     placeholder="John Doe"
                     className="h-12 border-gray-200 focus:border-brand-blue bg-gray-50/30"
+                    value={formData.customerName}
+                    onChange={(e) => setFormData({ ...formData, customerName: e.target.value })}
                   />
                 </div>
                 <div className="flex flex-col gap-2">
@@ -70,6 +105,8 @@ const ContactPage = () => {
                     type="email"
                     placeholder="john@example.com"
                     className="h-12 border-gray-200 focus:border-brand-blue bg-gray-50/30"
+                    value={formData.customerEmail}
+                    onChange={(e) => setFormData({ ...formData, customerEmail: e.target.value })}
                   />
                 </div>
                 <div className="flex flex-col gap-2 md:col-span-2">
@@ -78,6 +115,8 @@ const ContactPage = () => {
                     type="text"
                     placeholder="Inquiry about Bloom & Mist services"
                     className="h-12 border-gray-200 focus:border-brand-blue bg-gray-50/30"
+                    value={formData.subject}
+                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                   />
                 </div>
                 <div className="flex flex-col gap-2 md:col-span-2">
@@ -85,14 +124,18 @@ const ContactPage = () => {
                   <Textarea
                     className="min-h-[160px] border-gray-200 focus:border-brand-blue bg-gray-50/30 shadow-none"
                     placeholder="Write your message here..."
+                    value={formData.message}
+                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   />
                 </div>
                 <div className="md:col-span-2 pt-4">
                   <Button
                     variant="primary"
+                    type="submit"
+                    disabled={isLoading}
                     className="w-full md:w-auto px-12 py-4 h-auto text-sm font-black uppercase tracking-widest shadow-xl shadow-blue-100"
                   >
-                    Submit Inquiry
+                    {isLoading ? "Sending..." : "Submit Inquiry"}
                   </Button>
                 </div>
               </form>

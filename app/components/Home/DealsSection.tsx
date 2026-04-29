@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, Variants } from "framer-motion";
 import { Button } from "../Button/Button";
+import { FavoriteButton } from "../Other";
 import { useCart } from "@/app/context/CartContext";
 import { toast } from "sonner";
 
@@ -33,35 +34,92 @@ const itemVariants: Variants = {
   }
 };
 
-const dealProducts = [
-  { id: "d1", name: "Prada Paradoxe", discount: "-25%", image: "/Dealsandoffers/deal_prada.png", price: "₦85.00" },
-  { id: "d2", name: "CK Everyone", discount: "-15%", image: "/Dealsandoffers/deal_ck.png", price: "₦55.00" },
-  { id: "d3", name: "Versace Eros Flame", discount: "-40%", image: "/Dealsandoffers/deal_versace_eros.jpg", price: "₦95.00" },
-  { id: "d4", name: "Polo Blue EDT", discount: "-25%", image: "/Dealsandoffers/deal_polo_blue.png", price: "₦75.00" },
-  { id: "d5", name: "Polo Green EDT", discount: "-25%", image: "/Dealsandoffers/deal_polo_green.jpg", price: "₦72.00" },
-];
-
-const timerUnits = [
-  { v: "04", l: "Days" },
-  { v: "13", l: "Hour" },
-  { v: "34", l: "Min" },
-  { v: "56", l: "Sec" }
-];
+import { useState, useEffect, useMemo } from "react";
+import { useGetPublicDealsQuery, useGetPublicTimerQuery } from "@/lib/redux/services/boutiqueApi";
+import { useSocket } from "@/app/context/SocketContext";
 
 const DealsSection = () => {
   const { addToCart } = useCart();
+  const { data: timerResponse, refetch: refetchTimer } = useGetPublicTimerQuery();
+  const { data: dealsResponse, isLoading: isLoadingDeals, refetch: refetchDeals } = useGetPublicDealsQuery();
+  const { on, off } = useSocket();
+
+  const timerData = timerResponse?.data?.timer;
+  const dealProducts = dealsResponse?.data || [];
+
+  // Local timer state
+  const initialSeconds = useMemo(() => {
+    if (!timerData) return 0;
+    return (
+      parseInt(timerData.days) * 86400 +
+      parseInt(timerData.hours) * 3600 +
+      parseInt(timerData.minutes) * 60 +
+      parseInt(timerData.seconds)
+    );
+  }, [timerData]);
+
+  const [totalSeconds, setTotalSeconds] = useState(initialSeconds);
+
+  useEffect(() => {
+    setTotalSeconds(initialSeconds);
+  }, [initialSeconds]);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (timerData?.isRunning && totalSeconds > 0) {
+      interval = setInterval(() => {
+        setTotalSeconds(prev => prev - 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [timerData?.isRunning, totalSeconds]);
+
+  // Sync with global updates
+  useEffect(() => {
+    const handleTimerUpdate = () => refetchTimer();
+    const handleDealUpdate = () => refetchDeals();
+
+    on("TIMER_UPDATED", handleTimerUpdate);
+    on("OFFER_UPDATED", handleDealUpdate);
+    on("OFFER_DELETED", handleDealUpdate);
+
+    return () => {
+      off("TIMER_UPDATED", handleTimerUpdate);
+      off("OFFER_UPDATED", handleDealUpdate);
+      off("OFFER_DELETED", handleDealUpdate);
+    };
+  }, [on, off, refetchTimer, refetchDeals]);
+
+  const timerUnits = useMemo(() => {
+    const d = Math.floor(totalSeconds / 86400);
+    const h = Math.floor((totalSeconds % 86400) / 3600);
+    const m = Math.floor((totalSeconds % 3600) / 60);
+    const s = totalSeconds % 60;
+
+    return [
+      { v: d.toString().padStart(2, "0"), l: "Days" },
+      { v: h.toString().padStart(2, "0"), l: "Hour" },
+      { v: m.toString().padStart(2, "0"), l: "Min" },
+      { v: s.toString().padStart(2, "0"), l: "Sec" }
+    ];
+  }, [totalSeconds]);
 
   const handleAddToCart = (e: React.MouseEvent, prod: any) => {
     e.preventDefault();
     e.stopPropagation();
     addToCart({
-      id: prod.id,
-      title: prod.name,
-      price: prod.price,
-      image: prod.image,
+      id: prod.product?._id || prod.id,
+      title: prod.product?.name || prod.name,
+      price: prod.product?.price || 0,
+      image: prod.product?.productImage || prod.image,
     });
     toast.success("Added to cart");
   };
+
+  if (isLoadingDeals || !timerData?.isRunning && totalSeconds <= 0) {
+    if (isLoadingDeals) return null; // Or skeleton
+    return null; // Hide if no deals or timer expired
+  }
 
   return (
     <section className="w-full bg-white flex flex-col md:flex-row overflow-hidden rounded-md border border-gray-200">
@@ -91,7 +149,7 @@ const DealsSection = () => {
       >
         {dealProducts.map((prod, idx) => (
           <div key={idx} className="flex-shrink-0 relative group">
-            <Link href="/products/detail">
+            <Link href={`/products/detail?id=${prod.product?._id || prod.id}`}>
               <motion.div
                 variants={itemVariants}
                 whileHover={{ y: -5, transition: { type: "spring", stiffness: 300, damping: 15 } }}
@@ -99,30 +157,44 @@ const DealsSection = () => {
               >
                 <div className="w-28 h-28 md:w-40 md:h-40 relative bg-white p-4 flex items-center justify-center transition-shadow">
                   <div className="absolute top-2 right-2 z-10 bg-brand-gold text-white text-[9px] font-black px-2 py-1 rounded-full uppercase tracking-widest">
-                    {prod.discount}
+                    -{prod.discount}%
                   </div>
                   <Image
-                    src={prod.image}
-                    alt={prod.name}
+                    src={prod.product?.productImage || "/placeholder.png"}
+                    alt={prod.product?.name || "Product"}
                     fill
                     className="object-contain group-hover:scale-105 transition-transform duration-300"
+                    sizes="(max-width: 768px) 160px, 220px"
                   />
                 </div>
                 <p className="text-xs md:text-sm text-center line-clamp-1 text-gray-600 group-hover:text-brand-blue transition-colors font-medium">
-                  {prod.name}
+                  {prod.product?.name || "Premium Fragrance"}
                 </p>
-
-                {/* Hover Actions */}
-                <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <Button
-                    onClick={(e) => handleAddToCart(e, prod)}
-                    className="bg-black text-white hover:bg-brand-gold text-[10px] font-bold uppercase tracking-widest px-6 py-2 rounded-none transform translate-y-4 group-hover:translate-y-0 transition-all duration-300"
-                  >
-                    Quick Add
-                  </Button>
-                </div>
               </motion.div>
             </Link>
+
+            {/* Hover Actions */}
+            <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 pointer-events-none z-10">
+              <div className="flex gap-2 pointer-events-auto">
+                <FavoriteButton 
+                  item={{
+                    id: prod.product?._id || prod.id,
+                    title: prod.product?.name || prod.name,
+                    price: `\u20A6${(prod.product?.price || 0).toLocaleString()}`,
+                    image: prod.product?.productImage || prod.image,
+                  } as any}
+                  variant="outline"
+                  size="sm"
+                  className="!w-10 !h-10 bg-white border-transparent hover:border-brand-gold shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-300"
+                />
+                <Button
+                  onClick={(e) => handleAddToCart(e, prod)}
+                  className="bg-black text-white hover:bg-brand-gold text-[10px] font-bold uppercase tracking-widest px-6 py-2 rounded-none transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 shadow-lg"
+                >
+                  Quick Add
+                </Button>
+              </div>
+            </div>
           </div>
         ))}
       </motion.div>

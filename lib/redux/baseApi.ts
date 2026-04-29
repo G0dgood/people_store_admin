@@ -3,13 +3,14 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 export const baseApi = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1',
+    baseUrl: `${process.env.NEXT_PUBLIC_API_URL}/api/v1`,
     prepareHeaders: (headers) => {
       return headers;
     },
     credentials: 'include',
   }),
-  tagTypes: ['Product',
+  tagTypes: [
+    'Product',
     'User',
     'Order',
     'Category',
@@ -21,6 +22,18 @@ export const baseApi = createApi({
     'Brand',
     'Notification',
     'Advert',
-    'Customers'],
+    'Customers',
+    'Ticket',
+    'Refund',
+    'Transaction',
+    'Message',
+    'Review',
+    'Deal',
+    'Cart',
+    'Wishlist',
+    'RecentlyViewed',
+    'GiftBox',
+    'GiftCard'
+  ],
   endpoints: () => ({}),
 });

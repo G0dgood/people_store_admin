@@ -41,7 +41,10 @@ const Newsletter = ({ variant = "default" }: NewsletterProps) => {
   }
 
   return (
-    <section className="w-full bg-[#111111] py-24 px-6 text-center flex flex-col items-center gap-10 relative overflow-hidden border-t border-white/5">
+    <section 
+      className="w-full py-24 px-6 text-center flex flex-col items-center gap-10 relative overflow-hidden border-t border-white/5"
+      style={{ backgroundColor: 'var(--brand-charcoal)' }}
+    >
       <div className="max-w-[600px] flex flex-col items-center text-center gap-4 z-10">
         <h3 className="text-2xl md:text-4xl font-outfit font-light text-white uppercase tracking-[0.2em]">Join the <span className="font-bold">Privilege</span></h3>
         <p className="text-xs md:text-sm text-white/60 leading-relaxed font-light tracking-[0.1em] uppercase">

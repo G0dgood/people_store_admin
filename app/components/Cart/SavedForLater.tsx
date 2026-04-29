@@ -5,9 +5,11 @@ import { Icon } from "../Icon";
 import { Button } from "../Button";
 import Modal from "../Modal/Modal";
 import { toast } from "sonner";
+import { FavoriteButton } from "../Other";
 
 import { useCart } from "@/app/context/CartContext";
 import { useWishlist } from "@/app/context/WishlistContext";
+import { formatPrice } from "@/app/utils/formatPrice";
 
 const SavedForLater = () => {
   const { addToCart } = useCart();
@@ -51,8 +53,8 @@ const SavedForLater = () => {
           <h3 className="text-xl font-bold text-gray-900">Saved for later</h3>
         </div>
         <div className="p-12 flex flex-col items-center text-center gap-2">
-           <p className="text-gray-900 font-bold">No saved items</p>
-           <p className="text-gray-500 text-sm">Items you save for later will appear here.</p>
+          <p className="text-gray-900 font-bold">No saved items</p>
+          <p className="text-gray-500 text-sm">Items you save for later will appear here.</p>
         </div>
       </section>
     );
@@ -76,7 +78,7 @@ const SavedForLater = () => {
 
               {/* Quick View Button Overlay */}
               <div className="absolute bottom-0 left-0 right-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-10">
-                <button 
+                <button
                   onClick={(e) => handleQuickView(e, item)}
                   className="w-full py-2 bg-black/80 backdrop-blur-md text-white text-[9px] font-bold uppercase tracking-[0.2em] hover:bg-brand-gold transition-all"
                 >
@@ -86,23 +88,23 @@ const SavedForLater = () => {
             </div>
             <div className="flex flex-col gap-3">
               <div className="flex flex-col gap-1">
-                <span className="font-bold text-gray-900">{item.price}</span>
+                <span className="font-bold text-gray-900">{formatPrice(item.price)}</span>
                 <p className="text-gray-500 text-sm leading-tight line-clamp-2 group-hover:text-brand-blue">{item.title}</p>
               </div>
               <div className="flex flex-row gap-2">
-                <Button 
+                <Button
                   onClick={() => handleMoveToCart(item)}
-                  variant="secondary" 
-                  size="sm" 
-                  className="flex-1 font-bold hover:bg-brand-blue hover:text-white shadow-none justify-center" 
+                  variant="secondary"
+                  size="sm"
+                  className="flex-1 font-bold hover:bg-brand-blue hover:text-white shadow-none justify-center"
                   iconLeft={<Icon name="shopping_cart" size="xs" />}
                 >
                   Move to cart
                 </Button>
-                <Button 
+                <Button
                   onClick={() => removeFromWishlist(item.id)}
-                  variant="ghost" 
-                  size="sm" 
+                  variant="ghost"
+                  size="sm"
                   className="flex-1 !text-[#EB001B] font-medium border border-brand-blue-light hover:bg-red-50 shadow-none justify-center"
                 >
                   Remove
@@ -114,8 +116,8 @@ const SavedForLater = () => {
       </div>
 
       {/* Quick View Modal */}
-      <Modal 
-        isOpen={isQuickViewModalOpen} 
+      <Modal
+        isOpen={isQuickViewModalOpen}
         onClose={() => setIsQuickViewModalOpen(false)}
         size="lg"
       >
@@ -136,11 +138,11 @@ const SavedForLater = () => {
               <div className="flex flex-col gap-2">
                 <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-brand-gold">Saved Collection</span>
                 <h2 className="text-2xl font-outfit font-light uppercase tracking-widest text-gray-900 leading-tight">
-                  {selectedQuickViewItem.title.split(' ').map((word: string, i: number) => 
+                  {selectedQuickViewItem.title.split(' ').map((word: string, i: number) =>
                     i === selectedQuickViewItem.title.split(' ').length - 1 ? <span key={i} className="font-bold">{word}</span> : word + ' '
                   )}
                 </h2>
-                <span className="text-2xl font-black text-gray-900 mt-2">{selectedQuickViewItem.price}</span>
+                <span className="text-2xl font-black text-gray-900 mt-2">{formatPrice(selectedQuickViewItem.price)}</span>
               </div>
 
               <div className="h-px w-full bg-gray-100" />
@@ -153,14 +155,14 @@ const SavedForLater = () => {
               </div>
 
               <div className="mt-auto flex flex-col gap-4">
-                <Button 
+                <Button
                   onClick={() => handleAddToCart(selectedQuickViewItem)}
                   className="w-full bg-black text-white h-12 font-bold uppercase tracking-[0.2em] text-[11px] hover:bg-brand-gold transition-all"
                 >
                   Move to Cart
                 </Button>
-                <Link 
-                  href="/products/detail"
+                <Link
+                  href={`/products/detail?id=${selectedQuickViewItem.id}`}
                   className="text-center text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-brand-gold transition-colors"
                   onClick={() => setIsQuickViewModalOpen(false)}
                 >

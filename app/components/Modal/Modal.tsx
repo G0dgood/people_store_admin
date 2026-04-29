@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import { createPortal } from "react-dom";
 import ModalHeader from "./ModalHeader";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAdminTheme } from "@/app/context/AdminThemeContext";
 
 interface ModalProps {
   isOpen: boolean;
@@ -29,6 +30,7 @@ export default function Modal({
   header,
 }: ModalProps) {
   const [mounted, setMounted] = React.useState(false);
+  const { isAdminDark } = useAdminTheme();
 
   React.useEffect(() => {
     setMounted(true);
@@ -76,7 +78,8 @@ export default function Modal({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className={`relative bg-white rounded-2xl text-left overflow-hidden shadow-2xl ${sizeClasses[size]} w-[100%] md:w-full z-50 max-h-[85vh] flex flex-col`}
+            onClick={(e) => e.stopPropagation()}
+            className={`relative bg-white rounded-2xl text-left overflow-hidden shadow-2xl ${sizeClasses[size]} w-[100%] md:w-full z-50 max-h-[85vh] flex flex-col admin-theme ${isAdminDark ? 'admin-dark' : ''}`}
           >
             {header ? (
               header

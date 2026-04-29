@@ -9,6 +9,7 @@ import Checkbox from "../Checkbox";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { useUpdateCategoryMutation } from "@/lib/redux/services/categoryApi";
+import { useApiError } from "@/app/hooks/useApiError";
 import { toast } from "sonner";
 import { MediaSelectionModal } from "./MediaSelectionModal";
 
@@ -23,7 +24,9 @@ const ML_OPTIONS = ["50ml", "100ml", "250ml", "500ml", "750ml", "1L"];
 const SEX_OPTIONS = ["Male", "Female", "Kids", "Unisex"];
 
 export function EditCategoryDrawer({ isOpen, onClose, category }: EditCategoryDrawerProps) {
-  const [updateCategory, { isLoading }] = useUpdateCategoryMutation();
+  const [updateCategory, { isLoading, isError, error }] = useUpdateCategoryMutation();
+
+  useApiError(isError, error, "Failed to update category");
   const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -69,8 +72,8 @@ export function EditCategoryDrawer({ isOpen, onClose, category }: EditCategoryDr
       await updateCategory({ categoryId: category._id, body: formData }).unwrap();
       toast.success("Category updated successfully");
       onClose();
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to update category");
+    } catch (error) {
+      // Error handled by useApiError hook
     }
   };
 

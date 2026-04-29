@@ -7,6 +7,8 @@ import { Icon } from "../Icon";
 import { Button } from "../Button/Button";
 import { DropdownMenu, DropdownItem } from "../Dropdown/DropdownMenu";
 
+import { useGetPublicCategoriesQuery } from "@/lib/redux/services/boutiqueApi";
+
 export const SecondaryNavbar: React.FC = () => {
  const [isSecondaryCategoryOpen, setIsSecondaryCategoryOpen] = useState(false);
  const [isHelpOpen, setIsHelpOpen] = useState(false);
@@ -15,6 +17,7 @@ export const SecondaryNavbar: React.FC = () => {
  const helpRef = useRef<HTMLDivElement>(null);
 
  const pathname = usePathname();
+ const { data: categoriesResponse, isLoading: isCategoriesLoading } = useGetPublicCategoriesQuery();
 
  const isActive = (path: string) => pathname === path;
 
@@ -69,12 +72,20 @@ export const SecondaryNavbar: React.FC = () => {
        {isSecondaryCategoryOpen && (
         <div className="absolute top-full left-0 pt-2 w-56 z-[100]" onClick={() => setIsSecondaryCategoryOpen(false)}>
          <DropdownMenu width="100%" className="border border-gray-200">
-          <DropdownItem label="Signature Fragrance" href="/products?category=Signature+Fragrance" />
-          <DropdownItem label="Luxury Skincare" href="/products?category=Luxury+Skincare" />
+          {isCategoriesLoading ? (
+            <div className="p-4 text-center text-[10px] uppercase tracking-widest text-gray-400">Loading...</div>
+          ) : categoriesResponse?.data && categoriesResponse.data.length > 0 ? (
+            categoriesResponse.data.map((cat) => (
+              <DropdownItem 
+                key={cat._id} 
+                label={cat.name} 
+                href={`/products?category=${encodeURIComponent(cat.name)}`} 
+              />
+            ))
+          ) : (
+            <div className="p-4 text-center text-[10px] uppercase tracking-widest text-gray-400">No categories</div>
+          )}
           <DropdownItem label="Boutique Gift Sets" href="/gift-boxes" />
-          <DropdownItem label="Body & Bath" href="/products?category=Body+%26+Bath" />
-          <DropdownItem label="Home Fragrance" href="/products?category=Home+Fragrance" />
-          <DropdownItem label="Men's Grooming" href="/products?category=Men's+Grooming" />
          </DropdownMenu>
         </div>
        )}
@@ -122,8 +133,7 @@ export const SecondaryNavbar: React.FC = () => {
            {/* Contact Section */}
            <div className="p-4 border-t border-gray-200 bg-gray-50/30 flex flex-col gap-3">
             <Button
-             className="w-full text-white h-11 active:scale-95 transition-all hover:opacity-90 font-bold uppercase text-[11px] tracking-widest"
-             style={{ backgroundColor: "#111111" }}
+             className="w-full text-white h-11 active:scale-95 transition-all hover:opacity-90 font-bold uppercase text-[11px] tracking-widest bg-brand-charcoal"
              iconLeft={<Icon name="chat" size="sm" />}
             >
              Live Chat

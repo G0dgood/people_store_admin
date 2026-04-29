@@ -1,3 +1,4 @@
+import { ApiResponse } from '@/lib/types/api';
 import { baseApi } from '../baseApi';
 
 export const customerApi = baseApi.injectEndpoints({
@@ -74,8 +75,23 @@ export const customerApi = baseApi.injectEndpoints({
     }),
     deleteCustomer: builder.mutation({
       query: (id) => ({
-        url: `/customers/${id}`,
+        url: `/customers/delete-account/${id}`,
         method: 'DELETE',
+      }),
+      invalidatesTags: ['Customers'],
+    }),
+    getCustomerStats: builder.query<any, void>({
+      query: () => ({
+        url: '/customers/stats',
+        method: 'GET',
+      }),
+      providesTags: ['Customers'],
+    }),
+    toggleCustomerStatus: builder.mutation<ApiResponse<any>, { id: string, status: 'active' | 'deactivated' }>({
+      query: ({ id, status }) => ({
+        url: `/customers/status/${id}`,
+        method: 'PATCH',
+        body: { status }
       }),
       invalidatesTags: ['Customers'],
     }),
@@ -92,5 +108,7 @@ export const {
   useUpdateCustomerProfileMutation,
   useLogoutCustomerMutation,
   useGetAllCustomersQuery,
-  useDeleteCustomerMutation
+  useDeleteCustomerMutation,
+  useGetCustomerStatsQuery,
+  useToggleCustomerStatusMutation
 } = customerApi;

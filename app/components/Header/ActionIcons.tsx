@@ -39,11 +39,11 @@ export const ActionIcons: React.FC = () => {
           ) : (
             <div className="flex items-center gap-2 mb-0.5">
               <div className="w-5 h-5 rounded-full overflow-hidden border border-gray-200">
-                <Image 
-                  src={customer?.avatar || "/avatars/avatar=pic1.jpg"} 
-                  alt="Avatar" 
-                  width={20} 
-                  height={20} 
+                <Image
+                  src={customer?.avatar || "/avatars/avatar=pic1.jpg"}
+                  alt="Avatar"
+                  width={20}
+                  height={20}
                   className="w-full h-full object-cover"
                 />
               </div>
@@ -112,6 +112,9 @@ export const ActionIcons: React.FC = () => {
       {/* Vertical Divider */}
       <div className="h-10 w-px bg-gray-200 mx-2 hidden md:block" />
 
+
+
+
       {/* Cart Section */}
       <Link
         href="/cart"
@@ -132,7 +135,7 @@ export const ActionIcons: React.FC = () => {
         <span className="text-[15px] font-bold text-gray-900 group-hover:text-brand-gold transition-colors hidden md:block">Cart</span>
       </Link>
 
-      <LogoutConfirmationModal 
+      <LogoutConfirmationModal
         isOpen={isLogoutModalOpen}
         onClose={() => setIsLogoutModalOpen(false)}
         isLoading={isLoggingOut}

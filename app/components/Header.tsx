@@ -13,8 +13,12 @@ import { SearchBar } from "./Header/SearchBar";
 import { ActionIcons } from "./Header/ActionIcons";
 import { SecondaryNavbar } from "./Header/SecondaryNavbar";
 
+import { useGetPublicCategoriesQuery } from "@/lib/redux/services/boutiqueApi";
+
 const Header = () => {
   const { toggleMenu } = useMobileMenu();
+  const { data: categoriesResponse } = useGetPublicCategoriesQuery();
+  const categories = categoriesResponse?.data || [];
 
   return (
     <header className="w-full bg-white border-b border-gray-200 sticky top-0 z-[80]">
@@ -65,10 +69,17 @@ const Header = () => {
 
       {/* Mobile Breadcrumb-like nav (Home page specifics etc.) */}
       <div className="w-full overflow-x-auto bg-white border-t border-gray-200 md:hidden flex items-center gap-4 px-4 h-11 scrollbar-none whitespace-nowrap">
-        {["All category", "Perfume", "Serum", "Cleansers", "Gift Box"].map((item, idx) => (
-          <span key={idx} className="bg-white text-neutral-900 border border-gray-200 text-sm px-3 py-1.5 flex-shrink-0 font-bold uppercase text-[10px] tracking-wider">
-            {item}
-          </span>
+        <Link href="/products" className="bg-white text-neutral-900 border border-gray-200 text-sm px-3 py-1.5 flex-shrink-0 font-bold uppercase text-[10px] tracking-wider">
+          All categories
+        </Link>
+        {categories.map((item) => (
+          <Link 
+            key={item._id} 
+            href={`/products?category=${encodeURIComponent(item.name)}`}
+            className="bg-white text-neutral-900 border border-gray-200 text-sm px-3 py-1.5 flex-shrink-0 font-bold uppercase text-[10px] tracking-wider"
+          >
+            {item.name}
+          </Link>
         ))}
       </div>
     </header>

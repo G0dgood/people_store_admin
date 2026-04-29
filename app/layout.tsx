@@ -13,6 +13,10 @@ import { SocketProvider } from "@/app/context/SocketContext";
 import { SocketNotificationListener } from "./components/SocketNotificationListener";
 import OfflineBanner from "@/app/components/ui/OfflineBanner";
 import { CustomerAuthProvider } from "./context/CustomerAuthContext";
+import { RecentlyViewedProvider } from "./context/RecentlyViewedContext";
+import { FilterProvider } from "./context/FilterContext";
+import StoreProvider from "@/lib/redux/StoreProvider";
+import { AuthPersistence } from "./components/Auth/AuthPersistence";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -48,11 +52,10 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 5, // Allow zooming for accessibility, but 16px font prevents auto-zoom
+  maximumScale: 5,
 };
 
-import StoreProvider from "@/lib/redux/StoreProvider";
-import { AuthPersistence } from "./components/Auth/AuthPersistence";
+import Script from "next/script";
 
 export default function RootLayout({
   children,
@@ -65,28 +68,33 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${outfit.variable} ${lato.variable} h-full antialiased`}
     >
       <body className="min-h-full font-inter">
+        <Script src="https://js.paystack.co/v1/inline.js" strategy="afterInteractive" />
         <Toaster richColors closeButton position="bottom-right" />
         <StoreProvider>
           <CustomerAuthProvider>
-            <AuthPersistence>
-              <SocketProvider>
-                <SocketNotificationListener />
-                <OfflineBanner />
-                <AuthModalProvider>
-                  <CartProvider>
-                    <WishlistProvider>
-                      <MobileMenuProvider>
-                        <MobileMenuSidebar />
-                        <PageWrapper>
-                          {children}
-                        </PageWrapper>
-                      </MobileMenuProvider>
-                    </WishlistProvider>
-                  </CartProvider>
-                  <AuthModal />
-                </AuthModalProvider>
-              </SocketProvider>
-            </AuthPersistence>
+            <RecentlyViewedProvider>
+              <FilterProvider>
+                <AuthPersistence>
+                  <SocketProvider>
+                    <SocketNotificationListener />
+                    <OfflineBanner />
+                    <AuthModalProvider>
+                      <CartProvider>
+                        <WishlistProvider>
+                          <MobileMenuProvider>
+                            <MobileMenuSidebar />
+                            <PageWrapper>
+                              {children}
+                            </PageWrapper>
+                          </MobileMenuProvider>
+                        </WishlistProvider>
+                      </CartProvider>
+                      <AuthModal />
+                    </AuthModalProvider>
+                  </SocketProvider>
+                </AuthPersistence>
+              </FilterProvider>
+            </RecentlyViewedProvider>
           </CustomerAuthProvider>
         </StoreProvider>
       </body>

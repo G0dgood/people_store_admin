@@ -65,7 +65,7 @@ export function OrdersMoreActionsDrawer({ isOpen, onClose, onBulkPrint }: Orders
         <p className="text-[11px] font-bold text-gray-400 uppercase tracking-[0.15em] mb-2 px-1">
           Available Operations
         </p>
-        
+
         <div className="flex flex-col gap-2">
           {actions.map((action, i) => (
             <button
@@ -99,7 +99,8 @@ export function OrdersMoreActionsDrawer({ isOpen, onClose, onBulkPrint }: Orders
         </div>
 
         <div className="mt-8 pt-8 border-t border-gray-200">
-          <Button 
+          <Button
+            shape="rounded-sm"
             className="w-full h-12 text-[11px] font-black uppercase tracking-widest border border-gray-200 text-gray-500 hover:bg-gray-50 transition-all rounded-[6px]"
             onClick={onClose}
           >

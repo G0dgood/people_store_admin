@@ -17,6 +17,7 @@ import { BackgroundOrchestration } from "@/app/components/Admin/BackgroundOrches
 import { CopywritingTiming } from "@/app/components/Admin/CopywritingTiming";
 import { Icon } from "@/app/components/Icon";
 import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
+import { useSocket } from "@/app/context/SocketContext";
 
 const INITIAL_CONFIG: AdvertConfig = {
   backgroundImages: [],
@@ -35,15 +36,16 @@ const INITIAL_CONFIG: AdvertConfig = {
 };
 
 export default function AdvertManagement() {
-  const { data: advertResponse, isLoading: isAdvertLoading } = useGetAdvertConfigQuery();
+  const { data: advertResponse, isLoading: isAdvertLoading, refetch: refetchAdvert } = useGetAdvertConfigQuery();
   const { data: productsResponse, isLoading: isProductsLoading } = useGetProductsQuery();
   const { data: categoriesResponse, isLoading: isCategoriesLoading } = useGetCategoriesQuery();
   const { data: mediaResponse, isLoading: isMediaLoading } = useGetMediaItemsQuery();
   const [updateConfig, { isLoading: isUpdating }] = useUpdateAdvertConfigMutation();
   const [createConfig, { isLoading: isCreating }] = useCreateAdvertConfigMutation();
   const [localConfig, setLocalConfig] = useState<AdvertConfig>(INITIAL_CONFIG);
+  const { on, off } = useSocket();
 
-  const productsData = (productsResponse?.data as any) || [];
+  const productsData = (productsResponse?.data as any)?.products || [];
   const categoriesData = categoriesResponse?.data || [];
   // Synchronized category data for orchestration
   const availableBackgrounds = (mediaResponse?.data as MediaItem[])?.filter(m => m.type === "image").map(m => m.url) || [
@@ -63,6 +65,13 @@ export default function AdvertManagement() {
       setLocalConfig(advertResponse);
     }
   }, [advertResponse]);
+
+  // Real-time advert sync
+  useEffect(() => {
+    const handleUpdate = () => refetchAdvert();
+    on("ADVERT_UPDATED", handleUpdate);
+    return () => off("ADVERT_UPDATED", handleUpdate);
+  }, [on, off, refetchAdvert]);
 
   if (isAdvertLoading || isProductsLoading || isMediaLoading || isCategoriesLoading) return <AdvertSkeleton />;
 

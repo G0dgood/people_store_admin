@@ -1,8 +1,10 @@
+import { Key } from 'readline';
 import { baseApi } from '../baseApi';
 import { ApiResponse, PaginatedResponse } from '@/lib/types/api';
 
 export interface Brand {
-  _id: string;
+  _id: Key | null | undefined;
+  id: string;
   name: string;
   logo: string;
   category: string;

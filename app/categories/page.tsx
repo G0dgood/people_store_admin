@@ -5,54 +5,21 @@ import Image from "next/image";
 import Link from "next/link";
 import { Header } from "@/app/components/Header";
 import { Footer } from "@/app/components/Footer";
-import { HiChevronRight, HiDevicePhoneMobile, HiHome, HiSparkles, HiShoppingBag, HiHeart, HiBeaker, HiStar } from "react-icons/hi2";
+import { HiChevronRight, HiSparkles } from "react-icons/hi2";
 import { motion } from "framer-motion";
+import { useGetPublicCategoriesQuery } from "@/lib/redux/services/boutiqueApi";
 
 const CategoriesPage = () => {
-   const collections = [
-      {
-         title: "Signature Fragrance",
-         count: "320 items",
-         image: "/brandImage/signature_oud.webp",
-         icon: <HiSparkles className="text-brand-blue" size={24} />,
-         link: "/products?category=fragrance"
-      },
-      {
-         title: "Advanced Skincare",
-         count: "150 items",
-         image: "/brandImage/cat_skincare.png",
-         icon: <HiBeaker className="text-brand-blue" size={24} />,
-         link: "/products?category=skincare"
-      },
-      {
-         title: "Artisanal Gift Sets",
-         count: "85 items",
-         image: "/brandImage/cat_gifts.png",
-         icon: <HiShoppingBag className="text-brand-blue" size={24} />,
-         link: "/products?category=gifts"
-      },
-      {
-         title: "Body & Bath",
-         count: "120 items",
-         image: "/brandImage/cat_body.png",
-         icon: <HiHeart className="text-brand-blue" size={24} />,
-         link: "/products?category=body"
-      },
-      {
-         title: "Men's Grooming",
-         count: "95 items",
-         image: "/brandImage/cat_grooming.png",
-         icon: <HiStar className="text-brand-blue" size={24} />,
-         link: "/products?category=grooming"
-      },
-      {
-         title: "Home Fragrance",
-         count: "60 items",
-         image: "/brandImage/cat_home_scent.png",
-         icon: <HiHome className="text-brand-blue" size={24} />,
-         link: "/products?category=home-scent"
-      }
-   ];
+   const { data: categoriesResponse, isLoading } = useGetPublicCategoriesQuery();
+   const categories = categoriesResponse?.data || [];
+
+   const collections = categories.map((cat) => ({
+      title: cat.name,
+      count: "Explore collection", // Real count would require another API call or backend change
+      image: cat.image || "/brandImage/signature_oud.webp",
+      icon: <HiSparkles className="text-brand-blue" size={24} />, // Default icon
+      link: `/products?category=${encodeURIComponent(cat.name)}`
+   }));
 
    const subCategories = [
       "Kitchenware", "Smartphones", "Outerwear", "Yoga Mats", "Organic Oils", "Office Supplies",
@@ -86,50 +53,57 @@ const CategoriesPage = () => {
             </section>
 
             <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 py-16 md:py-24">
-               {/* Step 87: Build Visual Collections Grid with Glassmorphism overlays */}
-               <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-                  {collections.map((col, i) => (
-                     <motion.div
-                        key={i}
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: i * 0.1 }}
-                        className="relative aspect-[4/5] overflow-hidden cursor-pointer group border border-gray-200 transition-all duration-500"
-                     >
-                        <Image
-                           src={col.image}
-                           alt={col.title}
-                           fill
-                           className="object-cover group-hover:scale-110 transition-transform duration-1000"
-                        />
+               {isLoading ? (
+                  <div className="flex flex-col items-center justify-center py-20 gap-4">
+                     <div className="w-12 h-12 border-4 border-brand-blue border-t-transparent rounded-full animate-spin" />
+                     <p className="text-gray-400 font-bold uppercase tracking-widest text-[10px]">Fetching Collections...</p>
+                  </div>
+               ) : (
+                  <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
 
-                        {/* Glassmorphism Overlay */}
-                        <div className="absolute inset-0 bg-black/5 group-hover:bg-black/20 transition-colors duration-500" />
+                     {collections.map((col, i) => (
+                        <motion.div
+                           key={i}
+                           initial={{ opacity: 0, scale: 0.95 }}
+                           whileInView={{ opacity: 1, scale: 1 }}
+                           viewport={{ once: true }}
+                           transition={{ delay: i * 0.1 }}
+                           className="relative aspect-[4/5] overflow-hidden cursor-pointer group border border-gray-200 transition-all duration-500"
+                        >
+                           <Image
+                              src={col.image}
+                              alt={col.title}
+                              fill
+                              className="object-cover group-hover:scale-110 transition-transform duration-1000"
+                           />
 
-                        <div className="absolute bottom-6 left-6 right-6">
-                           <div className="bg-white/80 backdrop-blur-xl p-8 border border-gray-200 flex flex-col gap-4 group-hover:-translate-y-2 transition-transform duration-500">
-                              <div className="flex items-center justify-between">
-                                 <div className="w-12 h-12 bg-white flex items-center justify-center border border-gray-200">
-                                    {col.icon}
+                           {/* Glassmorphism Overlay */}
+                           <div className="absolute inset-0 bg-black/5 group-hover:bg-black/20 transition-colors duration-500" />
+
+                           <div className="absolute bottom-6 left-6 right-6">
+                              <div className="bg-white/80 backdrop-blur-xl p-8 border border-gray-200 flex flex-col gap-4 group-hover:-translate-y-2 transition-transform duration-500">
+                                 <div className="flex items-center justify-between">
+                                    <div className="w-12 h-12 bg-white flex items-center justify-center border border-gray-200">
+                                       {col.icon}
+                                    </div>
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-[#1D3557] opacity-60">Verified Collection</span>
                                  </div>
-                                 <span className="text-[10px] font-black uppercase tracking-widest text-[#1D3557] opacity-60">Verified Collection</span>
+                                 <div className="flex flex-col gap-1">
+                                    <h3 className="text-2xl font-black text-[#1D3557] tracking-tight">{col.title}</h3>
+                                    <span className="text-xs font-bold text-brand-blue uppercase tracking-widest">{col.count}</span>
+                                 </div>
+                                 <Link
+                                    href={col.link}
+                                    className="flex items-center justify-between text-xs font-black uppercase tracking-widest text-[#1D3557] group-hover:text-brand-blue pt-2 transition-colors"
+                                 >
+                                    Explore Catalog <HiChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                                 </Link>
                               </div>
-                              <div className="flex flex-col gap-1">
-                                 <h3 className="text-2xl font-black text-[#1D3557] tracking-tight">{col.title}</h3>
-                                 <span className="text-xs font-bold text-brand-blue uppercase tracking-widest">{col.count}</span>
-                              </div>
-                              <Link
-                                 href={col.link}
-                                 className="flex items-center justify-between text-xs font-black uppercase tracking-widest text-[#1D3557] group-hover:text-brand-blue pt-2 transition-colors"
-                              >
-                                 Explore Catalog <HiChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
-                              </Link>
                            </div>
-                        </div>
-                     </motion.div>
-                  ))}
-               </section>
+                        </motion.div>
+                     ))}
+                  </section>
+               )}
 
                {/* Step 88: Implement Sub-Category Exploration module */}
                <section className="mt-24 md:mt-40">

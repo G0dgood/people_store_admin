@@ -10,6 +10,7 @@ import { useRegisterCustomerMutation } from "@/lib/redux/services/customerApi";
 import { setCredentials } from "@/lib/redux/features/authSlice";
 import { useAppDispatch } from "@/lib/redux/hooks";
 import { useRouter } from "next/navigation";
+import { useApiError } from "@/app/hooks/useApiError";
 import { toast } from "sonner";
 import { FaGoogle, FaFacebook } from "react-icons/fa";
 import Link from "next/link";
@@ -24,8 +25,10 @@ interface CustomerRegisterFormProps {
 export const CustomerRegisterForm = ({ onToggleToLogin }: CustomerRegisterFormProps) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const [register, { isLoading }] = useRegisterCustomerMutation();
+  const [register, { isLoading, isError, error }] = useRegisterCustomerMutation();
   const [isCompressing, setIsCompressing] = useState(false);
+
+  useApiError(isError, error, "Account Creation Failed");
 
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
@@ -91,10 +94,8 @@ export const CustomerRegisterForm = ({ onToggleToLogin }: CustomerRegisterFormPr
 
         router.push("/"); // Go to home/shop
       }
-    } catch (err: any) {
-      toast.error("Account Creation Failed", {
-        description: err?.data?.message || "Something went wrong."
-      });
+    } catch (err) {
+      // Error handled by useApiError hook
     }
   };
 

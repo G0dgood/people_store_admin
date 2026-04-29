@@ -14,6 +14,7 @@ import { useAppDispatch } from "@/lib/redux/hooks";
 import { useRouter } from "next/navigation";
 import { FaGoogle, FaFacebook } from "react-icons/fa";
 import { useCustomerAuth } from "../../context/CustomerAuthContext";
+import { useApiError } from "@/app/hooks/useApiError";
 import { toast } from "sonner";
 
 interface CustomerLoginFormProps {
@@ -23,8 +24,10 @@ interface CustomerLoginFormProps {
 export const CustomerLoginForm = ({ onToggleToRegister }: CustomerLoginFormProps) => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const [login, { isLoading }] = useLoginCustomerMutation();
+  const [login, { isLoading, isError, error }] = useLoginCustomerMutation();
   const [socialLogin] = useSocialLoginCustomerMutation();
+
+  useApiError(isError, error, "Login Failed");
 
   const { setCustomerData } = useCustomerAuth();
 
@@ -55,10 +58,8 @@ export const CustomerLoginForm = ({ onToggleToRegister }: CustomerLoginFormProps
 
         router.push("/"); // Redirect to home/shop
       }
-    } catch (err: any) {
-      toast.error("Login Failed", {
-        description: err?.data?.message || "Invalid credentials."
-      });
+    } catch (err) {
+      // Error handled by useApiError hook
     }
   };
 

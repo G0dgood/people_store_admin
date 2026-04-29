@@ -7,16 +7,37 @@ import { useCart } from "@/app/context/CartContext";
 import { toast } from "sonner";
 import { Icon } from "../Icon";
 
+import { useGetPublicRecommendedProductsQuery } from "@/lib/redux/services/boutiqueApi";
+
 const YouMayLike = () => {
   const { addToCart } = useCart();
+  const { data: recommendedResponse, isLoading } = useGetPublicRecommendedProductsQuery();
 
-  const items = [
-    { id: "yml1", name: "Aura Pink Blossom", price: "₦40.00", image: "/web_images/perfume_product_1_square_1777031387712.png" },
-    { id: "yml2", name: "Aurore Noire Intense", price: "₦150.00", image: "/web_images/perfume_product_2_square_1777031402357.png" },
-    { id: "yml3", name: "Oceania Fresh Mist", price: "₦85.00", image: "/web_images/perfume_product_3_square_1777031417355.png" },
-    { id: "yml4", name: "Royale Luxe Parfum", price: "₦220.00", image: "/web_images/perfume_product_4_square_1777031431419.png" },
-    { id: "yml5", name: "Silver Aura Modern", price: "₦95.00", image: "/web_images/perfume_product_5_square_1777031445408.png" },
-  ];
+  const items = (recommendedResponse?.data || []).slice(0, 5).map(p => ({
+    id: p._id,
+    name: p.name,
+    price: `₦${p.price.toLocaleString()}`,
+    image: p.productImage || "/placeholder.png"
+  }));
+
+  if (isLoading) {
+    return (
+      <div className="w-full lg:w-80 flex-shrink-0 bg-white border border-gray-200 p-8 flex flex-col gap-8 animate-pulse">
+        <div className="h-6 bg-gray-100 w-3/4" />
+        <div className="flex flex-col gap-8">
+           {[1, 2, 3, 4, 5].map(i => (
+             <div key={i} className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-gray-50 flex-shrink-0" />
+                <div className="flex-1 flex flex-col gap-2">
+                   <div className="h-3 bg-gray-100 w-full" />
+                   <div className="h-3 bg-gray-50 w-1/2" />
+                </div>
+             </div>
+           ))}
+        </div>
+      </div>
+    );
+  }
 
   const handleAddToCart = (e: React.MouseEvent, item: any) => {
     e.preventDefault();
@@ -36,11 +57,11 @@ const YouMayLike = () => {
       <div className="flex flex-col gap-8">
         {items.map((item, idx) => (
           <div key={idx} className="flex items-center gap-4 group relative cursor-pointer active:scale-95 transition-all">
-            <Link href="/products/detail" className="w-16 h-16 relative flex-shrink-0 border border-gray-200 p-2 group-hover:border-brand-gold transition-colors overflow-hidden bg-white">
-              <Image src={item.image} alt={item.name} fill className="object-contain transition-transform group-hover:scale-110" />
+            <Link href={`/products/detail?id=${item.id}`} className="w-16 h-16 relative flex-shrink-0 border border-gray-200 p-2 group-hover:border-brand-gold transition-colors overflow-hidden bg-white">
+              <Image src={item.image} alt={item.name} fill className="object-contain transition-transform group-hover:scale-110" sizes="64px" />
             </Link>
             <div className="flex-1 flex flex-col gap-1 overflow-hidden">
-              <Link href="/products/detail" className="text-[11px] font-bold uppercase tracking-wider text-gray-900 line-clamp-2 leading-tight hover:text-brand-gold transition-colors">
+              <Link href={`/products/detail?id=${item.id}`} className="text-[11px] font-bold uppercase tracking-wider text-gray-900 line-clamp-2 leading-tight hover:text-brand-gold transition-colors">
                 {item.name}
               </Link>
               <div className="flex items-center justify-between">

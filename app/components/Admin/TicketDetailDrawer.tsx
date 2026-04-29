@@ -5,10 +5,14 @@ import Drawer from "../Drawer/Drawer";
 import { Icon } from "../Icon";
 import { Button } from "../Button";
 
+import { useUpdateTicketMutation } from "@/lib/redux/services/ticketApi";
+import { toast } from "sonner";
+
 interface TicketDetailDrawerProps {
    isOpen: boolean;
    onClose: () => void;
    ticket: any;
+   onReply: () => void;
 }
 
 const priorityStyles = {
@@ -18,8 +22,22 @@ const priorityStyles = {
    Low: "text-emerald-600 bg-emerald-50 border-emerald-100",
 };
 
-export function TicketDetailDrawer({ isOpen, onClose, ticket }: TicketDetailDrawerProps) {
+export function TicketDetailDrawer({ isOpen, onClose, ticket, onReply }: TicketDetailDrawerProps) {
+   const [updateTicket, { isLoading: isUpdating }] = useUpdateTicketMutation();
+
    if (!ticket) return null;
+
+   const handleEscalate = async () => {
+      try {
+         await updateTicket({
+            id: ticket._id,
+            body: { priority: "Urgent" }
+         }).unwrap();
+         toast.success("Ticket escalated to Urgent");
+      } catch (error: any) {
+         toast.error(error?.data?.message || "Failed to escalate ticket");
+      }
+   };
 
    return (
       <Drawer isOpen={isOpen} onClose={onClose} title="Ticket Details" width="max-w-md">
@@ -49,10 +67,10 @@ export function TicketDetailDrawer({ isOpen, onClose, ticket }: TicketDetailDraw
                <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Customer Profile</h4>
                <div className="bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-4 shadow-sm">
                   <div className="w-12 h-12 rounded-full bg-brand-gold/10 border-2 border-white shadow-sm flex items-center justify-center overflow-hidden">
-                     <img src={"https://ui-avatars.com/api/?name=" + ticket.customer} alt="" className="w-full h-full object-cover" />
+                     <img src={"https://ui-avatars.com/api/?name=" + ticket.customerName} alt="" className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1 flex flex-col gap-0.5">
-                     <span className="text-[13px] font-black text-[#1D3557]">{ticket.customer}</span>
+                     <span className="text-[13px] font-black text-[#1D3557]">{ticket.customerName}</span>
                      <span className="text-[11px] font-bold text-gray-400">#USR_023456789</span>
                   </div>
                   <button className="p-2 text-gray-400 hover:text-brand-blue transition-colors">
@@ -68,19 +86,23 @@ export function TicketDetailDrawer({ isOpen, onClose, ticket }: TicketDetailDraw
                   <div className="flex flex-col gap-2">
                      <div className="bg-gray-50 border border-gray-200 rounded-2xl rounded-tl-none p-4 shadow-sm">
                         <p className="text-xs font-bold text-[#1D3557] leading-relaxed">
-                           Hello support team, I'm having issues with my latest order. The status hasn't updated in three days though I've been charged. Please assist.
+                           {ticket.message}
                         </p>
                      </div>
                      <span className="text-[10px] font-bold text-gray-400 pl-1">{ticket.activity}</span>
                   </div>
 
                   {/* Internal Note Tag */}
-                  <div className="flex items-center gap-2 border-l-4 border-amber-400 pl-3 py-1">
-                     <div className="flex flex-col">
-                        <span className="text-[10px] font-black text-amber-500 uppercase tracking-widest">Internal Note</span>
-                        <p className="text-[11px] font-bold text-gray-500">System checked: Transaction verified, logistics delay detected.</p>
+                  {ticket.responses?.slice().reverse().find((r: any) => r.sender === "Admin") && (
+                     <div className="flex items-center gap-2 border-l-4 border-amber-400 pl-3 py-1">
+                        <div className="flex flex-col">
+                           <span className="text-[10px] font-black text-amber-500 uppercase tracking-widest">Latest Admin Note</span>
+                           <p className="text-[11px] font-bold text-gray-500">
+                              {ticket.responses.slice().reverse().find((r: any) => r.sender === "Admin").message}
+                           </p>
+                        </div>
                      </div>
-                  </div>
+                  )}
                </div>
             </div>
 
@@ -110,13 +132,13 @@ export function TicketDetailDrawer({ isOpen, onClose, ticket }: TicketDetailDraw
             <div className="mt-auto pt-8 border-t border-gray-50 flex flex-col gap-3">
                <Button
                   shape="rounded-sm"
-                  variant="primary" 
+                  variant="primary"
                   className="w-full h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-brand-gold/10 transition-all duration-300 hover:bg-brand-gold hover:text-white">
                   Reply to Customer
                </Button>
                <Button
                   shape="rounded-sm"
-                  variant="outline" 
+                  variant="outline"
                   className="w-full h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest border-gray-200 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all duration-300">
                   Escalate Ticket
                </Button>

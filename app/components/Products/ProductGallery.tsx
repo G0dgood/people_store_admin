@@ -3,15 +3,17 @@
 import React, { useState } from "react";
 import Image from "next/image";
 
-const ProductGallery = () => {
-  const images = [
-    "/web_images/royal_oud_front_view_1777031871485.png",
-    "/web_images/royal_oud_with_box_view_1777031887393.png",
-    "/web_images/royal_oud_cap_closeup_view_1777031904499.png",
-    "/web_images/royal_oud_atmospheric_shot_view_1777031932066.png",
-  ];
+interface ProductGalleryProps {
+  images?: string[];
+  title?: string;
+}
 
-  const [activeImage, setActiveImage] = useState(images[0]);
+const ProductGallery: React.FC<ProductGalleryProps> = ({ images = [], title = "Product" }) => {
+  const [activeImage, setActiveImage] = useState(images[0] || "/placeholder.png");
+
+  React.useEffect(() => {
+    if (images.length > 0) setActiveImage(images[0]);
+  }, [images]);
 
   return (
     <div className="flex flex-col gap-6 w-full">
@@ -23,6 +25,8 @@ const ProductGallery = () => {
           fill
           className="object-contain p-4 transition-transform duration-700 group-hover:scale-110"
           priority
+          loading="eager"
+          sizes="(max-width: 768px) 100vw, 50vw"
         />
       </div>
 
@@ -38,7 +42,7 @@ const ProductGallery = () => {
              `}
           >
             <div className="relative w-full h-full">
-              <Image src={img} alt={`Thumbnail ${idx}`} fill className="object-contain" />
+              <Image src={img} alt={`Thumbnail ${idx}`} fill className="object-contain" sizes="80px" />
             </div>
           </button>
         ))}

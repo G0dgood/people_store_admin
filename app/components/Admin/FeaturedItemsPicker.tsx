@@ -85,7 +85,7 @@ export const FeaturedItemsPicker: React.FC<FeaturedItemsPickerProps> = ({
     </div>
    </h3>
    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-    {productsData.map((product: AdvertItem) => {
+    {Array.isArray(productsData) && productsData.map((product: AdvertItem) => {
      const isSelected = activeFeaturedItems.some(p => p._id === product._id);
      return (
       <button

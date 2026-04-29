@@ -11,6 +11,7 @@ import Checkbox from "../Checkbox";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { useCreateCategoryMutation } from "@/lib/redux/services/categoryApi";
+import { useApiError } from "@/app/hooks/useApiError";
 import { toast } from "sonner";
 import { MediaSelectionModal } from "./MediaSelectionModal";
 
@@ -24,7 +25,9 @@ const ML_OPTIONS = ["50ml", "100ml", "250ml", "500ml", "750ml", "1L"];
 const SEX_OPTIONS = ["Male", "Female", "Kids", "Unisex"];
 
 export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
-  const [createCategory, { isLoading }] = useCreateCategoryMutation();
+  const [createCategory, { isLoading, isError, error }] = useCreateCategoryMutation();
+
+  useApiError(isError, error, "Failed to create category");
   const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -65,8 +68,8 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
         selectedSexes: [],
       });
       onClose();
-    } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to create category");
+    } catch (error) {
+      // Error handled by useApiError hook
     }
   };
 

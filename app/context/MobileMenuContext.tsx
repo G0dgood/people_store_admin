@@ -10,7 +10,7 @@ interface MobileMenuContextType {
 
 const MobileMenuContext = createContext<MobileMenuContextType | undefined>(undefined);
 
-export const MobileMenuProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const MobileMenuProvider = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen((prev) => !prev);

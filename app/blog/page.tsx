@@ -99,6 +99,7 @@ const BlogPage = () => {
                 alt="Featured Story" 
                 fill 
                 className="object-cover group-hover:scale-105 transition-transform duration-1000"
+                sizes="100vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#1D3557] via-[#1D3557]/20 to-transparent flex items-end">
                 <div className="p-8 md:p-16 max-w-4xl flex flex-col gap-4">
@@ -147,6 +148,7 @@ const BlogPage = () => {
                       alt={post.title} 
                       fill 
                       className="object-cover group-hover:scale-110 transition-transform duration-700" 
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
                     <div className="absolute top-4 left-4">
                       <span className="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-lg text-[10px] font-black uppercase tracking-widest text-brand-blue shadow-sm">

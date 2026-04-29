@@ -9,27 +9,26 @@ import { Newsletter } from "./Home/Newsletter";
 import { Logo } from "./Logo";
 
 import { useAuthModal } from "@/app/context/AuthModalContext";
+import { useAppSelector } from "@/lib/redux/hooks";
+import { selectCurrentUser } from "@/lib/redux/features/authSlice";
+import { useCustomerAuth } from "@/app/context/CustomerAuthContext";
 
 const Footer = () => {
   const { openLogin, openRegister } = useAuthModal();
+  const user = useAppSelector(selectCurrentUser);
+  const { isAuthenticated: isCustomerAuthenticated } = useCustomerAuth();
+
+  const isLoggedIn = !!user || isCustomerAuthenticated;
+
   const columns = [
     {
       title: "About",
       links: [
         { label: "About Us", href: "/about" },
-        // { label: "Find store", href: "#" },
         { label: "Categories", href: "/categories" },
         { label: "Blogs", href: "/blog" }
       ],
     },
-    // {
-    //   title: "Partnership",
-    //   links: [
-    //     { label: "About Us", href: "#" },
-    //     { label: "Find store", href: "#" },
-    //     { label: "Categories", href: "#" },
-    //   ],
-    // },
     {
       title: "Information",
       links: [
@@ -42,17 +41,24 @@ const Footer = () => {
     {
       title: "For users",
       links: [
-        { label: "Login", onClick: openLogin },
-        { label: "Register", onClick: openRegister },
-        { label: "Settings", href: "#" },
-        { label: "My Orders", href: "/orders" }
+        ...(!isLoggedIn ? [
+          { label: "Login", onClick: openLogin },
+          { label: "Register", onClick: openRegister },
+        ] : [
+          { label: "Profile", href: user ? "/admin/profile" : "/profile" },
+        ]),
+        // { label: "Settings", href: user ? "/admin/settings" : "/profile/settings" },
+        { label: "My Orders", href: user ? "/admin/orders" : "/orders" }
       ],
     },
   ];
 
   return (
     <>
-      <footer className="w-full bg-[#1A1A1A] pt-20 pb-12 text-white">
+      <footer
+        className="w-full pt-20 pb-12 text-white"
+        style={{ backgroundColor: 'var(--brand-charcoal)' }}
+      >
         <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-12 mb-20">
           {/* Brand Column */}
           <div className="lg:col-span-2">

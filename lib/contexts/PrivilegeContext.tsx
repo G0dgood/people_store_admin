@@ -21,12 +21,15 @@ import { selectCurrentUser } from "@/lib/redux/features/authSlice";
 import { toast } from "sonner";
 import { Role } from "@/lib/redux/services/roleApi";
 import { useGetRolesQuery } from "@/lib/redux/services/roleApi";
+import { useSocket } from "@/app/context/SocketContext";
+import { useRouter } from "next/navigation";
+import { logOut as logOutAuth } from "@/lib/redux/features/authSlice";
 
 export type PermissionAction = "view" | "create" | "edit" | "delete";
 
 export type ModuleId = 
   | "dashboard" | "support" | "faq" | "notifications" | "settings"
-  | "orders" | "transactions" | "refunds" | "products" | "media"
+  | "orders" | "transactions" | "refunds" | "products" | "media" | "products/media"
   | "categories" | "brands" | "reviews" | "marketing" | "deals"
   | "advert" | "customers" | "users" | "roles" | "permissions" | "profile";
 
@@ -47,6 +50,7 @@ const PrivilegeContext = createContext<PrivilegeContextType | undefined>(undefin
 
 export const PrivilegeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const user = useSelector(selectCurrentUser);
   const userPrivileges = useSelector(selectUserPrivileges);
   const isLoadingRedux = useSelector(selectIsPrivilegeLoading);
@@ -61,9 +65,11 @@ export const PrivilegeProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   const roleId = currentRole?._id;
 
   // 3. Fetch structured privileges for this role
-  const { data: rolePrivileges, isLoading: isQueryLoading } = useGetRolePrivilegesQuery(roleId!, {
+  const { data: rolePrivileges, isLoading: isQueryLoading, refetch: refetchPrivileges } = useGetRolePrivilegesQuery(roleId!, {
     skip: !roleId
   });
+
+  const { refetch: refetchRoles } = useGetRolesQuery();
 
   // 4. Update Redux when role privileges are fetched
   useEffect(() => {
@@ -88,6 +94,54 @@ export const PrivilegeProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       }
     }
   }, [dispatch]);
+
+  // 6. Listen for real-time permission updates via WebSockets
+  const { on, off } = useSocket();
+
+  useEffect(() => {
+    const handlePermissionsUpdate = (data: { roleId: string, adminId?: string, description?: string }) => {
+      console.log("🔔 Permissions update received via socket:", data);
+      
+      // If the updated role is the current user's role, refresh their privileges
+      if (data.roleId === roleId) {
+        refetchPrivileges();
+        
+        // Don't show toast to the admin who just saved the changes
+        if (data.adminId !== user?._id) {
+          toast.info("Access permissions updated", {
+            description: data.description || "Your administrative privileges have been synchronized with the server."
+          });
+        }
+      }
+      
+      // Always refresh the roles list to keep state consistent across the UI
+      refetchRoles();
+    };
+
+    const handleForceLogout = (data: { userId: string, reason?: string }) => {
+      console.log("⚠️ Force logout received via socket:", data);
+      if (data.userId === user?._id) {
+        // Clear everything
+        dispatch(logOutAuth());
+        dispatch(clearReduxPrivileges());
+        localStorage.removeItem("userPrivileges");
+        
+        toast.error("Session Terminated", {
+          description: data.reason || "Your administrative access has been revoked or locked by a superior administrator."
+        });
+        
+        router.push("/admin/login");
+      }
+    };
+
+    on("permissions_updated", handlePermissionsUpdate);
+    on("force_logout", handleForceLogout);
+
+    return () => {
+      off("permissions_updated", handlePermissionsUpdate);
+      off("force_logout", handleForceLogout);
+    };
+  }, [roleId, refetchPrivileges, refetchRoles, on, off, user?._id, dispatch, router]);
 
   const findModulePermission = (moduleId: string): RoleModulePermission | undefined => {
     if (!userPrivileges?.role?.permissions) return undefined;

@@ -47,8 +47,10 @@ const mockReviews: Review[] = [
   }
 ];
 
-const ProductReviews = () => {
+const ProductReviews = ({ product }: { product: any }) => {
   const [isReviewModalOpen, setIsReviewModalOpen] = React.useState(false);
+
+  if (!product) return null;
 
   return (
     <motion.div 
@@ -60,13 +62,13 @@ const ProductReviews = () => {
       {/* Rating Summary Section */}
       <div className="flex flex-col md:flex-row gap-8 md:items-center bg-white p-6 md:p-8 border border-gray-200">
         <div className="flex flex-col items-center text-center md:border-r border-gray-200 md:pr-12">
-          <span className="text-5xl font-black text-gray-900 leading-none">4.8</span>
+          <span className="text-5xl font-black text-gray-900 leading-none">{product.ratings || 0}</span>
           <div className="flex gap-1 my-3">
             {[1, 2, 3, 4, 5].map((star) => (
-              <Icon key={star} name="star" size="sm" className={star <= 4 ? "text-orange-400" : "text-gray-300"} />
+              <Icon key={star} name="star" size="sm" className={star <= Math.round(product.ratings || 0) ? "text-orange-400" : "text-gray-300"} />
             ))}
           </div>
-          <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Based on 124 reviews</p>
+          <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Based on {product.reviewCount || 0} reviews</p>
         </div>
 
         <div className="flex-1 flex flex-col gap-3">
@@ -106,7 +108,7 @@ const ProductReviews = () => {
         <ReviewModal 
           isOpen={isReviewModalOpen}
           onClose={() => setIsReviewModalOpen(false)}
-          productName="Canon EOS R5 Mirrorless Camera"
+          productName={product.name}
         />
 
         <div className="flex flex-col gap-8 divide-y divide-gray-100">
@@ -115,7 +117,7 @@ const ProductReviews = () => {
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-4">
                   <div className="relative w-12 h-12 overflow-hidden border-2 border-white ring-1 ring-gray-100">
-                    <Image src={review.avatar} alt={review.user} fill className="object-cover" />
+                    <Image src={review.avatar} alt={review.user} fill className="object-cover" sizes="48px" />
                   </div>
                   <div>
                     <h4 className="font-bold text-gray-900">{review.user}</h4>

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Input } from "../Form/Inputs";
 import { Button } from "../Button";
-import { Checkbox } from "../Form/Checkbox";
+import Checkbox from "../Checkbox";
 import { Logo } from "../Logo";
 import { LuEye, LuEyeOff } from "react-icons/lu";
 import { useLoginMutation } from "@/lib/redux/services/authApi";

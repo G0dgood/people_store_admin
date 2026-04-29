@@ -15,19 +15,10 @@ import { RowsPerPage } from "@/app/components/rows-per-page";
 import Checkbox from "@/app/components/Checkbox";
 import { BiMessageDetail } from "react-icons/bi";
 import { HiOutlineDocumentText } from "react-icons/hi2";
-
-const ticketsData = [
-  { ticketId: "#TKT_001", customer: "Alice Johnson", subject: "Login Issue", priority: "High", activity: "2 mins ago", status: "Open" },
-  { ticketId: "#TKT_002", customer: "Bob Smith", subject: "Payment Failed", priority: "Urgent", activity: "15 mins ago", status: "Pending" },
-  { ticketId: "#TKT_003", customer: "Charlie Brown", subject: "Order Status", priority: "Medium", activity: "1 hour ago", status: "Open" },
-  { ticketId: "#TKT_004", customer: "Diana Prince", subject: "Refund Request", priority: "High", activity: "3 hours ago", status: "Resolved" },
-  { ticketId: "#TKT_005", customer: "Edward Norton", subject: "Product Feedback", priority: "Low", activity: "5 hours ago", status: "Open" },
-  { ticketId: "#TKT_006", customer: "Fiona Gallagher", subject: "Account Deletion", priority: "Medium", activity: "8 hours ago", status: "Pending" },
-  { ticketId: "#TKT_007", customer: "George Costanza", subject: "Damaged Item", priority: "Urgent", activity: "1 day ago", status: "Open" },
-  { ticketId: "#TKT_008", customer: "Hannah Baker", subject: "Shipping Update", priority: "Low", activity: "1 day ago", status: "Resolved" },
-  { ticketId: "#TKT_009", customer: "Ian Curtis", subject: "Promotion Code", priority: "Medium", activity: "2 days ago", status: "Resolved" },
-  { ticketId: "#TKT_010", customer: "Jane Austen", subject: "Gift Card Query", priority: "Low", activity: "2 days ago", status: "Open" },
-];
+import { useGetTicketsQuery, ticketApi } from "@/lib/redux/services/ticketApi";
+import { useSocket } from "@/app/context/SocketContext";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 const priorityStyles = {
   Urgent: "text-rose-600 bg-rose-50",
@@ -40,10 +31,14 @@ const statusStyles = {
   Open: "bg-brand-gold",
   Pending: "bg-orange-400",
   Resolved: "bg-emerald-500",
+  Closed: "bg-gray-500",
 };
 
 export default function SupportPage() {
+  const dispatch = useDispatch();
+  const { on, off } = useSocket();
   const [activeTab, setActiveTab] = useState("All tickets");
+  const [searchQuery, setSearchQuery] = useState("");
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -51,6 +46,29 @@ export default function SupportPage() {
   const [isChatDrawerOpen, setIsChatDrawerOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedTicket, setSelectedTicket] = useState<any>(null);
+
+  useEffect(() => {
+    const handleTicketUpdate = (updatedTicket: any) => {
+      console.log("Ticket list update received via socket");
+      (dispatch as any)(ticketApi.util.invalidateTags([{ type: 'Ticket', id: 'LIST' }]));
+    };
+
+    on("ticket:update", handleTicketUpdate);
+
+    return () => {
+      off("ticket:update", handleTicketUpdate);
+    };
+  }, [on, off, dispatch]);
+
+  const { data: ticketsResponse, isLoading } = useGetTicketsQuery({
+    status: activeTab === "All tickets" ? undefined : activeTab,
+    search: searchQuery || undefined,
+    page: currentPage,
+    limit: rowsPerPage
+  });
+
+  const ticketsData = ticketsResponse?.data?.tickets || [];
+  const pagination = ticketsResponse?.data?.pagination;
 
   const toggleAll = () => {
     if (selectedIds.length === ticketsData.length) {
@@ -84,21 +102,21 @@ export default function SupportPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
         <StatCard
           title="Total Tickets"
-          value="1,284"
+          value={pagination?.total?.toString() || "0"}
           trendValue="12.5%"
           trendIsUp={true}
           periodLabel="Since last month"
         />
         <StatCard
           title="Open Tickets"
-          value="45"
+          value={ticketsData.filter(t => t.status === 'Open').length.toString()}
           trendValue="5.2%"
           trendIsUp={false}
           periodLabel="Active now"
         />
         <StatCard
           title="Resolved"
-          value="1,120"
+          value={ticketsData.filter(t => t.status === 'Resolved').length.toString()}
           trendValue="8.4%"
           trendIsUp={true}
           periodLabel="This month"
@@ -117,9 +135,12 @@ export default function SupportPage() {
         {/* Controls Bar */}
         <div className="p-4 sm:p-6 flex flex-col lg:flex-row gap-6 items-center justify-between border-b border-gray-50">
           <TabFilter
-            tabs={["All tickets", "Open", "Pending", "Resolved"]}
+            tabs={["All tickets", "Open", "Pending", "Resolved", "Closed"]}
             activeTab={activeTab}
-            onChange={setActiveTab} id={""} />
+            onChange={(tab) => {
+              setActiveTab(tab);
+              setCurrentPage(1); // Reset to first page on tab change
+            }} id={""} />
 
           <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
             <Input shape="rounded-sm"
@@ -127,11 +148,19 @@ export default function SupportPage() {
               placeholder="Search tickets by ID or Subject"
               containerClassName="w-full lg:w-80 xl:w-96"
               className="bg-white border-gray-200 placeholder:text-gray-400 text-xs font-medium"
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1); // Reset to first page on search
+              }}
               suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
             />
 
             <div className="flex items-center gap-3 w-full sm:w-auto">
-              <RowsPerPage value={rowsPerPage} onChange={setRowsPerPage} />
+              <RowsPerPage value={rowsPerPage} onChange={(val) => {
+                setRowsPerPage(val);
+                setCurrentPage(1);
+              }} />
 
               <div className="flex gap-2 ml-auto sm:ml-0">
                 <Button variant="outline" shape="rounded-sm" className="!p-2.5 text-gray-400">
@@ -163,62 +192,72 @@ export default function SupportPage() {
               </tr>
             </thead>
             <tbody>
-              {ticketsData.map((ticket, idx) => (
-                <tr key={idx} className="group">
-                  <td className="w-10 pl-8">
-                    <Checkbox
-                      checked={selectedIds.includes(ticket.ticketId)}
-                      onChange={() => toggleItem(ticket.ticketId)}
-                    />
-                  </td>
-                  <td>
-                    <span className="text-xs font-bold text-gray-900">{ticket.ticketId}</span>
-                  </td>
-                  <td>
-                    <div className="flex flex-col">
-                      <span className="text-xs font-bold text-[#1D3557]">{ticket.customer}</span>
-                      <span className="text-[10px] font-bold text-gray-400 italic">User ID: #USR_023</span>
-                    </div>
-                  </td>
-                  <td>
-                    <span className="text-xs font-bold text-gray-700 truncate max-w-[150px] inline-block">{ticket.subject}</span>
-                  </td>
-                  <td className="text-[11px] font-bold text-gray-400 text-center">{ticket.activity}</td>
-                  <td className="text-center">
-                    <span className={`px-2 py-1 rounded-md text-[10px] font-black uppercase tracking-wider ${priorityStyles[ticket.priority as keyof typeof priorityStyles]}`}>
-                      {ticket.priority}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="flex items-center gap-2">
-                      <span className={`w-1.5 h-1.5 rounded-full ${statusStyles[ticket.status as keyof typeof statusStyles]}`}></span>
-                      <span className={`text-xs font-bold text-gray-700`}>{ticket.status}</span>
-                    </div>
-                  </td>
-                  <td className="text-right pr-8">
-                    <div className="flex justify-end items-center gap-2">
-                      <Button shape="rounded-sm" variant="outline"
-                        className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all duration-300"
-                        onClick={() => {
-                          setSelectedTicket(ticket);
-                          setIsChatDrawerOpen(true);
-                        }}
-                      >
-                        <BiMessageDetail size={14} />
-                      </Button>
-                      <Button shape="rounded-sm" variant="outline"
-                        className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all duration-300"
-                        onClick={() => {
-                          setSelectedTicket(ticket);
-                          setIsDetailDrawerOpen(true);
-                        }}
-                      >
-                        <HiOutlineDocumentText size={14} />
-                      </Button>
-                    </div>
-                  </td>
+              {isLoading ? (
+                <tr>
+                  <td colSpan={8} className="text-center py-10 text-gray-400 text-xs font-bold">Loading tickets...</td>
                 </tr>
-              ))}
+              ) : ticketsData.length === 0 ? (
+                <tr>
+                  <td colSpan={8} className="text-center py-10 text-gray-400 text-xs font-bold">No tickets found</td>
+                </tr>
+              ) : (
+                ticketsData.map((ticket, idx) => (
+                  <tr key={idx} className="group">
+                    <td className="w-10 pl-8">
+                      <Checkbox
+                        checked={selectedIds.includes(ticket.ticketId)}
+                        onChange={() => toggleItem(ticket.ticketId)}
+                      />
+                    </td>
+                    <td>
+                      <span className="text-xs font-bold text-gray-900">{ticket.ticketId}</span>
+                    </td>
+                    <td>
+                      <div className="flex flex-col">
+                        <span className="text-xs font-bold text-[#1D3557]">{ticket.customerName}</span>
+                        <span className="text-[10px] font-bold text-gray-400 italic">{ticket.customerEmail}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <span className="text-xs font-bold text-gray-700 truncate max-w-[150px] inline-block">{ticket.subject}</span>
+                    </td>
+                    <td className="text-[11px] font-bold text-gray-400 text-center">{ticket.activity}</td>
+                    <td className="text-center">
+                      <span className={`px-2 py-1 rounded-md text-[10px] font-black uppercase tracking-wider ${priorityStyles[ticket.priority as keyof typeof priorityStyles]}`}>
+                        {ticket.priority}
+                      </span>
+                    </td>
+                    <td>
+                      <div className="flex items-center gap-2">
+                        <span className={`w-1.5 h-1.5 rounded-full ${statusStyles[ticket.status as keyof typeof statusStyles]}`}></span>
+                        <span className={`text-xs font-bold text-gray-700`}>{ticket.status}</span>
+                      </div>
+                    </td>
+                    <td className="text-right pr-8">
+                      <div className="flex justify-end items-center gap-2">
+                        <Button shape="rounded-sm" variant="outline"
+                          className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all duration-300"
+                          onClick={() => {
+                            setSelectedTicket(ticket);
+                            setIsChatDrawerOpen(true);
+                          }}
+                        >
+                          <BiMessageDetail size={14} />
+                        </Button>
+                        <Button shape="rounded-sm" variant="outline"
+                          className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all duration-300"
+                          onClick={() => {
+                            setSelectedTicket(ticket);
+                            setIsDetailDrawerOpen(true);
+                          }}
+                        >
+                          <HiOutlineDocumentText size={14} />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -226,7 +265,7 @@ export default function SupportPage() {
         {/* Pagination Footer */}
         <Pagination
           currentPage={currentPage}
-          totalPages={12}
+          totalPages={pagination?.totalPages || 1}
           onPageChange={setCurrentPage}
         />
       </div>
@@ -235,12 +274,16 @@ export default function SupportPage() {
         isOpen={isDetailDrawerOpen}
         onClose={() => setIsDetailDrawerOpen(false)}
         ticket={selectedTicket}
+        onReply={() => {
+          setIsDetailDrawerOpen(false);
+          setIsChatDrawerOpen(true);
+        }}
       />
 
       <SupportChatDrawer
         isOpen={isChatDrawerOpen}
         onClose={() => setIsChatDrawerOpen(false)}
-        ticket={selectedTicket}
+        ticketId={selectedTicket?._id}
       />
 
       <CreateTicketModal

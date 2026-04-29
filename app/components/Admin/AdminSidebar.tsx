@@ -8,13 +8,15 @@ import { Icon } from "../Icon";
 import { Logo } from "../Logo";
 import { ConfirmationModal } from "./ConfirmationModal";
 import { motion, AnimatePresence } from "framer-motion";
-import { HiChevronDown, HiOutlineQuestionMarkCircle, HiShieldCheck, HiXMark, HiBars3BottomLeft } from "react-icons/hi2";
+import { HiChevronDown, HiOutlineQuestionMarkCircle, HiShieldCheck, HiXMark, HiBars3BottomLeft, HiOutlineGift, HiCreditCard } from "react-icons/hi2";
 import { RiPercentLine } from "react-icons/ri";
 import { useLogoutMutation } from "@/lib/redux/services/authApi";
 import { logOut, selectCurrentUser } from "@/lib/redux/features/authSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { usePrivilege, ModuleId } from "@/lib/contexts/PrivilegeContext";
+import Image from "next/image";
 
 interface NavGroup {
   title: string;
@@ -22,6 +24,7 @@ interface NavGroup {
     name: string;
     href: string;
     icon: string | React.ReactNode;
+    moduleId?: ModuleId;
   }[];
 }
 
@@ -32,49 +35,38 @@ interface SidenavProps {
   role?: string;
 }
 
-const navGroups: NavGroup[] = [
-  {
-    title: "",
-    items: [
-      { name: "Dashboard", href: "/admin", icon: "Frame" },
-      { name: "Order Management", href: "/admin/orders", icon: "Cart" },
-    ],
-  },
-  {
-    title: "Product",
-    items: [
-      { name: "Add Products", href: "/admin/products/new", icon: "circle-plus" },
-      { name: "Product Media", href: "/admin/products/media", icon: "material-symbols_image-outline" },
-      { name: "Product List", href: "/admin/products", icon: "fluent-mdl2_product-list" },
-      { name: "Product Reviews", href: "/admin/reviews", icon: "material-symbols_reviews-outline" },
-    ],
-  },
-  {
-    title: "Operations",
-    items: [
-      { name: "Customers", href: "/admin/customers", icon: "users" },
-      { name: "Coupon Code", href: "/admin/coupons", icon: "ticket" },
-      { name: "Categories", href: "/admin/categories", icon: "circle-square" },
-      { name: "Transaction", href: "/admin/transactions", icon: "famicons_card-outline" },
-      { name: "Refund", href: "/admin/refunds", icon: "arrow-refresh-06" },
-      { name: "Support", href: "/admin/support", icon: "tabler_message" },
-      { name: "FAQ Management", href: "/admin/faq", icon: <HiOutlineQuestionMarkCircle size={14} /> },
-      { name: "Brand", href: "/admin/brands", icon: "star" },
-      { name: "Deals and Offers", href: "/admin/deals", icon: <RiPercentLine size={14} /> },
-      { name: "Advert Manager", href: "/admin/advert", icon: "Frame" },
-      { name: "Notifications", href: "/admin/notifications", icon: "Bell outline" },
-    ],
-  },
-  {
-    title: "Admin",
-    items: [
-      { name: "Users", href: "/admin/users", icon: "users" },
-      { name: "View Profile", href: "/admin/profile", icon: "user-profile-circle" },
-      { name: "Administrative Roles", href: "/admin/roles", icon: "settings" },
-      { name: "Permissions", href: "/admin/permissions", icon: <HiShieldCheck size={14} /> },
-    ],
-  },
-];
+const moduleIconMap: Record<string, string | React.ReactNode> = {
+  dashboard: "Frame",
+  orders: "Cart",
+  products: "fluent-mdl2_product-list",
+  media: "material-symbols_image-outline",
+  "products/media": "material-symbols_image-outline",
+  reviews: "material-symbols_reviews-outline",
+  customers: "users",
+  marketing: "ticket",
+  categories: "circle-square",
+  transactions: "famicons_card-outline",
+  refunds: "arrow-refresh-06",
+  support: "tabler_message",
+  faq: <HiOutlineQuestionMarkCircle size={14} />,
+  brands: "star",
+  deals: <RiPercentLine size={14} />,
+  "gift-boxes": <HiOutlineGift size={16} />,
+  advert: "Frame",
+  notifications: "Bell outline",
+  users: "users",
+  profile: "user-profile-circle",
+  roles: "settings",
+  permissions: <HiShieldCheck size={14} />,
+};
+
+// Map module IDs to their primary display names and routes if they differ from the default slug
+const moduleMetadata: Record<string, { name?: string; href?: string }> = {
+  dashboard: { name: "Dashboard Overview", href: "/admin" },
+  media: { name: "Media Library", href: "/admin/products/media" },
+  "products/media": { name: "Media Library", href: "/admin/products/media" },
+  marketing: { name: "Coupon Code", href: "/admin/coupons" },
+};
 
 
 interface NavItemProps {
@@ -82,29 +74,36 @@ interface NavItemProps {
     name: string;
     href: string;
     icon: string | React.ReactNode;
+    children?: { name: string; href: string }[];
   };
   isCollapsed: boolean;
-  pathname: string;
+  isActive: boolean;
   onHover: (name: string | null, rect: DOMRect | null) => void;
+  pathname: string;
 }
 
-const NavItem: React.FC<NavItemProps> = ({ item, isCollapsed, pathname, onHover }) => {
-  // Exact match or sub-path match (e.g., /admin/orders/1 matches /admin/orders)
-  const isMatch = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href + "/"));
+const NavItem: React.FC<NavItemProps> = ({ item, isCollapsed, isActive, onHover, pathname }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const hasChildren = item.children && item.children.length > 0;
 
-  // Ensure we don't highlight a base path if a more specific sibling path is also a match
-  const isMoreSpecificMatch = navGroups.flatMap(g => g.items).some(other =>
-    other.href !== item.href &&
-    other.href.startsWith(item.href + "/") &&
-    (pathname === other.href || pathname.startsWith(other.href + "/"))
-  );
+  useEffect(() => {
+    if (hasChildren && item.children?.some(child => pathname === child.href)) {
+      setIsOpen(true);
+    }
+  }, [pathname, hasChildren, item.children]);
 
-  const isActive = isMatch && !isMoreSpecificMatch;
+  const handleToggle = (e: React.MouseEvent) => {
+    if (hasChildren) {
+      e.preventDefault();
+      setIsOpen(!isOpen);
+    }
+  };
 
   return (
-    <div className="relative flex items-center">
+    <div className="relative flex flex-col gap-1 w-full">
       <Link
         href={item.href}
+        onClick={handleToggle}
         onMouseEnter={(e) => {
           if (isCollapsed) {
             onHover(item.name, e.currentTarget.getBoundingClientRect());
@@ -121,8 +120,39 @@ const NavItem: React.FC<NavItemProps> = ({ item, isCollapsed, pathname, onHover 
         ) : (
           item.icon
         )}
-        {!isCollapsed && <span>{item.name}</span>}
+        {!isCollapsed && (
+          <div className="flex items-center justify-between flex-1">
+            <span>{item.name}</span>
+            {hasChildren && (
+              <HiChevronDown
+                size={16}
+                className={`transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
+              />
+            )}
+          </div>
+        )}
       </Link>
+
+      <AnimatePresence>
+        {hasChildren && isOpen && !isCollapsed && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="overflow-hidden flex flex-col gap-1 pl-12 pr-2"
+          >
+            {item.children?.map(child => (
+              <Link
+                key={child.href}
+                href={child.href}
+                className={`py-2 px-3 text-[11px] font-bold uppercase tracking-widest rounded-[4px] transition-all ${pathname === child.href ? "text-brand-gold bg-brand-gold/5" : "text-gray-400 hover:text-brand-gold hover:bg-gray-50"}`}
+              >
+                {child.name}
+              </Link>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
@@ -158,17 +188,108 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
   const [isLogoutModalOpen, setIsLogoutModalOpen] = React.useState(false);
   const [hoveredItem, setHoveredItem] = useState<{ name: string; rect: DOMRect } | null>(null);
   const [mounted, setMounted] = useState(false);
+  const { canAccess, isLoading, userPrivileges } = usePrivilege();
+
+  const dynamicNavData = React.useMemo(() => {
+    if (!userPrivileges?.role?.permissions) return { coreItems: [], navGroups: [] };
+
+
+
+    // Sorting categories to match original order if possible
+    // Sorting categories to match backend and prioritize core modules
+    const categoryOrder = ["System", "Commerce", "Inventory", "Finance", "Marketing", "Users", "Admin"];
+
+    // Separate core modules from grouped modules
+    const coreModuleIds = ["dashboard", "orders"];
+
+    const coreItems = userPrivileges.role.permissions
+      .filter(p => p.access && coreModuleIds.includes(p.id))
+      .sort((a, b) => {
+        if (a.id === "dashboard") return -1;
+        if (b.id === "dashboard") return 1;
+        return 0;
+      })
+      .map(p => {
+        const metadata = moduleMetadata[p.id] || {};
+        return {
+          name: metadata.name || p.moduleName,
+          href: metadata.href || `/admin/${p.id}`,
+          icon: moduleIconMap[p.id] || "Frame",
+          moduleId: p.id as ModuleId
+        };
+      });
+
+    const grouped = userPrivileges.role.permissions.reduce((acc, p) => {
+      if (!p.access || coreModuleIds.includes(p.id)) return acc;
+
+      const category = p.category || "General";
+      if (!acc[category]) acc[category] = [];
+
+      const metadata = moduleMetadata[p.id] || {};
+
+      acc[category].push({
+        name: metadata.name || p.moduleName,
+        href: metadata.href || `/admin/${p.id}`,
+        icon: moduleIconMap[p.id] || "Frame",
+        moduleId: p.id as ModuleId
+      });
+
+      return acc;
+    }, {} as Record<string, any[]>);
+
+    // Inject new modules that might not be in the DB yet
+    if (!grouped["Inventory"]) grouped["Inventory"] = [];
+    if (!grouped["Inventory"].some(item => item.href === "/admin/gift-boxes")) {
+      grouped["Inventory"].push({
+        name: "Gift Boxes",
+        href: "/admin/gift-boxes",
+        icon: moduleIconMap["gift-boxes"] || <HiOutlineGift size={16} />,
+        moduleId: "gift-boxes" as any,
+      });
+    }
+    if (!grouped["Inventory"].some(item => item.href === "/admin/gift-cards")) {
+      grouped["Inventory"].push({
+        name: "Gift Cards",
+        href: "/admin/gift-cards",
+        icon: <HiCreditCard size={16} />,
+        moduleId: "gift-cards" as any,
+      });
+    }
+
+    const navGroups = Object.entries(grouped)
+      .sort(([a], [b]) => {
+        const indexA = categoryOrder.indexOf(a);
+        const indexB = categoryOrder.indexOf(b);
+        if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+        if (indexA !== -1) return -1;
+        if (indexB !== -1) return 1;
+        return a.localeCompare(b);
+      })
+      .map(([title, items]) => ({
+        title: title === "General" ? "" : title,
+        items
+      }));
+
+    return { coreItems, navGroups };
+  }, [userPrivileges]);
+
+  const { coreItems, navGroups } = dynamicNavData;
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   // Initialize expanded groups - default to expanded for groups containing the active path
-  const [expandedGroups, setExpandedGroups] = React.useState<string[]>(() => {
-    return navGroups
-      .filter(group => group.items.some(item => pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href + "/"))))
-      .map(group => group.title);
-  });
+  const [expandedGroups, setExpandedGroups] = React.useState<string[]>([]);
+
+  useEffect(() => {
+    if (navGroups.length > 0 && expandedGroups.length === 0) {
+      const activeGroups = navGroups
+        .filter(group => group.items.some(item => pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href + "/"))))
+        .map(group => group.title);
+      setExpandedGroups(activeGroups);
+    }
+  }, [navGroups, pathname]);
 
   const toggleGroup = (title: string) => {
     setExpandedGroups(prev =>
@@ -221,51 +342,88 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
         )}
       </div>
 
-      <nav className="flex-1 overflow-y-auto px-4 py-2 flex flex-col gap-6 custom-scrollbar pb-8">
-        {navGroups.map((group) => {
-          const isExpanded = expandedGroups.includes(group.title) || !group.title;
+      <nav className="flex-1 overflow-y-auto px-4 py-2 flex flex-col gap-1 custom-scrollbar pb-8">
+        {/* Flat Core Items */}
+        <div className="flex flex-col gap-1 mb-6">
+          {coreItems.map((item) => {
+            const isMatch = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href + "/"));
 
-          return (
-            <div key={group.title} className="flex flex-col gap-1">
-              {!isCollapsed && group.title && (
-                <button
-                  onClick={() => toggleGroup(group.title)}
-                  className="px-4 py-2 flex items-center justify-between group/title w-full"
-                >
-                  <h4 className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-hover/title:text-brand-charcoal transition-colors">
-                    {group.title}
-                  </h4>
-                  <HiChevronDown
-                    size={14}
-                    className={`text-gray-300 transition-transform duration-300 ${isExpanded ? "rotate-180" : ""} group-hover/title:text-brand-charcoal`}
-                  />
-                </button>
-              )}
+            // Core items don't have specific sibling matches in this context
+            const isActive = isMatch;
 
-              <AnimatePresence initial={false}>
-                {(isExpanded || isCollapsed || !group.title) && (
-                  <motion.div
-                    initial={!group.title ? false : { height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                    className="overflow-hidden flex flex-col gap-1"
+            return (
+              <NavItem
+                key={item.href}
+                item={item}
+                isCollapsed={isCollapsed}
+                isActive={isActive}
+                onHover={(name, rect) => setHoveredItem(name && rect ? { name, rect } : null)}
+                pathname={pathname}
+              />
+            );
+          })}
+        </div>
+
+        {/* Grouped Modules */}
+        <div className="flex flex-col gap-6">
+          {navGroups.map((group) => {
+            const isExpanded = expandedGroups.includes(group.title) || !group.title;
+
+            return (
+              <div key={group.title} className="flex flex-col gap-1">
+                {!isCollapsed && group.title && (
+                  <button
+                    onClick={() => toggleGroup(group.title)}
+                    className="px-4 py-2 flex items-center justify-between group/title w-full"
                   >
-                    {group.items.map((item) => (
-                      <NavItem
-                        key={item.href}
-                        item={item}
-                        isCollapsed={isCollapsed}
-                        pathname={pathname}
-                        onHover={(name, rect) => setHoveredItem(name && rect ? { name, rect } : null)}
-                      />
-                    ))}
-                  </motion.div>
+                    <h4 className="text-[10px] font-bold uppercase tracking-widest text-gray-400 group-hover/title:text-brand-charcoal transition-colors">
+                      {group.title}
+                    </h4>
+                    <HiChevronDown
+                      size={14}
+                      className={`text-gray-300 transition-transform duration-300 ${isExpanded ? "rotate-180" : ""} group-hover/title:text-brand-charcoal`}
+                    />
+                  </button>
                 )}
-              </AnimatePresence>
-            </div>
-          );
-        })}
+
+                <AnimatePresence initial={false}>
+                  {(isExpanded || isCollapsed || !group.title) && (
+                    <motion.div
+                      initial={!group.title ? false : { height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      className="overflow-hidden flex flex-col gap-1"
+                    >
+                      {group.items.map((item: any) => {
+                        const isMatch = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href + "/"));
+
+                        const isMoreSpecificMatch = navGroups.flatMap(g => g.items).some(other =>
+                          other.href !== item.href &&
+                          other.href.startsWith(item.href + "/") &&
+                          (pathname === other.href || pathname.startsWith(other.href + "/"))
+                        );
+
+                        const isActive = isMatch && !isMoreSpecificMatch;
+
+                        return (
+                          <NavItem
+                            key={item.href}
+                            item={item}
+                            isCollapsed={isCollapsed}
+                            isActive={isActive}
+                            onHover={(name, rect) => setHoveredItem(name && rect ? { name, rect } : null)}
+                            pathname={pathname}
+                          />
+                        );
+                      })}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          })}
+        </div>
       </nav>
 
       {/* Footer Profile & Shop */}
@@ -281,11 +439,14 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
             }}
             onMouseLeave={() => setHoveredItem(null)}
           >
-            <div className="w-10 h-10 rounded-full border border-gray-200 overflow-hidden shadow-sm flex-shrink-0 group-hover:border-brand-gold-light group-hover:shadow-md transition-all">
-              <img
+            <div className="w-10 h-10 rounded-full border border-gray-200 overflow-hidden shadow-sm flex-shrink-0 group-hover:border-brand-gold-light group-hover:shadow-md transition-all relative">
+              <Image
                 src={user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.fullName || "A")}&background=C5A028&color=fff`}
                 alt="User"
-                className="w-full h-full object-cover"
+                fill
+                className="object-cover"
+                priority
+                sizes="40px"
               />
             </div>
             {!isCollapsed && (

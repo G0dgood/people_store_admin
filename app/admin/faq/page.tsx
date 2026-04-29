@@ -25,6 +25,7 @@ import {
 import { toast } from "sonner";
 import { NoRecordFound, SVGLoaderFetch } from "@/app/components/Options";
 import moment from "moment";
+import { StatusBadge } from "@/app/components/StatusBadge";
 
 export default function FAQManagementPage() {
   const { data: faqsData, isLoading } = useGetFaqsQuery();
@@ -162,9 +163,7 @@ export default function FAQManagementPage() {
                     <span className="text-xs font-bold text-gray-500">{faq.category}</span>
                   </td>
                   <td>
-                    <span className="px-3 py-1 bg-emerald-50 text-emerald-500 text-[10px] font-black rounded-full uppercase">
-                      {faq.status}
-                    </span>
+                    <StatusBadge module="faq" value={faq.status} />
                   </td>
                   <td>
                     <span className="text-[11px] font-bold text-gray-400">

@@ -5,13 +5,9 @@ import Drawer from "../Drawer/Drawer";
 import { Icon } from "../Icon";
 import { Button } from "../Button";
 import { RichTextArea } from "../Form/SpecialInputs";
-
-interface Message {
-  id: number;
-  sender: "admin" | "customer";
-  text: string;
-  time: string;
-}
+import { useGetChatHistoryQuery, useSendMessageMutation } from "@/lib/redux/services/messageApi";
+import { SVGLoaderFetch } from "../Options";
+import { toast } from "sonner";
 
 interface CustomerMessageDrawerProps {
   isOpen: boolean;
@@ -19,31 +15,48 @@ interface CustomerMessageDrawerProps {
   customer: any;
 }
 
+
 export function CustomerMessageDrawer({ isOpen, onClose, customer }: CustomerMessageDrawerProps) {
   const [messageText, setMessageText] = useState("");
 
-  const mockMessages: Message[] = [
-    { id: 1, sender: "customer", text: "Hi, I have a question about my recent order #ORD0001.", time: "10:30 AM" },
-    { id: 2, sender: "admin", text: "Hello! Sure, I'd be happy to help. What seems to be the issue?", time: "10:32 AM" },
-    { id: 3, sender: "customer", text: "The delivery status shows as delivered but I haven't received it yet.", time: "10:35 AM" },
-  ];
+  const { data: historyResponse, isLoading: isLoadingChat } = useGetChatHistoryQuery(customer?._id || "", {
+    skip: !customer?._id || !isOpen
+  });
+
+  const [sendMessage, { isLoading: isSending }] = useSendMessageMutation();
+
+  const messages = historyResponse?.data || [];
 
   if (!customer) return null;
 
+  const handleSendMessage = async () => {
+    if (!messageText.trim()) return;
+    try {
+      await sendMessage({
+        receiverId: customer._id,
+        receiverModel: "Customer",
+        message: messageText
+      }).unwrap();
+      setMessageText("");
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Failed to send message");
+    }
+  };
+
   return (
-    <Drawer isOpen={isOpen} onClose={onClose} title={`Message ${customer.name}`} width="max-w-md">
+    <Drawer isOpen={isOpen} onClose={onClose} title={`Message ${customer.fullName || "Customer"}`} width="max-w-md">
       <div className="flex flex-col h-full gap-6">
         {/* Customer Quick Header */}
         <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
           <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 animate-in fade-in zoom-in duration-300">
             <img
-              src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=100&h=100&fit=crop"
+              src={customer.avatar || "https://ui-avatars.com/api/?name=" + customer.fullName}
               alt=""
               className="w-full h-full object-cover"
             />
           </div>
           <div className="flex flex-col">
-            <span className="text-sm font-black text-[#1D3557]">{customer.name}</span>
+            <span className="text-sm font-black text-[#1D3557]">{customer.fullName}</span>
             <span className="text-[11px] font-bold text-gray-400">{customer.email}</span>
           </div>
           <div className="ml-auto flex items-center gap-2">
@@ -54,27 +67,36 @@ export function CustomerMessageDrawer({ isOpen, onClose, customer }: CustomerMes
 
         {/* Message Feed */}
         <div className="flex-1 overflow-y-auto pr-2 flex flex-col gap-4">
-          <div className="flex flex-col items-center py-4">
-            <span className="text-[10px] font-bold text-gray-300 uppercase tracking-[0.2em]">Today, Jan 15</span>
-          </div>
-
-          {mockMessages.map((msg) => (
-            <div
-              key={msg.id}
-              className={`flex flex-col ${msg.sender === "admin" ? "items-end" : "items-start"} gap-1.5`}
-            >
-              <div
-                className={`max-w-[85%] px-4 py-3 rounded-2xl text-[13px] font-medium leading-relaxed shadow-sm transition-all
-                  ${msg.sender === "admin"
-                    ? "bg-brand-charcoal text-white rounded-tr-none"
-                    : "bg-white border border-gray-200 text-gray-700 rounded-tl-none"}
-                `}
-              >
-                {msg.text}
-              </div>
-              <span className="text-[10px] font-bold text-gray-300 px-1">{msg.time}</span>
+          {isLoadingChat ? (
+            <div className="flex justify-center py-10">
+               <SVGLoaderFetch asTable={false} text="Loading history..." />
             </div>
-          ))}
+          ) : messages.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-40 text-gray-400 gap-2">
+               <Icon name="tabler_message" folder="dashboardIcon" size="md" />
+               <p className="text-xs font-bold uppercase tracking-widest">No conversation yet</p>
+            </div>
+          ) : (
+            messages.map((msg: any) => (
+              <div
+                key={msg._id}
+                className={`flex flex-col ${msg.senderModel === "User" ? "items-end" : "items-start"} gap-1.5`}
+              >
+                <div
+                  className={`max-w-[85%] px-4 py-3 rounded-2xl text-[13px] font-medium leading-relaxed shadow-sm transition-all
+                    ${msg.senderModel === "User"
+                      ? "bg-brand-charcoal text-white rounded-tr-none"
+                      : "bg-white border border-gray-200 text-gray-700 rounded-tl-none"}
+                  `}
+                >
+                  {msg.message}
+                </div>
+                <span className="text-[10px] font-bold text-gray-300 px-1">
+                  {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </span>
+              </div>
+            ))
+          )}
         </div>
 
         {/* Templates Area */}
@@ -106,14 +128,11 @@ export function CustomerMessageDrawer({ isOpen, onClose, customer }: CustomerMes
             shape="rounded-sm"
             variant="primary"
             className="w-full h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-brand-charcoal/10"
-            disabled={!messageText.trim()}
+            disabled={!messageText.trim() || isSending}
             iconRight={<Icon name="arrow_forward" folder="icon" size="sm" />}
-            onClick={() => {
-              console.log(`Sending to ${customer.name}: ${messageText}`);
-              setMessageText("");
-            }}
+            onClick={handleSendMessage}
           >
-            Send Message
+            {isSending ? "Sending..." : "Send Message"}
           </Button>
         </div>
       </div>

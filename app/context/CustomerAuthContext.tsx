@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { useGetCurrentCustomerQuery, useLogoutCustomerMutation } from "@/lib/redux/services/customerApi";
+import { useApiError } from "../hooks/useApiError";
 
 interface Customer {
   _id: string;
@@ -46,11 +47,15 @@ export function CustomerAuthProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   
   // Use the query to sync with backend session
-  const { data: customerResponse, isLoading, isSuccess } = useGetCurrentCustomerQuery(undefined, {
+  const { data: customerResponse, isLoading, isSuccess, isError: isGetError, error: getError } = useGetCurrentCustomerQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
+  
+  const [logoutMutation, { isLoading: isLoggingOut, isError: isLogoutError, error: logoutError }] = useLogoutCustomerMutation();
 
-  const [logoutMutation, { isLoading: isLoggingOut }] = useLogoutCustomerMutation();
+  // Handle API Errors
+  useApiError(isGetError, getError, "Failed to load profile", { hideInAdmin: true, suppress401: true });
+  useApiError(isLogoutError, logoutError, "Logout failed", { hideInAdmin: true });
 
   const setCustomerData = (data: Customer | null) => {
     setCustomer(data);
@@ -62,12 +67,15 @@ export function CustomerAuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  // Sync state when query succeeds
+  // Sync state when query succeeds or fails
   useEffect(() => {
     if (isSuccess && customerResponse?.data) {
       setCustomerData(customerResponse.data);
+    } else if (isGetError) {
+      // Clear data if session is invalid (e.g. 401)
+      setCustomerData(null);
     }
-  }, [isSuccess, customerResponse]);
+  }, [isSuccess, isGetError, customerResponse]);
 
   // Initial sync from cookie for immediate UI response
   useEffect(() => {
@@ -87,7 +95,7 @@ export function CustomerAuthProvider({ children }: { children: ReactNode }) {
     try {
       await logoutMutation().unwrap();
     } catch (e) {
-      console.error("Logout mutation failed", e);
+      // Error handled by useApiError hook
     } finally {
       setCustomer(null);
       setIsAuthenticated(false);

@@ -1,6 +1,16 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { useCustomerAuth } from "./CustomerAuthContext";
+import { useApiError } from "../hooks/useApiError";
+import { 
+  useGetCartQuery, 
+  useSyncCartMutation, 
+  useAddToCartMutation, 
+  useUpdateCartItemMutation, 
+  useRemoveFromCartMutation, 
+  useClearCartMutation 
+} from "@/lib/redux/services/cartApi";
 
 export interface CartItem {
   id: string;
@@ -14,6 +24,7 @@ export interface CartItem {
     material?: string;
     seller?: string;
   };
+  itemType?: "Product" | "GiftBox";
 }
 
 interface CartContextType {
@@ -26,77 +37,153 @@ interface CartContextType {
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
-export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+export const CartProvider = ({ children }: { children: React.ReactNode }) => {
+  const [localCartItems, setLocalCartItems] = useState<CartItem[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
+  
+  const { isAuthenticated } = useCustomerAuth();
+
+  // RTK Query hooks
+  const { data: backendCartData, refetch } = useGetCartQuery(undefined, { skip: !isAuthenticated });
+  const [syncCart, { isError: isSyncError, error: syncError }] = useSyncCartMutation();
+  const [addToCartMut, { isError: isAddError, error: addError }] = useAddToCartMutation();
+  const [updateCartItemMut, { isError: isUpdateError, error: updateError }] = useUpdateCartItemMutation();
+  const [removeFromCartMut, { isError: isRemoveError, error: removeError }] = useRemoveFromCartMutation();
+  const [clearCartMut, { isError: isClearError, error: clearError }] = useClearCartMutation();
+
+  // Handle API Errors
+  useApiError(isSyncError, syncError, "Failed to sync cart", { hideInAdmin: true });
+  useApiError(isAddError, addError, "Failed to add to cart", { hideInAdmin: true });
+  useApiError(isUpdateError, updateError, "Failed to update quantity", { hideInAdmin: true });
+  useApiError(isRemoveError, removeError, "Failed to remove from cart", { hideInAdmin: true });
+  useApiError(isClearError, clearError, "Failed to clear cart", { hideInAdmin: true });
 
   // Load from localStorage on mount
   useEffect(() => {
     const savedCart = localStorage.getItem("cart_items");
-
     if (savedCart) {
-      setCartItems(JSON.parse(savedCart));
-    } else {
-      // Seed with initial hardcoded data if empty
-      setCartItems([
-        {
-          id: "c1",
-          title: "T-shirts with multiple colors, for men and boy",
-          price: "₦78.99",
-          image: "/images/shirt.jpg",
-          quantity: 1,
-          meta: { size: "Medium", color: "Blue", material: "Cotton", seller: "Artel Market" }
-        },
-        {
-          id: "c2",
-          title: "Leather bag for travel and for men",
-          price: "₦39.00",
-          image: "/images/bag.jpg",
-          quantity: 1,
-          meta: { size: "Large", color: "Black", material: "Leather", seller: "Best Buy" }
-        },
-        {
-          id: "c3",
-          title: "Canon camera black, 100x zoom",
-          price: "₦170.00",
-          image: "/images/camera.jpg",
-          quantity: 1,
-          meta: { size: "Small", color: "Black", material: "Plastic", seller: "Photo Max" }
-        }
-      ]);
+      setLocalCartItems(JSON.parse(savedCart));
     }
-    
     setIsInitialized(true);
   }, []);
 
-  // Save to localStorage when state changes
+  // Sync local cart to backend when user logs in
   useEffect(() => {
-    if (isInitialized) {
-      localStorage.setItem("cart_items", JSON.stringify(cartItems));
-    }
-  }, [cartItems, isInitialized]);
-
-  const addToCart = (item: Omit<CartItem, "quantity">) => {
-    setCartItems(prev => {
-      const existing = prev.find(i => i.id === item.id);
-      if (existing) {
-        return prev.map(i => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i);
+    const performSync = async () => {
+      if (isAuthenticated && isInitialized) {
+        const savedCart = localStorage.getItem("cart_items");
+        const parsedCart = savedCart ? JSON.parse(savedCart) : [];
+        
+        if (parsedCart.length > 0) {
+          const syncPayload = parsedCart.map((item: any) => ({
+            product: item.id,
+            quantity: item.quantity,
+            itemType: item.itemType || "Product",
+            meta: item.meta
+          }));
+          
+          try {
+            await syncCart({ items: syncPayload }).unwrap();
+            localStorage.removeItem("cart_items");
+            setLocalCartItems([]);
+            refetch();
+          } catch (error) {
+            // Error handled by useApiError hook
+          }
+        }
       }
-      return [...prev, { ...item, quantity: 1 }];
-    });
-  };
+    };
+    performSync();
+  }, [isAuthenticated, isInitialized, syncCart, refetch]);
 
-  const removeFromCart = (id: string) => {
-    setCartItems(prev => prev.filter(i => i.id !== id));
-  };
+  // Save to localStorage when local state changes (Guest only)
+  useEffect(() => {
+    if (isInitialized && !isAuthenticated) {
+      localStorage.setItem("cart_items", JSON.stringify(localCartItems));
+    }
+  }, [localCartItems, isInitialized, isAuthenticated]);
 
-  const updateQuantity = (id: string, quantity: number) => {
-    setCartItems(prev => prev.map(i => i.id === id ? { ...i, quantity: Math.max(1, quantity) } : i));
-  };
+  // Derived cart items depending on auth status
+  const cartItems: CartItem[] = isAuthenticated && backendCartData?.data?.items 
+    ? backendCartData.data.items.map((item: any) => {
+        const itemData = item.item;
+        const isPopulated = typeof itemData === "object" && itemData !== null;
+        
+        return {
+          id: isPopulated ? (itemData._id || itemData.id) : (itemData || item._id),
+          title: isPopulated ? (itemData.name || itemData.title) : (item.itemType === "GiftBox" ? "Gift Box" : "Unknown Item"),
+          price: String(isPopulated ? (itemData.price || 0) : 0),
+          image: isPopulated ? (itemData.productImage || itemData.image || "") : "",
+          quantity: item.quantity,
+          meta: item.meta,
+          itemType: item.itemType
+        };
+      })
+    : localCartItems;
 
-  const clearCart = () => {
-    setCartItems([]);
-  };
+  const addToCart = React.useCallback(async (item: Omit<CartItem, "quantity">) => {
+    if (isAuthenticated) {
+      try {
+        await addToCartMut({ 
+          product: item.id, 
+          itemType: item.itemType || "Product",
+          quantity: 1, 
+          meta: item.meta 
+        }).unwrap();
+      } catch (err) {
+        // Error handled by useApiError hook
+      }
+    } else {
+      setLocalCartItems((prev: CartItem[]) => {
+        const existing = prev.find(i => i.id === item.id);
+        if (existing) {
+          return prev.map(i => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i);
+        }
+        return [...prev, { ...item, quantity: 1 }];
+      });
+    }
+  }, [isAuthenticated, addToCartMut]);
+
+  const removeFromCart = React.useCallback(async (id: string) => {
+    if (isAuthenticated) {
+      try {
+        await removeFromCartMut(id).unwrap();
+      } catch (err) {
+        // Error handled by useApiError hook
+      }
+    } else {
+      setLocalCartItems((prev: CartItem[]) => prev.filter(i => i.id !== id));
+    }
+  }, [isAuthenticated, removeFromCartMut]);
+
+  const updateQuantity = React.useCallback(async (id: string, quantity: number) => {
+    const validQuantity = Math.max(1, quantity);
+    if (isAuthenticated) {
+      if (!id) {
+        console.error("Cannot update quantity: Missing item ID");
+        return;
+      }
+      try {
+        await updateCartItemMut({ productId: id, quantity: validQuantity }).unwrap();
+      } catch (err) {
+        // Error handled by useApiError hook
+      }
+    } else {
+      setLocalCartItems((prev: CartItem[]) => prev.map(i => i.id === id ? { ...i, quantity: validQuantity } : i));
+    }
+  }, [isAuthenticated, updateCartItemMut]);
+
+  const clearCart = React.useCallback(async () => {
+    if (isAuthenticated) {
+      try {
+        await clearCartMut().unwrap();
+      } catch (err) {
+        // Error handled by useApiError hook
+      }
+    } else {
+      setLocalCartItems([]);
+    }
+  }, [isAuthenticated, clearCartMut]);
 
   return (
     <CartContext.Provider value={{ 

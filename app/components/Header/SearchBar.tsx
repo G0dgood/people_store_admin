@@ -7,11 +7,19 @@ import { Icon } from "../Icon";
 import { DropdownMenu, DropdownItem } from "../Dropdown/DropdownMenu";
 import { SearchAutocomplete } from "./SearchAutocomplete";
 
+import { useGetPublicCategoriesQuery } from "@/lib/redux/services/boutiqueApi";
+import { useFilter } from "@/app/context/FilterContext";
+
 export const SearchBar = () => {
   const router = useRouter();
+  const { filters, setFilters } = useFilter();
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(filters.search || "");
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(filters.category || "All categories");
+
+  const { data: categoriesResponse, isLoading: isCategoriesLoading } = useGetPublicCategoriesQuery();
+  const categories = categoriesResponse?.data || [];
 
   const categoryRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
@@ -30,10 +38,20 @@ export const SearchBar = () => {
   }, []);
 
   const handleSearch = () => {
-    if (searchQuery.trim()) {
-      router.push(`/products?search=${encodeURIComponent(searchQuery)}`);
-      setIsSearchFocused(false);
+    setFilters(prev => ({
+      ...prev,
+      search: searchQuery,
+      category: selectedCategory === "All categories" ? "" : selectedCategory
+    }));
+
+    if (window.location.pathname !== "/products") {
+      let url = `/products?search=${encodeURIComponent(searchQuery)}`;
+      if (selectedCategory !== "All categories") {
+        url += `&category=${encodeURIComponent(selectedCategory)}`;
+      }
+      router.push(url);
     }
+    setIsSearchFocused(false);
   };
 
   return (
@@ -65,23 +83,36 @@ export const SearchBar = () => {
               e.stopPropagation();
               setIsCategoryOpen(prev => !prev);
             }}
-            className="w-36 h-full flex items-center justify-between px-4 bg-transparent cursor-pointer hover:bg-gray-100 transition-colors border-r border-neutral-200"
+            className="w-40 h-full flex items-center justify-between px-4 bg-transparent cursor-pointer hover:bg-gray-100 transition-colors border-r border-neutral-200"
           >
-            <span className="text-xs font-bold uppercase tracking-wider text-gray-600 truncate">Categories</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-gray-600 truncate">{selectedCategory}</span>
             <Icon name="expand_more" size="xs" className={`text-gray-400 transition-transform ${isCategoryOpen ? 'rotate-180' : ''}`} />
           </div>
 
           {/* Category Dropdown */}
           <AnimatePresence>
             {isCategoryOpen && (
-              <div className="absolute top-full right-0 pt-3 w-56 z-[100]" onClick={() => setIsCategoryOpen(false)}>
+              <div className="absolute top-full right-0 pt-3 w-64 z-[100]" onClick={() => setIsCategoryOpen(false)}>
                 <DropdownMenu width="100%" className="shadow-2xl border border-gray-200 rounded-xl">
-                  <DropdownItem label="All categories" isActive />
-                  <DropdownItem label="Signature Fragrance" />
-                  <DropdownItem label="Luxury Skincare" />
-                  <DropdownItem label="Boutique Gift Sets" />
-                  <DropdownItem label="Body & Bath" />
-                  <DropdownItem label="Home Fragrance" />
+                  <DropdownItem 
+                    label="All categories" 
+                    isActive={selectedCategory === "All categories"}
+                    onSelect={() => setSelectedCategory("All categories")}
+                  />
+                  {isCategoriesLoading ? (
+                    <div className="p-4 text-center text-[10px] uppercase tracking-widest text-gray-400 italic">Syncing...</div>
+                  ) : (
+                    categories.map((cat) => (
+                      <DropdownItem 
+                        key={cat._id} 
+                        label={cat.name} 
+                        isActive={selectedCategory === cat.name}
+                        onSelect={() => setSelectedCategory(cat.name)}
+                      />
+                    ))
+                  )}
+                  <div className="border-t border-gray-100 my-1" />
+                  <DropdownItem label="Boutique Gift Sets" href="/gift-boxes" />
                 </DropdownMenu>
               </div>
             )}

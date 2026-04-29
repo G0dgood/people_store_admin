@@ -12,23 +12,14 @@ import { RowsPerPage } from "@/app/components/rows-per-page";
 import Checkbox from "@/app/components/Checkbox";
 import { HiOutlineDocumentText } from "react-icons/hi2";
 
-const transactionsData = [
-	{ custId: "#CUST001", name: "John Doe", date: "01-01-2025", total: "₦2,904", method: "CC", status: "Complete" },
-	{ custId: "#CUST002", name: "John Doe", date: "01-01-2025", total: "₦2,904", method: "PayPal", status: "Complete" },
-	{ custId: "#CUST003", name: "John Doe", date: "01-01-2025", total: "₦2,904", method: "CC", status: "Complete" },
-	{ custId: "#CUST004", name: "John Doe", date: "01-01-2025", total: "₦2,904", method: "Bank", status: "Complete" },
-	{ custId: "#CUST005", name: "Jane Smith", date: "01-01-2025", total: "₦2,904", method: "CC", status: "Canceled" },
-	{ custId: "#CUST006", name: "Emily Davis", date: "01-01-2025", total: "₦2,904", method: "PayPal", status: "Pending" },
-	{ custId: "#CUST007", name: "Jane Smith", date: "01-01-2025", total: "₦2,904", method: "Bank", status: "Canceled" },
-	{ custId: "#CUST008", name: "John Doe", date: "01-01-2025", total: "₦2,904", method: "CC", status: "Complete" },
-	{ custId: "#CUST009", name: "Emily Davis", date: "01-01-2025", total: "₦2,904", method: "PayPal", status: "Pending" },
-	{ custId: "#CUST010", name: "Jane Smith", date: "01-01-2025", total: "₦2,904", method: "Bank", status: "Canceled" },
-];
+import { useGetTransactionsQuery, useGetTransactionStatsQuery } from "@/lib/redux/services/transactionApi";
+import { NoRecordFound, SVGLoaderFetch } from "../../components/Options";
 
 const statusStyles = {
-	Complete: { color: "text-emerald-500", bg: "bg-emerald-500" },
-	Canceled: { color: "text-rose-500", bg: "bg-rose-500" },
+	Success: { color: "text-emerald-500", bg: "bg-emerald-500" },
+	Failed: { color: "text-rose-500", bg: "bg-rose-500" },
 	Pending: { color: "text-orange-400", bg: "bg-orange-400" },
+	Reversed: { color: "text-brand-gold", bg: "bg-brand-gold" },
 };
 
 export default function TransactionsPage() {
@@ -39,11 +30,23 @@ export default function TransactionsPage() {
 	const [isDetailDrawerOpen, setIsDetailDrawerOpen] = useState(false);
 	const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
 
+	const { data: transactionsResponse, isLoading } = useGetTransactionsQuery({
+		status: activeTab === "All transactions" ? undefined : activeTab,
+		page: currentPage,
+		limit: rowsPerPage
+	});
+
+	const { data: statsResponse, isLoading: isLoadingStats } = useGetTransactionStatsQuery();
+
+	const transactionsData = transactionsResponse?.data.transactions || [];
+	const stats = statsResponse?.data;
+	const pagination = transactionsResponse?.data.pagination;
+
 	const toggleAll = () => {
-		if (selectedIds.length === transactionsData.length) {
+		if (selectedIds.length === transactionsData.length && transactionsData.length > 0) {
 			setSelectedIds([]);
 		} else {
-			setSelectedIds(transactionsData.map(t => t.custId));
+			setSelectedIds(transactionsData.map(t => t._id));
 		}
 	};
 
@@ -62,28 +65,28 @@ export default function TransactionsPage() {
 				<div className="xl:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
 					<StatCard
 						title="Total Revenue"
-						value="₦15,045"
+						value={isLoadingStats ? "..." : `₦${stats?.totalRevenue?.toLocaleString() || '0'}`}
 						trendValue="14.4%"
 						trendIsUp={true}
 						periodLabel="Last 7 days"
 					/>
 					<StatCard
 						title="Completed Transactions"
-						value="3,150"
+						value={isLoadingStats ? "..." : stats?.successCount?.toString() || '0'}
 						trendValue="20%"
 						trendIsUp={true}
 						periodLabel="Last 7 days"
 					/>
 					<StatCard
 						title="Pending Transactions"
-						value="150"
+						value={isLoadingStats ? "..." : stats?.pendingCount?.toString() || '0'}
 						trendValue="85%"
 						trendIsUp={true}
 						periodLabel="Last 7 days"
 					/>
 					<StatCard
 						title="Failed Transactions"
-						value="75"
+						value={isLoadingStats ? "..." : stats?.failedCount?.toString() || '0'}
 						trendValue="15%"
 						trendIsUp={false}
 						periodLabel="Last 7 days"
@@ -93,7 +96,7 @@ export default function TransactionsPage() {
 				{/* Payment Method Card (Right 2 columns) */}
 				<div className="xl:col-span-2 bg-white rounded-[6px] border border-[#1C1C1C1A] overflow-hidden flex flex-col p-6 gap-6">
 					<div className="flex justify-between items-center">
-						<h3 className="text-sm font-bold text-brand-charcoal">Payment Method</h3>
+						<h3 className="text-sm font-bold text-brand-charcoal">Payment Gateway</h3>
 						<Button shape="rounded-sm" 
 							variant="ghost"
 							className="text-gray-300 hover:text-gray-600 !p-1"
@@ -111,7 +114,7 @@ export default function TransactionsPage() {
 
 							<div className="relative h-full p-6 flex flex-col justify-between text-white">
 								<div className="flex justify-between items-start">
-									<span className="text-xl font-black italic tracking-tighter">Finaci</span>
+									<span className="text-xl font-black italic tracking-tighter">Bloom & Mist</span>
 									<div className="flex gap-1 items-center">
 										<div className="w-8 h-8 rounded-full bg-white/20"></div>
 										<div className="w-8 h-8 rounded-full bg-white/40 -ml-4"></div>
@@ -119,17 +122,17 @@ export default function TransactionsPage() {
 								</div>
 
 								<div className="flex flex-col gap-1">
-									<p className="text-xs font-medium opacity-80">Card Holder name</p>
-									<p className="text-sm font-bold tracking-widest uppercase text-white">Noman Manzoor</p>
+									<p className="text-xs font-medium opacity-80">Primary Gateway</p>
+									<p className="text-sm font-bold tracking-widest uppercase text-white">Paystack</p>
 								</div>
 
 								<div className="flex justify-between items-end">
 									<div className="flex flex-col gap-1">
-										<p className="text-lg font-bold tracking-[0.2em]">**** **** **** 2345</p>
+										<p className="text-lg font-bold tracking-[0.2em]">CONNECTED</p>
 									</div>
 									<div className="text-right">
-										<p className="text-[10px] opacity-80">Expiry Date</p>
-										<p className="text-xs font-bold">02/30</p>
+										<p className="text-[10px] opacity-80">Status</p>
+										<p className="text-xs font-bold">Active</p>
 									</div>
 								</div>
 							</div>
@@ -139,24 +142,20 @@ export default function TransactionsPage() {
 						<div className="flex-1 flex flex-col gap-4 w-full">
 							<div className="flex flex-col gap-3">
 								<div className="flex justify-between items-center">
-									<span className="text-xs font-bold text-gray-400">Status:</span>
-									<span className="text-xs font-bold text-brand-gold">Active</span>
+									<span className="text-xs font-bold text-gray-400">Total Count:</span>
+									<span className="text-xs font-bold text-brand-charcoal">{stats?.transactionCount || 0}</span>
 								</div>
 								<div className="flex justify-between items-center">
-									<span className="text-xs font-bold text-gray-400">Transactions:</span>
-									<span className="text-xs font-bold text-brand-charcoal">1,250</span>
+									<span className="text-xs font-bold text-gray-400">Success Rate:</span>
+									<span className="text-xs font-bold text-brand-gold">
+										{stats?.transactionCount ? Math.round((stats.successCount / stats.transactionCount) * 100) : 0}%
+									</span>
 								</div>
 								<div className="flex justify-between items-center">
 									<span className="text-xs font-bold text-gray-400">Revenue:</span>
-									<span className="text-xs font-bold text-brand-charcoal">₦50,000</span>
+									<span className="text-xs font-bold text-brand-charcoal">₦{stats?.totalRevenue?.toLocaleString() || 0}</span>
 								</div>
 							</div>
-							<Button shape="rounded-sm" 
-								variant="ghost"
-								className="text-[11px] font-black text-brand-gold uppercase tracking-widest hover:underline !px-0 !justify-start"
-							>
-								View Transactions
-							</Button>
 						</div>
 					</div>
 
@@ -165,11 +164,7 @@ export default function TransactionsPage() {
 							className="flex-1 h-12 border-dashed border-gray-200 text-gray-400 hover:text-brand-gold hover:border-brand-gold transition-all"
 							iconLeft={<Icon name="circle-plus" folder="dashboardIcon" size="sm" />}
 						>
-							Add Card
-						</Button>
-						<Button shape="rounded-sm" variant="rose"
-							className="h-12 px-6 w-full sm:w-auto">
-							Deactivate
+							Manage Gateways
 						</Button>
 					</div>
 				</div>
@@ -180,7 +175,7 @@ export default function TransactionsPage() {
 				{/* Controls Bar */}
 				<div className="p-4 sm:p-6 flex flex-col lg:flex-row gap-6 items-center justify-between border-b border-gray-50">
 					<TabFilter
-						tabs={["All transactions", "Completed", "Pending", "Canceled"]}
+						tabs={["All transactions", "Success", "Pending", "Failed"]}
 						activeTab={activeTab}
 						onChange={setActiveTab} id={""} />
 
@@ -194,21 +189,6 @@ export default function TransactionsPage() {
 
 						<div className="flex items-center gap-3 w-full sm:w-auto">
 							<RowsPerPage value={rowsPerPage} onChange={setRowsPerPage} />
-
-							<div className="flex gap-2 ml-auto sm:ml-0">
-								<Button shape="rounded-sm" variant="outline"
-									className="!p-2.5 text-gray-400">
-									<Icon name="sort" folder="dashboardIcon" size="sm" />
-								</Button>
-								<Button shape="rounded-sm" variant="outline"
-									className="!p-2.5 text-gray-400">
-									<Icon name="flowbite_arrow-up-down-outline" folder="dashboardIcon" size="sm" />
-								</Button>
-								<Button shape="rounded-sm" variant="outline"
-									className="!p-2.5 text-gray-400">
-									<Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />
-								</Button>
-							</div>
 						</div>
 					</div>
 				</div>
@@ -224,8 +204,8 @@ export default function TransactionsPage() {
 										onChange={toggleAll}
 									/>
 								</th>
-								<th>Customer Id</th>
-								<th>Name</th>
+								<th>Transaction Id</th>
+								<th>Customer</th>
 								<th className="text-center">Date</th>
 								<th>Total</th>
 								<th className="text-center">Method</th>
@@ -234,25 +214,31 @@ export default function TransactionsPage() {
 							</tr>
 						</thead>
 						<tbody>
-							{transactionsData.map((tx, idx) => (
+							{isLoading ? (
+								<SVGLoaderFetch colSpan={8} text={"Fetching Transactions..."} />
+							) : transactionsData.length === 0 ? (
+								<NoRecordFound colSpan={8} text="No transactions found." />
+							) : transactionsData.map((tx, idx) => (
 								<tr key={idx} className="group">
 									<td className="w-10 pl-8">
 										<Checkbox
-											checked={selectedIds.includes(tx.custId)}
-											onChange={() => toggleItem(tx.custId)}
+											checked={selectedIds.includes(tx._id)}
+											onChange={() => toggleItem(tx._id)}
 										/>
 									</td>
 									<td>
-										<span className="text-xs font-bold text-gray-900">{tx.custId}</span>
+										<span className="text-xs font-bold text-gray-900">{tx.transactionId}</span>
 									</td>
-									<td className="text-xs font-bold text-gray-700">{tx.name}</td>
-									<td className="text-xs font-bold text-gray-400 text-center">{tx.date}</td>
-									<td className="text-xs font-bold text-gray-900">{tx.total}</td>
-									<td className="text-xs font-bold text-gray-700 text-center">{tx.method}</td>
+									<td className="text-xs font-bold text-gray-700">{tx.customer?.fullName || "Guest"}</td>
+									<td className="text-xs font-bold text-gray-400 text-center">
+										{new Date(tx.createdAt).toLocaleDateString()}
+									</td>
+									<td className="text-xs font-bold text-gray-900">₦{tx.amount.toLocaleString()}</td>
+									<td className="text-xs font-bold text-gray-700 text-center">{tx.paymentMethod}</td>
 									<td>
 										<div className="flex items-center gap-2">
-											<span className={`w-1.5 h-1.5 rounded-full ${statusStyles[tx.status as keyof typeof statusStyles].bg}`}></span>
-											<span className={`text-xs font-bold ${statusStyles[tx.status as keyof typeof statusStyles].color}`}>{tx.status}</span>
+											<span className={`w-1.5 h-1.5 rounded-full ${statusStyles[tx.status as keyof typeof statusStyles]?.bg || "bg-gray-400"}`}></span>
+											<span className={`text-xs font-bold ${statusStyles[tx.status as keyof typeof statusStyles]?.color || "text-gray-400"}`}>{tx.status}</span>
 										</div>
 									</td>
 									<td className="text-right">
@@ -277,7 +263,7 @@ export default function TransactionsPage() {
 				{/* Pagination Footer */}
 				<Pagination
 					currentPage={currentPage}
-					totalPages={24}
+					totalPages={pagination?.totalPages || 1}
 					onPageChange={setCurrentPage}
 				/>
 			</div>

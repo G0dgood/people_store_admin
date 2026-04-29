@@ -5,14 +5,33 @@ import { Icon } from "../Icon";
 import { Button } from "../Button";
 import { AdminChart } from "./AdminChart";
 import { DropdownMenu, DropdownItem } from "../Dropdown/DropdownMenu";
-import { HiArrowPath, HiPower, HiBell } from "react-icons/hi2";
+import { HiArrowPath, HiPower, HiBell, HiClock, HiCheckCircle } from "react-icons/hi2";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface RealtimeUsersProps {
   onViewInsight?: () => void;
 }
+import { useGetOrderStatsQuery } from "@/lib/redux/services/orderApi";
+
+
 
 export const RealtimeUsers: React.FC<RealtimeUsersProps> = ({ onViewInsight }) => {
+  const { data: statsResponse, isLoading } = useGetOrderStatsQuery();
+  const totalOrders = statsResponse?.data?.totalOrders || 0;
+
+  // Generate semi-random live-looking data based on totalOrders
+  const [chartData, setChartData] = useState<number[]>([]);
+
+  useEffect(() => {
+    if (totalOrders > 0) {
+      const base = totalOrders / 30;
+      const data = Array.from({ length: 30 }, () => Math.floor(base + Math.random() * (base * 0.5)));
+      setChartData(data);
+    } else {
+      setChartData(Array(30).fill(0));
+    }
+  }, [totalOrders]);
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -51,15 +70,15 @@ export const RealtimeUsers: React.FC<RealtimeUsersProps> = ({ onViewInsight }) =
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-gold/40 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-gold shadow-[0_0_8px_rgba(197,160,89,0.8)]"></span>
             </span>
-            <span className="text-[10px] font-black text-brand-gold uppercase tracking-[0.1em]">Realtime Monitor</span>
+            <span className="text-[10px] font-black text-brand-gold uppercase tracking-[0.1em]">Order Monitor</span>
           </div>
 
           <h3 className="text-5xl font-black text-[#1D3557] tracking-[-0.04em] mt-3 tabular-nums drop-shadow-sm">
-            21,540
+            {isLoading ? "..." : totalOrders.toLocaleString()}
           </h3>
           <p className="text-[11px] font-bold text-gray-400 mt-2 flex items-center gap-2 uppercase tracking-widest opacity-80">
             <span className="w-4 h-[1px] bg-gray-200"></span>
-            Active Users Now
+            Total Orders Placed
             <span className="w-4 h-[1px] bg-gray-200"></span>
           </p>
         </div>
@@ -116,7 +135,7 @@ export const RealtimeUsers: React.FC<RealtimeUsersProps> = ({ onViewInsight }) =
             data={{
               labels: Array(30).fill(''),
               datasets: [{
-                data: [30, 45, 35, 60, 40, 75, 55, 35, 25, 65, 45, 55, 35, 25, 80, 50, 70, 45, 85, 55, 90, 40, 65, 30, 50, 40, 75, 50, 85, 60],
+                data: chartData,
                 backgroundColor: (context: any) => {
                   const chart = context.chart;
                   const { ctx, chartArea } = chart;
@@ -143,49 +162,51 @@ export const RealtimeUsers: React.FC<RealtimeUsersProps> = ({ onViewInsight }) =
 
       <div className="flex flex-col gap-6 pt-6 mt-2 relative z-10">
         <div className="flex justify-between items-center bg-gray-50/50 p-2 rounded-lg border border-gray-200/50">
-          <h4 className="text-[12px] font-black text-[#1D3557] uppercase tracking-widest pl-1">Global Distribution</h4>
-          <span className="text-[10px] font-black text-brand-gold bg-white px-2 py-0.5 rounded border border-gray-200 shadow-sm">ACTIVE</span>
+          <h4 className="text-[12px] font-black text-[#1D3557] uppercase tracking-widest pl-1">Order Status Distribution</h4>
+          <span className="text-[10px] font-black text-brand-gold bg-white px-2 py-0.5 rounded border border-gray-200 shadow-sm">LIVE</span>
         </div>
 
         {[
-          { flag: "🇺🇸", country: "United States", val: "30.4k", perc: 75, trend: "25.8%", isUp: true },
-          { flag: "🇧🇷", country: "Brazil", val: "12.2k", perc: 35, trend: "15.8%", isUp: false },
-          { flag: "🇦🇺", country: "Australia", val: "8.1k", perc: 60, trend: "35.8%", isUp: true },
-        ].map((c, i) => (
-          <div key={c.country} className="flex flex-col gap-3">
-            <div className="flex justify-between items-center group/row">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-white border border-gray-200 shadow-sm flex items-center justify-center text-xl grayscale group-hover/row:grayscale-0 transition-all duration-500 group-hover/row:scale-110 group-hover/row:rotate-3">
-                  {c.flag}
+          { label: "Pending Orders", val: statsResponse?.data?.pendingOrders || 0, color: "text-amber-500", icon: <HiClock />, trend: "Attention", isUp: false },
+          { label: "Processing", val: statsResponse?.data?.processingOrders || 0, color: "text-blue-500", icon: <HiArrowPath />, trend: "Active", isUp: true },
+          { label: "Delivered", val: statsResponse?.data?.completedOrders || 0, color: "text-emerald-500", icon: <HiCheckCircle />, trend: "Completed", isUp: true },
+        ].map((s, i) => {
+          const percentage = totalOrders > 0 ? (s.val / totalOrders) * 100 : 0;
+          return (
+            <div key={s.label} className="flex flex-col gap-3">
+              <div className="flex justify-between items-center group/row">
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-xl bg-white border border-gray-200 shadow-sm flex items-center justify-center text-lg ${s.color} transition-all duration-500 group-hover/row:scale-110 group-hover/row:rotate-3`}>
+                    {s.icon}
+                  </div>
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-[11px] font-black text-[#1D3557] tracking-tight">{s.val.toLocaleString()}</span>
+                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter opacity-70">{s.label}</span>
+                  </div>
                 </div>
-                <div className="flex flex-col gap-0.5">
-                  <span className="text-[11px] font-black text-[#1D3557] tracking-tight">{c.val}</span>
-                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter opacity-70">{c.country}</span>
+                <div className={`flex items-center gap-1 text-[10px] font-black px-2.5 py-1 rounded-lg border shadow-sm transition-all duration-300 ${s.isUp ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-amber-50 text-amber-600 border-amber-100'}`}>
+                  <span>{s.trend}</span>
                 </div>
               </div>
-              <div className={`flex items-center gap-1 text-[10px] font-black px-2.5 py-1 rounded-lg border shadow-sm transition-all duration-300 ${c.isUp ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-rose-50 text-rose-500 border-rose-100'}`}>
-                <Icon name={c.isUp ? 'arrow_upward' : 'arrow_downward'} size="xs" />
-                <span>{c.trend}</span>
-              </div>
-            </div>
 
-            {/* Segmented Glowing Progress Bar */}
-            <div className="h-2 w-full bg-gray-50/80 rounded-full overflow-hidden flex gap-0.5 p-[1px] border border-gray-200">
-              {Array.from({ length: 20 }).map((_, idx) => {
-                const isActive = (idx / 20) * 100 < c.perc;
-                return (
-                  <motion.div
-                    key={idx}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: isActive ? 1 : 0.1 }}
-                    transition={{ delay: 0.5 + (idx * 0.02) + (i * 0.1) }}
-                    className={`h-full flex-1 rounded-[1px] ${isActive ? 'bg-gradient-to-b from-brand-gold/80 to-brand-gold shadow-[0_0_5px_rgba(197,160,89,0.3)]' : 'bg-gray-200'}`}
-                  />
-                );
-              })}
+              {/* Segmented Glowing Progress Bar */}
+              <div className="h-2 w-full bg-gray-50/80 rounded-full overflow-hidden flex gap-0.5 p-[1px] border border-gray-200">
+                {Array.from({ length: 20 }).map((_, idx) => {
+                  const isActive = (idx / 20) * 100 < percentage;
+                  return (
+                    <motion.div
+                      key={idx}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: isActive ? 1 : 0.1 }}
+                      transition={{ delay: 0.5 + (idx * 0.02) + (i * 0.1) }}
+                      className={`h-full flex-1 rounded-[1px] ${isActive ? 'bg-gradient-to-b from-brand-gold/80 to-brand-gold shadow-[0_0_5px_rgba(197,160,89,0.3)]' : 'bg-gray-200'}`}
+                    />
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <button

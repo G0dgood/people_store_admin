@@ -1,8 +1,8 @@
-"use client";
-
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useRef, useEffect } from "react";
 import { Icon } from "../Icon";
 import { FilterState, ViewMode, SORT_OPTIONS, DEFAULT_FILTERS } from "@/app/types/products";
+import { AnimatePresence, motion } from "framer-motion";
+import { DropdownMenu, DropdownItem } from "../Dropdown/DropdownMenu";
 
 interface ListingControlBarProps {
   viewMode: ViewMode;
@@ -10,6 +10,8 @@ interface ListingControlBarProps {
   count: number;
   filters: FilterState;
   onFiltersChange: (filters: FilterState) => void;
+  sortBy: string;
+  onSortChange: (sort: string) => void;
   onFilterClick?: () => void;
 }
 
@@ -40,12 +42,69 @@ const ViewSwitcher = ({ mode, onChange }: { mode: ViewMode; onChange: (mode: Vie
 /**
  * SortSelector Sub-component
  */
-const SortSelector = ({ className = "" }: { className?: string }) => (
-  <div className={`flex items-center border border-gray-200 px-4 h-10 bg-white cursor-pointer hover:bg-gray-50 transition-colors group ${className}`}>
-    <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-gray-500 group-hover:text-gray-900">Sort: Featured</span>
-    <Icon name="expand_more" size="xs" className="text-gray-300 ml-8 group-hover:text-brand-gold transition-colors" />
-  </div>
-);
+const SortSelector = ({ currentSort, onSortChange, className = "" }: { currentSort: string; onSortChange: (id: string) => void; className?: string }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const currentOption = SORT_OPTIONS.find(opt => opt.id === currentSort) || SORT_OPTIONS[0];
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <div className={`relative ${className}`} ref={dropdownRef}>
+      <div
+        onClick={() => setIsOpen(!isOpen)}
+        className={`flex items-center border px-4 h-10 cursor-pointer transition-colors group min-w-[180px] justify-between ${
+          isOpen || currentSort !== "featured" ? "border-brand-gold bg-white" : "border-gray-200 bg-white hover:bg-gray-50"
+        }`}
+      >
+        <span className={`text-[10px] font-bold uppercase tracking-[0.15em] ${
+          isOpen || currentSort !== "featured" ? "text-brand-gold" : "text-gray-500 group-hover:text-gray-900"
+        }`}>
+          Sort: {currentOption.label}
+        </span>
+        <Icon 
+          name="expand_more" 
+          size="xs" 
+          className={`ml-4 transition-transform duration-300 ${
+            isOpen || currentSort !== "featured" ? "text-brand-gold rotate-180" : "text-gray-300 group-hover:text-brand-gold"
+          }`} 
+        />
+      </div>
+
+      <AnimatePresence>
+        {isOpen && (
+          <div className="absolute top-full right-0 mt-2 z-50 w-64">
+            <DropdownMenu width="100%" className="border border-gray-200 shadow-xl overflow-hidden">
+              <div className="py-1">
+                {SORT_OPTIONS.map((option) => (
+                  <DropdownItem
+                    key={option.id}
+                    label={option.label}
+                    isActive={currentSort === option.id}
+                    onSelect={() => {
+                      onSortChange(option.id);
+                      setIsOpen(false);
+                    }}
+                    className="text-[10px] uppercase tracking-widest font-bold py-3"
+                  />
+                ))}
+              </div>
+            </DropdownMenu>
+          </div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
 
 /**
  * FilterTag Sub-component
@@ -66,6 +125,8 @@ const ListingControlBar: React.FC<ListingControlBarProps> = ({
   count,
   filters,
   onFiltersChange,
+  sortBy,
+  onSortChange,
   onFilterClick,
 }) => {
   // Memoize active tags to avoid unnecessary recalcs
@@ -76,25 +137,33 @@ const ListingControlBar: React.FC<ListingControlBarProps> = ({
       tags.push({
         id: `cat-${filters.category}`,
         label: filters.category,
-        onRemove: () => onFiltersChange({ ...filters, category: null }),
+        onRemove: () => onFiltersChange({ ...filters, category: "" }),
       });
     }
 
-    filters.brands.forEach((brand) => {
+    if (filters.brand) {
       tags.push({
-        id: `brand-${brand}`,
-        label: brand,
-        onRemove: () => onFiltersChange({ ...filters, brands: filters.brands.filter((b) => b !== brand) }),
+        id: `brand-${filters.brand}`,
+        label: filters.brand,
+        onRemove: () => onFiltersChange({ ...filters, brand: "" }),
       });
-    });
+    }
 
-    filters.ratings.forEach((rating) => {
+    if (filters.status && filters.status !== "All") {
       tags.push({
-        id: `rating-${rating}`,
-        label: `${rating} Stars`,
-        onRemove: () => onFiltersChange({ ...filters, ratings: filters.ratings.filter((r) => r !== rating) }),
+        id: `status-${filters.status}`,
+        label: filters.status,
+        onRemove: () => onFiltersChange({ ...filters, status: "All" }),
       });
-    });
+    }
+
+    if (filters.search) {
+      tags.push({
+        id: `search-${filters.search}`,
+        label: `Search: ${filters.search}`,
+        onRemove: () => onFiltersChange({ ...filters, search: "" }),
+      });
+    }
 
     return tags;
   }, [filters, onFiltersChange]);
@@ -105,13 +174,32 @@ const ListingControlBar: React.FC<ListingControlBarProps> = ({
     <div className="w-full flex flex-col gap-6">
       {/* Desktop Bar */}
       <div className="hidden md:flex w-full bg-white border border-gray-200 h-20 items-center justify-between px-8">
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-12">
           <div className="flex flex-col">
             <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-400 mb-1">Curation</span>
             <span className="text-md font-outfit text-gray-900">
               <span className="font-bold text-brand-gold">{count.toLocaleString()}</span> masterpieces found
               {filters.category && <span> in <span className="font-bold">{filters.category}</span></span>}
             </span>
+          </div>
+
+          <div className="relative group">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <Icon 
+                name="search" 
+                size="xs" 
+                className={`transition-colors ${filters.search ? "text-brand-gold" : "text-gray-300 group-hover:text-brand-gold"}`} 
+              />
+            </div>
+            <input
+              type="text"
+              value={filters.search || ""}
+              onChange={(e) => onFiltersChange({ ...filters, search: e.target.value })}
+              placeholder="Refine collection..."
+              className={`h-10 pl-10 pr-4 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-900 placeholder:text-gray-300 focus:bg-white focus:border-brand-gold outline-none transition-all w-64 ${
+                filters.search ? "border-brand-gold bg-white" : "border-gray-100 bg-gray-50"
+              }`}
+            />
           </div>
         </div>
 
@@ -123,13 +211,32 @@ const ListingControlBar: React.FC<ListingControlBarProps> = ({
             <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 group-hover:text-gray-900">Filter</span>
             <Icon name="filter_alt" size="xs" className="text-gray-300 group-hover:text-brand-gold" />
           </button>
-          <SortSelector />
+          <SortSelector currentSort={sortBy} onSortChange={onSortChange} />
           <ViewSwitcher mode={viewMode} onChange={onViewModeChange} />
         </div>
       </div>
 
       {/* Mobile Bar */}
-      <div className="flex md:hidden flex-col gap-3 md:px-4 px-0">
+      <div className="flex md:hidden flex-col gap-4 md:px-4 px-0">
+        <div className="relative group">
+          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <Icon 
+              name="search" 
+              size="xs" 
+              className={`transition-colors ${filters.search ? "text-brand-gold" : "text-gray-300"}`} 
+            />
+          </div>
+          <input
+            type="text"
+            value={filters.search || ""}
+            onChange={(e) => onFiltersChange({ ...filters, search: e.target.value })}
+            placeholder="Search products..."
+            className={`w-full h-12 pl-10 pr-4 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-900 placeholder:text-gray-400 focus:bg-white focus:border-brand-gold outline-none transition-all ${
+              filters.search ? "border-brand-gold bg-white" : "border-gray-200 bg-gray-50"
+            }`}
+          />
+        </div>
+
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
             <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-400">Discovering</span>
@@ -140,10 +247,13 @@ const ListingControlBar: React.FC<ListingControlBarProps> = ({
 
         <div className="flex items-center gap-2">
           {/* Mobile Sort/Filter Buttons */}
-          <button className="flex-1 flex items-center justify-between px-4 py-3 bg-white border border-gray-200 group hover:border-brand-gold transition-colors">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-gray-600">Sort</span>
-            <Icon name="expand_more" size="xs" className="text-gray-300 group-hover:text-brand-gold" />
-          </button>
+          <div className="flex-1">
+            <SortSelector
+              currentSort={sortBy}
+              onSortChange={onSortChange}
+              className="w-full h-full"
+            />
+          </div>
 
           <button
             onClick={onFilterClick}

@@ -25,10 +25,35 @@ export const SocketNotificationListener = () => {
       });
     };
 
+    const handleRefundUpdate = (data: any) => {
+      console.log("🚀 Refund Update Received:", data);
+      
+      const isNew = data.status === "Pending";
+      
+      toast(isNew ? "New Refund Request" : "Refund Status Updated", {
+        description: isNew 
+          ? `A new refund request for Order ${data.order?.orderId || "..."} has been submitted.`
+          : `Refund request for ${data.order?.orderId || "..."} is now ${data.status}.`,
+        duration: 6000,
+        icon: (
+          <div className={`p-1 rounded-full ${isNew ? "bg-amber-100" : "bg-blue-100"}`}>
+            <Icon 
+              name={isNew ? "cached" : "verified"} 
+              folder="icon" 
+              size="xs" 
+              className={isNew ? "text-amber-600" : "text-blue-600"} 
+            />
+          </div>
+        ),
+      });
+    };
+
     on("newCustomer", handleNewCustomer);
+    on("refund:update", handleRefundUpdate);
 
     return () => {
       off("newCustomer", handleNewCustomer);
+      off("refund:update", handleRefundUpdate);
     };
   }, [isConnected, on, off]);
 
