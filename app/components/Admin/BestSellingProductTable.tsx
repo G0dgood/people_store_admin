@@ -70,7 +70,7 @@ export function BestSellingProductTable() {
         <Button
           shape="rounded-sm"
           variant="ghost"
-          className="border border-brand-blue/20 text-brand-blue text-[10px] font-black uppercase tracking-widest px-8 h-10 rounded-[6px] hover:bg-brand-blue/5"
+          className="border border-brand-gold/20 text-brand-gold text-[10px] font-black uppercase tracking-widest px-8 h-10 rounded-[6px] hover:bg-brand-gold/5"
         >
           Details
         </Button>

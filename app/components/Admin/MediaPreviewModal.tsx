@@ -46,7 +46,7 @@ export function MediaPreviewModal({ isOpen, onClose, media }: MediaPreviewModalP
         </div>
         <button 
           onClick={() => window.open(media.url, '_blank')}
-          className="text-xs font-bold text-brand-blue hover:underline"
+          className="text-xs font-bold text-brand-gold hover:underline"
         >
           View Original Asset
         </button>

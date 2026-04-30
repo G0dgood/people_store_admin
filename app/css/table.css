@@ -8,7 +8,7 @@ table {
 
 /* Header Styles */
 thead {
-  background-color: var(--brand-blue-light);
+  background-color: var(--neutral-100);
 }
 
 th:first-child {
@@ -29,7 +29,7 @@ th {
   padding: 1rem 1.5rem; /* px-6 py-4 */
   font-size: 11px;
   font-weight: 700;
-  color: #1D3557; /* Primary Dark Blue */
+  color: var(--brand-charcoal); /* Primary Charcoal */
   text-transform: uppercase;
   letter-spacing: 0.05em; /* tracking-wider */
   white-space: nowrap;
@@ -132,7 +132,7 @@ table > tfoot > tr > td  {
 }
 
 .admin-pagination-page-btn.active {
-  background-color: var(--brand-blue-light);
-  color: #2563EB; /* text-blue-600 */
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  background-color: var(--brand-charcoal);
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }

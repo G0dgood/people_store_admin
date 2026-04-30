@@ -101,8 +101,8 @@ export default function FormOtherDemo() {
                   defaultValue="Text"
                   suffixElement={
                     <div className="flex gap-1.5 mr-1">
-                      <div className="w-5 h-5 rounded bg-brand-blue" />
-                      <div className="w-5 h-5 rounded bg-brand-blue" />
+                      <div className="w-5 h-5 rounded bg-brand-gold" />
+                      <div className="w-5 h-5 rounded bg-brand-gold" />
                     </div>
                   }
                 />

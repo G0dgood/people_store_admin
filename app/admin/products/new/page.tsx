@@ -59,8 +59,8 @@ export default function CreateProduct() {
   expiryEnd: "",
   sku: "",
   variants: [] as any[],
-  colors: [] as string[],
-  size: [] as string[],
+  colors: "",
+  size: "",
   gender: "Unisex"
  });
 
@@ -87,7 +87,7 @@ export default function CreateProduct() {
  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
  const [stagedMedia, setStagedMedia] = useState<{ file: File, url: string }[]>([]);
  const [showColorPicker, setShowColorPicker] = useState(false);
- const [editingColorIndex, setEditingColorIndex] = useState<number | null>(null);
+
  const [isRefining, setIsRefining] = useState(false);
  const [isAISettingsOpen, setIsAISettingsOpen] = useState(false);
  const [aiTone, setAiTone] = useState("Professional");
@@ -160,11 +160,21 @@ export default function CreateProduct() {
    postData.append("expiryStart", expiryStart);
    postData.append("expiryEnd", expiryEnd);
    postData.append("tags", JSON.stringify(tag ? [tag] : []));
-   postData.append("colors", JSON.stringify(colors));
-   postData.append("size", JSON.stringify(size));
+   postData.append("colors", colors || "");
+    postData.append("size", size || "");
    postData.append("gender", gender);
    postData.append("sku", formData.sku);
-   postData.append("variants", JSON.stringify(formData.variants));
+    const cleanedVariants = formData.variants.map(v => ({
+      ...v,
+      attributes: Object.fromEntries(
+        Object.entries(v.attributes || {}).map(([key, val]) => [
+          key, 
+          Array.isArray(val) ? val.join(", ") : val
+        ])
+      )
+    }));
+
+    postData.append("variants", JSON.stringify(cleanedVariants));
 
    // Append all media files
    stagedMedia.forEach((item) => {
@@ -276,44 +286,15 @@ export default function CreateProduct() {
        <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-2.5">
          <label className="text-xs font-bold text-[#1D3557]">Available Sizes</label>
-         <Select
-          isMulti
-          searchable
-          placeholder="Select sizes..."
-          shape="rounded-sm"
-          options={[
-           { label: "5ml", value: "5ml" },
-           { label: "10ml", value: "10ml" },
-           { label: "15ml", value: "15ml" },
-           { label: "20ml", value: "20ml" },
-           { label: "25ml", value: "25ml" },
-           { label: "30ml", value: "30ml" },
-           { label: "50ml", value: "50ml" },
-           { label: "75ml", value: "75ml" },
-           { label: "100ml", value: "100ml" },
-           { label: "125ml", value: "125ml" },
-           { label: "150ml", value: "150ml" },
-           { label: "200ml", value: "200ml" },
-           { label: "250ml", value: "250ml" },
-           { label: "300ml", value: "300ml" },
-           { label: "350ml", value: "350ml" },
-           { label: "400ml", value: "400ml" },
-           { label: "450ml", value: "450ml" },
-           { label: "500ml", value: "500ml" },
-           { label: "750ml", value: "750ml" },
-           { label: "1L", value: "1L" },
-           { label: "1.5L", value: "1.5L" },
-           { label: "2L", value: "2L" },
-           { label: "2.5L", value: "2.5L" },
-           { label: "3L", value: "3L" },
-           { label: "4L", value: "4L" },
-           { label: "5L", value: "5L" },
-           { label: "10L", value: "10L" },
-          ]}
-          value={formData.size}
-          onChange={(val) => handleInputChange("size", val)}
-         />
-         <p className="text-[9px] text-gray-400 font-medium">Select one or more available sizes for this product</p>
+          <Select
+           searchable
+           placeholder="Select size..."
+           shape="rounded-sm"
+           options={PRODUCT_SIZE_OPTIONS}
+           value={formData.size}
+           onChange={(val) => handleInputChange("size", val as string)}
+          />
+          <p className="text-[9px] text-gray-400 font-medium">Select the available size for this product</p>
         </div>
 
        </div>
@@ -379,8 +360,8 @@ export default function CreateProduct() {
           price: formData.price || "0",
           stock: formData.stockQuantity || "0",
           attributes: {
-           color: formData.colors[0] || "",
-           size: formData.size[0] || ""
+           color: formData.colors || "",
+           size: formData.size || ""
           }
          };
          handleInputChange("variants", [...formData.variants, newVariant]);
@@ -481,23 +462,22 @@ export default function CreateProduct() {
                />
               </div>
              ) : attr.toLowerCase() === 'size' ? (
-              <Select
-               isMulti
-               options={PRODUCT_SIZE_OPTIONS}
-               value={Array.isArray(val) ? val : (val ? [val as string] : [])}
-               onChange={(selectedVal) => {
-                const newVariants = [...formData.variants];
-                newVariants[vIdx] = {
-                 ...variant,
-                 attributes: { ...variant.attributes, [attr]: selectedVal as string[] }
-                };
-                handleInputChange("variants", newVariants);
-               }}
-               placeholder="Size"
-               shape="rounded-sm"
-               className="h-8"
-               searchable
-              />
+               <Select
+                options={PRODUCT_SIZE_OPTIONS}
+                value={val as string || ""}
+                onChange={(selectedVal) => {
+                 const newVariants = [...formData.variants];
+                 newVariants[vIdx] = {
+                  ...variant,
+                  attributes: { ...variant.attributes, [attr]: selectedVal as string }
+                 };
+                 handleInputChange("variants", newVariants);
+                }}
+                placeholder="Size"
+                shape="rounded-sm"
+                className="h-8"
+                searchable
+               />
              ) : (
               <Input
                shape="rounded-sm"
@@ -530,8 +510,8 @@ export default function CreateProduct() {
            price: formData.price || "0",
            stock: formData.stockQuantity || "0",
            attributes: {
-            color: formData.colors[0] || "",
-            size: formData.size[0] ? [formData.size[0]] : []
+            color: formData.colors || "",
+            size: formData.size || ""
            }
           };
           handleInputChange("variants", [...formData.variants, newVariant]);
@@ -636,8 +616,6 @@ export default function CreateProduct() {
      brands={brands || []}
      showColorPicker={showColorPicker}
      setShowColorPicker={setShowColorPicker}
-     editingColorIndex={editingColorIndex}
-     setEditingColorIndex={setEditingColorIndex}
     />
    </div>
 
@@ -702,9 +680,9 @@ export default function CreateProduct() {
       expiryStart: "",
       expiryEnd: "",
       sku: "",
-      variants: [],
-      colors: [],
-      size: [],
+      variants: [] as any[],
+      colors: "",
+      size: "",
       gender: "Unisex"
      });
      setStagedMedia([]);

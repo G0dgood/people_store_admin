@@ -116,7 +116,7 @@ export const CustomerLoginForm = ({ onToggleToRegister }: CustomerLoginFormProps
           <div className="flex flex-col gap-1.5">
             <div className="flex justify-between items-center ml-1">
               <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Password</label>
-              <Link href="#" className="text-[10px] font-black text-brand-blue uppercase hover:underline">Forgot?</Link>
+              <Link href="#" className="text-[10px] font-black text-brand-gold uppercase hover:underline">Forgot?</Link>
             </div>
             <Input
               type={showPassword ? "text" : "password"}
@@ -129,7 +129,7 @@ export const CustomerLoginForm = ({ onToggleToRegister }: CustomerLoginFormProps
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="text-gray-400 hover:text-brand-blue mr-3"
+                  className="text-gray-400 hover:text-brand-gold mr-3"
                 >
                   {showPassword ? <LuEyeOff size={18} /> : <LuEye size={18} />}
                 </button>
@@ -160,7 +160,7 @@ export const CustomerLoginForm = ({ onToggleToRegister }: CustomerLoginFormProps
           <Button
             shape="rounded-sm"
             variant="ghost"
-            className="text-brand-blue font-black hover:underline ml-1"
+            className="text-brand-gold font-black hover:underline ml-1"
             onClick={onToggleToRegister}
           >
             Create Account

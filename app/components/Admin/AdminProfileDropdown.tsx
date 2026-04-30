@@ -64,9 +64,9 @@ export const AdminProfileDropdown: React.FC = () => {
      {canAccess("profile", "view") && (
       <button 
        onClick={() => router.push("/admin/profile")}
-       className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-brand-blue-light hover:text-brand-blue transition-all group text-[#1D3557]"
+       className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-brand-gold-light hover:text-brand-gold transition-all group text-[#1D3557]"
       >
-       <Icon name="user-profile-circle" folder="dashboardIcon" size="sm" className="text-gray-400 group-hover:text-brand-blue" />
+       <Icon name="user-profile-circle" folder="dashboardIcon" size="sm" className="text-gray-400 group-hover:text-brand-gold" />
        <span className="text-[13px] font-bold">View Profile</span>
       </button>
      )}
@@ -74,9 +74,9 @@ export const AdminProfileDropdown: React.FC = () => {
      {canAccess("profile", "view") && (
       <button 
        onClick={() => router.push("/admin/profile")}
-       className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-brand-blue-light hover:text-brand-blue transition-all group text-[#1D3557]"
+       className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-brand-gold-light hover:text-brand-gold transition-all group text-[#1D3557]"
       >
-       <Icon name="settings" folder="dashboardIcon" size="sm" className="text-gray-400 group-hover:text-brand-blue" />
+       <Icon name="settings" folder="dashboardIcon" size="sm" className="text-gray-400 group-hover:text-brand-gold" />
        <span className="text-[13px] font-bold">Account Settings</span>
       </button>
      )}

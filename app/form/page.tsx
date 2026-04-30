@@ -111,7 +111,7 @@ export default function FormDemo() {
               <div>
                 <Label>Label</Label>
                 <div className="relative">
-                  <select className="w-full bg-white border border-gray-200 rounded-md py-2.5 px-4 text-sm text-gray-400 appearance-none focus:outline-none focus:ring-2 focus:ring-brand-blue/20">
+                  <select className="w-full bg-white border border-gray-200 rounded-md py-2.5 px-4 text-sm text-gray-400 appearance-none focus:outline-none focus:ring-2 focus:ring-brand-gold/20">
                     <option>Select</option>
                   </select>
                   <Icon name="expand_more" size="sm" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -141,17 +141,17 @@ export default function FormDemo() {
                   value={searchValue}
                   onChange={(e) => setSearchValue(e.target.value)}
                   onClear={() => setSearchValue("")}
-                  className="border-brand-blue"
+                  className="border-brand-gold"
                 />
 
                 <Input
                   placeholder="Search"
-                  suffixElement={<Icon name="search" size="sm" className="text-brand-blue" />}
+                  suffixElement={<Icon name="search" size="sm" className="text-brand-gold" />}
                 />
 
                 <Input
                   placeholder="Typing"
-                  suffixElement={<Icon name="search" size="sm" className="text-brand-blue" />}
+                  suffixElement={<Icon name="search" size="sm" className="text-brand-gold" />}
                 />
               </div>
             </section>

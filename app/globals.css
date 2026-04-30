@@ -51,16 +51,12 @@
   --status-success: #10B981;
   --status-warning: #F59E0B;
   --status-error: #EF4444;
-
-  /* Override existing brand blue with gold for luxury impact as per user request */
-  --brand-blue: var(--brand-gold);
-  --brand-blue-light: #FFFBF0;
 }
+
+
 
 /* Scoped theme for Administrative Panel */
 .admin-theme {
-  --brand-blue: var(--brand-charcoal);
-  --brand-blue-light: #F9FAFB;
   --primary: var(--brand-charcoal);
   --neutral-900: var(--brand-charcoal);
   --admin-blue-accent: var(--brand-charcoal);
@@ -117,8 +113,7 @@ body:has(.admin-dark) {
   --color-gray-50: var(--neutral-50);
 
   /* Brand */
-  --color-brand-blue-light: var(--brand-blue-light);
-  --color-brand-blue: var(--brand-blue);
+
   --color-brand-gold: var(--brand-gold);
   --color-brand-gold-light: var(--brand-gold-light);
   --color-brand-charcoal: var(--brand-charcoal);

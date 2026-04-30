@@ -75,7 +75,7 @@ export const QuickAddProduct: React.FC<QuickAddProductProps> = ({
         </div>
         <button
           onClick={onSeeMoreCategories}
-          className="text-[10px] font-black text-brand-blue/40 uppercase mt-2 self-center hover:text-brand-blue transition-colors tracking-widest"
+          className="text-[10px] font-black text-brand-gold/40 uppercase mt-2 self-center hover:text-brand-gold transition-colors tracking-widest"
         >
           Explore Categories
         </button>
@@ -100,12 +100,12 @@ export const QuickAddProduct: React.FC<QuickAddProductProps> = ({
               >
                 <div className="flex items-center gap-4 flex-1">
                   <div className="relative">
-                    <div className="w-12 h-10 bg-gray-50 rounded-lg border border-gray-200 overflow-hidden group-hover/row:border-brand-blue/20 transition-colors p-1">
+                    <div className="w-12 h-10 bg-gray-50 rounded-lg border border-gray-200 overflow-hidden group-hover/row:border-brand-gold/20 transition-colors p-1">
                       <img src={p.productImage} className="w-full h-full object-contain" alt="" />
                     </div>
                   </div>
                   <div className="flex flex-col min-w-0">
-                    <span className="text-[12px] font-black text-[#1D3557] leading-tight truncate max-w-[140px] group-hover/row:text-brand-blue transition-all">{p.name}</span>
+                    <span className="text-[12px] font-black text-[#1D3557] leading-tight truncate max-w-[140px] group-hover/row:text-brand-gold transition-all">{p.name}</span>
                     <span className={`text-[10px] font-black w-fit px-1.5 py-0.5 rounded mt-1 bg-brand-gold/10 text-brand-gold`}>
                       ₦{p.price.toLocaleString()}
                     </span>
@@ -113,7 +113,7 @@ export const QuickAddProduct: React.FC<QuickAddProductProps> = ({
                 </div>
                 <button
                   onClick={() => onAddProduct?.(p.name)}
-                  className="flex items-center gap-1.5 px-4 h-9 rounded-xl bg-gray-900 text-white text-[10px] font-black uppercase hover:bg-brand-blue transition-all shadow-md active:scale-95"
+                  className="flex items-center gap-1.5 px-4 h-9 rounded-xl bg-gray-900 text-white text-[10px] font-black uppercase hover:bg-brand-gold transition-all shadow-md active:scale-95"
                 >
                   <Icon name="circle-plus" folder="dashboardIcon" size="xs" /> Add
                 </button>
@@ -123,7 +123,7 @@ export const QuickAddProduct: React.FC<QuickAddProductProps> = ({
         </div>
         <button
           onClick={onSeeMoreProducts}
-          className="text-[10px] font-black text-brand-blue/40 uppercase mt-1 self-center hover:text-brand-blue transition-colors tracking-widest"
+          className="text-[10px] font-black text-brand-gold/40 uppercase mt-1 self-center hover:text-brand-gold transition-colors tracking-widest"
         >
           View More Items
         </button>

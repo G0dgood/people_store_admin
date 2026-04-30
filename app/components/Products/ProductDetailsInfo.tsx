@@ -17,40 +17,37 @@ interface ProductDetailsInfoProps {
 const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
   const { addToCart } = useCart();
   const router = useRouter();
-  const [selectedVariantIdx, setSelectedVariantIdx] = React.useState<number | null>(
-    product?.variants?.length > 0 ? 0 : null
-  );
-  const [selectedSize, setSelectedSize] = React.useState(0);
-
-  if (!product) return null;
-
-  const currentPrice = React.useMemo(() => {
-    if (selectedVariantIdx !== null && product.variants?.[selectedVariantIdx]) {
-      return product.variants[selectedVariantIdx].price;
-    }
-    return product.price;
-  }, [product, selectedVariantIdx]);
-
-  const currentSKU = React.useMemo(() => {
-    if (selectedVariantIdx !== null && product.variants?.[selectedVariantIdx]) {
-      return product.variants[selectedVariantIdx].sku;
-    }
-    return product.sku || `PRD-${product._id?.slice(-6).toUpperCase()}`;
-  }, [product, selectedVariantIdx]);
-
-  const currentStock = React.useMemo(() => {
-    if (selectedVariantIdx !== null && product.variants?.[selectedVariantIdx]) {
-      return product.variants[selectedVariantIdx].stock;
-    }
-    return product.stock;
-  }, [product, selectedVariantIdx]);
 
   const sizes = React.useMemo(() => {
+    const allOptions: any[] = [];
+
+    // 1. Base sizes (Normal sizes)
+    const rawBaseSizes = product.size || product.volume || [];
+    const baseSizeArray = Array.isArray(rawBaseSizes)
+      ? rawBaseSizes
+      : typeof rawBaseSizes === "string"
+        ? rawBaseSizes.split(",").map(s => s.trim())
+        : [];
+
+    baseSizeArray.forEach((s: any, bIdx: number) => {
+      if (s) {
+        allOptions.push({
+          id: `base-${bIdx}`,
+          label: typeof s === 'string' ? s.replace(/[\[\]"]/g, "").trim() : String(s),
+          price: `₦${product.price.toLocaleString()}`,
+          isVariant: false,
+          originalPrice: product.price,
+          originalStock: product.stock,
+          originalSku: product.sku || `PRD-${product._id?.slice(-6).toUpperCase()}`
+        });
+      }
+    });
+
+    // 2. Variants
     if (product.variants?.length > 0) {
-      return product.variants.map((v: any, idx: number) => {
+      product.variants.forEach((v: any, vIdx: number) => {
         const attrs = v.attributes || {};
         const color = attrs.color || attrs.Color;
-        
         const otherAttrs = Object.entries(attrs)
           .filter(([key]) => key.toLowerCase() !== 'color')
           .map(([_, val]) => {
@@ -60,11 +57,7 @@ const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
             } else if (typeof val === 'string') {
               try {
                 const parsed = JSON.parse(val);
-                if (Array.isArray(parsed)) {
-                  cleaned = parsed.join(", ");
-                } else {
-                  cleaned = parsed;
-                }
+                cleaned = Array.isArray(parsed) ? parsed.join(", ") : parsed;
               } catch (e) {
                 cleaned = val;
               }
@@ -74,30 +67,45 @@ const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
           })
           .filter(Boolean);
 
-        // Deduplicate values (e.g. if size and volume are both "100ml")
         const uniqueAttrs = Array.from(new Set(otherAttrs));
 
-        return {
-          label: uniqueAttrs.join(" / ") || `Variant ${idx + 1}`,
+        allOptions.push({
+          id: `variant-${vIdx}`,
+          label: uniqueAttrs.join(" / ") || `Variant ${vIdx + 1}`,
           color: typeof color === 'string' ? color.replace(/[\[\]"]/g, "").trim() : color,
           price: `₦${v.price.toLocaleString()}`,
-          isActive: true
-        };
+          isVariant: true,
+          variantIdx: vIdx,
+          originalPrice: v.price,
+          originalStock: v.stock,
+          originalSku: v.sku
+        });
       });
     }
-    const rawSizes = product.size || product.volume || ["One Size"];
-    const sizeArray = Array.isArray(rawSizes)
-      ? rawSizes
-      : typeof rawSizes === "string"
-        ? rawSizes.split(",").map(s => s.trim())
-        : ["One Size"];
 
-    return sizeArray.map((s: any) => ({
-      label: typeof s === 'string' ? s.replace(/[\[\]"]/g, "") : (Array.isArray(s) ? s.join(", ") : String(s)),
-      price: `₦${product.price.toLocaleString()}`,
-      isActive: true
-    }));
-  }, [product, selectedVariantIdx]);
+    if (allOptions.length === 0) {
+      allOptions.push({
+        id: "default",
+        label: "One Size",
+        price: `₦${product.price.toLocaleString()}`,
+        isVariant: false,
+        originalPrice: product.price,
+        originalStock: product.stock,
+        originalSku: product.sku || `PRD-${product._id?.slice(-6).toUpperCase()}`
+      });
+    }
+
+    return allOptions;
+  }, [product]);
+
+  const [selectedIdx, setSelectedIdx] = React.useState(0);
+  const currentSelection = sizes[selectedIdx];
+
+  const currentPrice = currentSelection?.originalPrice || product.price;
+  const currentSKU = currentSelection?.originalSku || product.sku || `PRD-${product._id?.slice(-6).toUpperCase()}`;
+  const currentStock = currentSelection?.originalStock ?? product.stock;
+
+  if (!product) return null;
 
   const specs = [
     { label: "SKU:", value: currentSKU },
@@ -115,7 +123,7 @@ const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
       price: `₦${currentPrice.toLocaleString()}`,
       image: product.productImage,
       sku: currentSKU,
-      variant: selectedVariantIdx !== null ? sizes[selectedVariantIdx].label : undefined
+      variant: currentSelection?.label
     });
     toast.success("Added to Boutique Bag");
   };
@@ -127,7 +135,7 @@ const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
       price: `₦${currentPrice.toLocaleString()}`,
       image: product.productImage,
       sku: currentSKU,
-      variant: selectedVariantIdx !== null ? sizes[selectedVariantIdx].label : undefined
+      variant: currentSelection?.label
     });
     router.push("/checkout");
   };
@@ -171,18 +179,18 @@ const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
               <div className="w-1.5 h-1.5 bg-brand-gold rounded-full animate-pulse" />
               <span className="text-[10px] font-bold uppercase tracking-widest text-brand-gold">Boutique Essential — Always Available</span>
             </div>
-          ) : product.stock > 0 ? (
+          ) : currentStock > 0 ? (
             <div className="flex flex-col gap-2 max-w-[250px]">
               <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest">
-                <span className={product.stock <= 5 ? "text-rose-500" : "text-gray-400"}>
-                  {product.stock <= 5 ? "Limited Availability" : "Inventory Status"}
+                <span className={currentStock <= 5 ? "text-rose-500" : "text-gray-400"}>
+                  {currentStock <= 5 ? "Limited Availability" : "Inventory Status"}
                 </span>
-                <span className="text-gray-900">{product.stock} units left</span>
+                <span className="text-gray-900">{currentStock} units left</span>
               </div>
               <div className="h-1 w-full bg-gray-100 rounded-full overflow-hidden">
                 <div
-                  className={`h-full transition-all duration-1000 ${product.stock <= 5 ? "bg-rose-500" : "bg-brand-gold"}`}
-                  style={{ width: `${Math.min((product.stock / 20) * 100, 100)}%` }}
+                  className={`h-full transition-all duration-1000 ${currentStock <= 5 ? "bg-rose-500" : "bg-brand-gold"}`}
+                  style={{ width: `${Math.min((currentStock / 20) * 100, 100)}%` }}
                 />
               </div>
             </div>
@@ -197,33 +205,27 @@ const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
 
       <div className="flex flex-col gap-6">
         <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400 border-b border-gray-200 pb-2">
-          {product.variants?.length > 0 ? "Select Variant" : "Select Size"}
+          Select Variant / Size
         </h3>
         <div className="flex flex-wrap gap-4">
           {sizes.map((size: any, idx: number) => (
             <button
               key={idx}
-              onClick={() => {
-                if (product.variants?.length > 0) {
-                  setSelectedVariantIdx(idx);
-                } else {
-                  setSelectedSize(idx);
-                }
-              }}
+              onClick={() => setSelectedIdx(idx)}
               className={`px-6 py-3 border transition-all duration-300 flex items-center gap-4 rounded-none
-                ${(product.variants?.length > 0 ? selectedVariantIdx === idx : selectedSize === idx)
+                ${selectedIdx === idx
                   ? "border-brand-gold bg-black text-white shadow-xl scale-105"
                   : "border-gray-200 hover:border-brand-gold text-gray-500 hover:text-gray-900"}`}
             >
               {size.color && (
-                <div 
+                <div
                   className="w-4 h-4 rounded-full border border-white/20 shadow-sm"
                   style={{ backgroundColor: size.color }}
                 />
               )}
               <div className="flex flex-col items-start gap-0.5">
                 <span className="text-[11px] font-bold uppercase tracking-widest leading-none">{size.label}</span>
-                <span className={`text-[9px] font-medium leading-none mt-1 ${(product.variants?.length > 0 ? selectedVariantIdx === idx : selectedSize === idx) ? "text-brand-gold" : "text-gray-400"}`}>{size.price}</span>
+                <span className={`text-[9px] font-medium leading-none mt-1 ${selectedIdx === idx ? "text-brand-gold" : "text-gray-400"}`}>{size.price}</span>
               </div>
             </button>
           ))}
@@ -242,18 +244,18 @@ const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
           </button>
           <FavoriteButton
             item={{
-              id: product._id,
+              id: product._id || product.id,
               title: product.name,
-              price: `₦${product.price.toLocaleString()}`,
-              image: product.productImage,
+              price: typeof product.price === 'number' ? `₦${product.price.toLocaleString()}` : product.price,
+              image: product.image,
             } as any}
             variant="outline"
-            className="!w-auto px-6 h-14 border-gray-200 flex items-center gap-2"
+            className="!w-auto px-6 h-14 border-gray-200 flex items-center gap-3 transition-all hover:border-brand-gold hover:text-brand-gold"
           >
             <span className="text-[10px] font-bold uppercase tracking-widest hidden md:inline">Save for later</span>
           </FavoriteButton>
         </div>
-        <button 
+        <button
           onClick={handleBuyNow}
           className="w-full border-2 border-brand-gold text-brand-gold h-14 font-bold uppercase tracking-[0.2em] text-[11px] hover:bg-brand-gold hover:text-white transition-all active:scale-95"
         >

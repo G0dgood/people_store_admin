@@ -20,7 +20,7 @@ const Switch = React.forwardRef<HTMLInputElement, SwitchProps>(
           <div className={`
             w-11 h-6 rounded-full transition-all duration-200
             bg-gray-200 group-hover:bg-gray-300
-            peer-checked:bg-brand-blue peer-focus:ring-2 peer-focus:ring-brand-blue/20
+            peer-checked:bg-brand-gold peer-focus:ring-2 peer-focus:ring-brand-gold/20
             peer-disabled:opacity-50
           `} />
           <div className={`

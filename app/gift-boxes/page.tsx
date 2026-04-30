@@ -76,7 +76,7 @@ const GiftBoxesPage = () => {
     <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 py-20 md:py-32">
      {/* Step 119: Build 'Gift Collection' grid with glassmorphism cards */}
      <div className="flex flex-col gap-4 mb-16 md:mb-24">
-      <span className="text-brand-blue font-bold tracking-[0.2em] uppercase text-xs">The Seasonal Edit</span>
+      <span className="text-brand-gold font-bold tracking-[0.2em] uppercase text-xs">The Seasonal Edit</span>
       <h2 className="text-4xl md:text-6xl font-black text-[#1D3557] tracking-tight">Hand-Wrapped <br />Excellence.</h2>
      </div>
 
@@ -128,7 +128,7 @@ const GiftBoxesPage = () => {
           </div>
           <div className="flex flex-col gap-2 px-2">
            <div className="flex justify-between items-start">
-            <h3 className="text-2xl font-black text-[#1D3557] tracking-tight group-hover:text-brand-blue transition-colors">
+            <h3 className="text-2xl font-black text-[#1D3557] tracking-tight group-hover:text-brand-gold transition-colors">
              {set.name}
             </h3>
             <span className="text-xl font-bold text-gray-900">₦{set.price.toLocaleString()}</span>
@@ -165,15 +165,15 @@ const GiftBoxesPage = () => {
 
      {/* Step 120: Implement 'Bespoke Concierge' CTA section */}
      <div className="mt-40 md:mt-60 bg-[#F7FAFC] rounded-[64px] p-10 md:p-24 overflow-hidden relative">
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-blue/5 rounded-full filter blur-[100px] translate-x-1/2 -translate-y-1/2" />
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-gold/5 rounded-full filter blur-[100px] translate-x-1/2 -translate-y-1/2" />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
        <div className="flex flex-col gap-8 md:gap-10">
         <div className="flex flex-col gap-4">
-         <div className="w-16 h-16 bg-brand-blue rounded-3xl flex items-center justify-center text-white shadow-xl shadow-blue-500/20">
+         <div className="w-16 h-16 bg-brand-gold rounded-3xl flex items-center justify-center text-white shadow-xl shadow-blue-500/20">
           <HiSparkles size={32} />
          </div>
-         <h2 className="text-4xl md:text-6xl font-black text-[#1D3557] tracking-tight leading-[1.1]">The Bespoke <br /><span className="text-brand-blue">Choice.</span></h2>
+         <h2 className="text-4xl md:text-6xl font-black text-[#1D3557] tracking-tight leading-[1.1]">The Bespoke <br /><span className="text-brand-gold">Choice.</span></h2>
         </div>
         <p className="text-gray-600 text-lg md:text-xl leading-relaxed font-medium">
          Seeking a personalized touch? Our Concierge team specializes in corporate gifting and custom sensory curation for life's most momentous occasions.
@@ -194,7 +194,7 @@ const GiftBoxesPage = () => {
         </Link>
        </div>
        <div className="relative aspect-square">
-        <div className="absolute inset-0 bg-brand-blue/10 rounded-[64px] rotate-6" />
+        <div className="absolute inset-0 bg-brand-gold/10 rounded-[64px] rotate-6" />
         <div className="absolute inset-0 bg-white rounded-[64px] shadow-2xl relative overflow-hidden p-10 flex items-center justify-center">
          <div className="relative w-full h-full">
           <Image

@@ -99,7 +99,7 @@ const WishlistPage = () => {
                     });
                     toast.success("All items moved to cart");
                   }}
-                  className="text-[10px] font-bold uppercase tracking-widest text-brand-blue hover:text-blue-700 transition-colors flex items-center gap-2 cursor-pointer"
+                  className="text-[10px] font-bold uppercase tracking-widest text-brand-gold hover:text-blue-700 transition-colors flex items-center gap-2 cursor-pointer"
                 >
                   <Icon name="shopping_cart" size="sm" />
                   Move all to cart
@@ -187,7 +187,7 @@ const WishlistPage = () => {
                   <span className="font-bold text-gray-900 text-sm md:text-md">
                     {item.price}
                   </span>
-                  <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed group-hover:text-brand-blue transition-colors">
+                  <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed group-hover:text-brand-gold transition-colors">
                     {item.title}
                   </p>
                 </div>

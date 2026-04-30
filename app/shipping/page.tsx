@@ -55,7 +55,7 @@ const ShippingPage = () => {
             sizes="100vw"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-[#1D3557] via-[#1D3557]/80 to-transparent" />
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-blue rounded-full filter blur-[140px] opacity-10 translate-x-1/2 -translate-y-1/2" />
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-gold rounded-full filter blur-[140px] opacity-10 translate-x-1/2 -translate-y-1/2" />
 
           <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 relative z-10">
             <motion.div
@@ -65,8 +65,8 @@ const ShippingPage = () => {
               className="flex flex-col gap-6"
             >
               <div className="flex items-center gap-3">
-                <span className="w-10 h-1 bg-brand-blue rounded-full" />
-                <span className="text-brand-blue font-bold tracking-[0.3em] uppercase text-xs">Global Logistics</span>
+                <span className="w-10 h-1 bg-brand-gold rounded-full" />
+                <span className="text-brand-gold font-bold tracking-[0.3em] uppercase text-xs">Global Logistics</span>
               </div>
               <h1 className="text-4xl md:text-7xl font-black text-white tracking-tighter font-inter leading-none">
                 Delivering Excellence <br />to Your <span className="text-[#8CB7F5]">Doorstep.</span>
@@ -90,12 +90,12 @@ const ShippingPage = () => {
                 transition={{ delay: i * 0.1 }}
                 className="bg-white p-10 rounded-[40px] border border-gray-200 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all group flex flex-col h-full"
               >
-                <div className="w-16 h-16 bg-brand-blue-light rounded-3xl flex items-center justify-center text-brand-blue mb-8 group-hover:bg-brand-blue group-hover:text-white transition-colors duration-500">
+                <div className="w-16 h-16 bg-brand-gold-light rounded-3xl flex items-center justify-center text-brand-gold mb-8 group-hover:bg-brand-gold group-hover:text-white transition-colors duration-500">
                   {method.icon}
                 </div>
                 <h3 className="text-2xl font-black text-[#1D3557] mb-4">{method.title}</h3>
                 <div className="flex flex-col gap-1 mb-6">
-                  <div className="flex items-center gap-2 text-brand-blue">
+                  <div className="flex items-center gap-2 text-brand-gold">
                     <HiClock />
                     <span className="text-sm font-bold uppercase tracking-widest">{method.time}</span>
                   </div>
@@ -144,13 +144,13 @@ const ShippingPage = () => {
           <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 grid grid-cols-1 lg:grid-cols-2 gap-24 items-center relative z-10">
             <div className="flex flex-col gap-10">
               <div className="flex flex-col gap-4">
-                <span className="text-brand-blue font-bold tracking-[0.2em] uppercase text-xs">Stay Connected</span>
+                <span className="text-brand-gold font-bold tracking-[0.2em] uppercase text-xs">Stay Connected</span>
                 <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight leading-tight">Follow Your Bloom <br />Every Step of the Way.</h2>
               </div>
 
               <div className="flex flex-col gap-8">
                 <div className="flex items-start gap-6">
-                  <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-brand-blue shrink-0">
+                  <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-brand-gold shrink-0">
                     <HiMapPin size={24} />
                   </div>
                   <div className="flex flex-col gap-1">
@@ -159,7 +159,7 @@ const ShippingPage = () => {
                   </div>
                 </div>
                 <div className="flex items-start gap-6">
-                  <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-brand-blue shrink-0">
+                  <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-brand-gold shrink-0">
                     <HiCube size={24} />
                   </div>
                   <div className="flex flex-col gap-1">
@@ -170,19 +170,19 @@ const ShippingPage = () => {
               </div>
 
               <div className="pt-4">
-                <button className="bg-brand-blue text-white px-12 py-5 rounded-2xl font-black uppercase tracking-widest text-sm shadow-2xl shadow-blue-500/20 hover:scale-105 transition-all">
+                <button className="bg-brand-gold text-white px-12 py-5 rounded-2xl font-black uppercase tracking-widest text-sm shadow-2xl shadow-blue-500/20 hover:scale-105 transition-all">
                   Track My Order
                 </button>
               </div>
             </div>
 
             <div className="relative group">
-              <div className="absolute -inset-4 bg-brand-blue/20 rounded-[50px] blur-2xl group-hover:bg-brand-blue/30 transition-all" />
+              <div className="absolute -inset-4 bg-brand-gold/20 rounded-[50px] blur-2xl group-hover:bg-brand-gold/30 transition-all" />
               <div className="relative rounded-[40px] overflow-hidden border border-white/10 aspect-video shadow-2xl">
                 <Image src="/web_images/Mask group copy 3.png" alt="Tracking Visual" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#1D3557]/80 to-transparent flex items-end p-8">
                   <div className="flex flex-col gap-1">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-brand-blue">Real-time Dashboard</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-brand-gold">Real-time Dashboard</span>
                     <p className="text-white text-sm font-medium">Precision tracking available for all shipments.</p>
                   </div>
                 </div>
@@ -198,7 +198,7 @@ const ShippingPage = () => {
             <p className="text-gray-500 mb-10 max-w-xl mx-auto italic">Learn more about customs, local duties, and carrier-specific policies in our Help Center.</p>
             <button
               onClick={() => window.location.href = '/faq'}
-              className="px-10 py-4 bg-gray-50 border border-gray-200 rounded-xl text-[#1D3557] font-black uppercase tracking-widest text-xs hover:bg-white hover:border-brand-blue hover:text-brand-blue transition-all"
+              className="px-10 py-4 bg-gray-50 border border-gray-200 rounded-xl text-[#1D3557] font-black uppercase tracking-widest text-xs hover:bg-white hover:border-brand-gold hover:text-brand-gold transition-all"
             >
               Visit Help Center
             </button>

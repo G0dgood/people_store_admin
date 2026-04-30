@@ -53,11 +53,11 @@ export const ProfileSidebar: React.FC = () => {
       {/* User Header */}
       <div className="p-8 pb-6 border-b border-gray-50 flex flex-col items-center text-center">
         <div className="relative group cursor-pointer" onClick={() => !isUpdatingAvatar && fileInputRef.current?.click()}>
-          <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg ring-1 ring-gray-100 mb-4 group-hover:ring-brand-blue/30 transition-all bg-gray-50 relative">
+          <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg ring-1 ring-gray-100 mb-4 group-hover:ring-brand-gold/30 transition-all bg-gray-50 relative">
             {isLoading || isUpdatingAvatar ? (
               <div className="w-full h-full flex flex-col items-center justify-center bg-gray-50">
-                <div className="w-6 h-6 border-2 border-brand-blue border-t-transparent rounded-full animate-spin mb-1"></div>
-                {isUpdatingAvatar && <span className="text-[8px] font-black text-brand-blue uppercase tracking-widest">Optimizing</span>}
+                <div className="w-6 h-6 border-2 border-brand-gold border-t-transparent rounded-full animate-spin mb-1"></div>
+                {isUpdatingAvatar && <span className="text-[8px] font-black text-brand-gold uppercase tracking-widest">Optimizing</span>}
               </div>
             ) : (
               <Image
@@ -74,7 +74,7 @@ export const ProfileSidebar: React.FC = () => {
               </div>
             )}
           </div>
-          <div className="absolute bottom-4 right-1 bg-brand-blue text-white p-1.5 rounded-full shadow-md border-2 border-white translate-y-1/2">
+          <div className="absolute bottom-4 right-1 bg-brand-gold text-white p-1.5 rounded-full shadow-md border-2 border-white translate-y-1/2">
             <Icon name="edit" size="xs" />
           </div>
           <input
@@ -91,7 +91,7 @@ export const ProfileSidebar: React.FC = () => {
           <h3 className="text-xl font-bold text-gray-900 mb-0.5">{customer?.fullName || "Guest User"}</h3>
         )}
         <p className="text-sm font-medium text-gray-400 mb-3 uppercase tracking-tighter">Premium Member</p>
-        <div className="px-3 py-1 bg-brand-blue-light text-brand-blue text-[10px] font-bold rounded-full uppercase tracking-wider">
+        <div className="px-3 py-1 bg-brand-gold-light text-brand-gold text-[10px] font-bold rounded-full uppercase tracking-wider">
           Verified Buyer
         </div>
       </div>
@@ -106,21 +106,21 @@ export const ProfileSidebar: React.FC = () => {
               href={item.href}
               className={`flex items-center gap-4 px-5 py-3.5 rounded-xl font-bold text-sm transition-all group relative overflow-hidden
                 ${isActive
-                  ? "text-brand-blue bg-brand-blue-light"
-                  : "text-gray-500 hover:text-brand-blue hover:bg-gray-50"}`}
+                  ? "text-brand-gold bg-brand-gold-light"
+                  : "text-gray-500 hover:text-brand-gold hover:bg-gray-50"}`}
             >
               {isActive && (
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-brand-blue rounded-r-full" />
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-6 bg-brand-gold rounded-r-full" />
               )}
               <Icon
                 name={item.icon}
                 size="sm"
-                className={`transition-colors ${isActive ? "text-brand-blue" : "text-gray-400 group-hover:text-brand-blue"}`}
+                className={`transition-colors ${isActive ? "text-brand-gold" : "text-gray-400 group-hover:text-brand-gold"}`}
               />
               <span className="flex-1">{item.label}</span>
               {item.badge && (
                 <span className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black transition-colors
-                  ${isActive ? "bg-brand-blue text-white" : "bg-gray-200 text-gray-600 group-hover:bg-brand-blue group-hover:text-white"}`}>
+                  ${isActive ? "bg-brand-gold text-white" : "bg-gray-200 text-gray-600 group-hover:bg-brand-gold group-hover:text-white"}`}>
                   {item.badge}
                 </span>
               )}

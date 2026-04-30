@@ -43,7 +43,7 @@ export default function CheckoutPage() {
             <div className="flex flex-col gap-2">
               <div className="flex items-center gap-2">
                 <h1 className="text-xl md:text-2xl font-bold text-neutral-900 tracking-tight leading-none font-heading">Finalize Order</h1>
-                <div className="h-1.5 w-1.5 rounded-full bg-brand-blue mt-1" />
+                <div className="h-1.5 w-1.5 rounded-full bg-brand-gold mt-1" />
               </div>
               <p className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Complete your purchase safely and securely</p>
             </div>

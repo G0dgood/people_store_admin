@@ -141,7 +141,7 @@ export const OrderSummary: React.FC = () => {
             <h2 className="text-xl font-bold text-gray-900 tracking-tight">Order Summary</h2>
             <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mt-0.5">Review items</p>
           </div>
-          <Icon name="shopping_cart" size="md" className="text-brand-blue opacity-10" />
+          <Icon name="shopping_cart" size="md" className="text-brand-gold opacity-10" />
         </div>
 
         <div className="p-6 md:p-8">
@@ -160,13 +160,13 @@ export const OrderSummary: React.FC = () => {
                   <div className="flex-1 flex flex-col justify-between py-1">
                     <div>
                       <Link href="/products/detail">
-                        <h4 className="font-bold text-gray-900 text-[13px] line-clamp-2 leading-tight group-hover:text-brand-blue cursor-pointer transition-colors">
+                        <h4 className="font-bold text-gray-900 text-[13px] line-clamp-2 leading-tight group-hover:text-brand-gold cursor-pointer transition-colors">
                           {item.title}
                         </h4>
                       </Link>
                       <span className="text-[11px] font-black text-gray-400 uppercase tracking-widest mt-1.5 block">Qty: {item.quantity}</span>
                     </div>
-                    <span className="font-bold text-brand-blue text-sm tracking-tight">{formatPrice(parsePrice(item.price) * item.quantity)}</span>
+                    <span className="font-bold text-brand-gold text-sm tracking-tight">{formatPrice(parsePrice(item.price) * item.quantity)}</span>
                   </div>
                 </motion.div>
               ))
@@ -199,7 +199,7 @@ export const OrderSummary: React.FC = () => {
                 <span className="text-xs font-black text-gray-400 uppercase tracking-[0.2em]">Total</span>
                 <span className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Incl. VAT</span>
               </div>
-              <span className="text-3xl font-black text-brand-blue leading-none tracking-tighter">{formatPrice(total)}</span>
+              <span className="text-3xl font-black text-brand-gold leading-none tracking-tighter">{formatPrice(total)}</span>
             </div>
           </div>
 
@@ -207,7 +207,7 @@ export const OrderSummary: React.FC = () => {
             shape="rounded-sm"
             onClick={handleCompleteOrder}
             className={`w-full text-base h-[60px] text-white shadow-xl transition-all font-black rounded-2xl flex items-center justify-center gap-3 ${cartItems.length > 0
-              ? "bg-brand-blue shadow-brand-blue/20 hover:shadow-2xl hover:translate-y-[-2px] active:scale-[0.98]"
+              ? "bg-brand-gold shadow-brand-gold/20 hover:shadow-2xl hover:translate-y-[-2px] active:scale-[0.98]"
               : "bg-gray-400 cursor-not-allowed opacity-50"
               }`}
             disabled={cartItems.length === 0}
@@ -217,7 +217,7 @@ export const OrderSummary: React.FC = () => {
           </Button>
 
           <div className="mt-8 flex flex-col gap-4">
-            <div className="flex items-center justify-center gap-2.5 px-4 py-2.5 bg-brand-blue-light rounded-full w-fit mx-auto border border-blue-100 shadow-sm shadow-blue-100/50">
+            <div className="flex items-center justify-center gap-2.5 px-4 py-2.5 bg-brand-gold-light rounded-full w-fit mx-auto border border-blue-100 shadow-sm shadow-blue-100/50">
               <Icon name="verified_user" size="xs" className="text-blue-600" />
               <span className="text-[10px] font-black text-blue-700 uppercase tracking-widest">Secure 256-bit SSL encryption</span>
             </div>

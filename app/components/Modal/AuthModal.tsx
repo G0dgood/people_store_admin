@@ -76,7 +76,7 @@ const LoginForm = ({ onSwitch }: { onSwitch: () => void }) => {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="text-gray-400 hover:text-brand-blue transition-colors cursor-pointer mr-2"
+                className="text-gray-400 hover:text-brand-gold transition-colors cursor-pointer mr-2"
               >
                 {showPassword ? <LuEyeOff size={18} /> : <LuEye size={18} />}
               </button>
@@ -86,7 +86,7 @@ const LoginForm = ({ onSwitch }: { onSwitch: () => void }) => {
             <button
               type="button"
               onClick={() => setView("forgotPassword")}
-              className="text-[10px] font-bold text-brand-blue hover:underline cursor-pointer"
+              className="text-[10px] font-bold text-brand-gold hover:underline cursor-pointer"
             >
               Forgot password?
             </button>
@@ -142,7 +142,7 @@ const LoginForm = ({ onSwitch }: { onSwitch: () => void }) => {
         <button
           type="button"
           onClick={onSwitch}
-          className="text-brand-blue font-bold hover:underline cursor-pointer"
+          className="text-brand-gold font-bold hover:underline cursor-pointer"
         >
           Register now
         </button>
@@ -211,7 +211,7 @@ const RegisterForm = ({
         {/* Avatar Section */}
         <div className="flex flex-col items-center gap-2 mb-2">
           <div
-            className="w-20 h-20 rounded-full border-2 border-dashed border-gray-200 bg-gray-50 flex items-center justify-center relative group cursor-pointer overflow-hidden transition-all hover:border-brand-blue"
+            className="w-20 h-20 rounded-full border-2 border-dashed border-gray-200 bg-gray-50 flex items-center justify-center relative group cursor-pointer overflow-hidden transition-all hover:border-brand-gold"
             onClick={() => fileInputRef.current?.click()}
           >
             {avatarPreview ? (
@@ -241,7 +241,7 @@ const RegisterForm = ({
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="text-gray-400 hover:text-brand-blue transition-colors cursor-pointer mr-2"
+                className="text-gray-400 hover:text-brand-gold transition-colors cursor-pointer mr-2"
               >
                 {showPassword ? <LuEyeOff size={18} /> : <LuEye size={18} />}
               </button>
@@ -258,7 +258,7 @@ const RegisterForm = ({
             label={
               <span className="text-xs text-gray-500 font-medium">
                 I agree with{" "}
-                <button type="button" onClick={() => setIsTermsOpen(true)} className="text-brand-blue hover:underline cursor-pointer">
+                <button type="button" onClick={() => setIsTermsOpen(true)} className="text-brand-gold hover:underline cursor-pointer">
                   Terms and Conditions
                 </button>
               </span>
@@ -284,7 +284,7 @@ const RegisterForm = ({
 
       <p className="text-center text-sm text-gray-500 mt-2">
         Already have an account?{" "}
-        <button type="button" onClick={onSwitch} className="text-brand-blue font-bold hover:underline cursor-pointer">
+        <button type="button" onClick={onSwitch} className="text-brand-gold font-bold hover:underline cursor-pointer">
           Sign In
         </button>
       </p>
@@ -320,7 +320,7 @@ const ForgotPasswordForm = ({ onBack }: { onBack: () => void }) => (
       Remember your password?{" "}
       <button
         onClick={onBack}
-        className="text-brand-blue font-bold hover:underline cursor-pointer"
+        className="text-brand-gold font-bold hover:underline cursor-pointer"
       >
         Back to Login
       </button>

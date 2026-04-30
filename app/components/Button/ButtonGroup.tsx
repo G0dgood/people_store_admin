@@ -34,7 +34,7 @@ const ButtonGroup: React.FC<ButtonGroupProps> = ({ children, className = "", isP
         const element = child as React.ReactElement<{ className?: string }>;
 
         return React.cloneElement(element, {
-          className: `${element.props.className || ""} ${roundedClass} border-l-brand-blue/30`.trim(),
+          className: `${element.props.className || ""} ${roundedClass} border-l-brand-gold/30`.trim(),
         });
       })}
     </div>

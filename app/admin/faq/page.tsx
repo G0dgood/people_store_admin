@@ -165,7 +165,7 @@ export default function FAQManagementPage() {
                   </td>
                   <td className="py-5">
                     <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-brand-blue group-hover:bg-brand-blue/10 transition-colors">
+                      <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-brand-gold group-hover:bg-brand-gold/10 transition-colors">
                         <HiOutlineQuestionMarkCircle size={20} />
                       </div>
                       <span className="text-xs font-bold text-[#1D3557] line-clamp-1 max-w-[300px]">{faq.question}</span>

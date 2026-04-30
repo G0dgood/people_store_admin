@@ -203,7 +203,7 @@ export default function NotificationCenter() {
                 }}
               >
                 {!item.isRead && (
-                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-blue shadow-lg shadow-blue-100"></div>
+                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-gold shadow-lg shadow-blue-100"></div>
                 )}
 
                 <div className="flex items-center self-center" onClick={(e) => e.stopPropagation()}>
@@ -244,10 +244,10 @@ export default function NotificationCenter() {
                   <div className="flex items-center gap-4 mt-2">
                     <div className="flex items-center gap-1.5 overflow-hidden">
                       <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">Actor:</span>
-                      <span className="text-[11px] font-black text-brand-blue">{item.actor}</span>
+                      <span className="text-[11px] font-black text-brand-gold">{item.actor}</span>
                     </div>
                     <div className="w-1 h-1 rounded-full bg-gray-200"></div>
-                    <span className="text-[11px] font-bold text-gray-400 hover:text-brand-blue transition-colors underline underline-offset-4">
+                    <span className="text-[11px] font-bold text-gray-400 hover:text-brand-gold transition-colors underline underline-offset-4">
                       View Details
                     </span>
                   </div>

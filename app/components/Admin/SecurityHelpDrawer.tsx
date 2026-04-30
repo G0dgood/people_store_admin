@@ -38,7 +38,7 @@ export function SecurityHelpDrawer({ isOpen, onClose }: SecurityHelpDrawerProps)
     <Drawer isOpen={isOpen} onClose={onClose} title="Security & Access Help">
       <div className="flex flex-col h-full gap-8">
         <div className="flex items-center gap-4 p-5 bg-blue-50/50 border border-blue-100 rounded-2xl">
-           <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center text-brand-blue shadow-sm shrink-0">
+           <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center text-brand-gold shadow-sm shrink-0">
               <Icon name="live_help" folder="icon" size="sm" />
            </div>
            <div className="flex flex-col gap-0.5">
@@ -54,11 +54,11 @@ export function SecurityHelpDrawer({ isOpen, onClose }: SecurityHelpDrawerProps)
            <div className="flex flex-col gap-3">
               {helpItems.map((item, i) => (
                 <div key={i} className="flex items-start gap-4 p-4 rounded-xl hover:bg-gray-50 transition-all group">
-                   <div className="mt-1 w-8 h-8 rounded-lg bg-white border border-gray-200 flex items-center justify-center text-gray-400 group-hover:text-brand-blue group-hover:border-brand-blue/20 transition-all shadow-sm shrink-0">
+                   <div className="mt-1 w-8 h-8 rounded-lg bg-white border border-gray-200 flex items-center justify-center text-gray-400 group-hover:text-brand-gold group-hover:border-brand-gold/20 transition-all shadow-sm shrink-0">
                       <Icon name={item.icon} folder="icon" size="xs" />
                    </div>
                    <div className="flex flex-col gap-1">
-                      <span className="text-[12px] font-black text-[#1D3557] group-hover:text-brand-blue transition-colors">{item.title}</span>
+                      <span className="text-[12px] font-black text-[#1D3557] group-hover:text-brand-gold transition-colors">{item.title}</span>
                       <span className="text-[11px] font-medium text-gray-400 leading-relaxed">{item.description}</span>
                    </div>
                 </div>

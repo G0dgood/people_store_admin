@@ -89,14 +89,14 @@ const SavedForLater = () => {
             <div className="flex flex-col gap-3">
               <div className="flex flex-col gap-1">
                 <span className="font-bold text-gray-900">{formatPrice(item.price)}</span>
-                <p className="text-gray-500 text-sm leading-tight line-clamp-2 group-hover:text-brand-blue">{item.title}</p>
+                <p className="text-gray-500 text-sm leading-tight line-clamp-2 group-hover:text-brand-gold">{item.title}</p>
               </div>
               <div className="flex flex-row gap-2">
                 <Button
                   onClick={() => handleMoveToCart(item)}
                   variant="secondary"
                   size="sm"
-                  className="flex-1 font-bold hover:bg-brand-blue hover:text-white shadow-none justify-center"
+                  className="flex-1 font-bold hover:bg-brand-gold hover:text-white shadow-none justify-center"
                   iconLeft={<Icon name="shopping_cart" size="xs" />}
                 >
                   Move to cart
@@ -105,7 +105,7 @@ const SavedForLater = () => {
                   onClick={() => removeFromWishlist(item.id)}
                   variant="ghost"
                   size="sm"
-                  className="flex-1 !text-[#EB001B] font-medium border border-brand-blue-light hover:bg-red-50 shadow-none justify-center"
+                  className="flex-1 !text-[#EB001B] font-medium border border-brand-gold-light hover:bg-red-50 shadow-none justify-center"
                 >
                   Remove
                 </Button>

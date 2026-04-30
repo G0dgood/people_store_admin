@@ -98,7 +98,7 @@ const CookiePreferencesPage = () => {
                             </div>
 
                             <div className="bg-blue-50/50 p-10 rounded-[40px] border border-blue-50 flex flex-col gap-6">
-                                <div className="flex items-center gap-4 text-brand-blue">
+                                <div className="flex items-center gap-4 text-brand-gold">
                                     <HiShieldCheck size={32} />
                                     <h4 className="text-xl font-black text-[#1D3557]">Data Sovereignty</h4>
                                 </div>
@@ -124,11 +124,11 @@ const CookiePreferencesPage = () => {
                                         </div>
                                         <div className="flex items-center gap-4">
                                             {cookie.required ? (
-                                                <span className="text-[10px] font-black uppercase tracking-widest text-brand-blue bg-brand-blue-light px-4 py-2 rounded-full">Required</span>
+                                                <span className="text-[10px] font-black uppercase tracking-widest text-brand-gold bg-brand-gold-light px-4 py-2 rounded-full">Required</span>
                                             ) : (
                                                 <button 
                                                     onClick={() => togglePreference(cookie.id as keyof typeof preferences)}
-                                                    className={`relative w-14 h-8 rounded-full transition-colors duration-300 ${preferences[cookie.id as keyof typeof preferences] ? 'bg-brand-blue' : 'bg-gray-200'}`}
+                                                    className={`relative w-14 h-8 rounded-full transition-colors duration-300 ${preferences[cookie.id as keyof typeof preferences] ? 'bg-brand-gold' : 'bg-gray-200'}`}
                                                 >
                                                     <motion.div 
                                                         animate={{ x: preferences[cookie.id as keyof typeof preferences] ? 28 : 4 }}

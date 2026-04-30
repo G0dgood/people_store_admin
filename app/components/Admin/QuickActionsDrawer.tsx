@@ -46,7 +46,7 @@ export function QuickActionsDrawer({
               <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
                 action.variant === "danger" 
                   ? "bg-rose-50 text-rose-500 group-hover:bg-rose-500 group-hover:text-white" 
-                  : "bg-blue-50 text-brand-blue group-hover:bg-brand-blue group-hover:text-white"
+                  : "bg-blue-50 text-brand-gold group-hover:bg-brand-gold group-hover:text-white"
               }`}>
                 <Icon name={action.icon as any} size="sm" />
               </div>
@@ -68,7 +68,7 @@ export function QuickActionsDrawer({
                 name="chevron_right" 
                 size="xs" 
                 className={`ml-auto opacity-0 group-hover:opacity-40 transition-all -translate-x-2 group-hover:translate-x-0 ${
-                  action.variant === "danger" ? "text-rose-400" : "text-brand-blue"
+                  action.variant === "danger" ? "text-rose-400" : "text-brand-gold"
                 }`} 
               />
             </button>

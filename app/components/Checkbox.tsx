@@ -52,7 +52,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
 	const variantClasses = ``;
 
 	const checkedClasses = checked
-		? `bg-white text-brand-blue border border-brand-blue`
+		? `bg-white text-brand-gold border border-brand-gold`
 		: `bg-neutral-50 border border-neutral-300`;
 
 	const disabledClasses = disabled

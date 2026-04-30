@@ -33,7 +33,7 @@ const Avatar: React.FC<AvatarProps> = ({
 
   return (
     <div className={`
-      relative rounded-full overflow-hidden flex items-center justify-center bg-brand-blue/5 border-2 border-white shrink-0
+      relative rounded-full overflow-hidden flex items-center justify-center bg-brand-gold/5 border-2 border-white shrink-0
       ${sizes[size]} ${className}
     `}>
       {src ? (
@@ -43,13 +43,13 @@ const Avatar: React.FC<AvatarProps> = ({
           className="w-full h-full object-cover"
           onError={(e) => {
             (e.target as HTMLImageElement).style.display = 'none';
-            (e.target as HTMLImageElement).parentElement!.classList.add('bg-brand-blue/5');
+            (e.target as HTMLImageElement).parentElement!.classList.add('bg-brand-gold/5');
           }}
         />
       ) : initials ? (
-        <span className="text-brand-blue font-black tracking-tighter">{initials}</span>
+        <span className="text-brand-gold font-black tracking-tighter">{initials}</span>
       ) : (
-        <div className="w-full h-full bg-brand-blue/10 flex items-center justify-center text-brand-blue">
+        <div className="w-full h-full bg-brand-gold/10 flex items-center justify-center text-brand-gold">
           <Icon name="person" size={size === "xl" ? "lg" : size === "lg" ? "md" : "sm"} />
         </div>
       )}

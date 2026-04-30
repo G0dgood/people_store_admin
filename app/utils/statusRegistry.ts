@@ -47,8 +47,8 @@ const MODULE_STATUSES: Record<ModuleName, StatusConfig[]> = {
       value: "Processing",
       label: "Processing",
       description: "Mark as being processed",
-      color: "#2D4A6E", // brand-blue
-      bgColor: "bg-brand-blue/10",
+      color: "#2D4A6E", // brand-gold
+      bgColor: "bg-brand-gold/10",
       icon: "cached",
       iconFolder: "icon",
     },
@@ -95,7 +95,7 @@ const MODULE_STATUSES: Record<ModuleName, StatusConfig[]> = {
       label: "Processing",
       description: "Order is being prepared",
       color: "#2D4A6E",
-      bgColor: "bg-brand-blue/10",
+      bgColor: "bg-brand-gold/10",
       icon: "cached",
       iconFolder: "icon",
     },

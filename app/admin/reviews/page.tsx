@@ -29,7 +29,7 @@ import { Tooltip } from "../../components/Tooltip";
 import { HiArrowPath } from "react-icons/hi2";
 
 const statusStyles = {
-  Published: "text-blue-500 bg-brand-blue-light",
+  Published: "text-blue-500 bg-brand-gold-light",
   Pending: "text-amber-500 bg-amber-50/50",
   Spam: "text-rose-500 bg-rose-50/50",
 };

@@ -47,7 +47,7 @@ export const TopProducts: React.FC<TopProductsProps> = ({
             if (onViewAll) onViewAll();
             router.push("/admin/products");
           }}
-          className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-blue/5 text-brand-blue text-[10px] font-black uppercase tracking-widest hover:bg-brand-blue hover:text-white transition-all duration-300"
+          className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-gold/5 text-brand-gold text-[10px] font-black uppercase tracking-widest hover:bg-brand-gold hover:text-white transition-all duration-300"
         >
           Inventory
           <Icon name="arrow_forward" size="xs" className="group-hover:translate-x-0.5 transition-transform" />
@@ -79,7 +79,7 @@ export const TopProducts: React.FC<TopProductsProps> = ({
                 {/* Rank & MiniChart Container */}
                 <div className="relative">
                   <div className="w-16 h-12 bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden p-1 flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
-                    <div className="absolute inset-0 bg-gradient-to-br from-brand-blue/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-brand-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     <img src={p.productImage} className="w-full h-full object-contain" alt="" />
                   </div>
                   {/* Rank Badge */}
@@ -111,7 +111,7 @@ export const TopProducts: React.FC<TopProductsProps> = ({
       </div>
 
       {/* Decorative Glow */}
-      <div className="absolute -bottom-12 -right-12 w-32 h-32 bg-brand-blue/5 rounded-full blur-2xl group-hover/card:bg-brand-blue/10 transition-colors pointer-events-none" />
+      <div className="absolute -bottom-12 -right-12 w-32 h-32 bg-brand-gold/5 rounded-full blur-2xl group-hover/card:bg-brand-gold/10 transition-colors pointer-events-none" />
     </motion.div>
   );
 };

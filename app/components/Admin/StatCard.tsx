@@ -80,7 +80,7 @@ export const StatCard: React.FC<StatCardProps> = ({
         <h3 className="text-[13px] font-black text-gray-400 uppercase tracking-widest leading-none">{title}</h3>
         <div className="relative" ref={dropdownRef}>
           <button
-            className={`transition-colors p-1 rounded-md ${isDropdownOpen ? "bg-brand-blue-light text-brand-blue" : "text-gray-300 hover:text-gray-600"}`}
+            className={`transition-colors p-1 rounded-md ${isDropdownOpen ? "bg-brand-gold-light text-brand-gold" : "text-gray-300 hover:text-gray-600"}`}
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             <Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />

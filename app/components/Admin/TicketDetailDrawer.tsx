@@ -73,7 +73,7 @@ export function TicketDetailDrawer({ isOpen, onClose, ticket, onReply }: TicketD
                      <span className="text-[13px] font-black text-[#1D3557]">{ticket.customerName}</span>
                      <span className="text-[11px] font-bold text-gray-400">#USR_023456789</span>
                   </div>
-                  <button className="p-2 text-gray-400 hover:text-brand-blue transition-colors">
+                  <button className="p-2 text-gray-400 hover:text-brand-gold transition-colors">
                      <Icon name="link-external" folder="dashboardIcon" size="sm" />
                   </button>
                </div>

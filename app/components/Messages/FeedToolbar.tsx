@@ -19,7 +19,7 @@ export const FeedToolbar: React.FC<FeedToolbarProps> = ({ activeTab, onTabChange
             onClick={() => onTabChange(tab)}
             className={`
               relative px-4 py-1.5 text-sm font-bold rounded-md transition-colors z-10
-              ${activeTab === tab ? "text-brand-blue" : "text-gray-500 hover:text-gray-700"}
+              ${activeTab === tab ? "text-brand-gold" : "text-gray-500 hover:text-gray-700"}
             `}
           >
             {activeTab === tab && (
@@ -44,7 +44,7 @@ export const FeedToolbar: React.FC<FeedToolbarProps> = ({ activeTab, onTabChange
         <input
           type="text"
           placeholder="Search messages..."
-          className="w-full h-10 pl-10 pr-4 bg-white border border-gray-300 rounded-lg text-sm outline-none focus:border-brand-blue transition-colors text-gray-900 relative z-0"
+          className="w-full h-10 pl-10 pr-4 bg-white border border-gray-300 rounded-lg text-sm outline-none focus:border-brand-gold transition-colors text-gray-900 relative z-0"
         />
       </motion.div>
     </div>

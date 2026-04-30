@@ -167,7 +167,7 @@ const DealsSection = () => {
                     sizes="(max-width: 768px) 160px, 220px"
                   />
                 </div>
-                <p className="text-xs md:text-sm text-center line-clamp-1 text-gray-600 group-hover:text-brand-blue transition-colors font-medium">
+                <p className="text-xs md:text-sm text-center line-clamp-1 text-gray-600 group-hover:text-brand-gold transition-colors font-medium">
                   {prod.product?.name || "Premium Fragrance"}
                 </p>
               </motion.div>

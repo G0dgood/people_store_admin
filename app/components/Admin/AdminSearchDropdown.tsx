@@ -107,7 +107,7 @@ export const AdminSearchDropdown: React.FC<AdminSearchDropdownProps> = ({ query 
                  {filteredResults.length} matches found
               </span>
            </div>
-           {!query && <button className="text-[10px] font-black text-brand-blue uppercase hover:underline">Clear History</button>}
+           {!query && <button className="text-[10px] font-black text-brand-gold uppercase hover:underline">Clear History</button>}
         </div>
 
         <div className="flex-1 overflow-y-auto custom-scrollbar p-2">
@@ -117,7 +117,7 @@ export const AdminSearchDropdown: React.FC<AdminSearchDropdownProps> = ({ query 
                   <h4 className="px-3 py-2 text-[10px] font-black text-gray-400 uppercase tracking-widest">{cat}s</h4>
                   <div className="flex flex-col gap-0.5">
                      {filteredResults.filter(r => r.type === cat).map(item => (
-                       <Link key={item.id} href={(item as any).url || "#"} className="flex items-center gap-4 px-3 py-3 rounded-lg hover:bg-brand-blue-light group transition-all text-left">
+                       <Link key={item.id} href={(item as any).url || "#"} className="flex items-center gap-4 px-3 py-3 rounded-lg hover:bg-brand-gold-light group transition-all text-left">
                           <div className={`w-10 h-10 rounded-lg shrink-0 flex items-center justify-center border border-gray-200 shadow-sm overflow-hidden relative
                              ${item.type === 'product' ? 'bg-white' : 'bg-gray-50'}
                           `}>
@@ -133,13 +133,13 @@ export const AdminSearchDropdown: React.FC<AdminSearchDropdownProps> = ({ query 
                              )}
                           </div>
                           <div className="flex flex-col flex-1 min-w-0">
-                             <span className="text-[13px] font-black text-[#1D3557] group-hover:text-brand-blue truncate">{item.title}</span>
+                             <span className="text-[13px] font-black text-[#1D3557] group-hover:text-brand-gold truncate">{item.title}</span>
                              <span className="text-[11px] font-bold text-gray-400 truncate">{item.subtitle}</span>
                           </div>
                           {item.meta && (
                             <span className={`text-[11px] font-black px-2 py-0.5 rounded-md
                                ${item.meta === 'Complete' || item.meta === 'Delivered' ? 'bg-emerald-50 text-emerald-500' : 
-                                 item.meta === 'Pending' || item.meta === 'Processing' ? 'bg-amber-50 text-amber-500' : 'text-brand-blue'}
+                                 item.meta === 'Pending' || item.meta === 'Processing' ? 'bg-amber-50 text-amber-500' : 'text-brand-gold'}
                             `}>
                                {item.meta}
                             </span>
@@ -163,8 +163,8 @@ export const AdminSearchDropdown: React.FC<AdminSearchDropdownProps> = ({ query 
         </div>
 
         <button className="h-14 border-t border-gray-50 flex items-center justify-center gap-2 group hover:bg-gray-50 transition-all">
-           <span className="text-[11px] font-black text-[#1D3557] group-hover:text-brand-blue uppercase tracking-widest">View All Search Results</span>
-           <HiOutlineArrowRight className="text-gray-300 group-hover:text-brand-blue transition-all translate-x-0 group-hover:translate-x-1 w-4 h-4" />
+           <span className="text-[11px] font-black text-[#1D3557] group-hover:text-brand-gold uppercase tracking-widest">View All Search Results</span>
+           <HiOutlineArrowRight className="text-gray-300 group-hover:text-brand-gold transition-all translate-x-0 group-hover:translate-x-1 w-4 h-4" />
         </button>
       </DropdownMenu>
     </div>

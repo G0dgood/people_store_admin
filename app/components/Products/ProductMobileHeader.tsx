@@ -42,7 +42,7 @@ export const ProductMobileHeader: React.FC<ProductMobileHeaderProps> = ({ title 
         <input
           type="text"
           placeholder="Search"
-          className="w-full h-10 bg-white border border-gray-200 pl-10 pr-4 text-sm outline-none focus:border-brand-blue transition-all"
+          className="w-full h-10 bg-white border border-gray-200 pl-10 pr-4 text-sm outline-none focus:border-brand-gold transition-all"
         />
       </div>
     </div>

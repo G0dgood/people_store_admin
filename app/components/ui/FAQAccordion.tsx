@@ -22,7 +22,7 @@ export const FAQItem = ({ question, answer, isOpen, onToggle }: FAQItemProps) =>
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
-          className={`flex-shrink-0 ml-4 ${isOpen ? "text-brand-blue" : "text-gray-400"}`}
+          className={`flex-shrink-0 ml-4 ${isOpen ? "text-brand-gold" : "text-gray-400"}`}
         >
           <HiChevronDown size={22} />
         </motion.div>

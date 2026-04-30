@@ -155,7 +155,7 @@ export default function ProfilePage() {
                     </Button>
                     <Button
                       shape="rounded-sm"
-                      className="h-11 px-8 bg-brand-blue text-white shadow-lg shadow-brand-blue/20 hover:bg-brand-blue/90 font-bold"
+                      className="h-11 px-8 bg-brand-gold text-white shadow-lg shadow-brand-gold/20 hover:bg-brand-gold/90 font-bold"
                       onClick={handleUpdate}
                       isLoading={isUpdating}
                     >
@@ -166,7 +166,7 @@ export default function ProfilePage() {
               </div>
             </motion.div>
 
-            <motion.div variants={itemVariants} className="bg-gradient-to-r from-brand-blue to-blue-700 p-8 rounded-2xl shadow-lg flex flex-col md:flex-row items-center justify-between gap-6 text-white overflow-hidden relative">
+            <motion.div variants={itemVariants} className="bg-gradient-to-r from-brand-gold to-blue-700 p-8 rounded-2xl shadow-lg flex flex-col md:flex-row items-center justify-between gap-6 text-white overflow-hidden relative">
               <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
               <div className="z-10 text-center md:text-left">
                 <h3 className="text-xl font-bold mb-1">Stay updated on new deals!</h3>

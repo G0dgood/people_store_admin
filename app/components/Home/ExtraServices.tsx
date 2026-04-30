@@ -77,10 +77,10 @@ const ExtraServices = () => {
               <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors"></div>
             </div>
             <div className="p-5 pt-8 relative bg-white">
-              <div className="absolute -top-7 right-5 w-14 h-14 bg-[#D1E7FF] border-4 border-white rounded-full flex items-center justify-center text-gray-900 group-hover:bg-brand-blue group-hover:text-white transition-all duration-300 shadow-sm group-hover:shadow-md">
+              <div className="absolute -top-7 right-5 w-14 h-14 bg-[#D1E7FF] border-4 border-white rounded-full flex items-center justify-center text-gray-900 group-hover:bg-brand-gold group-hover:text-white transition-all duration-300 shadow-sm group-hover:shadow-md">
                 <Icon name={service.icon} size="md" />
               </div>
-              <p className="text-sm font-medium pr-12 leading-relaxed text-gray-800 group-hover:text-brand-blue transition-colors">
+              <p className="text-sm font-medium pr-12 leading-relaxed text-gray-800 group-hover:text-brand-gold transition-colors">
                 {service.title}
               </p>
             </div>

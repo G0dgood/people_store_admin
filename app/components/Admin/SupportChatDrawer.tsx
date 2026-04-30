@@ -196,8 +196,8 @@ export function SupportChatDrawer({ isOpen, onClose, ticketId }: SupportChatDraw
    <div className="flex flex-col h-[calc(100vh-120px)] relative">
     {isUploading && (
      <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px] z-50 flex items-center justify-center flex-col gap-3">
-      <div className="w-10 h-10 border-4 border-brand-blue border-t-transparent rounded-full animate-spin"></div>
-      <span className="text-[10px] font-black text-brand-blue uppercase tracking-widest">Uploading Media...</span>
+      <div className="w-10 h-10 border-4 border-brand-gold border-t-transparent rounded-full animate-spin"></div>
+      <span className="text-[10px] font-black text-brand-gold uppercase tracking-widest">Uploading Media...</span>
      </div>
     )}
 
@@ -235,7 +235,7 @@ export function SupportChatDrawer({ isOpen, onClose, ticketId }: SupportChatDraw
          <div className={`max-w-[80%] flex flex-col gap-1.5 ${msg.sender === "Admin" ? "items-end" : "items-start"}`}>
           <div className={`p-4 rounded-2xl text-xs font-bold leading-relaxed shadow-sm flex flex-col gap-3
                                  ${msg.sender === "Admin"
-            ? "bg-brand-blue text-white rounded-tr-none"
+            ? "bg-brand-gold text-white rounded-tr-none"
             : "bg-gray-100 text-[#1D3557] rounded-tl-none"}
                               `}>
            {msg.message}
@@ -263,7 +263,7 @@ export function SupportChatDrawer({ isOpen, onClose, ticketId }: SupportChatDraw
        {attachments.length > 0 && (
         <div className="flex gap-2 mb-3 overflow-x-auto pb-2">
          {attachments.map((url: string, i: number) => (
-          <div key={i} className="relative w-16 h-16 rounded-xl overflow-hidden border-2 border-brand-blue/20 flex-shrink-0 group">
+          <div key={i} className="relative w-16 h-16 rounded-xl overflow-hidden border-2 border-brand-gold/20 flex-shrink-0 group">
            <img src={url} alt="preview" className="w-full h-full object-cover" />
            <button
             onClick={() => setAttachments(prev => prev.filter((_, idx) => idx !== i))}
@@ -276,7 +276,7 @@ export function SupportChatDrawer({ isOpen, onClose, ticketId }: SupportChatDraw
         </div>
        )}
 
-       <div className="flex items-center gap-3 bg-gray-50 p-2 rounded-2xl border border-gray-200 focus-within:border-brand-blue/30 focus-within:bg-white transition-all">
+       <div className="flex items-center gap-3 bg-gray-50 p-2 rounded-2xl border border-gray-200 focus-within:border-brand-gold/30 focus-within:bg-white transition-all">
         <input
          type="file"
          ref={fileInputRef}
@@ -287,7 +287,7 @@ export function SupportChatDrawer({ isOpen, onClose, ticketId }: SupportChatDraw
         />
         <button
          onClick={() => fileInputRef.current?.click()}
-         className="p-2 text-gray-400 hover:text-brand-blue transition-colors"
+         className="p-2 text-gray-400 hover:text-brand-gold transition-colors"
         >
          <PiPaperclipBold size={20} />
         </button>
@@ -302,7 +302,7 @@ export function SupportChatDrawer({ isOpen, onClose, ticketId }: SupportChatDraw
         <button
          onClick={handleSendMessage}
          disabled={isSending || isUploading || (!message.trim() && attachments.length === 0)}
-         className="w-10 h-10 rounded-xl bg-brand-blue text-white flex items-center justify-center shadow-lg shadow-blue-100 hover:scale-105 active:scale-95 transition-all disabled:opacity-50"
+         className="w-10 h-10 rounded-xl bg-brand-gold text-white flex items-center justify-center shadow-lg shadow-blue-100 hover:scale-105 active:scale-95 transition-all disabled:opacity-50"
         >
          <IoSend size={18} />
         </button>

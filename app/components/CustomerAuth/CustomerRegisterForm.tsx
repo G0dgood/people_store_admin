@@ -134,7 +134,7 @@ export const CustomerRegisterForm = ({ onToggleToLogin }: CustomerRegisterFormPr
           {/* High-Fidelity Avatar Upload */}
           <div className="flex flex-col items-center gap-2 mb-2">
             <div 
-              className="w-24 h-24 rounded-full border-2 border-dashed border-gray-200 bg-gray-50 flex items-center justify-center relative group cursor-pointer overflow-hidden transition-all hover:border-brand-blue"
+              className="w-24 h-24 rounded-full border-2 border-dashed border-gray-200 bg-gray-50 flex items-center justify-center relative group cursor-pointer overflow-hidden transition-all hover:border-brand-gold"
               onClick={() => !isCompressing && fileInputRef.current?.click()}
             >
               {avatarPreview ? (
@@ -145,8 +145,8 @@ export const CustomerRegisterForm = ({ onToggleToLogin }: CustomerRegisterFormPr
               
               {isCompressing ? (
                 <div className="absolute inset-0 bg-white/80 flex flex-col items-center justify-center z-10 backdrop-blur-sm">
-                  <div className="w-6 h-6 border-2 border-brand-blue border-t-transparent rounded-full animate-spin mb-1"></div>
-                  <span className="text-[8px] font-black text-brand-blue uppercase tracking-widest">Compressing</span>
+                  <div className="w-6 h-6 border-2 border-brand-gold border-t-transparent rounded-full animate-spin mb-1"></div>
+                  <span className="text-[8px] font-black text-brand-gold uppercase tracking-widest">Compressing</span>
                 </div>
               ) : (
                 <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -204,7 +204,7 @@ export const CustomerRegisterForm = ({ onToggleToLogin }: CustomerRegisterFormPr
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="text-gray-400 hover:text-brand-blue mr-3"
+                  className="text-gray-400 hover:text-brand-gold mr-3"
                 >
                   {showPassword ? <LuEyeOff size={18} /> : <LuEye size={18} />}
                 </button>
@@ -219,7 +219,7 @@ export const CustomerRegisterForm = ({ onToggleToLogin }: CustomerRegisterFormPr
               onChange={setIsAgreed}
               label={
                 <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
-                  I agree to the <button type="button" onClick={() => setIsTermsOpen(true)} className="text-brand-blue hover:underline">Terms & Conditions</button>
+                  I agree to the <button type="button" onClick={() => setIsTermsOpen(true)} className="text-brand-gold hover:underline">Terms & Conditions</button>
                 </span>
               }
               required
@@ -243,7 +243,7 @@ export const CustomerRegisterForm = ({ onToggleToLogin }: CustomerRegisterFormPr
 
         <p className="text-sm text-gray-500">
           Already a member?{" "}
-          <button onClick={onToggleToLogin} className="text-brand-blue font-black hover:underline ml-1">
+          <button onClick={onToggleToLogin} className="text-brand-gold font-black hover:underline ml-1">
             Login Now
           </button>
         </p>

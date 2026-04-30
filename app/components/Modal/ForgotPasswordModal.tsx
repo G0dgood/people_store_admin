@@ -55,7 +55,7 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
             Remember your password?{" "}
             <button
               onClick={onBackToLogin}
-              className="text-brand-blue font-bold hover:underline cursor-pointer"
+              className="text-brand-gold font-bold hover:underline cursor-pointer"
             >
               Back to Login
             </button>

@@ -31,9 +31,9 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
           <div className={`
             w-6 h-6 border-2 transition-all duration-200 flex items-center justify-center
             border-gray-300 bg-white group-hover:border-gray-400
-            peer-checked:bg-brand-blue peer-checked:border-brand-blue
-            peer-indeterminate:bg-brand-blue peer-indeterminate:border-brand-blue
-            peer-focus:ring-2 peer-focus:ring-brand-blue/20
+            peer-checked:bg-brand-gold peer-checked:border-brand-gold
+            peer-indeterminate:bg-brand-gold peer-indeterminate:border-brand-gold
+            peer-focus:ring-2 peer-focus:ring-brand-gold/20
             peer-disabled:opacity-50 peer-disabled:bg-gray-100
           `}>
             <Icon 

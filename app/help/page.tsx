@@ -78,11 +78,11 @@ const HelpCenterPage = () => {
 
               {/* Search Bar Component */}
               <div className="w-full max-w-2xl relative group">
-                <HiSearch className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-blue transition-colors" size={24} />
+                <HiSearch className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-brand-gold transition-colors" size={24} />
                 <input
                   type="text"
                   placeholder="Search for articles, tracking, or policies..."
-                  className="w-full bg-white/95 backdrop-blur-md border border-white/20 py-6 pl-16 pr-8 rounded-2xl shadow-2xl outline-none focus:ring-4 focus:ring-brand-blue/20 transition-all text-gray-900 font-medium"
+                  className="w-full bg-white/95 backdrop-blur-md border border-white/20 py-6 pl-16 pr-8 rounded-2xl shadow-2xl outline-none focus:ring-4 focus:ring-brand-gold/20 transition-all text-gray-900 font-medium"
                 />
               </div>
             </motion.div>
@@ -108,11 +108,11 @@ const HelpCenterPage = () => {
                   <h3 className="text-xl font-black text-[#1D3557] mb-4">{cat.title}</h3>
                   <div className="flex flex-col gap-2">
                     {cat.links.map((link, j) => (
-                      <span key={j} className="text-sm text-gray-400 font-medium hover:text-brand-blue cursor-pointer transition-colors">{link}</span>
+                      <span key={j} className="text-sm text-gray-400 font-medium hover:text-brand-gold cursor-pointer transition-colors">{link}</span>
                     ))}
                   </div>
                 </div>
-                <Link href={cat.href || "#"} className="mt-8 flex items-center justify-between text-xs font-black uppercase tracking-widest text-brand-blue opacity-0 group-hover:opacity-100 transition-opacity">
+                <Link href={cat.href || "#"} className="mt-8 flex items-center justify-between text-xs font-black uppercase tracking-widest text-brand-gold opacity-0 group-hover:opacity-100 transition-opacity">
                   View More <HiChevronRight size={16} />
                 </Link>
               </motion.div>
@@ -123,28 +123,28 @@ const HelpCenterPage = () => {
           <div className="mt-40 grid grid-cols-1 lg:grid-cols-2 gap-20">
             <div className="flex flex-col gap-10">
               <div className="flex flex-col gap-4">
-                <span className="text-brand-blue font-bold tracking-[0.2em] uppercase text-xs">Discovery</span>
+                <span className="text-brand-gold font-bold tracking-[0.2em] uppercase text-xs">Discovery</span>
                 <h2 className="text-4xl font-black text-[#1D3557] tracking-tight">Trending Questions.</h2>
               </div>
               <div className="flex flex-col gap-4">
                 {popularFaqs.map((faq, i) => (
-                  <div key={i} className="p-6 bg-gray-50 border border-transparent hover:border-brand-blue hover:bg-white rounded-2xl cursor-pointer transition-all flex items-center justify-between group">
+                  <div key={i} className="p-6 bg-gray-50 border border-transparent hover:border-brand-gold hover:bg-white rounded-2xl cursor-pointer transition-all flex items-center justify-between group">
                     <span className="text-gray-600 font-medium group-hover:text-[#1D3557]">{faq}</span>
-                    <HiChevronRight className="text-gray-300 group-hover:text-brand-blue group-hover:translate-x-1 transition-all" />
+                    <HiChevronRight className="text-gray-300 group-hover:text-brand-gold group-hover:translate-x-1 transition-all" />
                   </div>
                 ))}
               </div>
             </div>
 
             <div className="bg-[#1D3557] rounded-[48px] p-10 md:p-16 flex flex-col justify-center gap-8 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-64 h-64 bg-brand-blue rounded-full filter blur-[100px] opacity-10 translate-x-1/2 -translate-y-1/2" />
+              <div className="absolute top-0 right-0 w-64 h-64 bg-brand-gold rounded-full filter blur-[100px] opacity-10 translate-x-1/2 -translate-y-1/2" />
               <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-[#8CB7F5]">
                 <HiShieldCheck size={32} />
               </div>
               <h3 className="text-3xl font-black text-white leading-tight">Can't find the <br /><span className="text-[#8CB7F5]">answer?</span></h3>
               <p className="text-blue-100/40 text-lg">Our artisanal support curators are available from 9am to 6pm for a personalized consultation.</p>
               <div className="pt-4">
-                <Link href="/contact" className="px-12 py-5 bg-brand-blue text-white rounded-2xl font-black uppercase tracking-widest text-sm shadow-2xl shadow-blue-500/20 hover:scale-105 transition-all inline-block">
+                <Link href="/contact" className="px-12 py-5 bg-brand-gold text-white rounded-2xl font-black uppercase tracking-widest text-sm shadow-2xl shadow-blue-500/20 hover:scale-105 transition-all inline-block">
                   Talk to a Human
                 </Link>
               </div>

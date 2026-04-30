@@ -195,14 +195,14 @@ export const RefundRequestModal: React.FC<RefundRequestModalProps> = ({ isOpen, 
                         
                         <label className={`w-20 h-20 rounded-xl border-2 border-dashed flex flex-col items-center justify-center gap-1 transition-all cursor-pointer ${
                             isUploading 
-                            ? "border-brand-blue/30 bg-blue-50/30" 
-                            : "border-gray-200 text-gray-400 hover:border-brand-blue hover:text-brand-blue hover:bg-blue-50/50"
+                            ? "border-brand-gold/30 bg-blue-50/30" 
+                            : "border-gray-200 text-gray-400 hover:border-brand-gold hover:text-brand-gold hover:bg-blue-50/50"
                         }`}>
                             <input type="file" multiple accept="image/*" onChange={handleFileChange} className="hidden" disabled={isUploading} />
                             {isUploading ? (
                                 <div className="flex flex-col items-center gap-1">
-                                    <div className="w-5 h-5 border-2 border-brand-blue border-t-transparent rounded-full animate-spin" />
-                                    <span className="text-[8px] font-black uppercase tracking-tighter text-brand-blue">Uploading</span>
+                                    <div className="w-5 h-5 border-2 border-brand-gold border-t-transparent rounded-full animate-spin" />
+                                    <span className="text-[8px] font-black uppercase tracking-tighter text-brand-gold">Uploading</span>
                                 </div>
                             ) : (
                                 <>

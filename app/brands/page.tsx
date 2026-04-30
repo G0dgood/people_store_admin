@@ -100,7 +100,7 @@ const BrandsPage = () => {
          <main className="flex-1 w-full bg-white">
             {/* Brands Hero section */}
             <section className="bg-gray-50 py-20 md:py-32 relative overflow-hidden">
-               <div className="absolute top-0 right-0 w-96 h-96 bg-brand-blue rounded-full filter blur-[120px] opacity-5 translate-x-1/2 -translate-y-1/2" />
+               <div className="absolute top-0 right-0 w-96 h-96 bg-brand-gold rounded-full filter blur-[120px] opacity-5 translate-x-1/2 -translate-y-1/2" />
                <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 text-center relative z-10">
                   <motion.div
                      initial={{ opacity: 0, y: 20 }}
@@ -108,9 +108,9 @@ const BrandsPage = () => {
                      transition={{ duration: 0.6 }}
                      className="flex flex-col gap-4"
                   >
-                     <span className="text-brand-blue font-bold tracking-[0.3em] uppercase text-[10px] md:text-xs">Artisanal Houses</span>
+                     <span className="text-brand-gold font-bold tracking-[0.3em] uppercase text-[10px] md:text-xs">Artisanal Houses</span>
                      <h1 className="text-4xl md:text-7xl font-black text-[#1D3557] tracking-tighter leading-none font-inter">
-                        The <span className="text-brand-blue">Brands.</span>
+                        The <span className="text-brand-gold">Brands.</span>
                      </h1>
                      <p className="text-gray-500 max-w-xl mx-auto text-sm md:text-lg mt-6 leading-relaxed font-medium">
                         Explore our curated selection of luxury perfume houses and skincare curators, each bringing a unique signature to the Bloom & Mist ecosystem.
@@ -134,13 +134,13 @@ const BrandsPage = () => {
                />
                <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 flex flex-col items-center text-center gap-8 relative z-10">
                   <div className="flex flex-col gap-2">
-                     <span className="text-brand-blue font-bold tracking-[0.4em] uppercase text-xs">Custom Procurement</span>
+                     <span className="text-brand-gold font-bold tracking-[0.4em] uppercase text-xs">Custom Procurement</span>
                      <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter leading-none font-inter">Looking for a specific <span className="text-[#8CB7F5]">Creator?</span></h2>
                   </div>
                   <p className="text-blue-100/40 text-sm md:text-lg max-w-2xl font-medium">
                      Our artisans maintain connections with luxury houses globally. If you need a specific brand or collector's edition not shown here, our concierge sourcing team is at your disposal.
                   </p>
-                  <Link href="/contact" className="mt-4 px-16 py-6 bg-brand-blue text-white rounded-3xl font-black uppercase tracking-widest text-sm shadow-2xl shadow-blue-500/30 hover:scale-105 active:scale-95 transition-all">
+                  <Link href="/contact" className="mt-4 px-16 py-6 bg-brand-gold text-white rounded-3xl font-black uppercase tracking-widest text-sm shadow-2xl shadow-blue-500/30 hover:scale-105 active:scale-95 transition-all">
                      Consult a Brand Curator
                   </Link>
                </div>

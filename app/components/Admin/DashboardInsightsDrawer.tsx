@@ -55,7 +55,7 @@ export function DashboardInsightsDrawer({ isOpen, onClose, activeSection }: Dash
       <Drawer isOpen={isOpen} onClose={onClose} title={getTitle()} width="max-w-xl">
          <div className="flex flex-col gap-10 pb-8">
             {/* Growth Forecast Section */}
-            <div className={`flex flex-col gap-6 p-2 rounded-2xl transition-all duration-500 ${activeSection === 'revenue' ? 'ring-2 ring-brand-blue/20 bg-brand-blue/[0.02]' : ''}`}>
+            <div className={`flex flex-col gap-6 p-2 rounded-2xl transition-all duration-500 ${activeSection === 'revenue' ? 'ring-2 ring-brand-gold/20 bg-brand-gold/[0.02]' : ''}`}>
                <div className="flex justify-between items-end px-1">
                   <div className="flex flex-col gap-1">
                      <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em]">Growth Analytics</h4>
@@ -63,7 +63,7 @@ export function DashboardInsightsDrawer({ isOpen, onClose, activeSection }: Dash
                   </div>
                   <div className="flex items-center gap-4">
                      <div className="flex items-center gap-1.5">
-                        <div className="w-2.5 h-2.5 rounded-full bg-brand-blue"></div>
+                        <div className="w-2.5 h-2.5 rounded-full bg-brand-gold"></div>
                         <span className="text-[10px] font-bold text-gray-500">Actual</span>
                      </div>
                      <div className="flex items-center gap-1.5">
@@ -120,7 +120,7 @@ export function DashboardInsightsDrawer({ isOpen, onClose, activeSection }: Dash
             </div>
 
             {/* Conversion Funnel */}
-            <div className={`flex flex-col gap-6 p-2 rounded-2xl transition-all duration-500 ${activeSection === 'funnel' ? 'ring-2 ring-brand-blue/20 bg-brand-blue/[0.02]' : ''}`}>
+            <div className={`flex flex-col gap-6 p-2 rounded-2xl transition-all duration-500 ${activeSection === 'funnel' ? 'ring-2 ring-brand-gold/20 bg-brand-gold/[0.02]' : ''}`}>
                <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Conversion Funnel</h4>
                <div className="flex flex-col gap-2">
                   {isLoadingFunnel ? (
@@ -150,7 +150,7 @@ export function DashboardInsightsDrawer({ isOpen, onClose, activeSection }: Dash
             </div>
 
             {/* Audience Intelligence */}
-            <div className={`grid grid-cols-2 gap-6 p-2 rounded-2xl transition-all duration-500 ${activeSection === 'traffic' ? 'ring-2 ring-brand-blue/20 bg-brand-blue/[0.02]' : ''}`}>
+            <div className={`grid grid-cols-2 gap-6 p-2 rounded-2xl transition-all duration-500 ${activeSection === 'traffic' ? 'ring-2 ring-brand-gold/20 bg-brand-gold/[0.02]' : ''}`}>
                <div className="flex flex-col gap-4">
                   <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Traffic Sources</h4>
                   <div className="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col gap-6 shadow-sm">
@@ -242,7 +242,7 @@ export function DashboardInsightsDrawer({ isOpen, onClose, activeSection }: Dash
                   <h5 className="text-white text-sm font-black tracking-tight">Generate Advanced Audit Report</h5>
                   <p className="text-white/60 text-[10px] font-medium max-w-[280px]">Deep-dive into every transaction, user behavior, and operational bottleneck.</p>
                </div>
-               <button className="mt-5 w-fit bg-brand-blue text-white px-5 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest relative z-10 shadow-lg shadow-black/20 group-hover:bg-white group-hover:text-brand-blue transition-colors">
+               <button className="mt-5 w-fit bg-brand-gold text-white px-5 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest relative z-10 shadow-lg shadow-black/20 group-hover:bg-white group-hover:text-brand-gold transition-colors">
                   Run Audit Now
                </button>
             </div>

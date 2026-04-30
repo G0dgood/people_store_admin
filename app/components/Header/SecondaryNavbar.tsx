@@ -61,7 +61,7 @@ export const SecondaryNavbar: React.FC = () => {
         e.stopPropagation();
         setIsSecondaryCategoryOpen(prev => !prev);
        }}
-       className="flex items-center gap-2 h-full font-bold text-sm text-gray-900 border-r border-gray-200 pr-6 hover:text-brand-blue transition-colors outline-none focus:outline-none"
+       className="flex items-center gap-2 h-full font-bold text-sm text-gray-900 border-r border-gray-200 pr-6 hover:text-brand-gold transition-colors outline-none focus:outline-none"
        aria-expanded={isSecondaryCategoryOpen}
       >
        All categories

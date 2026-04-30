@@ -50,7 +50,7 @@ const TrackingPage = () => {
        transition={{ duration: 0.7 }}
        className="flex flex-col gap-6"
       >
-       <span className="text-brand-blue font-black tracking-[0.4em] uppercase text-xs">Real-time Logistics</span>
+       <span className="text-brand-gold font-black tracking-[0.4em] uppercase text-xs">Real-time Logistics</span>
        <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter leading-none font-inter">
         Follow Your <br /><span className="text-[#8CB7F5]">Journey.</span>
        </h1>
@@ -91,7 +91,7 @@ const TrackingPage = () => {
         <Button
          type="submit"
          variant="primary"
-         className="w-full h-14 bg-brand-blue text-white font-black uppercase tracking-widest text-sm shadow-xl shadow-blue-500/10"
+         className="w-full h-14 bg-brand-gold text-white font-black uppercase tracking-widest text-sm shadow-xl shadow-blue-500/10"
         >
          Visualize Journey
         </Button>
@@ -103,7 +103,7 @@ const TrackingPage = () => {
             setEmail("guest@bloomandmist.com");
             setIsTracking(true);
           }}
-          className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-blue/60 hover:text-brand-blue transition-colors text-center w-full"
+          className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-gold/60 hover:text-brand-gold transition-colors text-center w-full"
         >
           Try with Demo ID
         </button>
@@ -111,7 +111,7 @@ const TrackingPage = () => {
 
        <div className="flex flex-col gap-6 text-sm text-gray-500 bg-blue-50/30 p-8 rounded-[32px] border border-blue-50">
         <div className="flex items-center gap-3 font-bold text-[#1D3557]">
-         <HiCubeTransparent size={20} className="text-brand-blue" />
+         <HiCubeTransparent size={20} className="text-brand-gold" />
          <span>Packaging Note</span>
         </div>
         <p className="leading-relaxed">All Bloom & Mist orders are fortified in eco-friendly, artisan-textured packaging to ensure sensory preservation during transit.</p>
@@ -131,10 +131,10 @@ const TrackingPage = () => {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-gray-200 pb-10">
            <div className="flex flex-col gap-1">
             <h3 className="text-3xl font-black text-[#1D3557] tracking-tight">Status: Shipped</h3>
-            <p className="text-gray-400 font-medium">Estimated arrival: <span className="text-brand-blue">October 28, 2026</span></p>
+            <p className="text-gray-400 font-medium">Estimated arrival: <span className="text-brand-gold">October 28, 2026</span></p>
            </div>
            <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-brand-blue flex items-center justify-center text-white shadow-lg">
+            <div className="w-14 h-14 rounded-2xl bg-brand-gold flex items-center justify-center text-white shadow-lg">
              <HiTruck size={28} />
             </div>
             <div className="flex flex-col">
@@ -147,11 +147,11 @@ const TrackingPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-5 gap-8 relative pb-20">
            {/* Progress Line */}
            <div className="absolute top-6 left-6 right-6 h-1 bg-gray-100 hidden md:block" />
-           <div className="absolute top-6 left-6 w-[40%] h-1 bg-brand-blue hidden md:block" />
+           <div className="absolute top-6 left-6 w-[40%] h-1 bg-brand-gold hidden md:block" />
 
            {trackingSteps.map((step, i) => (
             <div key={i} className={`flex md:flex-col items-center gap-4 md:gap-6 relative z-10 ${!step.active ? 'opacity-30' : ''}`}>
-             <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg transition-colors overflow-hidden ${step.done ? 'bg-brand-blue text-white' : 'bg-white text-gray-300 border border-gray-200'}`}>
+             <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg transition-colors overflow-hidden ${step.done ? 'bg-brand-gold text-white' : 'bg-white text-gray-300 border border-gray-200'}`}>
               {step.done ? <HiCheckCircle size={24} /> : i + 1}
              </div>
              <div className="flex flex-col md:items-center md:text-center gap-1">

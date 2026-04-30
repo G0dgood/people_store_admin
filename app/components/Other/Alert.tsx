@@ -20,7 +20,7 @@ const Alert: React.FC<AlertProps> = ({
 }) => {
   const variants = {
     success: {
-      bg: "bg-brand-blue-light",
+      bg: "bg-brand-gold-light",
       border: "border-blue-100",
       icon: "task_alt",
       iconColor: "text-[#2196F3]",

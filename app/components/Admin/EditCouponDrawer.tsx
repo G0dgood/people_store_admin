@@ -137,7 +137,7 @@ export function EditCouponDrawer({ isOpen, onClose, coupon }: EditCouponDrawerPr
               placeholder="e.g. SUMMER25"
               value={formData.code}
               onChange={(e) => setFormData({ ...formData, code: e.target.value })}
-              className="h-12 border-gray-200 focus:border-brand-blue/50 transition-all font-bold"
+              className="h-12 border-gray-200 focus:border-brand-gold/50 transition-all font-bold"
               required
             />
           </div>

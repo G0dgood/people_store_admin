@@ -20,7 +20,7 @@ const Uploader: React.FC<UploaderProps> = ({
       className={`
         w-20 h-20 flex items-center justify-center rounded-lg transition-all duration-200
         ${variant === "dashed" 
-          ? "border-2 border-dashed border-gray-200 bg-white hover:border-brand-blue hover:bg-gray-50" 
+          ? "border-2 border-dashed border-gray-200 bg-white hover:border-brand-gold hover:bg-gray-50" 
           : "bg-gray-100 border border-transparent hover:bg-gray-200"}
         ${className}
       `}
@@ -28,7 +28,7 @@ const Uploader: React.FC<UploaderProps> = ({
       <Icon 
         name={icon} 
         size="md" 
-        className={variant === "dashed" ? "text-gray-400 group-hover:text-brand-blue" : "text-gray-400"} 
+        className={variant === "dashed" ? "text-gray-400 group-hover:text-brand-gold" : "text-gray-400"} 
       />
     </button>
   );

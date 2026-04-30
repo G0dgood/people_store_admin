@@ -21,8 +21,8 @@ const HeroUserCard = () => {
           </div>
         </div>
         <div className="flex-1 w-full flex flex-col gap-2">
-          <Button onClick={openRegister} size="sm" className="w-full bg-brand-blue text-white hover:bg-brand-blue/90 border-none transition-colors cursor-pointer">Join now</Button>
-          <Button onClick={openLogin} variant="ghost" size="sm" className="w-full bg-white text-brand-blue border-none hover:bg-gray-50 transition-colors cursor-pointer">Log in</Button>
+          <Button onClick={openRegister} size="sm" className="w-full bg-brand-gold text-white hover:bg-brand-gold/90 border-none transition-colors cursor-pointer">Join now</Button>
+          <Button onClick={openLogin} variant="ghost" size="sm" className="w-full bg-white text-brand-gold border-none hover:bg-gray-50 transition-colors cursor-pointer">Log in</Button>
         </div>
       </div>
 

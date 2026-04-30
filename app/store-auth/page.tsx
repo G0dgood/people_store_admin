@@ -41,7 +41,7 @@ export default function StoreAuthPage() {
           </AnimatePresence>
 
           {/* Decorative background elements */}
-          <div className="absolute -top-24 -left-24 w-64 h-64 bg-brand-blue/5 rounded-full blur-3xl -z-10" />
+          <div className="absolute -top-24 -left-24 w-64 h-64 bg-brand-gold/5 rounded-full blur-3xl -z-10" />
           <div className="absolute -bottom-24 -right-24 w-64 h-64 bg-brand-gold/5 rounded-full blur-3xl -z-10" />
         </div>
       </main>

@@ -41,7 +41,7 @@ const Tabs: React.FC<TabsProps> = ({
                 key={tab.id}
                 onClick={() => onTabChange?.(tab.id)}
                 className={`flex items-center px-6 py-2 text-sm font-medium rounded-md transition-all ${isActive
-                    ? "bg-brand-blue-light text-brand-blue "
+                    ? "bg-brand-gold-light text-brand-gold "
                     : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"
                   }`}
               >
@@ -49,7 +49,7 @@ const Tabs: React.FC<TabsProps> = ({
                   <Icon
                     name={tab.icon}
                     size="sm"
-                    className={`${tab.label ? "mr-2" : ""} ${isActive ? "text-brand-blue" : "text-gray-400"}`}
+                    className={`${tab.label ? "mr-2" : ""} ${isActive ? "text-brand-gold" : "text-gray-400"}`}
                   />
                 )}
                 {tab.label}
@@ -62,7 +62,7 @@ const Tabs: React.FC<TabsProps> = ({
               key={tab.id}
               onClick={() => onTabChange?.(tab.id)}
               className={`flex items-center px-6 py-4 text-sm font-medium transition-all relative border-b-2 ${isActive
-                  ? "border-brand-blue text-brand-blue"
+                  ? "border-brand-gold text-brand-gold"
                   : "border-transparent text-gray-500 hover:text-gray-900 hover:border-gray-300"
                 }`}
             >
@@ -70,7 +70,7 @@ const Tabs: React.FC<TabsProps> = ({
                 <Icon
                   name={tab.icon}
                   size="sm"
-                  className={`${tab.label ? "mr-2" : ""} ${isActive ? "text-brand-blue" : "text-gray-400"}`}
+                  className={`${tab.label ? "mr-2" : ""} ${isActive ? "text-brand-gold" : "text-gray-400"}`}
                 />
               )}
               {tab.label}

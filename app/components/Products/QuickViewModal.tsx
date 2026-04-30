@@ -18,32 +18,127 @@ interface QuickViewModalProps {
 export const QuickViewModal: React.FC<QuickViewModalProps> = ({ isOpen, onClose, product }) => {
   const { addToCart } = useCart();
   const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
+  const [selectedIdx, setSelectedIdx] = React.useState<number>(0);
 
   React.useEffect(() => {
     if (product?.image) {
       setSelectedImage(product.image);
     }
+    setSelectedIdx(0);
   }, [product]);
 
-  if (!product) return null;
+  const images = React.useMemo(() => {
+    if (!product) return [];
+    return [
+      product.image,
+      ...(product.media || [])
+        .filter((m: any) => m.type === "image" && m.url !== product.image)
+        .map((m: any) => m.url)
+    ].filter(Boolean);
+  }, [product]);
 
-  const images = [
-    product.image,
-    ...(product.media || [])
-      .filter((m: any) => m.type === "image" && m.url !== product.image)
-      .map((m: any) => m.url)
-  ].filter(Boolean);
+  const sizes = React.useMemo(() => {
+    const allOptions: any[] = [];
+    if (!product) return allOptions;
+    
+    // 1. Base sizes (Normal sizes)
+    const rawBaseSizes = product.size || product.volume || [];
+    const baseSizeArray = Array.isArray(rawBaseSizes)
+      ? rawBaseSizes
+      : typeof rawBaseSizes === "string"
+        ? rawBaseSizes.split(",").map(s => s.trim())
+        : [];
+ 
+    baseSizeArray.forEach((s: any, bIdx: number) => {
+      if (s) {
+        allOptions.push({
+          id: `base-${bIdx}`,
+          label: typeof s === 'string' ? s.replace(/[\[\]"]/g, "").trim() : String(s),
+          price: typeof product.price === 'number' ? `₦${product.price.toLocaleString()}` : product.price,
+          isVariant: false,
+          originalPrice: product.price,
+          originalStock: product.stock,
+          originalSku: product.sku
+        });
+      }
+    });
+ 
+    // 2. Variants
+    if (product.variants?.length > 0) {
+      product.variants.forEach((v: any, vIdx: number) => {
+        const attrs = v.attributes || {};
+        const color = attrs.color || attrs.Color;
+        const otherAttrs = Object.entries(attrs)
+          .filter(([key]) => key.toLowerCase() !== 'color')
+          .map(([_, val]) => {
+            let cleaned = val;
+            if (Array.isArray(val)) {
+              cleaned = val.join(", ");
+            } else if (typeof val === 'string') {
+              try {
+                const parsed = JSON.parse(val);
+                cleaned = Array.isArray(parsed) ? parsed.join(", ") : parsed;
+              } catch (e) {
+                cleaned = val;
+              }
+              cleaned = String(cleaned).replace(/[\[\]"]/g, "").trim();
+            }
+            return cleaned;
+          })
+          .filter(Boolean);
+ 
+        const uniqueAttrs = Array.from(new Set(otherAttrs));
+ 
+        allOptions.push({
+          id: `variant-${vIdx}`,
+          label: uniqueAttrs.join(" / ") || `Variant ${vIdx + 1}`,
+          color: typeof color === 'string' ? color.replace(/[\[\]"]/g, "").trim() : color,
+          price: typeof v.price === 'number' ? `₦${v.price.toLocaleString()}` : v.price,
+          isVariant: true,
+          variantIdx: vIdx,
+          originalPrice: v.price,
+          originalStock: v.stock,
+          originalSku: v.sku
+        });
+      });
+    }
+ 
+    if (allOptions.length === 0) {
+      allOptions.push({
+        id: "default",
+        label: "One Size",
+        price: typeof product.price === 'number' ? `₦${product.price.toLocaleString()}` : product.price,
+        isVariant: false,
+        originalPrice: product.price,
+        originalStock: product.stock,
+        originalSku: product.sku
+      });
+    }
+ 
+    return allOptions;
+  }, [product]);
 
   const handleAddToCart = () => {
+    if (!product || !sizes[selectedIdx]) return;
+    const selected = sizes[selectedIdx];
+
     addToCart({
-      id: `qv-${product.name}`,
+      id: product._id || product.id,
       title: product.name,
-      price: product.price,
+      price: selected.price,
       image: product.image,
+      variant: selected.label,
+      sku: selected.originalSku,
+      meta: {
+        color: selected.color,
+        size: !selected.isVariant ? selected.label : undefined
+      }
     });
     toast.success(`${product.name} added to cart`);
     onClose();
   };
+
+  if (!product) return null;
 
   return (
     <Modal 
@@ -96,7 +191,9 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ isOpen, onClose,
               )}
             </h2>
             <div className="flex items-center justify-between mt-2">
-              <span className="text-2xl font-black text-gray-900">{product.price}</span>
+              <span className="text-2xl font-black text-gray-900">
+                {sizes[selectedIdx]?.price || product.price}
+              </span>
               <FavoriteButton 
                 item={{
                   id: product.id,
@@ -113,6 +210,33 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ isOpen, onClose,
           </div>
 
           <div className="h-px w-full bg-gray-100" />
+
+          {/* Variant Selection */}
+          {sizes.length > 0 && (
+            <div className="flex flex-col gap-4">
+              <h4 className="text-[10px] uppercase tracking-widest font-bold text-gray-400">Select Option</h4>
+              <div className="flex flex-wrap gap-2">
+                {sizes.map((size: any, idx: number) => (
+                  <button
+                    key={idx}
+                    onClick={() => setSelectedIdx(idx)}
+                    className={`px-4 py-2 border transition-all duration-300 flex items-center gap-3 rounded-none
+                      ${selectedIdx === idx 
+                        ? "border-brand-gold bg-black text-white" 
+                        : "border-gray-100 text-gray-400 hover:border-brand-gold"}`}
+                  >
+                    {size.color && (
+                      <div 
+                        className="w-3 h-3 rounded-full border border-white/20"
+                        style={{ backgroundColor: size.color }}
+                      />
+                    )}
+                    <span className="text-[10px] font-bold uppercase tracking-widest">{size.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="flex flex-col gap-3">
             <h4 className="text-[10px] uppercase tracking-widest font-bold text-gray-400">About the scent</h4>

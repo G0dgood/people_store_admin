@@ -133,11 +133,11 @@ export default function TableDemo() {
               <div className="w-40"><ActionIcons /></div>
               <div className="w-20"><Checkbox checked onChange={() => { }} /></div>
               <div className="w-40"><Badge variant="warning">Pending</Badge></div>
-              <div className="w-40 flex items-center gap-2 text-sm font-bold text-brand-blue">
+              <div className="w-40 flex items-center gap-2 text-sm font-bold text-brand-gold">
                 Text cell
                 <Icon name="expand_more" size="xs" />
               </div>
-              <div className="w-40 flex items-center gap-2 text-sm font-bold text-brand-blue">
+              <div className="w-40 flex items-center gap-2 text-sm font-bold text-brand-gold">
                 Text cell
                 <Icon name="expand_more" size="xs" className="rotate-180" />
               </div>

@@ -28,7 +28,7 @@ export default function ModalHeader({
       <div className="flex items-center gap-3">
         {icon && <Icon name={icon} size="sm" className="text-inherit" />}
         <h3
-          className={`font-work text-[14px] font-normal tracking-[-0.03em] text-brand-blue md:text-[16px] ${className}`}
+          className={`font-work text-[14px] font-normal tracking-[-0.03em] text-brand-gold md:text-[16px] ${className}`}
         >
           {title}
         </h3>

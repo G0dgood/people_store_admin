@@ -51,7 +51,7 @@ const PaymentOptionsPage = () => {
        transition={{ duration: 0.7 }}
        className="flex flex-col gap-6"
       >
-       <span className="text-brand-blue font-black tracking-[0.4em] uppercase text-xs">Security Framework</span>
+       <span className="text-brand-gold font-black tracking-[0.4em] uppercase text-xs">Security Framework</span>
        <h1 className="text-4xl md:text-7xl font-black text-white tracking-tighter leading-none font-inter">
         Secure <br /><span className="text-[#8CB7F5]">Orchestration.</span>
        </h1>
@@ -74,7 +74,7 @@ const PaymentOptionsPage = () => {
         transition={{ delay: i * 0.1 }}
         className="bg-white p-10 rounded-[40px] border border-gray-200 shadow-sm hover:shadow-2xl transition-all group"
        >
-        <div className="w-16 h-16 bg-brand-blue-light rounded-3xl flex items-center justify-center text-brand-blue mb-8 group-hover:bg-brand-blue group-hover:text-white transition-colors duration-500">
+        <div className="w-16 h-16 bg-brand-gold-light rounded-3xl flex items-center justify-center text-brand-gold mb-8 group-hover:bg-brand-gold group-hover:text-white transition-colors duration-500">
          {method.icon}
         </div>
         <h3 className="text-2xl font-black text-[#1D3557] mb-4">{method.title}</h3>
@@ -87,12 +87,12 @@ const PaymentOptionsPage = () => {
 
      {/* Encryption Details Area */}
      <div className="mt-24 md:mt-40 bg-gray-50 rounded-[64px] p-10 md:p-24 overflow-hidden relative">
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-blue/5 rounded-full filter blur-[100px] translate-x-1/2 -translate-y-1/2" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-gold/5 rounded-full filter blur-[100px] translate-x-1/2 -translate-y-1/2" />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center relative z-10">
        <div className="flex flex-col gap-8">
         <div className="flex flex-col gap-4">
-         <span className="text-brand-blue font-bold tracking-[0.2em] uppercase text-xs">Technical Integrity</span>
+         <span className="text-brand-gold font-bold tracking-[0.2em] uppercase text-xs">Technical Integrity</span>
          <h2 className="text-3xl md:text-5xl font-black text-[#1D3557] tracking-tight leading-tight">Artisanal Encryption <br />Standards.</h2>
         </div>
         <p className="text-gray-500 text-lg leading-relaxed">
@@ -100,18 +100,18 @@ const PaymentOptionsPage = () => {
         </p>
         <div className="flex flex-wrap gap-6 pt-4">
          <div className="flex items-center gap-3 text-[#1D3557]">
-          <HiLockClosed className="text-brand-blue" size={24} />
+          <HiLockClosed className="text-brand-gold" size={24} />
           <span className="text-xs font-black uppercase tracking-widest">SSL Secure</span>
          </div>
          <div className="flex items-center gap-3 text-[#1D3557]">
-          <HiCheckBadge className="text-brand-blue" size={24} />
+          <HiCheckBadge className="text-brand-gold" size={24} />
           <span className="text-xs font-black uppercase tracking-widest">PCI Compliant</span>
          </div>
         </div>
        </div>
 
        <div className="flex flex-col gap-8 bg-[#1D3557] p-10 md:p-12 rounded-[48px] shadow-2xl relative overflow-hidden group">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-brand-blue/10 rounded-full filter blur-[60px] group-hover:scale-110 transition-transform duration-700" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-brand-gold/10 rounded-full filter blur-[60px] group-hover:scale-110 transition-transform duration-700" />
         <div className="flex items-center gap-4 text-[#8CB7F5] relative z-10">
          <HiShieldCheck size={32} />
          <h4 className="text-xl font-black text-white">Patron Assurance</h4>
@@ -120,7 +120,7 @@ const PaymentOptionsPage = () => {
          "We understand that luxury discovery requires absolute peace of mind. Our billing curators work tirelessly behind the scenes to monitor transaction integrity, ensuring that your journey from curation to acquisition is as secure as it is seamless."
         </p>
         <div className="flex items-center gap-3 relative z-10">
-         <div className="w-10 h-10 rounded-full bg-brand-blue" />
+         <div className="w-10 h-10 rounded-full bg-brand-gold" />
          <div className="flex flex-col">
           <span className="text-[10px] font-black uppercase text-[#8CB7F5] tracking-widest">Chief Security Officer</span>
           <span className="text-[10px] text-white/40 font-medium">Boutique Compliance Suite</span>

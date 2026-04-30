@@ -114,7 +114,7 @@ export function UploadMediaModal({ isOpen, onClose, onUpload, onUploadSuccess, o
           onDrop={handleDrop}
           className={`
             border-2 border-dashed rounded-2xl p-12 flex flex-col items-center justify-center gap-4 transition-all cursor-pointer group
-            ${isDragging ? "border-brand-blue bg-blue-50/30" : "border-gray-200 bg-gray-50/50 hover:bg-white hover:border-brand-blue/30 hover:shadow-xl hover:shadow-blue-50/50"}
+            ${isDragging ? "border-brand-gold bg-blue-50/30" : "border-gray-200 bg-gray-50/50 hover:bg-white hover:border-brand-gold/30 hover:shadow-xl hover:shadow-blue-50/50"}
           `}
         >
           <input
@@ -125,7 +125,7 @@ export function UploadMediaModal({ isOpen, onClose, onUpload, onUploadSuccess, o
             accept=".jpg,.jpeg,.png,.mp4"
             onChange={handleFileSelect}
           />
-          <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center text-gray-400 group-hover:text-brand-blue group-hover:scale-110 transition-all shadow-sm">
+          <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center text-gray-400 group-hover:text-brand-gold group-hover:scale-110 transition-all shadow-sm">
             <Icon name="cloud_upload" folder="icon" size="md" />
           </div>
           <div className="flex flex-col items-center gap-1 text-center">
@@ -181,7 +181,7 @@ export function UploadMediaModal({ isOpen, onClose, onUpload, onUploadSuccess, o
             { icon: "verified", label: "Color Space", text: "Use sRGB for consistent color across all browsers." }
           ].map((req, i) => (
             <div key={i} className="flex items-start gap-3 p-4 bg-white border border-gray-50 rounded-xl">
-              <Icon name={req.icon} folder="icon" size="xs" className="text-brand-blue mt-0.5" />
+              <Icon name={req.icon} folder="icon" size="xs" className="text-brand-gold mt-0.5" />
               <div className="flex flex-col gap-0.5">
                 <span className="text-[11px] font-black text-[#1D3557]">{req.label}</span>
                 <span className="text-[10px] font-bold text-gray-400 leading-tight">{req.text}</span>

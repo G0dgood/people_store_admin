@@ -93,13 +93,13 @@ export const MessageFeed: React.FC = () => {
     <div className="flex gap-2 p-1 bg-gray-100 rounded-lg">
      <button
       onClick={() => setActiveTab("all")}
-      className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${activeTab === 'all' ? 'bg-white shadow-sm text-brand-blue' : 'text-gray-600 hover:text-gray-900'}`}
+      className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${activeTab === 'all' ? 'bg-white shadow-sm text-brand-gold' : 'text-gray-600 hover:text-gray-900'}`}
      >
       All Messages
      </button>
      <button
       onClick={() => setActiveTab("unread")}
-      className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${activeTab === 'unread' ? 'bg-white shadow-sm text-brand-blue' : 'text-gray-600 hover:text-gray-900'}`}
+      className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${activeTab === 'unread' ? 'bg-white shadow-sm text-brand-gold' : 'text-gray-600 hover:text-gray-900'}`}
      >
       Unread
      </button>
@@ -110,7 +110,7 @@ export const MessageFeed: React.FC = () => {
      <input
       type="text"
       placeholder="Search messages..."
-      className="w-full h-10 pl-10 pr-4 bg-white border border-gray-300 rounded-lg text-sm outline-none focus:border-brand-blue transition-colors text-gray-900"
+      className="w-full h-10 pl-10 pr-4 bg-white border border-gray-300 rounded-lg text-sm outline-none focus:border-brand-gold transition-colors text-gray-900"
      />
     </div>
    </div>
@@ -132,15 +132,15 @@ export const MessageFeed: React.FC = () => {
         animate="show"
         exit="exit"
         layout
-        className={`p-4 sm:p-5 flex gap-4 hover:bg-gray-50 transition-colors cursor-pointer group relative ${message.isUnread ? 'bg-brand-blue-light/20' : 'bg-white'}`}
+        className={`p-4 sm:p-5 flex gap-4 hover:bg-gray-50 transition-colors cursor-pointer group relative ${message.isUnread ? 'bg-brand-gold-light/20' : 'bg-white'}`}
        >
         {message.isUnread && (
-         <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-blue rounded-r"></div>
+         <div className="absolute left-0 top-0 bottom-0 w-1 bg-brand-gold rounded-r"></div>
         )}
 
         <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 border border-gray-200 bg-white">
          {message.avatar.startsWith("icon:") ? (
-          <div className="w-full h-full bg-brand-blue-light flex items-center justify-center text-brand-blue">
+          <div className="w-full h-full bg-brand-gold-light flex items-center justify-center text-brand-gold">
            <Icon name={message.avatar.replace("icon:", "")} size="md" />
           </div>
          ) : (
@@ -153,7 +153,7 @@ export const MessageFeed: React.FC = () => {
           <span className={`text-sm sm:text-base truncate ${message.isUnread ? 'font-bold text-gray-900' : 'font-semibold text-gray-700'}`}>
            {message.sender}
           </span>
-          <span className={`text-xs sm:text-sm whitespace-nowrap pt-0.5 ${message.isUnread ? 'font-bold text-brand-blue' : 'text-gray-400 font-medium'}`}>
+          <span className={`text-xs sm:text-sm whitespace-nowrap pt-0.5 ${message.isUnread ? 'font-bold text-brand-gold' : 'text-gray-400 font-medium'}`}>
            {message.time}
           </span>
          </div>
@@ -168,7 +168,7 @@ export const MessageFeed: React.FC = () => {
         </div>
 
         <div className="hidden sm:flex flex-col justify-center items-end opacity-0 group-hover:opacity-100 transition-opacity">
-         <button className="w-8 h-8 rounded-full bg-white border border-gray-200 text-gray-500 hover:text-brand-blue hover:border-brand-blue flex items-center justify-center shadow-sm">
+         <button className="w-8 h-8 rounded-full bg-white border border-gray-200 text-gray-500 hover:text-brand-gold hover:border-brand-gold flex items-center justify-center shadow-sm">
           <Icon name="delete" size="sm" />
          </button>
         </div>

@@ -66,7 +66,7 @@ export default function NotFound() {
               404
             </motion.div>
             <div className="flex flex-col gap-2 -mt-16 md:-mt-24">
-              <span className="text-brand-blue font-black tracking-[0.6em] uppercase text-xs">Environment Alert</span>
+              <span className="text-brand-gold font-black tracking-[0.6em] uppercase text-xs">Environment Alert</span>
               <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter leading-tight font-inter">
                 Lost in the <br /><span className="text-[#8CB7F5]">Mist.</span>
               </h1>
@@ -80,7 +80,7 @@ export default function NotFound() {
           {/* Recovery Nav Paths */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
             <Link href="/" className="group flex flex-col items-center gap-3 p-6 rounded-3xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/20 transition-all">
-              <div className="w-10 h-10 rounded-2xl bg-brand-blue flex items-center justify-center text-white shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
+              <div className="w-10 h-10 rounded-2xl bg-brand-gold flex items-center justify-center text-white shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
                 <HiHome size={20} />
               </div>
               <span className="text-[10px] font-black uppercase tracking-widest text-white/60 group-hover:text-white transition-colors">Home</span>

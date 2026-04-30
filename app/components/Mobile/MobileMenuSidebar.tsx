@@ -86,7 +86,7 @@ const MobileMenuSidebar = () => {
                      closeMenu();
                      openLogin();
                    }}
-                   className="text-sm text-left font-bold text-gray-900 hover:text-brand-blue transition-colors"
+                   className="text-sm text-left font-bold text-gray-900 hover:text-brand-gold transition-colors"
                  >
                    Sign in | Register
                  </button>
@@ -104,13 +104,13 @@ const MobileMenuSidebar = () => {
                   key={iIdx} 
                   href={item.href} 
                   onClick={closeMenu}
-                  className="flex items-center gap-4 px-6 py-3 text-sm text-gray-600 hover:bg-gray-50 hover:text-brand-blue transition-colors group"
+                  className="flex items-center gap-4 px-6 py-3 text-sm text-gray-600 hover:bg-gray-50 hover:text-brand-gold transition-colors group"
                 >
                    {item.icon && (
                      <Icon 
                        name={item.icon} 
                        size="sm" 
-                       className="text-gray-400 group-hover:text-brand-blue" 
+                       className="text-gray-400 group-hover:text-brand-gold" 
                      />
                    )}
                    <span className={!item.icon ? "ml-9" : ""}>{item.label}</span>

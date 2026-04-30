@@ -48,20 +48,20 @@ export const ProfileSkeleton: React.FC = () => {
                   <div className="h-5 w-48 bg-gray-50 rounded animate-pulse" />
                   <div className="flex gap-4">
                     <div className="h-11 w-24 bg-gray-100 rounded-xl animate-pulse" />
-                    <div className="h-11 w-32 bg-brand-blue/20 rounded-xl animate-pulse" />
+                    <div className="h-11 w-32 bg-brand-gold/20 rounded-xl animate-pulse" />
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Newsletter Skeleton */}
-            <div className="h-40 w-full bg-brand-blue/10 rounded-2xl animate-pulse flex items-center justify-between px-8">
+            <div className="h-40 w-full bg-brand-gold/10 rounded-2xl animate-pulse flex items-center justify-between px-8">
               <div className="space-y-2">
-                <div className="h-6 w-64 bg-brand-blue/20 rounded" />
-                <div className="h-4 w-80 bg-brand-blue/10 rounded" />
+                <div className="h-6 w-64 bg-brand-gold/20 rounded" />
+                <div className="h-4 w-80 bg-brand-gold/10 rounded" />
               </div>
               <div className="flex gap-3">
-                <div className="h-12 w-64 bg-brand-blue/10 rounded-xl border border-brand-blue/20" />
+                <div className="h-12 w-64 bg-brand-gold/10 rounded-xl border border-brand-gold/20" />
                 <div className="h-12 w-24 bg-orange-200 rounded-xl" />
               </div>
             </div>

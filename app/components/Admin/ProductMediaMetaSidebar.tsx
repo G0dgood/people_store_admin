@@ -17,8 +17,6 @@ interface ProductMediaMetaSidebarProps {
   brands: any[];
   showColorPicker: boolean;
   setShowColorPicker: (show: boolean) => void;
-  editingColorIndex: number | null;
-  setEditingColorIndex: (index: number | null) => void;
 }
 
 export const ProductMediaMetaSidebar: React.FC<ProductMediaMetaSidebarProps> = ({
@@ -32,8 +30,6 @@ export const ProductMediaMetaSidebar: React.FC<ProductMediaMetaSidebarProps> = (
   brands,
   showColorPicker,
   setShowColorPicker,
-  editingColorIndex,
-  setEditingColorIndex,
 }) => {
   return (
     <div className="flex flex-col gap-6">
@@ -189,16 +185,15 @@ export const ProductMediaMetaSidebar: React.FC<ProductMediaMetaSidebarProps> = (
           <div className="flex flex-col gap-4">
             <div className="flex justify-between items-center">
               <label className="text-[11px] font-bold text-[#1D3557]">
-                {editingColorIndex !== null ? "Edit selected color" : "Select your color"}
+                {formData.colors ? "Selected Color" : "Select your color"}
               </label>
               <button
                 onClick={() => {
                   setShowColorPicker(!showColorPicker);
-                  if (showColorPicker) setEditingColorIndex(null);
                 }}
                 className="text-[10px] font-bold text-brand-gold hover:underline"
               >
-                {showColorPicker ? "Close Picker" : editingColorIndex !== null ? "Change Color" : "Open Custom Picker"}
+                {showColorPicker ? "Close Picker" : formData.colors ? "Change Color" : "Open Custom Picker"}
               </button>
             </div>
 
@@ -210,16 +205,11 @@ export const ProductMediaMetaSidebar: React.FC<ProductMediaMetaSidebarProps> = (
                     {["#1D3557", "#457B9D", "#A8DADC", "#2A9D8F", "#E9C46A", "#F4A261", "#E76F51", "#264653"].map((preset) => (
                       <button
                         key={preset}
-                        className="w-6 h-6 rounded-full border border-white shadow-sm transition-transform hover:scale-125"
+                        className={`w-6 h-6 rounded-full border shadow-sm transition-transform hover:scale-125 ${formData.colors === preset ? "border-brand-gold ring-2 ring-brand-gold/20" : "border-white"}`}
                         style={{ backgroundColor: preset }}
                         onClick={() => {
-                          if (editingColorIndex !== null) {
-                            const newColors = [...formData.colors];
-                            newColors[editingColorIndex] = preset;
-                            handleInputChange("colors", newColors);
-                          } else if (!formData.colors.includes(preset)) {
-                            handleInputChange("colors", [...formData.colors, preset]);
-                          }
+                          handleInputChange("colors", preset);
+                          setShowColorPicker(false);
                         }}
                       />
                     ))}
@@ -238,36 +228,22 @@ export const ProductMediaMetaSidebar: React.FC<ProductMediaMetaSidebarProps> = (
                     <div className="relative group">
                       <input
                         type="color"
-                        value={editingColorIndex !== null ? formData.colors[editingColorIndex] : "#000000"}
+                        value={formData.colors || "#000000"}
                         className="w-8 h-8 rounded-[4px] cursor-pointer border-none bg-transparent"
                         onChange={(e) => {
-                          const newColor = e.target.value.toUpperCase();
-                          if (editingColorIndex !== null) {
-                            const newColors = [...formData.colors];
-                            newColors[editingColorIndex] = newColor;
-                            handleInputChange("colors", newColors);
-                          } else if (!formData.colors.includes(newColor)) {
-                            handleInputChange("colors", [...formData.colors, newColor]);
-                          }
+                          handleInputChange("colors", e.target.value.toUpperCase());
                         }}
                       />
                     </div>
                     <input
                       type="text"
-                      value={editingColorIndex !== null ? formData.colors[editingColorIndex] : ""}
+                      value={formData.colors || ""}
                       placeholder="#000000"
                       className="flex-1 h-8 bg-white border border-gray-200 rounded-[4px] px-2 text-[10px] font-mono text-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-100"
                       onChange={(e) => {
                         const val = e.target.value;
-                        if (val.match(/^#[0-9A-F]{6}$/i)) {
-                          const newColor = val.toUpperCase();
-                          if (editingColorIndex !== null) {
-                            const newColors = [...formData.colors];
-                            newColors[editingColorIndex] = newColor;
-                            handleInputChange("colors", newColors);
-                          } else if (!formData.colors.includes(newColor)) {
-                            handleInputChange("colors", [...formData.colors, newColor]);
-                          }
+                        if (val.match(/^#[0-9A-F]{6}$/i) || val === "") {
+                          handleInputChange("colors", val.toUpperCase());
                         }
                       }}
                     />
@@ -276,44 +252,19 @@ export const ProductMediaMetaSidebar: React.FC<ProductMediaMetaSidebarProps> = (
               </div>
             )}
 
-            {formData.colors.length > 0 && (
-              <div className="flex flex-wrap gap-2 p-3 bg-gray-50/50 rounded-[6px] border border-gray-100">
-                {formData.colors.map((color: string, index: number) => (
-                  <div
-                    key={index}
-                    className={`group relative flex items-center gap-1.5 px-2 py-1 rounded-full border transition-all ${editingColorIndex === index ? "border-brand-gold bg-brand-gold/5 ring-2 ring-brand-gold/20" : "border-gray-200 bg-white hover:border-gray-300"}`}
-                  >
-                    <div
-                      className="w-3 h-3 rounded-full border border-black/5 shadow-sm"
-                      style={{ backgroundColor: color }}
-                    />
-                    <span className="text-[9px] font-bold text-gray-500 uppercase tracking-tighter">{color}</span>
-                    <div className="flex items-center ml-1">
-                      <button
-                        onClick={() => {
-                          setEditingColorIndex(index);
-                          setShowColorPicker(true);
-                        }}
-                        className="p-0.5 text-gray-300 hover:text-brand-gold transition-colors"
-                      >
-                        <HiPencil size={10} />
-                      </button>
-                      <button
-                        onClick={() => {
-                          const newColors = formData.colors.filter((_: any, i: number) => i !== index);
-                          handleInputChange("colors", newColors);
-                          if (editingColorIndex === index) {
-                            setEditingColorIndex(null);
-                            setShowColorPicker(false);
-                          }
-                        }}
-                        className="p-0.5 text-gray-300 hover:text-rose-500 transition-colors"
-                      >
-                        <HiXCircle size={12} />
-                      </button>
-                    </div>
-                  </div>
-                ))}
+            {formData.colors && (
+              <div className="flex items-center gap-2 p-3 bg-gray-50/50 rounded-[6px] border border-gray-100 w-fit">
+                <div
+                  className="w-4 h-4 rounded-full border border-black/5 shadow-sm"
+                  style={{ backgroundColor: formData.colors }}
+                />
+                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">{formData.colors}</span>
+                <button
+                  onClick={() => handleInputChange("colors", "")}
+                  className="ml-2 text-gray-300 hover:text-rose-500 transition-colors"
+                >
+                  <HiXCircle size={14} />
+                </button>
               </div>
             )}
           </div>

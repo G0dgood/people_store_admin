@@ -25,7 +25,7 @@ export const ProfileStats: React.FC = () => {
     { label: "Total Orders", value: 12, icon: "favorite", color: "bg-blue-500" },
     { label: "Pending Shipments", value: 3, icon: "send", color: "bg-orange-500" },
     { label: "Reward Points", value: "2.4k", icon: "security", color: "bg-blue-500" },
-    { label: "Messages", value: 2, icon: "message_header", color: "bg-brand-blue" },
+    { label: "Messages", value: 2, icon: "message_header", color: "bg-brand-gold" },
   ];
 
   return (

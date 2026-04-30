@@ -77,7 +77,7 @@ export default function FAQPage() {
           <motion.span
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-block text-brand-blue font-black text-[10px] uppercase tracking-[0.2em] mb-4 bg-blue-50 px-4 py-1.5 rounded-full"
+            className="inline-block text-brand-gold font-black text-[10px] uppercase tracking-[0.2em] mb-4 bg-blue-50 px-4 py-1.5 rounded-full"
           >
             Help Center
           </motion.span>
@@ -118,7 +118,7 @@ export default function FAQPage() {
                   <h2 className="text-xl font-black text-[#1D3557]">Search Results</h2>
                   <button
                     onClick={() => setSearchQuery("")}
-                    className="text-xs font-bold text-brand-blue hover:underline"
+                    className="text-xs font-bold text-brand-gold hover:underline"
                   >
                     Clear search
                   </button>
@@ -135,7 +135,7 @@ export default function FAQPage() {
                   <p className="text-gray-500 font-bold">No results found for "{searchQuery}"</p>
                   <button
                     onClick={() => setSearchQuery("")}
-                    className="text-sm font-black text-brand-blue hover:underline"
+                    className="text-sm font-black text-brand-gold hover:underline"
                   >
                     Try searching something else
                   </button>
@@ -156,7 +156,7 @@ export default function FAQPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl">
             <div className="bg-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/10 flex flex-col items-center gap-4 hover:bg-white/10 transition-all cursor-pointer group">
-              <div className="w-12 h-12 rounded-xl bg-brand-blue flex items-center justify-center text-white shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 rounded-xl bg-brand-gold flex items-center justify-center text-white shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
                 <HiOutlineChatBubbleLeftRight size={24} />
               </div>
               <div className="flex flex-col">

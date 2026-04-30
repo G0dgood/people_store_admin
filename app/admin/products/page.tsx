@@ -185,7 +185,7 @@ export default function ProductListing() {
             <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Products</span>
             <span className="text-2xl font-black text-[#1D3557]">{products.length}</span>
           </div>
-          <div className="p-3 bg-blue-50 rounded-[6px] text-brand-blue">
+          <div className="p-3 bg-blue-50 rounded-[6px] text-brand-gold">
             <LuPackageSearch size={24} />
           </div>
         </div>

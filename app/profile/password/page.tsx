@@ -72,7 +72,7 @@ export default function PasswordPage() {
                         placeholder="••••••••••••"
                         className="h-12 bg-gray-50/50 border-gray-200 focus:bg-white transition-all shadow-none pr-12"
                       />
-                      <button className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-brand-blue transition-colors">
+                      <button className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-brand-gold transition-colors">
                         <Icon name="visibility" size="xs" />
                       </button>
                     </div>
@@ -127,7 +127,7 @@ export default function PasswordPage() {
                       <Button variant="ghost" className="h-11 px-6 font-bold text-gray-500 hover:text-gray-900">
                         Cancel
                       </Button>
-                      <Button className="h-11 px-8 bg-brand-blue text-white shadow-lg shadow-brand-blue/20 hover:bg-brand-blue/90 font-bold">
+                      <Button className="h-11 px-8 bg-brand-gold text-white shadow-lg shadow-brand-gold/20 hover:bg-brand-gold/90 font-bold">
                         Update Password
                       </Button>
                     </div>
@@ -144,7 +144,7 @@ export default function PasswordPage() {
               <div>
                 <h3 className="font-bold text-gray-900 mb-1">Two-Factor Authentication</h3>
                 <p className="text-sm text-gray-500 leading-relaxed mb-4">Add an extra layer of security to your account by enabling two-factor authentication. This helps protect your account from unauthorized access.</p>
-                <button className="text-sm font-bold text-brand-blue hover:underline">Setup 2FA Now</button>
+                <button className="text-sm font-bold text-brand-gold hover:underline">Setup 2FA Now</button>
               </div>
             </motion.div>
           </motion.div>

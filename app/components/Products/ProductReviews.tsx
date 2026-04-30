@@ -83,7 +83,7 @@ const ProductReviews = ({ product }: { product: any }) => {
                     initial={{ width: 0 }}
                     animate={{ width: `${pct}%` }}
                     transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
-                    className="h-full bg-brand-blue"
+                    className="h-full bg-brand-gold"
                   />
                 </div>
                 <span className="text-xs font-bold text-gray-400 w-10 text-right">{pct}%</span>
@@ -99,7 +99,7 @@ const ProductReviews = ({ product }: { product: any }) => {
           <h3 className="text-xl font-bold text-gray-900 tracking-tight">User Reviews</h3>
           <button
             onClick={() => setIsReviewModalOpen(true)}
-            className="text-sm font-bold text-brand-blue hover:underline cursor-pointer"
+            className="text-sm font-bold text-brand-gold hover:underline cursor-pointer"
           >
             Write a Review
           </button>
@@ -133,7 +133,7 @@ const ProductReviews = ({ product }: { product: any }) => {
                 </div>
 
                 {/* {review.verified && (
-                  <div className="flex items-center gap-1.5 px-3 py-1 bg-brand-blue-light text-[10px] font-black text-blue-600 uppercase tracking-wider border border-blue-100">
+                  <div className="flex items-center gap-1.5 px-3 py-1 bg-brand-gold-light text-[10px] font-black text-blue-600 uppercase tracking-wider border border-blue-100">
                     <Icon name="check" size="xs" />
                     Verified
                   </div>

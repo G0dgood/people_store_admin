@@ -52,7 +52,7 @@ const CancelOrderPage = () => {
                             transition={{ duration: 0.7 }}
                             className="flex flex-col gap-6"
                         >
-                            <span className="text-brand-blue font-black tracking-[0.4em] uppercase text-xs">Policy Framework</span>
+                            <span className="text-brand-gold font-black tracking-[0.4em] uppercase text-xs">Policy Framework</span>
                             <h1 className="text-4xl md:text-7xl font-black text-white tracking-tighter leading-none font-inter">
                                 Order <br /><span className="text-[#8CB7F5]">Cancellation.</span>
                             </h1>
@@ -75,7 +75,7 @@ const CancelOrderPage = () => {
                                 transition={{ delay: i * 0.1 }}
                                 className="bg-white p-10 rounded-[40px] border border-gray-200 shadow-sm hover:shadow-2xl transition-all group"
                             >
-                                <div className="w-16 h-16 bg-brand-blue-light rounded-3xl flex items-center justify-center text-brand-blue mb-8 group-hover:bg-brand-blue group-hover:text-white transition-colors duration-500">
+                                <div className="w-16 h-16 bg-brand-gold-light rounded-3xl flex items-center justify-center text-brand-gold mb-8 group-hover:bg-brand-gold group-hover:text-white transition-colors duration-500">
                                     {policy.icon}
                                 </div>
                                 <h3 className="text-2xl font-black text-[#1D3557] mb-4">{policy.title}</h3>
@@ -83,7 +83,7 @@ const CancelOrderPage = () => {
                                     {policy.desc}
                                 </p>
                                 {policy.link && (
-                                    <Link href={policy.link} className="text-xs font-black uppercase tracking-widest text-brand-blue hover:underline">
+                                    <Link href={policy.link} className="text-xs font-black uppercase tracking-widest text-brand-gold hover:underline">
                                         View Returns →
                                     </Link>
                                 )}
@@ -93,12 +93,12 @@ const CancelOrderPage = () => {
 
                     {/* Interactive Action Area */}
                     <div className="mt-24 md:mt-40 bg-gray-50 rounded-[64px] p-10 md:p-24 overflow-hidden relative">
-                        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-blue/5 rounded-full filter blur-[100px] translate-x-1/2 -translate-y-1/2" />
+                        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-gold/5 rounded-full filter blur-[100px] translate-x-1/2 -translate-y-1/2" />
                         
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center relative z-10">
                             <div className="flex flex-col gap-8">
                                 <div className="flex flex-col gap-4">
-                                    <span className="text-brand-blue font-bold tracking-[0.2em] uppercase text-xs">Immediate Request</span>
+                                    <span className="text-brand-gold font-bold tracking-[0.2em] uppercase text-xs">Immediate Request</span>
                                     <h2 className="text-3xl md:text-5xl font-black text-[#1D3557] tracking-tight leading-tight">Materialize Your <br />Cancellation.</h2>
                                 </div>
                                 <p className="text-gray-500 text-lg leading-relaxed">
@@ -122,7 +122,7 @@ const CancelOrderPage = () => {
                             </div>
 
                             <div className="flex flex-col gap-8 bg-white p-10 md:p-12 rounded-[48px] shadow-sm border border-gray-200">
-                                <div className="flex items-center gap-4 text-brand-blue">
+                                <div className="flex items-center gap-4 text-brand-gold">
                                     <HiShieldCheck size={32} />
                                     <h4 className="text-xl font-black text-[#1D3557]">Our Guarantee</h4>
                                 </div>
@@ -130,7 +130,7 @@ const CancelOrderPage = () => {
                                     "We prioritize your satisfaction above all. Our concierge team is committed to resolving all cancellation requests with precision and empathy, ensuring your Bloom & Mist experience remains flawless even when plans change."
                                 </p>
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full bg-brand-blue-light" />
+                                    <div className="w-10 h-10 rounded-full bg-brand-gold-light" />
                                     <div className="flex flex-col">
                                         <span className="text-[10px] font-black uppercase text-[#1D3557] tracking-widest">Director of Logistics</span>
                                         <span className="text-[10px] text-gray-400 font-medium">Bloom & Mist Support Suite</span>

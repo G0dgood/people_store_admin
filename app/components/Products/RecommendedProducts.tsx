@@ -55,7 +55,7 @@ export const RecommendedProducts: React.FC<RecommendedProductsProps> = ({ produc
               </div>
               <div className="flex flex-col gap-1 mb-2">
                 <span className="text-sm font-bold text-gray-900">{product.price}</span>
-                <p className="text-[11px] text-gray-500 line-clamp-2 leading-relaxed group-hover:text-brand-blue transition-colors">
+                <p className="text-[11px] text-gray-500 line-clamp-2 leading-relaxed group-hover:text-brand-gold transition-colors">
                   {product.title}
                 </p>
               </div>

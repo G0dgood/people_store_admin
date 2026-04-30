@@ -81,13 +81,13 @@ export function OrdersMoreActionsDrawer({ isOpen, onClose, onBulkPrint }: Orders
                   onClose();
                 }
               }}
-              className="flex items-start gap-4 p-5 rounded-[6px] border border-gray-50 hover:border-brand-blue/30 hover:bg-brand-blue/5 transition-all group text-left"
+              className="flex items-start gap-4 p-5 rounded-[6px] border border-gray-50 hover:border-brand-gold/30 hover:bg-brand-gold/5 transition-all group text-left"
             >
               <div className={`w-10 h-10 rounded-[6px] ${action.bg} ${action.color} flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-110`}>
                 <Icon name={action.icon} folder={action.folder as any} size="sm" />
               </div>
               <div className="flex flex-col">
-                <span className="text-[13px] font-black text-[#1D3557] group-hover:text-brand-blue transition-colors">
+                <span className="text-[13px] font-black text-[#1D3557] group-hover:text-brand-gold transition-colors">
                   {action.title}
                 </span>
                 <span className="text-[11px] font-bold text-gray-500 mt-1 leading-relaxed">

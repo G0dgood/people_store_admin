@@ -80,7 +80,7 @@ export function EditMediaDrawer({ isOpen, onClose, media }: EditMediaDrawerProps
                   <div className="flex gap-2">
                     <button 
                        type="button"
-                       className="p-2 rounded-[6px] border border-gray-200 text-gray-400 hover:text-brand-blue hover:border-brand-blue/30 transition-all"
+                       className="p-2 rounded-[6px] border border-gray-200 text-gray-400 hover:text-brand-gold hover:border-brand-gold/30 transition-all"
                        onClick={() => setIsPickerOpen(true)}
                        title="Change Thumbnail"
                     >
@@ -88,7 +88,7 @@ export function EditMediaDrawer({ isOpen, onClose, media }: EditMediaDrawerProps
                     </button>
                     <button 
                        type="button"
-                       className="p-2 rounded-[6px] border border-gray-200 text-gray-400 hover:text-brand-blue hover:border-brand-blue/30 transition-all"
+                       className="p-2 rounded-[6px] border border-gray-200 text-gray-400 hover:text-brand-gold hover:border-brand-gold/30 transition-all"
                        onClick={() => window.open(media.url, '_blank')}
                        title="View Full Asset"
                     >

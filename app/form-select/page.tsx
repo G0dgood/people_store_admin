@@ -50,7 +50,7 @@ export default function FormSelectDemo() {
         options={[options[1]]}
         value={select2}
         onChange={(v) => setSelect2(v as string)}
-        className="border-brand-blue"
+        className="border-brand-gold"
        />
 
        <Select
@@ -104,14 +104,14 @@ export default function FormSelectDemo() {
          </div>
          <div className="grid grid-cols-7 gap-1">
           {Array.from({ length: 31 }, (_, i) => i + 1).map(d => (
-           <div key={d} className={`w-8 h-8 text-xs font-semibold rounded-md flex items-center justify-center ${d === 16 ? "bg-brand-blue text-white" : "text-gray-700 hover:bg-gray-50 pointer-events-none"}`}>
+           <div key={d} className={`w-8 h-8 text-xs font-semibold rounded-md flex items-center justify-center ${d === 16 ? "bg-brand-gold text-white" : "text-gray-700 hover:bg-gray-50 pointer-events-none"}`}>
             {d}
            </div>
           ))}
          </div>
          <div className="flex gap-2 mt-6 pt-4 border-t border-gray-200">
-          <button className="flex-1 py-2 text-xs font-bold text-brand-blue border border-gray-200 rounded-md">Clear</button>
-          <button className="flex-1 py-2 text-xs font-bold text-brand-blue border border-gray-200 rounded-md">Today</button>
+          <button className="flex-1 py-2 text-xs font-bold text-brand-gold border border-gray-200 rounded-md">Clear</button>
+          <button className="flex-1 py-2 text-xs font-bold text-brand-gold border border-gray-200 rounded-md">Today</button>
          </div>
         </div>
        </div>

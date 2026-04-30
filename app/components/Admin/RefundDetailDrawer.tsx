@@ -17,7 +17,7 @@ const statusStyles = {
  Rejected: { color: "text-rose-500", bg: "bg-rose-500", lightBg: "bg-rose-50" },
  Pending: { color: "text-orange-400", bg: "bg-orange-400", lightBg: "bg-orange-50" },
  Approved: { color: "text-emerald-500", bg: "bg-emerald-500", lightBg: "bg-emerald-50" },
- Processing: { color: "text-brand-blue", bg: "bg-brand-blue", lightBg: "bg-brand-blue/5" },
+ Processing: { color: "text-brand-gold", bg: "bg-brand-gold", lightBg: "bg-brand-gold/5" },
 };
 
 export function RefundDetailDrawer({ isOpen, onClose, refund, onUpdateStatus }: RefundDetailDrawerProps) {

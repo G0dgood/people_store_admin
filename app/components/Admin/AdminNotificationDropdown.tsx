@@ -18,7 +18,7 @@ const typeIcons = {
 };
 
 const typeStyles = {
-  Orders: { bg: "bg-blue-50 text-brand-blue", dot: "bg-brand-blue" },
+  Orders: { bg: "bg-blue-50 text-brand-gold", dot: "bg-brand-gold" },
   Stock: { bg: "bg-amber-50 text-amber-500", dot: "bg-amber-500" },
   Security: { bg: "bg-rose-50 text-rose-500", dot: "bg-rose-500" },
   General: { bg: "bg-emerald-50 text-emerald-500", dot: "bg-emerald-500" },
@@ -39,7 +39,7 @@ export const NotificationList: React.FC<{ onAction?: () => void }> = ({ onAction
      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Platform Events</span>
     </div>
     <button
-     className="text-[10px] font-black text-brand-blue uppercase hover:underline"
+     className="text-[10px] font-black text-brand-gold uppercase hover:underline"
      onClick={() => markAllAsRead()}
     >
      Mark all as read

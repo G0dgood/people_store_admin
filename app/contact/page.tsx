@@ -64,7 +64,7 @@ const ContactPage = () => {
                 transition={{ duration: 0.6 }}
                 className="flex flex-col gap-2"
               >
-                <span className="text-brand-blue font-bold tracking-[0.2em] uppercase text-xs md:text-sm">Bloom & Mist Support</span>
+                <span className="text-brand-gold font-bold tracking-[0.2em] uppercase text-xs md:text-sm">Bloom & Mist Support</span>
                 <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight">How can we <br /><span className="text-[#8CB7F5]">help you?</span></h1>
                 <p className="text-white/80 text-sm md:text-base max-w-md mt-4 leading-relaxed">
                   Whether you have a question about features, pricing, or anything else, our team is ready to answer all your questions.
@@ -94,7 +94,7 @@ const ContactPage = () => {
                   <Input
                     type="text"
                     placeholder="John Doe"
-                    className="h-12 border-gray-200 focus:border-brand-blue bg-gray-50/30"
+                    className="h-12 border-gray-200 focus:border-brand-gold bg-gray-50/30"
                     value={formData.customerName}
                     onChange={(e) => setFormData({ ...formData, customerName: e.target.value })}
                   />
@@ -104,7 +104,7 @@ const ContactPage = () => {
                   <Input
                     type="email"
                     placeholder="john@example.com"
-                    className="h-12 border-gray-200 focus:border-brand-blue bg-gray-50/30"
+                    className="h-12 border-gray-200 focus:border-brand-gold bg-gray-50/30"
                     value={formData.customerEmail}
                     onChange={(e) => setFormData({ ...formData, customerEmail: e.target.value })}
                   />
@@ -114,7 +114,7 @@ const ContactPage = () => {
                   <Input
                     type="text"
                     placeholder="Inquiry about Bloom & Mist services"
-                    className="h-12 border-gray-200 focus:border-brand-blue bg-gray-50/30"
+                    className="h-12 border-gray-200 focus:border-brand-gold bg-gray-50/30"
                     value={formData.subject}
                     onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                   />
@@ -122,7 +122,7 @@ const ContactPage = () => {
                 <div className="flex flex-col gap-2 md:col-span-2">
                   <label className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Message</label>
                   <Textarea
-                    className="min-h-[160px] border-gray-200 focus:border-brand-blue bg-gray-50/30 shadow-none"
+                    className="min-h-[160px] border-gray-200 focus:border-brand-gold bg-gray-50/30 shadow-none"
                     placeholder="Write your message here..."
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
@@ -150,7 +150,7 @@ const ContactPage = () => {
             >
               <div className="flex flex-col gap-8">
                 <div className="flex items-start gap-5 group">
-                  <div className="w-14 h-14 rounded-2xl bg-brand-blue-light flex items-center justify-center text-brand-blue flex-shrink-0 group-hover:scale-110 transition-transform">
+                  <div className="w-14 h-14 rounded-2xl bg-brand-gold-light flex items-center justify-center text-brand-gold flex-shrink-0 group-hover:scale-110 transition-transform">
                     <HiMapPin size={24} />
                   </div>
                   <div className="flex flex-col gap-1">
@@ -163,7 +163,7 @@ const ContactPage = () => {
                 </div>
 
                 <div className="flex items-start gap-5 group">
-                  <div className="w-14 h-14 rounded-2xl bg-brand-blue-light flex items-center justify-center text-brand-blue flex-shrink-0 group-hover:scale-110 transition-transform">
+                  <div className="w-14 h-14 rounded-2xl bg-brand-gold-light flex items-center justify-center text-brand-gold flex-shrink-0 group-hover:scale-110 transition-transform">
                     <HiPhone size={24} />
                   </div>
                   <div className="flex flex-col gap-1">
@@ -176,7 +176,7 @@ const ContactPage = () => {
                 </div>
 
                 <div className="flex items-start gap-5 group">
-                  <div className="w-14 h-14 rounded-2xl bg-brand-blue-light flex items-center justify-center text-brand-blue flex-shrink-0 group-hover:scale-110 transition-transform">
+                  <div className="w-14 h-14 rounded-2xl bg-brand-gold-light flex items-center justify-center text-brand-gold flex-shrink-0 group-hover:scale-110 transition-transform">
                     <HiEnvelope size={24} />
                   </div>
                   <div className="flex flex-col gap-1">

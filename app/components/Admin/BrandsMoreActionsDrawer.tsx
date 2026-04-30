@@ -69,7 +69,7 @@ export function BrandsMoreActionsDrawer({ isOpen, onClose, onDeactivateInactive 
                 <div className={`mt-1 w-10 h-10 rounded-lg flex items-center justify-center transition-all
                   ${action.variant === "danger" 
                     ? "bg-rose-50 text-rose-500 group-hover:bg-rose-100" 
-                    : "bg-brand-blue-light text-brand-blue group-hover:bg-brand-blue group-hover:text-white"}
+                    : "bg-brand-gold-light text-brand-gold group-hover:bg-brand-gold group-hover:text-white"}
                 `}>
                   <Icon name={action.icon} folder={action.folder} size="sm" />
                 </div>
