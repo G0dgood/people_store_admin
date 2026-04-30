@@ -28,6 +28,7 @@ export function EditBrandDrawer({ isOpen, onClose, brand }: EditBrandDrawerProps
   const [formData, setFormData] = useState({
     name: "",
     logo: "",
+    coverImage: "",
     category: "",
     status: "Active",
   });
@@ -37,6 +38,7 @@ export function EditBrandDrawer({ isOpen, onClose, brand }: EditBrandDrawerProps
       setFormData({
         name: brand.name || "",
         logo: brand.logo || "",
+        coverImage: brand.coverImage || "",
         category: brand.category || "Electronics",
         status: brand.status || "Active",
       });
@@ -83,12 +85,20 @@ export function EditBrandDrawer({ isOpen, onClose, brand }: EditBrandDrawerProps
             />
           </div>
 
-          <ImageUpload
-            label="Brand Logo"
-            value={formData.logo}
-            onChange={(url) => setFormData({ ...formData, logo: url })}
-            placeholder="Click or drag to upload brand logo"
-          />
+          <div className="grid grid-cols-1  gap-6">
+            <ImageUpload
+              label="Brand Logo"
+              value={formData.logo}
+              onChange={(url) => setFormData({ ...formData, logo: url })}
+              placeholder="Click or drag to upload brand logo"
+            />
+            <ImageUpload
+              label="Cover Picture (Optional)"
+              value={formData.coverImage}
+              onChange={(url) => setFormData({ ...formData, coverImage: url })}
+              placeholder="Click or drag to upload cover picture"
+            />
+          </div>
 
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">

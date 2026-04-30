@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Checkbox from "../../components/Checkbox";
+import { useApiError } from "../../hooks/useApiError";
 
 import { useGetCategoriesQuery } from "@/lib/redux/services/categoryApi";
 import { Select } from "../Form";
@@ -42,7 +43,9 @@ export const QuickAddProductModal: React.FC<QuickAddProductModalProps> = ({
     category: filterCategoryId || undefined
   }, { skip: !isOpen });
 
-  const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
+  const [updateProduct, { isLoading: isUpdating, isError, error }] = useUpdateProductMutation();
+
+  useApiError(isError, error, "Failed to update products");
 
   const products = productsData?.data?.products || [];
   const productOptions = products.map((p: any) => ({
@@ -66,13 +69,11 @@ export const QuickAddProductModal: React.FC<QuickAddProductModalProps> = ({
 
     try {
       const updatePromises = selectedProductIds.map(productId => {
-        const formData = new FormData();
-        if (isCategory) {
-          formData.append("category", category._id);
-        } else {
-          formData.append("brand", brand._id);
-        }
-        return updateProduct({ productId, data: formData as any }).unwrap();
+        const data = isCategory 
+          ? { category: category._id } 
+          : { brand: brand._id };
+        
+        return updateProduct({ productId, data }).unwrap();
       });
 
       await Promise.all(updatePromises);
@@ -80,7 +81,7 @@ export const QuickAddProductModal: React.FC<QuickAddProductModalProps> = ({
       onClose();
       setSelectedProductIds([]);
     } catch (error) {
-      toast.error("Failed to update some products");
+      // Error is handled by useApiError hook
     }
   };
 

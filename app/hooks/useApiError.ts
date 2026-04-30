@@ -38,51 +38,35 @@ export const useApiError = (
     if (typeof error === "string") {
       message = error;
     } else if (typeof error === "object" && error !== null) {
-      const err = error as { data?: unknown; error?: unknown };
-      const data = err.data;
-
-      if (typeof data === "string") {
-        message = data;
-      } else if (Array.isArray(data) && data.length > 0) {
-        const first = data[0] as { message?: unknown };
-        if (typeof first?.message === "string") {
-          message = first.message;
-        }
-      } else if (typeof data === "object" && data !== null) {
-        const anyData = data as {
-          message?: unknown;
-          Message?: unknown;
-          error?: unknown;
-          Error?: unknown;
-          errors?: Array<{ message?: unknown; Message?: unknown }>;
-        };
-
-        if (typeof anyData.message === "string") {
-          message = anyData.message;
-        } else if (typeof anyData.Message === "string") {
-          message = anyData.Message;
-        } else if (typeof anyData.error === "string") {
-          message = anyData.error;
-        } else if (typeof anyData.Error === "string") {
-          message = anyData.Error;
-        } else if (
-          Array.isArray(anyData.errors) &&
-          anyData.errors.length > 0
-        ) {
-          const firstErr = anyData.errors[0];
-          if (typeof firstErr?.message === "string") {
-            message = firstErr.message;
-          } else if (typeof firstErr?.Message === "string") {
-            message = firstErr.Message;
+      const err = error as any;
+      
+      // 1. Try err.data.message (RTK Query standard)
+      if (err.data) {
+        const data = err.data;
+        if (typeof data === "string") {
+          message = data;
+        } else if (typeof data === "object" && data !== null) {
+          message = data.message || data.Message || data.error || data.Error;
+          
+          if (!message && Array.isArray(data.errors) && data.errors.length > 0) {
+            const first = data.errors[0];
+            message = first.message || first.Message;
           }
         }
       }
 
-      if (!message && typeof err?.error === "string") {
+      // 2. Try err.message (Fetch error or other)
+      if (!message && typeof err.message === "string") {
+        message = err.message;
+      }
+
+      // 3. Try err.error (RTK Query fallback)
+      if (!message && typeof err.error === "string") {
         message = err.error;
       }
     }
 
-    toast.error(message || fallbackMessage);
+    const finalMessage = typeof message === "string" ? message : fallbackMessage;
+    toast.error(finalMessage);
   }, [isError, error, fallbackMessage]);
 };

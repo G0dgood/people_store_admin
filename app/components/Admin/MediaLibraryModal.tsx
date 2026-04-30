@@ -72,11 +72,20 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({
                 }}
                 className="group relative aspect-square bg-white border border-gray-100 rounded-xl overflow-hidden cursor-pointer hover:border-brand-gold transition-all shadow-sm hover:shadow-lg"
               >
-                <img 
-                  src={item.url} 
-                  alt={item.name} 
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                />
+                {item.url?.match(/\.(mp4|webm|ogg)$/i) ? (
+                  <video 
+                    src={item.url} 
+                    muted 
+                    playsInline
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                ) : (
+                  <img 
+                    src={item.url} 
+                    alt={item.name} 
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                )}
                 
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2">

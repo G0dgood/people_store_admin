@@ -26,7 +26,9 @@ export function MediaSelectionModal({ isOpen, onClose, onSelect, title = "Select
   const filteredMedia = mediaData.filter(item => {
     const isImage = item.type === "image" || 
                     /\.(jpeg|jpg|gif|png|webp|avif|svg)$/i.test(item.url);
-    return isImage && item.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const isVideo = item.type === "video" ||
+                    /\.(mp4|webm|ogg)$/i.test(item.url);
+    return (isImage || isVideo) && item.name.toLowerCase().includes(searchQuery.toLowerCase());
   });
 
   return (
@@ -75,11 +77,20 @@ export function MediaSelectionModal({ isOpen, onClose, onSelect, title = "Select
                   }}
                   className="group relative aspect-square bg-gray-50 rounded-xl border border-gray-200 overflow-hidden cursor-pointer hover:border-brand-gold hover:shadow-lg transition-all"
                 >
-                  <img
-                    src={item.url}
-                    alt={item.name}
-                    className="w-full h-full object-cover transition-transform group-hover:scale-110"
-                  />
+                  {item.url?.match(/\.(mp4|webm|ogg)$/i) ? (
+                    <video
+                      src={item.url}
+                      muted
+                      playsInline
+                      className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                    />
+                  ) : (
+                    <img
+                      src={item.url}
+                      alt={item.name}
+                      className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                    />
+                  )}
                   <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <span className="text-[10px] font-black text-white uppercase tracking-widest bg-brand-gold px-3 py-1 rounded-full">Select</span>
                   </div>

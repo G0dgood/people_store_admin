@@ -63,7 +63,7 @@ export const productApi = baseApi.injectEndpoints({
         method: 'POST',
         body: formData,
       }),
-      invalidatesTags: ['Product'],
+      invalidatesTags: ['Product', 'Brand', 'Category'],
     }),
     updateProduct: builder.mutation<ApiResponse<Product>, { productId: string; data: Partial<Product> }>({
       query: ({ productId, data }) => ({
@@ -71,14 +71,19 @@ export const productApi = baseApi.injectEndpoints({
         method: 'PATCH',
         body: data,
       }),
-      invalidatesTags: (result, error, { productId }) => [{ type: 'Product', id: productId }, 'Product'],
+      invalidatesTags: (result, error, { productId }) => [
+        { type: 'Product', id: productId }, 
+        'Product',
+        'Brand',
+        'Category'
+      ],
     }),
     deleteProduct: builder.mutation<ApiResponse<{}>, string>({
       query: (id) => ({
         url: `/products/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Product'],
+      invalidatesTags: ['Product', 'Brand', 'Category'],
     }),
     getBestSellingProducts: builder.query<ApiResponse<any[]>, void>({
       query: () => '/products/best-selling',

@@ -32,9 +32,11 @@ export function EditCategoryDrawer({ isOpen, onClose, category }: EditCategoryDr
 
  useApiError(isError, error, "Failed to update category");
  const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
+ const [mediaTarget, setMediaTarget] = useState<"image" | "coverImage">("image");
  const [formData, setFormData] = useState({
   name: "",
   image: "",
+  coverImage: "",
   description: "",
   hasSize: false,
   hasML: false,
@@ -51,6 +53,7 @@ export function EditCategoryDrawer({ isOpen, onClose, category }: EditCategoryDr
    setFormData({
     name: category.name || "",
     image: category.image || "",
+    coverImage: category.coverImage || "",
     description: category.description || "",
     hasSize: category.hasSize || false,
     hasML: category.hasML || false,
@@ -148,7 +151,36 @@ export function EditCategoryDrawer({ isOpen, onClose, category }: EditCategoryDr
           variant="outline"
           shape="rounded-sm"
           className="w-12 h-12 p-0 flex-shrink-0 hover:bg-brand-gold hover:text-white hover:border-brand-gold transition-all"
-          onClick={() => setIsMediaModalOpen(true)}
+          onClick={() => {
+           setMediaTarget("image");
+           setIsMediaModalOpen(true);
+          }}
+         >
+          <Icon name="photo" folder="icon" size="sm" />
+         </Button>
+        </div>
+       </div>
+
+       {/* Category Cover Image */}
+       <div className="flex flex-col gap-2">
+        <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Cover Picture (Optional)</label>
+        <div className="flex gap-4">
+         <Input
+          placeholder="Path to cover image"
+          value={formData.coverImage}
+          onChange={(e) => setFormData({ ...formData, coverImage: e.target.value })}
+          className="h-12 border-gray-200 font-bold flex-1"
+          shape="rounded-sm"
+         />
+         <Button
+          type="button"
+          variant="outline"
+          shape="rounded-sm"
+          className="w-12 h-12 p-0 flex-shrink-0 hover:bg-brand-gold hover:text-white hover:border-brand-gold transition-all"
+          onClick={() => {
+           setMediaTarget("coverImage");
+           setIsMediaModalOpen(true);
+          }}
          >
           <Icon name="photo" folder="icon" size="sm" />
          </Button>
@@ -284,15 +316,15 @@ export function EditCategoryDrawer({ isOpen, onClose, category }: EditCategoryDr
       </div>
 
       <div className="flex flex-col gap-3 mt-auto pt-6 border-t border-gray-200">
-       <Button
-        shape="rounded-sm"
-        variant="primary"
-        type="submit"
-        disabled={isLoading}
-        className="w-full h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
-       >
-        {isLoading ? "Updating..." : "Update Category"}
-       </Button>
+        <Button
+         shape="rounded-sm"
+         variant="primary"
+         type="submit"
+         isLoading={isLoading}
+         className="w-full h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
+        >
+         Update Category
+        </Button>
        <Button
         shape="rounded-sm"
         variant="outline"
@@ -310,7 +342,7 @@ export function EditCategoryDrawer({ isOpen, onClose, category }: EditCategoryDr
    <MediaSelectionModal
     isOpen={isMediaModalOpen}
     onClose={() => setIsMediaModalOpen(false)}
-    onSelect={(url) => setFormData({ ...formData, image: url })}
+    onSelect={(url) => setFormData({ ...formData, [mediaTarget]: url })}
    />
   </>
  );

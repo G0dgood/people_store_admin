@@ -18,7 +18,9 @@ interface ImageUploadProps {
   className?: string;
 }
 
-const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const ALLOWED_VIDEO_TYPES = ["video/mp4", "video/webm", "video/ogg"];
+const ALLOWED_TYPES = [...ALLOWED_IMAGE_TYPES, ...ALLOWED_VIDEO_TYPES];
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 export function ImageUpload({
@@ -45,7 +47,7 @@ export function ImageUpload({
 
   const handleFileSelect = (file: File) => {
     if (!ALLOWED_TYPES.includes(file.type)) {
-      toast.error("Invalid format. Only JPG, PNG, and WEBP are allowed.");
+      toast.error("Invalid format. Only JPG, PNG, WEBP, and MP4/WEBM videos are allowed.");
       return;
     }
     if (file.size > MAX_FILE_SIZE) {
@@ -54,8 +56,33 @@ export function ImageUpload({
     }
 
     setStagedFile(file);
-    setPreviewUrl(URL.createObjectURL(file));
-    setIsTweakModalOpen(true);
+    const url = URL.createObjectURL(file);
+    setPreviewUrl(url);
+
+    if (ALLOWED_VIDEO_TYPES.includes(file.type)) {
+      // Direct upload for videos (no tweaks supported yet)
+      handleDirectUpload(file);
+    } else {
+      setIsTweakModalOpen(true);
+    }
+  };
+
+  const handleDirectUpload = async (file: File) => {
+    try {
+      const formData = new FormData();
+      formData.append("files", file);
+
+      const response = await uploadMedia(formData).unwrap();
+      const url = response.data?.[0]?.url;
+      if (url) {
+        onChange(url);
+        toast.success("Video uploaded successfully");
+        setStagedFile(null);
+        setPreviewUrl(null);
+      }
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to upload video.");
+    }
   };
 
   const handleUpload = async () => {
@@ -156,11 +183,22 @@ export function ImageUpload({
 
       {value ? (
         <div className="relative w-full h-32 rounded-xl overflow-hidden border border-gray-200 group">
-          <img
-            src={value}
-            alt="Preview"
-            className="w-full h-full object-contain p-4 bg-gray-50 transition-transform duration-500 group-hover:scale-105"
-          />
+          {value.match(/\.(mp4|webm|ogg)$/i) ? (
+            <video
+              src={value}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full h-full object-cover bg-gray-50 transition-transform duration-500 group-hover:scale-105"
+            />
+          ) : (
+            <img
+              src={value}
+              alt="Preview"
+              className="w-full h-full object-contain p-4 bg-gray-50 transition-transform duration-500 group-hover:scale-105"
+            />
+          )}
           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 px-4 flex-wrap">
             <button
               type="button"
@@ -211,7 +249,7 @@ export function ImageUpload({
             type="file"
             ref={fileInputRef}
             className="hidden"
-            accept=".jpg,.jpeg,.png,.webp"
+            accept=".jpg,.jpeg,.png,.webp,.mp4,.webm,.ogg"
             onChange={(e) => e.target.files?.[0] && handleFileSelect(e.target.files[0])}
             disabled={isUploading}
           />

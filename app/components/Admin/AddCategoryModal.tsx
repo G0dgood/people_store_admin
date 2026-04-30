@@ -33,6 +33,7 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
 
   useApiError(isError, error, "Failed to create category");
   const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
+  const [mediaTarget, setMediaTarget] = useState<"image" | "coverImage">("image");
   const [formData, setFormData] = useState({
     name: "",
     image: "",
@@ -45,6 +46,7 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
     selectedSexes: [] as string[],
     parent: "" as string,
     subCategories: [] as string[],
+    coverImage: "",
   });
 
   const toggleSelection = (field: "selectedSizes" | "selectedMLs" | "selectedSexes", value: string) => {
@@ -74,6 +76,7 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
         selectedSexes: [],
         parent: "",
         subCategories: [],
+        coverImage: "",
       });
       onClose();
     } catch (error) {
@@ -178,12 +181,40 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
                 variant="outline"
                 shape="rounded-sm"
                 className="w-12 h-12 p-0 flex-shrink-0 hover:bg-brand-gold hover:text-white hover:border-brand-gold transition-all"
-                onClick={() => setIsMediaModalOpen(true)}
+                onClick={() => {
+                  setMediaTarget("image");
+                  setIsMediaModalOpen(true);
+                }}
               >
                 <Icon name="photo" folder="icon" size="sm" />
               </Button>
             </div>
             <p className="text-[10px] font-medium text-gray-400">Provide a path to an image in the public directory.</p>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Cover Picture (Optional)</label>
+            <div className="flex gap-4">
+              <Input
+                placeholder="Path to cover image"
+                value={formData.coverImage}
+                onChange={(e) => setFormData({ ...formData, coverImage: e.target.value })}
+                className="h-12 border-gray-200 font-bold flex-1"
+                shape="rounded-sm"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                shape="rounded-sm"
+                className="w-12 h-12 p-0 flex-shrink-0 hover:bg-brand-gold hover:text-white hover:border-brand-gold transition-all"
+                onClick={() => {
+                  setMediaTarget("coverImage");
+                  setIsMediaModalOpen(true);
+                }}
+              >
+                <Icon name="photo" folder="icon" size="sm" />
+              </Button>
+            </div>
           </div>
 
           <div className="flex flex-col gap-2">
@@ -325,9 +356,9 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
             variant="primary"
             type="submit"
             shape="rounded-sm"
-            disabled={isLoading}
+            isLoading={isLoading}
           >
-            {isLoading ? "Creating..." : "Create Category"}
+            Create Category
           </Button>
         </ModalFooter>
       </form>
@@ -335,7 +366,7 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
       <MediaSelectionModal
         isOpen={isMediaModalOpen}
         onClose={() => setIsMediaModalOpen(false)}
-        onSelect={(url) => setFormData({ ...formData, image: url })}
+        onSelect={(url) => setFormData({ ...formData, [mediaTarget]: url })}
       />
     </Modal>
   );

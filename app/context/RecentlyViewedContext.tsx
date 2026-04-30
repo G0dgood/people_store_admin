@@ -2,9 +2,9 @@
 
 import React, { createContext, useContext, useState, useEffect, useMemo } from "react";
 import { useCustomerAuth } from "./CustomerAuthContext";
-import { 
-  useGetRecentlyViewedQuery, 
-  useAddToRecentlyViewedMutation 
+import {
+  useGetRecentlyViewedQuery,
+  useAddToRecentlyViewedMutation
 } from "@/lib/redux/services/recentlyViewedApi";
 import { useApiError } from "../hooks/useApiError";
 import { usePathname } from "next/navigation";
@@ -84,8 +84,8 @@ export const RecentlyViewedProvider = ({ children }: { children: React.ReactNode
   };
 
   return (
-    <RecentlyViewedContext.Provider value={{ 
-      recentlyViewedItems, 
+    <RecentlyViewedContext.Provider value={{
+      recentlyViewedItems,
       addToRecentlyViewed,
       isLoading: isAuthenticated ? isBackendLoading : !isInitialized
     }}>
