@@ -13,14 +13,19 @@ export interface CategoryItem {
   selectedMLs: string[];
   selectedSexes: string[];
   owner?: string;
+  parent?: string | CategoryItem | null;
+  subCategories?: string[] | CategoryItem[];
   createdAt: string;
   updatedAt: string;
 }
 
 export const categoryApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getCategories: builder.query<ApiResponse<CategoryItem[]>, void>({
-      query: () => '/categories',
+    getCategories: builder.query<ApiResponse<CategoryItem[]>, { search?: string; status?: string } | void>({
+      query: (params) => ({
+        url: '/categories',
+        params: params || {},
+      }),
       providesTags: (result) =>
         result
           ? [

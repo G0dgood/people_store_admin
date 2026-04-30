@@ -80,9 +80,9 @@ export const customerApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Customers'],
     }),
-    getCustomerStats: builder.query<any, void>({
-      query: () => ({
-        url: '/customers/stats',
+    getCustomerStats: builder.query<any, string | void>({
+      query: (range) => ({
+        url: `/customers/stats${range ? `?range=${range}` : ""}`,
         method: 'GET',
       }),
       providesTags: ['Customers'],

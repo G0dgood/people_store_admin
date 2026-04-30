@@ -17,6 +17,7 @@ import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import { toast } from "sonner";
 import { NoRecordFound, SVGLoaderFetch } from "@/app/components/Options";
 import { Tooltip } from "../../components/Tooltip";
+import { HiArrowPath } from "react-icons/hi2";
 
 import { StockAdjustmentDrawer } from "../../components/Admin/StockAdjustmentDrawer";
 import { useAddProductMutation, useGetProductsQuery, useDeleteProductMutation, useUpdateProductMutation, Product } from "@/lib/redux/services/productApi";
@@ -32,7 +33,7 @@ const statusStyles = {
 };
 
 export default function ProductListing() {
-  const { data: response, isLoading } = useGetProductsQuery();
+  const { data: response, isLoading, refetch, isFetching } = useGetProductsQuery();
   const products = response?.data?.products || [];
 
   const [deleteProduct, { isLoading: isDeleting }] = useDeleteProductMutation();
@@ -195,6 +196,16 @@ export default function ProductListing() {
       {/* Header Area */}
       <div className="flex justify-end items-center">
         <div className="flex gap-3">
+          <Tooltip text="Refresh Product List">
+            <Button shape="rounded-sm" variant="outline"
+              className="border-gray-200 text-gray-500 group"
+              iconLeft={<HiArrowPath size={16} className={`${isFetching ? 'animate-spin text-brand-gold' : 'text-gray-400 group-hover:text-white'} transition-colors`} />}
+              onClick={() => refetch()}
+              disabled={isLoading || isFetching}
+            >
+              {isFetching ? "Refreshing..." : "Refresh"}
+            </Button>
+          </Tooltip>
           {canAccess("products", "create") && (
             <Link href="/admin/products/new">
               <Button shape="rounded-sm" variant="primary"

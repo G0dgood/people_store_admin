@@ -14,7 +14,7 @@ import { RowsPerPage } from "@/app/components/rows-per-page";
 import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import { BulkActionsDrawer } from "../../components/Admin/BulkActionsDrawer";
 import Checkbox from "@/app/components/Checkbox";
-import { HiOutlineEye } from "react-icons/hi2";
+import { HiOutlineEye, HiArrowPath } from "react-icons/hi2";
 import { Tooltip } from "../../components/Tooltip";
 
 
@@ -22,6 +22,7 @@ import { useGetOrdersQuery, useGetOrderStatsQuery, useUpdateOrderStatusMutation,
 import { SVGLoaderFetch, NoRecordFound } from "../../components/Options";
 import { toast } from "sonner";
 import { formatPrice } from "@/app/utils/formatPrice";
+import { StatCardSkeleton } from "@/app/components/Skeleton/StatCardSkeleton";
 
 const statusConfig = {
   Delivered: { color: "text-blue-500", icon: "Delivered" },
@@ -43,8 +44,8 @@ export default function OrderListing() {
   const [orderToDelete, setOrderToDelete] = useState<string | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const { data: statsResponse, isLoading: isLoadingStats } = useGetOrderStatsQuery();
-  const { data: ordersResponse, isLoading: isLoadingOrders } = useGetOrdersQuery({
+  const { data: statsResponse, isLoading: isLoadingStats, refetch: refetchStats, isFetching: isFetchingStats } = useGetOrderStatsQuery();
+  const { data: ordersResponse, isLoading: isLoadingOrders, refetch: refetchOrders, isFetching: isFetchingOrders } = useGetOrdersQuery({
     page: currentPage,
     limit: rowsPerPage,
     status: activeTab === "All" ? "" : activeTab,
@@ -96,24 +97,47 @@ export default function OrderListing() {
  return (
   <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
    {/* Header Area */}
-   <div className="flex flex-col sm:flex-row justify-end items-center gap-3">
-    <div className="flex gap-3 w-full sm:w-auto">
-     <Button shape="rounded-sm" variant="outline"
-      className="flex-1 sm:flex-initial"
-      iconRight={<Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" className="text-gray-400" />}
-      onClick={() => setIsMoreActionDrawerOpen(true)}
-     >
-      More Action
-     </Button>
+    <div className="flex flex-col sm:flex-row justify-end items-center gap-3">
+     <div className="flex gap-3 w-full sm:w-auto">
+      <Tooltip text="Refresh Orders & Stats">
+        <button
+          className="bg-white border border-gray-200 text-gray-500 h-10 px-4 rounded-[6px] flex items-center gap-2 hover:bg-gray-50 transition-all disabled:opacity-50 group"
+          onClick={() => { refetchStats(); refetchOrders(); }}
+          disabled={isLoadingOrders || isFetchingOrders || isFetchingStats}
+        >
+          <HiArrowPath size={16} className={`${(isFetchingOrders || isFetchingStats) ? 'animate-spin text-brand-gold' : 'text-gray-400 group-hover:text-brand-gold'} transition-colors`} />
+          <span className="text-[10px] font-black uppercase tracking-widest">
+            {(isFetchingOrders || isFetchingStats) ? "Refreshing..." : "Refresh"}
+          </span>
+        </button>
+      </Tooltip>
+      <Button shape="rounded-sm" variant="outline"
+       className="flex-1 sm:flex-initial"
+       iconRight={<Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" className="text-gray-400" />}
+       onClick={() => setIsMoreActionDrawerOpen(true)}
+      >
+       More Action
+      </Button>
+     </div>
     </div>
-   </div>
 
     {/* Stats Cards */}
     <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-     <StatCard title="Total Orders" value={isLoadingStats ? "..." : stats?.totalOrders || "0"} trendValue="14.4%" trendIsUp={true} />
-     <StatCard title="Total Revenue" value={isLoadingStats ? "..." : formatPrice(stats?.totalRevenue || 0)} trendValue="20%" trendIsUp={true} />
-     <StatCard title="Pending Orders" value={isLoadingStats ? "..." : stats?.pendingOrders || "0"} trendValue="85%" trendIsUp={true} />
-     <StatCard title="Completed Orders" value={isLoadingStats ? "..." : stats?.completedOrders || "0"} trendValue="5%" trendIsUp={true} />
+      {isLoadingStats ? (
+        <>
+          <StatCardSkeleton />
+          <StatCardSkeleton />
+          <StatCardSkeleton />
+          <StatCardSkeleton />
+        </>
+      ) : (
+        <>
+          <StatCard title="Total Orders" value={stats?.totalOrders || "0"} trendValue="14.4%" trendIsUp={true} />
+          <StatCard title="Total Revenue" value={formatPrice(stats?.totalRevenue || 0)} trendValue="20%" trendIsUp={true} />
+          <StatCard title="Pending Orders" value={stats?.pendingOrders || "0"} trendValue="85%" trendIsUp={true} />
+          <StatCard title="Completed Orders" value={stats?.completedOrders || "0"} trendValue="5%" trendIsUp={true} />
+        </>
+      )}
     </div>
 
     <div className="bg-white border border-[#1C1C1C1A] rounded-[6px] overflow-hidden flex flex-col">

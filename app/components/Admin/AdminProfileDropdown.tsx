@@ -81,27 +81,6 @@ export const AdminProfileDropdown: React.FC = () => {
       </button>
      )}
 
-     {canAccess("permissions", "view") && (
-      <button 
-       onClick={() => router.push("/admin/permissions")}
-       className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-brand-blue-light hover:text-brand-blue transition-all group text-[#1D3557]"
-      >
-       <Icon name="security" folder="icon" size="sm" className="text-gray-400 group-hover:text-brand-blue" />
-       <span className="text-[13px] font-bold">Security & Audit</span>
-      </button>
-     )}
-
-     <div className="h-px bg-gray-50 my-2 mx-4"></div>
-
-     {canAccess("support", "view") && (
-      <button 
-       onClick={() => router.push("/admin/support")}
-       className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-blue-50 hover:text-brand-blue transition-all group text-[#1D3557]"
-      >
-       <Icon name="info-circle" folder="dashboardIcon" size="sm" className="text-gray-400 group-hover:text-brand-blue" />
-       <span className="text-[13px] font-bold">Help & Support</span>
-      </button>
-     )}
     </div>
 
     {/* Footer Logout */}

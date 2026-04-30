@@ -10,10 +10,12 @@ import { Icon } from "../Icon";
 import Checkbox from "../Checkbox";
 import { motion, AnimatePresence } from "framer-motion";
 
-import { useCreateCategoryMutation } from "@/lib/redux/services/categoryApi";
-import { useApiError } from "@/app/hooks/useApiError";
 import { toast } from "sonner";
 import { MediaSelectionModal } from "./MediaSelectionModal";
+import { Select } from "../Form/Select";
+import { MultiInput } from "../Form/MultiInput";
+import { useApiError } from "@/app/hooks/useApiError";
+import { useCreateCategoryMutation, useGetCategoriesQuery } from "@/lib/redux/services/categoryApi";
 
 interface AddCategoryModalProps {
   isOpen: boolean;
@@ -26,6 +28,8 @@ const SEX_OPTIONS = ["Male", "Female", "Kids", "Unisex"];
 
 export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
   const [createCategory, { isLoading, isError, error }] = useCreateCategoryMutation();
+  const { data: categoriesData } = useGetCategoriesQuery();
+  const categories = categoriesData?.data || [];
 
   useApiError(isError, error, "Failed to create category");
   const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
@@ -39,6 +43,8 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
     selectedSizes: [] as string[],
     selectedMLs: [] as string[],
     selectedSexes: [] as string[],
+    parent: "" as string,
+    subCategories: [] as string[],
   });
 
   const toggleSelection = (field: "selectedSizes" | "selectedMLs" | "selectedSexes", value: string) => {
@@ -66,6 +72,8 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
         selectedSizes: [],
         selectedMLs: [],
         selectedSexes: [],
+        parent: "",
+        subCategories: [],
       });
       onClose();
     } catch (error) {
@@ -87,6 +95,71 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
               shape="rounded-sm"
               required
             />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Parent Category (Optional)</label>
+            <Select
+              placeholder="Select parent category"
+              value={formData.parent}
+              onChange={(val) => setFormData({ ...formData, parent: val as string })}
+              options={[
+                { label: "", value: "" },
+                ...categories.map((c: any) => ({ label: c.name.toUpperCase(), value: c._id }))
+              ]}
+              shape="rounded-sm"
+            />
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center justify-between">
+              <label className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Sub Categories (Optional)</label>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="text-brand-gold h-7 text-[10px] font-black hover:bg-brand-gold/5"
+                onClick={() => setFormData(prev => ({ ...prev, subCategories: [...prev.subCategories, ""] }))}
+              >
+                + ADD SUB CATEGORY
+              </Button>
+            </div>
+            <div className="flex flex-col gap-3">
+              {formData.subCategories.map((sub, index) => (
+                <div key={index} className="flex gap-2 animate-in fade-in slide-in-from-top-1 duration-200">
+                  <Input
+                    placeholder="e.g. New Arrivals"
+                    value={sub}
+                    onChange={(e) => {
+                      const newSubs = [...formData.subCategories];
+                      newSubs[index] = e.target.value;
+                      setFormData({ ...formData, subCategories: newSubs });
+                    }}
+                    className="h-11 border-gray-100 font-bold flex-1 bg-gray-50/30"
+                    shape="rounded-sm"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    shape="rounded-sm"
+                    className="w-11 h-11 p-0 text-gray-300 hover:text-rose-500 hover:border-rose-500 transition-all border-gray-100"
+                    onClick={() => {
+                      const newSubs = formData.subCategories.filter((_, i) => i !== index);
+                      setFormData({ ...formData, subCategories: newSubs });
+                    }}
+                  >
+                    <Icon name="Delete" folder="dashboardIcon" size="sm" />
+                  </Button>
+                </div>
+              ))}
+              {formData.subCategories.length === 0 && (
+                <div className="py-4 border-2 border-dashed border-gray-100 rounded-[6px] flex flex-col items-center justify-center gap-2 opacity-60 hover:opacity-100 transition-opacity cursor-pointer group"
+                  onClick={() => setFormData(prev => ({ ...prev, subCategories: [""] }))}>
+                  <Icon name="circle-plus" folder="dashboardIcon" size="sm" className="text-gray-300 group-hover:text-brand-gold" />
+                  <span className="text-[10px] font-bold text-gray-400 group-hover:text-brand-gold">No subcategories added yet. Click to add one.</span>
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="flex flex-col gap-2">

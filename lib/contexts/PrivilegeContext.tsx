@@ -31,7 +31,8 @@ export type ModuleId =
   | "dashboard" | "support" | "faq" | "notifications" | "settings"
   | "orders" | "transactions" | "refunds" | "products" | "media" | "products/media"
   | "categories" | "brands" | "reviews" | "marketing" | "deals"
-  | "advert" | "customers" | "users" | "roles" | "permissions" | "profile";
+  | "advert" | "customers" | "users" | "roles" | "permissions" | "profile"
+  | "gift-cards" | "gift-boxes";
 
 interface PrivilegeContextType {
   userPrivileges: UserPrivileges | null;

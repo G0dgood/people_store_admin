@@ -10,7 +10,7 @@ import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import Modal from "../../../components/Modal/Modal";
 import ModalBody from "../../../components/Modal/ModalBody";
 import ModalFooter from "../../../components/Modal/ModalFooter";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { UploadMediaModal } from "../../../components/Admin/UploadMediaModal";
 import Checkbox from "@/app/components/Checkbox";
 import { HiPhoto, HiArrowPath, HiXCircle, HiXMark, HiPencil } from "react-icons/hi2";
@@ -24,6 +24,8 @@ import { useSocket } from "@/app/context/SocketContext";
 
 export default function CreateProduct() {
  const router = useRouter();
+ const searchParams = useSearchParams();
+ const categoryParam = searchParams.get("category");
  const [addProduct, { isLoading: isSubmitting }] = useAddProductMutation();
  const { data: categoriesResponse, isLoading: isLoadingCategories } = useGetCategoriesQuery();
  const { emit } = useSocket();
@@ -36,7 +38,7 @@ export default function CreateProduct() {
   description: "",
   price: "",
   discountPrice: "",
-  category: "",
+  category: categoryParam || "",
   tag: "",
   stockStatus: "In Stock",
   stockQuantity: "10",

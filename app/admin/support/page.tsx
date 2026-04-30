@@ -19,6 +19,8 @@ import { useGetTicketsQuery, ticketApi } from "@/lib/redux/services/ticketApi";
 import { useSocket } from "@/app/context/SocketContext";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { Tooltip } from "@/app/components/Tooltip";
+import { HiArrowPath } from "react-icons/hi2";
 
 const priorityStyles = {
   Urgent: "text-rose-600 bg-rose-50",
@@ -60,7 +62,7 @@ export default function SupportPage() {
     };
   }, [on, off, dispatch]);
 
-  const { data: ticketsResponse, isLoading } = useGetTicketsQuery({
+  const { data: ticketsResponse, isLoading, refetch, isFetching } = useGetTicketsQuery({
     status: activeTab === "All tickets" ? undefined : activeTab,
     search: searchQuery || undefined,
     page: currentPage,
@@ -88,7 +90,17 @@ export default function SupportPage() {
     <div className="flex flex-col gap-6">
 
       {/* Header Area */}
-      <div className="flex justify-end items-center mb-2">
+      <div className="flex justify-end items-center mb-2 gap-3">
+        <Tooltip text="Refresh Tickets">
+          <Button shape="rounded-sm" variant="outline"
+            className="border-gray-200 text-gray-500 group"
+            iconLeft={<HiArrowPath size={16} className={`${isFetching ? 'animate-spin text-brand-gold' : 'text-gray-400 group-hover:text-white'} transition-colors`} />}
+            onClick={() => refetch()}
+            disabled={isLoading || isFetching}
+          >
+            {isFetching ? "Refreshing..." : "Refresh"}
+          </Button>
+        </Tooltip>
         <Button shape="rounded-sm" variant="primary"
           className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold  text-[10px] font-black uppercase tracking-widest"
           iconLeft={<Icon name="circle-plus" folder="dashboardIcon" size="sm" />}
@@ -235,24 +247,28 @@ export default function SupportPage() {
                     </td>
                     <td className="text-right pr-8">
                       <div className="flex justify-end items-center gap-2">
-                        <Button shape="rounded-sm" variant="outline"
-                          className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all duration-300"
-                          onClick={() => {
-                            setSelectedTicket(ticket);
-                            setIsChatDrawerOpen(true);
-                          }}
-                        >
-                          <BiMessageDetail size={14} />
-                        </Button>
-                        <Button shape="rounded-sm" variant="outline"
-                          className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all duration-300"
-                          onClick={() => {
-                            setSelectedTicket(ticket);
-                            setIsDetailDrawerOpen(true);
-                          }}
-                        >
-                          <HiOutlineDocumentText size={14} />
-                        </Button>
+                        <Tooltip text="Open Support Chat">
+                          <Button shape="rounded-sm" variant="outline"
+                            className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all duration-300"
+                            onClick={() => {
+                              setSelectedTicket(ticket);
+                              setIsChatDrawerOpen(true);
+                            }}
+                          >
+                            <BiMessageDetail size={14} />
+                          </Button>
+                        </Tooltip>
+                        <Tooltip text="View Ticket Details">
+                          <Button shape="rounded-sm" variant="outline"
+                            className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all duration-300"
+                            onClick={() => {
+                              setSelectedTicket(ticket);
+                              setIsDetailDrawerOpen(true);
+                            }}
+                          >
+                            <HiOutlineDocumentText size={14} />
+                          </Button>
+                        </Tooltip>
                       </div>
                     </td>
                   </tr>

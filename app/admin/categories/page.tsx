@@ -15,6 +15,7 @@ import { BulkActionsDrawer } from "../../components/Admin/BulkActionsDrawer";
 import { RowsPerPage } from "@/app/components/rows-per-page";
 import { Tooltip } from "../../components/Tooltip";
 import { AttributeDetailModal } from "../../components/Admin/AttributeDetailModal";
+import { QuickAddProductModal } from "../../components/Admin/QuickAddProductModal";
 
 
 import {
@@ -24,17 +25,24 @@ import {
 import { toast } from "sonner";
 import { NoRecordFound, SVGLoaderFetch } from "@/app/components/Options";
 import moment from "moment";
+import { HiArrowPath } from "react-icons/hi2";
 import { usePrivilege } from "@/lib/contexts/PrivilegeContext";
 
 export default function CategoriesPage() {
-  const { data: categoriesData, isLoading } = useGetCategoriesQuery();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeTab, setActiveTab] = useState("All Categories");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const { data: categoriesData, isLoading, refetch, isFetching } = useGetCategoriesQuery({
+    search: searchQuery,
+    status: activeTab === "All Categories" ? undefined : activeTab
+  });
   const [deleteCategory] = useDeleteCategoryMutation();
   const { canAccess } = usePrivilege();
 
   const categories = categoriesData?.data || [];
 
-  const [activeTab, setActiveTab] = useState(`All Categories (${categories.length})`);
-  const [currentPage, setCurrentPage] = useState(1);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isMoreActionsOpen, setIsMoreActionsOpen] = useState(false);
   const [isBulkDeleteConfirmOpen, setIsBulkDeleteConfirmOpen] = useState(false);
@@ -44,29 +52,16 @@ export default function CategoriesPage() {
   const [categoryToDelete, setCategoryToDelete] = useState<any>(null);
   const [isAttributeModalOpen, setIsAttributeModalOpen] = useState(false);
   const [selectedCategoryForAttributes, setSelectedCategoryForAttributes] = useState<any>(null);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [isQuickAddModalOpen, setIsQuickAddModalOpen] = useState(false);
+  const [selectedCategoryForQuickAdd, setSelectedCategoryForQuickAdd] = useState<any>(null);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  // Filter Logic
-  const filteredCategories = categories.filter((cat: any) => {
-    // Search filter
-    const matchesSearch = cat.name.toLowerCase().includes(searchQuery.toLowerCase());
-
-    // Tab filter (if needed - currently we only have "All Categories")
-    const matchesTab = activeTab.includes("All Categories") ||
-      (activeTab === "Active" && cat.isActive) ||
-      (activeTab === "Inactive" && !cat.isActive);
-
-    return matchesSearch;
-  });
-
-  // Pagination Metadata
-  const totalItems = filteredCategories.length;
+  // Pagination Metadata (categories are already filtered by backend if search/status is used)
+  const totalItems = categories.length;
   const totalPages = Math.ceil(totalItems / rowsPerPage) || 1;
   const startIndex = (currentPage - 1) * rowsPerPage;
-  const paginatedCategories = filteredCategories.slice(startIndex, startIndex + rowsPerPage);
+  const paginatedCategories = categories.slice(startIndex, startIndex + rowsPerPage);
 
   // Sync pagination reset
   React.useEffect(() => {
@@ -114,6 +109,16 @@ export default function CategoriesPage() {
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row justify-end items-center gap-3">
         <div className="flex gap-3 w-full sm:w-auto">
+          <Tooltip text="Refresh Categories">
+            <Button shape="rounded-sm" variant="outline"
+              className="border-gray-200 text-gray-500 group"
+              iconLeft={<HiArrowPath size={16} className={`${isFetching ? 'animate-spin text-brand-gold' : 'text-gray-400 group-hover:text-white'} transition-colors`} />}
+              onClick={() => refetch()}
+              disabled={isLoading || isFetching}
+            >
+              {isFetching ? "Refreshing..." : "Refresh"}
+            </Button>
+          </Tooltip>
           {canAccess("categories", "create") && (
             <Button shape="rounded-sm" variant="primary"
               className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold flex-1 sm:flex-initial"
@@ -169,7 +174,7 @@ export default function CategoriesPage() {
         {/* Fill Tabs & Controls */}
         <div className="px-6 flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
           <TabFilter
-            tabs={[`All Categories (${categories.length})`]}
+            tabs={["All Categories", "Active", "Inactive"]}
             activeTab={activeTab}
             onChange={setActiveTab} id={""} />
 
@@ -231,7 +236,17 @@ export default function CategoriesPage() {
                         <img src={c.image} alt="" className="w-full h-full object-contain" />
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-sm font-black text-gray-900 leading-tight block truncate max-w-[200px]">{c.name}</span>
+                        <div className="flex items-center gap-1.5">
+                          {c.parent && (
+                            <>
+                              <span className="text-[10px] font-bold text-brand-gold uppercase bg-brand-gold/5 px-1.5 py-0.5 rounded">
+                                {typeof c.parent === 'object' ? c.parent.name : "Parent"}
+                              </span>
+                              <Icon name="chevron_right" folder="icon" size="xs" className="text-gray-300" />
+                            </>
+                          )}
+                          <span className="text-sm font-black text-gray-900 leading-tight block truncate max-w-[200px]">{c.name}</span>
+                        </div>
                         <span className="text-[10px] text-gray-400 font-bold uppercase truncate max-w-[200px]">{c.description || "No description"}</span>
                       </div>
                     </td>
@@ -254,6 +269,19 @@ export default function CategoriesPage() {
                     </td>
                     <td className="text-right">
                       <div className="flex justify-end gap-2">
+                        {canAccess("products", "create") && (
+                          <Tooltip text="Add Product to Category" position="top">
+                            <Button shape="rounded-sm" variant="outline"
+                              className="!p-1.5 text-gray-400 hover:text-white hover:bg-emerald-500 hover:border-emerald-500 transition-all"
+                              onClick={() => {
+                                setSelectedCategoryForQuickAdd(c);
+                                setIsQuickAddModalOpen(true);
+                              }}
+                            >
+                              <Icon name="circle-plus" folder="dashboardIcon" size="sm" />
+                            </Button>
+                          </Tooltip>
+                        )}
                         {canAccess("categories", "edit") && (
                           <Tooltip text="Edit Category" position="top">
                             <Button shape="rounded-sm" variant="outline"
@@ -379,6 +407,15 @@ export default function CategoriesPage() {
           setSelectedCategoryForAttributes(null);
         }}
         category={selectedCategoryForAttributes}
+      />
+
+      <QuickAddProductModal
+        isOpen={isQuickAddModalOpen}
+        onClose={() => {
+          setIsQuickAddModalOpen(false);
+          setSelectedCategoryForQuickAdd(null);
+        }}
+        category={selectedCategoryForQuickAdd}
       />
     </div>
   );

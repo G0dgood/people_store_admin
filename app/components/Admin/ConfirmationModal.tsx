@@ -3,7 +3,7 @@
 import React from "react";
 import Modal from "../Modal/Modal";
 import { Button } from "../Button";
-import { Icon } from "../Icon";
+import { HiOutlineExclamationTriangle, HiOutlineCheckCircle, HiOutlineInformationCircle, HiOutlineQuestionMarkCircle } from "react-icons/hi2";
 
 interface ConfirmationModalProps {
   isOpen: boolean;
@@ -14,8 +14,22 @@ interface ConfirmationModalProps {
   confirmText?: string;
   cancelText?: string;
   type?: "danger" | "warning" | "success" | "info";
+  icon?: React.ReactNode;
   isLoading?: boolean;
+  children?: React.ReactNode;
 }
+
+// Internal icon renderer for the modal
+const ModalIcon = ({ icon, config }: { icon: React.ReactNode, config: any }) => {
+  return (
+    <div className={`w-16 h-16 ${config.iconBg} rounded-[20px] flex items-center justify-center ${config.iconColor} shadow-sm border border-current flex-shrink-0 mb-2 relative overflow-hidden`}>
+      <div className="absolute inset-0 bg-current opacity-10"></div>
+      <div className="relative z-10 flex items-center justify-center">
+        {icon || config.icon}
+      </div>
+    </div>
+  );
+};
 
 export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   isOpen,
@@ -26,36 +40,38 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   confirmText = "Confirm",
   cancelText = "Cancel",
   type = "danger",
+  icon,
   isLoading = false,
+  children,
 }) => {
   const typeConfig = {
     danger: {
-      icon: "delete_outline",
+      icon: <HiOutlineExclamationTriangle size={28} />,
       iconBg: "bg-red-50",
-      iconColor: "text-red-500",
-      buttonBg: "bg-red-500 hover:bg-red-600",
+      iconColor: "text-red-600",
+      buttonBg: "bg-red-600 hover:bg-red-700",
       shadow: "shadow-red-100",
     },
     warning: {
-      icon: "warning_amber",
-      iconBg: "bg-orange-50",
-      iconColor: "text-brand-orange",
-      buttonBg: "bg-brand-orange hover:bg-orange-600",
-      shadow: "shadow-orange-100",
+      icon: <HiOutlineExclamationTriangle size={28} />,
+      iconBg: "bg-amber-50",
+      iconColor: "text-amber-600",
+      buttonBg: "bg-amber-600 hover:bg-amber-700",
+      shadow: "shadow-amber-100",
     },
     success: {
-      icon: "verified",
-      iconBg: "bg-brand-gold/5",
-      iconColor: "text-brand-gold",
-      buttonBg: "bg-brand-gold hover:bg-brand-gold/90",
-      shadow: "shadow-brand-gold/10",
+      icon: <HiOutlineCheckCircle size={28} />,
+      iconBg: "bg-emerald-50",
+      iconColor: "text-emerald-600",
+      buttonBg: "bg-emerald-600 hover:bg-emerald-700",
+      shadow: "shadow-emerald-100",
     },
     info: {
-      icon: "help_outline",
-      iconBg: "bg-brand-charcoal/5",
-      iconColor: "text-brand-charcoal",
-      buttonBg: "bg-brand-charcoal hover:bg-brand-charcoal/90",
-      shadow: "shadow-brand-charcoal/10",
+      icon: <HiOutlineInformationCircle size={28} />,
+      iconBg: "bg-blue-50",
+      iconColor: "text-blue-600",
+      buttonBg: "bg-blue-600 hover:bg-blue-700",
+      shadow: "shadow-blue-100",
     },
   };
 
@@ -69,10 +85,7 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
       title={title}
     >
       <div className="flex flex-col items-center text-center gap-6 py-4">
-        <div className={`w-16 h-16 ${config.iconBg} rounded-[20px] flex items-center justify-center ${config.iconColor} shadow-sm border border-current flex-shrink-0 mb-2 relative overflow-hidden`}>
-          <div className="absolute inset-0 bg-current opacity-10"></div>
-          <Icon name={config.icon} size="lg" className="relative z-10" />
-        </div>
+        <ModalIcon icon={icon} config={config} />
 
         <div className="flex flex-col gap-2 mt-2">
           <h3 className="text-lg sm:text-xl font-black text-gray-900 leading-tight">{title}</h3>
@@ -81,17 +94,22 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
           </p>
         </div>
 
-        <div className="flex flex-row w-full gap-3 mt-4">
+        {children && (
+          <div className="w-full px-4 mt-2 text-left">
+            {children}
+          </div>
+        )}
+
+        <div className="flex flex-row justify-end w-full gap-3 mt-4">
           <Button
             variant="ghost"
-            className="flex-1 h-10 sm:h-12 font-bold text-gray-500 hover:text-gray-700 hover:bg-gray-50"
             onClick={onClose}
           >
             {cancelText}
           </Button>
           <Button
             shape="rounded-sm"
-            className={`flex-1 h-10 sm:h-12 font-black text-white border-transparent shadow-lg ${config.shadow} transition-all active:scale-95 ${config.buttonBg}`}
+            className={` ${config.shadow} transition-all active:scale-95 ${config.buttonBg}`}
             onClick={onConfirm}
             isLoading={isLoading}
           >

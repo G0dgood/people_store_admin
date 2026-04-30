@@ -8,6 +8,7 @@ import { TabFilter } from "@/app/components/Admin/TabFilter";
 import { UpdateRefundStatusModal } from "@/app/components/Admin/UpdateRefundStatusModal";
 import { Button } from "@/app/components/Button";
 import { Input } from "@/app/components/Form";
+import Dropdown from "@/app/components/Form/Dropdown";
 import Checkbox from "@/app/components/Checkbox";
 import { Icon } from "@/app/components/Icon";
 import { NoRecordFound, SVGLoaderFetch } from "@/app/components/Options";
@@ -16,6 +17,9 @@ import { useGetRefundsQuery, useGetRefundStatsQuery, useUpdateRefundStatusMutati
 import { useState } from "react";
 import { StatusBadge } from "@/app/components/StatusBadge";
 import { toast } from "sonner";
+import { Tooltip } from "@/app/components/Tooltip";
+import { HiArrowPath } from "react-icons/hi2";
+import { StatCardSkeleton } from "@/app/components/Skeleton/StatCardSkeleton";
 
 export default function RefundsPage() {
   const [activeTab, setActiveTab] = useState("All refunds");
@@ -29,7 +33,7 @@ export default function RefundsPage() {
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
   const [actionTarget, setActionTarget] = useState<any>(null);
 
-  const { data: refundsResponse, isLoading } = useGetRefundsQuery({
+  const { data: refundsResponse, isLoading, refetch, isFetching } = useGetRefundsQuery({
     status: activeTab === "All refunds" ? undefined : activeTab,
     search: searchQuery || undefined,
     page: currentPage,
@@ -76,46 +80,88 @@ export default function RefundsPage() {
 
       {/* Stats Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-        <StatCard
-          title="Total Refunds"
-          value={isLoadingStats ? "..." : `₦${stats?.totalAmount?.toLocaleString() || '0'}`}
-          trendValue="8.4%"
-          trendIsUp={true}
-          periodLabel="Last 7 days"
-        />
-        <StatCard
-          title="Completed Refunds"
-          value={isLoadingStats ? "..." : stats?.completedCount?.toString() || '0'}
-          trendValue="12%"
-          trendIsUp={true}
-          periodLabel="Last 7 days"
-        />
-        <StatCard
-          title="Pending Refunds"
-          value={isLoadingStats ? "..." : stats?.pendingCount?.toString() || '0'}
-          trendValue="5%"
-          trendIsUp={false}
-          periodLabel="Last 7 days"
-        />
-        <StatCard
-          title="Approved Refunds"
-          value={isLoadingStats ? "..." : stats?.approvedCount?.toString() || '0'}
-          trendValue="2%"
-          trendIsUp={true}
-          periodLabel="Last 7 days"
-        />
+        {isLoadingStats ? (
+          <>
+            <StatCardSkeleton />
+            <StatCardSkeleton />
+            <StatCardSkeleton />
+            <StatCardSkeleton />
+          </>
+        ) : (
+          <>
+            <StatCard
+              title="Total Refunds"
+              value={`₦${stats?.totalAmount?.toLocaleString() || '0'}`}
+              trendValue="8.4%"
+              trendIsUp={true}
+              periodLabel="Last 7 days"
+            />
+            <StatCard
+              title="Completed Refunds"
+              value={stats?.completedCount?.toString() || '0'}
+              trendValue="12%"
+              trendIsUp={true}
+              periodLabel="Last 7 days"
+            />
+            <StatCard
+              title="Pending Refunds"
+              value={stats?.pendingCount?.toString() || '0'}
+              trendValue="5%"
+              trendIsUp={false}
+              periodLabel="Last 7 days"
+            />
+            <StatCard
+              title="Approved Refunds"
+              value={stats?.approvedCount?.toString() || '0'}
+              trendValue="2%"
+              trendIsUp={true}
+              periodLabel="Last 7 days"
+            />
+          </>
+        )}
       </div>
 
       {/* Refunds History Table Card */}
       <div className="bg-white rounded-[6px] overflow-hidden flex flex-col border border-[#1C1C1C1A]">
         {/* Controls Bar */}
         <div className="p-4 sm:p-6 flex flex-col lg:flex-row gap-6 items-center justify-between border-b border-gray-50">
-          <TabFilter
-            tabs={["All refunds", "Completed", "Pending", "Approved", "Processing", "Rejected"]}
-            activeTab={activeTab}
-            onChange={setActiveTab} id={""} />
+          <div className="w-full lg:w-64">
+            <Dropdown
+              value={activeTab}
+              onChange={setActiveTab}
+              placeholder="Filter by Status"
+              options={[
+                { value: "All refunds", label: "All Refunds" },
+                { value: "Completed", label: "Completed" },
+                { value: "Pending", label: "Pending" },
+                { value: "Approved", label: "Approved" },
+                { value: "Processing", label: "Processing" },
+                { value: "Rejected", label: "Rejected" },
+              ]}
+              getOptionDotColor={(opt) => {
+                const colors: Record<string, string> = {
+                  Completed: "#10B981",
+                  Pending: "#F59E0B",
+                  Approved: "#3B82F6",
+                  Processing: "#6366F1",
+                  Rejected: "#EF4444",
+                };
+                return colors[opt.value];
+              }}
+            />
+          </div>
 
           <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
+            <Tooltip text="Refresh Refund List">
+              <Button shape="rounded-sm" variant="outline"
+                className="border-gray-200 text-gray-500 group"
+                iconLeft={<HiArrowPath size={16} className={`${isFetching ? 'animate-spin text-brand-gold' : 'text-gray-400 group-hover:text-white'} transition-colors`} />}
+                onClick={() => refetch()}
+                disabled={isLoading || isFetching}
+              >
+                {isFetching ? "Refreshing..." : "Refresh"}
+              </Button>
+            </Tooltip>
             <Input shape="rounded-sm"
               type="text"
               placeholder="Search refunds"
@@ -131,14 +177,12 @@ export default function RefundsPage() {
 
               <div className="flex gap-2 ml-auto sm:ml-0">
                 <Button variant="outline" shape="rounded-sm" className="!p-2.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold border-gray-200 transition-all">
-                  <Icon name="sort" folder="dashboardIcon" size="sm" />
-                </Button>
-                <Button variant="outline" shape="rounded-sm" className="!p-2.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold border-gray-200 transition-all">
                   <Icon name="flowbite_arrow-up-down-outline" folder="dashboardIcon" size="sm" />
                 </Button>
                 <Button variant="outline" shape="rounded-sm" className="!p-2.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold border-gray-200 transition-all">
-                  <Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />
+                  <Icon name="sort" folder="dashboardIcon" size="sm" />
                 </Button>
+
               </div>
             </div>
           </div>
@@ -190,27 +234,29 @@ export default function RefundsPage() {
                   </td>
                   <td className="text-right">
                     <div className="flex justify-end items-center gap-2">
-                      <Button shape="rounded-sm" variant="outline"
-                        className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
-                        onClick={() => {
-                          setActionTarget(refund);
-                          setIsStatusModalOpen(true);
-                        }}
-                        disabled={refund.status === "Completed"}
-                        title={refund.status === "Completed" ? "Refund Completed" : "Update Status"}
-                      >
-                        <Icon name="cached" folder="icon" size="sm" />
-                      </Button>
-                      <Button shape="rounded-sm" variant="outline"
-                        className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
-                        onClick={() => {
-                          setSelectedRefund(refund);
-                          setIsDetailDrawerOpen(true);
-                        }}
-                        title="View Details"
-                      >
-                        <Icon name="description" folder="icon" size="sm" />
-                      </Button>
+                      <Tooltip text={refund.status === "Completed" ? "Refund Completed" : "Update Status"}>
+                        <Button shape="rounded-sm" variant="outline"
+                          className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
+                          onClick={() => {
+                            setActionTarget(refund);
+                            setIsStatusModalOpen(true);
+                          }}
+                          disabled={refund.status === "Completed"}
+                        >
+                          <Icon name="cached" folder="icon" size="sm" />
+                        </Button>
+                      </Tooltip>
+                      <Tooltip text="View Refund Details">
+                        <Button shape="rounded-sm" variant="outline"
+                          className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
+                          onClick={() => {
+                            setSelectedRefund(refund);
+                            setIsDetailDrawerOpen(true);
+                          }}
+                        >
+                          <Icon name="description" folder="icon" size="sm" />
+                        </Button>
+                      </Tooltip>
                     </div>
                   </td>
                 </tr>

@@ -29,25 +29,25 @@ export const AuthPersistence = ({ children }: { children: React.ReactNode }) => 
             {/* Animated Outer Rings */}
             <div className="absolute inset-0 rounded-full border border-brand-gold/20 animate-ping" />
             <div className="absolute -inset-2 rounded-full border border-brand-gold/10 animate-pulse" />
-            
+
             {/* Logo Container */}
             <div className="relative w-20 h-20 rounded-full bg-white border-[0.5px] border-brand-gold/30 shadow-xl flex items-center justify-center overflow-hidden p-4">
-              <img 
-                src="/brand_logo/logo.png" 
-                alt="Logo" 
-                className="w-full h-full object-contain animate-pulse" 
+              <img
+                src="/brand_logo/logo.png"
+                alt="Logo"
+                className="w-full h-full object-contain animate-pulse"
               />
             </div>
           </div>
-          
-          <div className="flex flex-col items-center gap-1">
+
+          {/* <div className="flex flex-col items-center gap-1">
             <p className="text-[10px] font-black text-brand-charcoal uppercase tracking-[0.3em] animate-pulse">
               Bloom & Mist
             </p>
             <p className="text-[9px] font-medium text-gray-400 uppercase tracking-widest opacity-60">
               Securing Your Session
             </p>
-          </div>
+          </div> */}
         </div>
       </div>
     );

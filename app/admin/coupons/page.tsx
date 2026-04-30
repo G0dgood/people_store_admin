@@ -16,6 +16,7 @@ import { BulkActionsDrawer } from "../../components/Admin/BulkActionsDrawer";
 import { Tooltip } from "../../components/Tooltip";
 import { useGetCouponsQuery, useDeleteCouponMutation } from "@/lib/redux/services/couponApi";
 import { toast } from "sonner";
+import { HiArrowPath } from "react-icons/hi2";
 import { SVGLoaderFetch, NoRecordFound } from "@/app/components/Options";
 
 
@@ -31,7 +32,7 @@ export default function CouponsListing() {
  const [rowsPerPage, setRowsPerPage] = useState(10);
  const [searchQuery, setSearchQuery] = useState("");
 
- const { data: response, isLoading } = useGetCouponsQuery({
+ const { data: response, isLoading, refetch, isFetching } = useGetCouponsQuery({
   page: currentPage,
   limit: rowsPerPage,
   search: searchQuery
@@ -69,6 +70,16 @@ export default function CouponsListing() {
    {/* Header Area */}
    <div className="flex flex-col sm:flex-row justify-end items-center gap-3">
     <div className="flex gap-3 w-full sm:w-auto">
+     <Tooltip text="Refresh Coupon List">
+       <Button shape="rounded-sm" variant="outline"
+         className="border-gray-200 text-gray-500 group h-10"
+         iconLeft={<HiArrowPath size={16} className={`${isFetching ? 'animate-spin text-brand-gold' : 'text-gray-400 group-hover:text-white'} transition-colors`} />}
+         onClick={() => refetch()}
+         disabled={isLoading || isFetching}
+       >
+         {isFetching ? "Refreshing..." : "Refresh"}
+       </Button>
+     </Tooltip>
      <Button shape="rounded-sm" variant="primary"
       className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold flex-1 sm:flex-initial"
       iconLeft={<Icon name="ticket" folder="dashboardIcon" size="sm" />}

@@ -22,6 +22,8 @@ import {
 import { toast } from "sonner";
 import moment from "moment";
 import { NoRecordFound, SVGLoaderFetch } from "@/app/components/Options";
+import { Tooltip } from "@/app/components/Tooltip";
+import { HiArrowPath } from "react-icons/hi2";
 
 const typeStyles = {
   Orders: {
@@ -52,7 +54,7 @@ export default function NotificationCenter() {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
-  const { data: response, isLoading } = useGetNotificationsQuery({
+  const { data: response, isLoading, refetch, isFetching } = useGetNotificationsQuery({
     page: currentPage,
     limit: rowsPerPage,
     type: activeTab
@@ -123,6 +125,16 @@ export default function NotificationCenter() {
       {/* Header Actions */}
 
       <div className="flex justify-end items-center gap-4">
+        <Tooltip text="Refresh Notifications">
+          <Button shape="rounded-sm" variant="outline"
+            className="border-gray-200 text-gray-500 group"
+            iconLeft={<HiArrowPath size={16} className={`${isFetching ? 'animate-spin text-brand-gold' : 'text-gray-400 group-hover:text-white'} transition-colors`} />}
+            onClick={() => refetch()}
+            disabled={isLoading || isFetching}
+          >
+            {isFetching ? "Refreshing..." : "Refresh"}
+          </Button>
+        </Tooltip>
         <Button shape="rounded-sm" variant="outline"
           className="text-gray-400"
           onClick={() => setIsMarkAllModalOpen(true)}
@@ -243,20 +255,24 @@ export default function NotificationCenter() {
 
                 <div className="flex flex-col sm:flex-row gap-2 sm:gap-2 opacity-100 group-hover:opacity-100 sm:opacity-0 transition-all translate-x-0 sm:translate-x-2 sm:group-hover:translate-x-0 absolute sm:static right-2 top-2 sm:right-auto sm:top-auto bg-white/80 sm:bg-transparent p-1 sm:p-0 rounded-lg backdrop-blur-sm sm:backdrop-blur-none border border-gray-200 sm:border-0 shadow-sm sm:shadow-none" onClick={(e) => e.stopPropagation()}>
                   {!item.isRead && (
-                    <Button shape="rounded-sm" variant="outline"
-                      onClick={() => markAsRead({ ids: [item._id] })}
-                      className="!p-1.5 text-gray-300 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all">
-                      <Icon name="verified" folder="icon" size="sm" className="scale-75 sm:scale-100" />
-                    </Button>
+                    <Tooltip text="Mark as Read">
+                      <Button shape="rounded-sm" variant="outline"
+                        onClick={() => markAsRead({ ids: [item._id] })}
+                        className="!p-1.5 text-gray-300 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all">
+                        <Icon name="verified" folder="icon" size="sm" className="scale-75 sm:scale-100" />
+                      </Button>
+                    </Tooltip>
                   )}
-                  <Button shape="rounded-sm" variant="outline"
-                    onClick={() => {
-                      setSelectedIds([item._id]);
-                      setIsDeleteModalOpen(true);
-                    }}
-                    className="!p-1.5 text-gray-300 hover:text-white hover:bg-rose-500 hover:border-rose-500 transition-all">
-                    <Icon name="Delete" folder="dashboardIcon" size="sm" className="scale-75 sm:scale-100" />
-                  </Button>
+                  <Tooltip text="Delete Notification">
+                    <Button shape="rounded-sm" variant="outline"
+                      onClick={() => {
+                        setSelectedIds([item._id]);
+                        setIsDeleteModalOpen(true);
+                      }}
+                      className="!p-1.5 text-gray-300 hover:text-white hover:bg-rose-500 hover:border-rose-500 transition-all">
+                      <Icon name="Delete" folder="dashboardIcon" size="sm" className="scale-75 sm:scale-100" />
+                    </Button>
+                  </Tooltip>
                 </div>
               </div>
             ))

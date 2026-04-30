@@ -4,12 +4,36 @@ import React, { useEffect } from "react";
 import { useSocket } from "@/app/context/SocketContext";
 import { toast } from "sonner";
 import { Icon } from "./Icon";
+import { useDispatch } from "react-redux";
+import { roleApi } from "@/lib/redux/services/roleApi";
 
 export const SocketNotificationListener = () => {
   const { on, off, isConnected } = useSocket();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!isConnected) return;
+
+    const handlePermissionsUpdated = (data: any) => {
+      console.log("🚀 Permissions Updated Signal:", data);
+      
+      // Force refresh the role privileges globally
+      if (data.roleId) {
+        dispatch(roleApi.util.invalidateTags([{ type: 'Role', id: data.roleId }]));
+      } else {
+        dispatch(roleApi.util.invalidateTags(['Role']));
+      }
+
+      toast.info("Access Privileges Updated", {
+        description: data.description || "Your access permissions have been modified. Your dashboard is updating...",
+        duration: 8000,
+        icon: (
+          <div className="bg-brand-gold/10 p-1.5 rounded-full ring-4 ring-brand-gold/5">
+            <Icon name="verified_user" folder="icon" size="xs" className="text-brand-gold" />
+          </div>
+        ),
+      });
+    };
 
     const handleNewCustomer = (data: any) => {
       console.log("🚀 New Customer Registered:", data);
@@ -48,14 +72,16 @@ export const SocketNotificationListener = () => {
       });
     };
 
+    on("permissions_updated", handlePermissionsUpdated);
     on("newCustomer", handleNewCustomer);
     on("refund:update", handleRefundUpdate);
 
     return () => {
+      off("permissions_updated", handlePermissionsUpdated);
       off("newCustomer", handleNewCustomer);
       off("refund:update", handleRefundUpdate);
     };
-  }, [isConnected, on, off]);
+  }, [isConnected, on, off, dispatch]);
 
   return null; // This component doesn't render anything
 };

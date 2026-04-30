@@ -25,6 +25,8 @@ import {
 } from "@/lib/redux/services/reviewApi";
 import { SVGLoaderFetch, NoRecordFound } from "../../components/Options";
 import { toast } from "sonner";
+import { Tooltip } from "../../components/Tooltip";
+import { HiArrowPath } from "react-icons/hi2";
 
 const statusStyles = {
   Published: "text-blue-500 bg-brand-blue-light",
@@ -39,7 +41,7 @@ export default function ReviewListing() {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { data: response, isLoading } = useGetReviewsQuery({
+  const { data: response, isLoading, refetch, isFetching } = useGetReviewsQuery({
     page: currentPage,
     limit: rowsPerPage,
     status: activeTab,
@@ -103,6 +105,16 @@ export default function ReviewListing() {
       {/* Header Area */}
       <div className="flex justify-end items-center">
         <div className="flex gap-3">
+          <Tooltip text="Refresh Reviews">
+            <Button shape="rounded-sm" variant="outline"
+              className="border-gray-200 text-gray-500 group"
+              iconLeft={<HiArrowPath size={16} className={`${isFetching ? 'animate-spin text-brand-gold' : 'text-gray-400 group-hover:text-white'} transition-colors`} />}
+              onClick={() => refetch()}
+              disabled={isLoading || isFetching}
+            >
+              {isFetching ? "Refreshing..." : "Refresh"}
+            </Button>
+          </Tooltip>
           <Button shape="rounded-sm" variant="primary"
             iconLeft={<Icon name="ticket" folder="dashboardIcon" size="sm" />}
             className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold"

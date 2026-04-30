@@ -15,11 +15,14 @@ import { useGetMediaItemsQuery, useDeleteMediaMutation, MediaItem } from "@/lib/
 import { toast } from "sonner";
 import { SVGLoaderFetch, NoRecordFound } from "@/app/components/Options";
 import { useEffect } from "react";
+import { Tooltip } from "@/app/components/Tooltip";
+import { HiArrowPath } from "react-icons/hi2";
+import { MediaSkeleton } from "@/app/components/Admin/MediaSkeleton";
 
 // Media items are now fetched via useGetMediaItemsQuery
 
 export default function ProductMediaListing() {
- const { data: response, isLoading } = useGetMediaItemsQuery();
+ const { data: response, isLoading, refetch, isFetching } = useGetMediaItemsQuery();
  const mediaData = response?.data || [];
 
  const [deleteMedia, { isLoading: isDeleting }] = useDeleteMediaMutation();
@@ -77,8 +80,18 @@ export default function ProductMediaListing() {
  return (
   <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
    {/* Header Area */}
-   <div className="flex justify-end items-center">
+   <div className="flex justify-end items-center mb-2">
     <div className="flex gap-3">
+     <Tooltip text="Refresh Media Library">
+      <Button shape="rounded-sm" variant="outline"
+        className="border-gray-200 text-gray-500 group"
+        iconLeft={<HiArrowPath size={16} className={`${isFetching ? 'animate-spin text-brand-gold' : 'text-gray-400 group-hover:text-white'} transition-colors`} />}
+        onClick={() => refetch()}
+        disabled={isLoading || isFetching}
+      >
+        {isFetching ? "Refreshing..." : "Refresh"}
+      </Button>
+     </Tooltip>
      <Button shape="rounded-sm" variant="primary"
       iconLeft={<Icon name="circle-plus" folder="dashboardIcon" size="sm" />}
       className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold"
@@ -142,10 +155,9 @@ export default function ProductMediaListing() {
      </div>
     </div>
 
-    {/* Media Content */}
     <div className="p-6 min-h-[400px] flex flex-col">
-     {isLoading ? (
-      <SVGLoaderFetch asTable={false} text="" />
+     {(isLoading || isFetching) ? (
+      <MediaSkeleton viewType={viewType} count={12} />
      ) : filteredMedia.length === 0 ? (
       <NoRecordFound asTable={false} />
      ) : viewType === "grid" ? (
@@ -169,26 +181,30 @@ export default function ProductMediaListing() {
            </div>
           )}
            <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-all translate-y-2 group-hover:translate-y-0">
-            <Button shape="rounded-sm" variant="outline"
-             className="w-8 h-8 text-gray-500 bg-white/95 shadow-sm hover:text-white hover:bg-brand-gold hover:border-brand-gold !p-0 transition-all cursor-pointer"
-             onClick={(e) => {
-              e.stopPropagation();
-              setMediaToEdit(item);
-              setIsEditDrawerOpen(true);
-             }}
-            >
-             <Icon name="settings" folder="dashboardIcon" size="xs" />
-            </Button>
-            <Button shape="rounded-sm" variant="outline"
-             className="w-8 h-8 bg-white/95 shadow-sm text-gray-500 hover:text-white hover:bg-rose-500 hover:border-rose-500 !p-0 transition-all cursor-pointer"
-             onClick={(e) => {
-              e.stopPropagation();
-              setMediaToDelete(item);
-              setIsDeleteModalOpen(true);
-             }}
-            >
-             <Icon name="Delete" folder="dashboardIcon" size="xs" />
-            </Button>
+            <Tooltip text="Media Settings">
+              <Button shape="rounded-sm" variant="outline"
+              className="w-8 h-8 text-gray-500 bg-white/95 shadow-sm hover:text-white hover:bg-brand-gold hover:border-brand-gold !p-0 transition-all cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation();
+                setMediaToEdit(item);
+                setIsEditDrawerOpen(true);
+              }}
+              >
+              <Icon name="settings" folder="dashboardIcon" size="xs" />
+              </Button>
+            </Tooltip>
+            <Tooltip text="Permanently Delete Asset">
+              <Button shape="rounded-sm" variant="outline"
+              className="w-8 h-8 bg-white/95 shadow-sm text-gray-500 hover:text-white hover:bg-rose-500 hover:border-rose-500 !p-0 transition-all cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation();
+                setMediaToDelete(item);
+                setIsDeleteModalOpen(true);
+              }}
+              >
+              <Icon name="Delete" folder="dashboardIcon" size="xs" />
+              </Button>
+            </Tooltip>
            </div>
           </div>
           <div className="p-4 border-t border-gray-50 bg-white">
@@ -259,24 +275,28 @@ export default function ProductMediaListing() {
            </td>
            <td className="text-right">
             <div className="flex justify-end items-center gap-4">
-             <Button shape="rounded-sm" variant="outline"
-              className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
-              onClick={() => {
-               setMediaToEdit(item);
-               setIsEditDrawerOpen(true);
-              }}
-             >
-              <Icon name="settings" folder="dashboardIcon" size="sm" />
-             </Button>
-             <Button shape="rounded-sm" variant="outline"
-              className="!p-1.5 text-gray-400 hover:text-white hover:bg-rose-500 hover:border-rose-500 transition-all"
-              onClick={() => {
-               setMediaToDelete(item);
-               setIsDeleteModalOpen(true);
-              }}
-             >
-              <Icon name="Delete" folder="dashboardIcon" size="sm" />
-             </Button>
+             <Tooltip text="Media Settings">
+               <Button shape="rounded-sm" variant="outline"
+                className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
+                onClick={() => {
+                 setMediaToEdit(item);
+                 setIsEditDrawerOpen(true);
+                }}
+               >
+                <Icon name="settings" folder="dashboardIcon" size="sm" />
+               </Button>
+             </Tooltip>
+             <Tooltip text="Permanently Delete Asset">
+               <Button shape="rounded-sm" variant="outline"
+                className="!p-1.5 text-gray-400 hover:text-white hover:bg-rose-500 hover:border-rose-500 transition-all"
+                onClick={() => {
+                 setMediaToDelete(item);
+                 setIsDeleteModalOpen(true);
+                }}
+               >
+                <Icon name="Delete" folder="dashboardIcon" size="sm" />
+               </Button>
+             </Tooltip>
             </div>
            </td>
           </tr>

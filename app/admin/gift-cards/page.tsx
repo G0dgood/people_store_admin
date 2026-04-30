@@ -9,9 +9,11 @@ import { Pagination } from "@/app/components/Admin/Pagination";
 import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import { useGetGiftCardsQuery, useDeleteGiftCardMutation, GiftCard } from "@/lib/redux/services/giftCardApi";
 import { toast } from "sonner";
-import { HiPlus, HiMagnifyingGlass, HiTrash, HiCreditCard, HiSquares2X2, HiListBullet, HiArrowsRightLeft } from "react-icons/hi2";
+import { HiPlus, HiMagnifyingGlass, HiTrash, HiCreditCard, HiSquares2X2, HiListBullet, HiArrowsRightLeft, HiArrowPath } from "react-icons/hi2";
 import { HiPencil } from "react-icons/hi";
 import { SVGLoaderFetch, NoRecordFound } from "@/app/components/Options";
+import { Tooltip } from "@/app/components/Tooltip";
+import { MediaSkeleton as CardSkeleton } from "@/app/components/Admin/MediaSkeleton";
 import { AddGiftCardModal } from "../../components/Admin/AddGiftCardModal";
 
 const GiftCardsPage = () => {
@@ -23,7 +25,7 @@ const GiftCardsPage = () => {
   const [selectedCard, setSelectedCard] = useState<GiftCard | null>(null);
   const rowsPerPage = 12;
 
-  const { data: response, isLoading } = useGetGiftCardsQuery({
+  const { data: response, isLoading, refetch, isFetching } = useGetGiftCardsQuery({
     search,
     status: activeTab === "All" ? undefined : activeTab,
     page: currentPage,
@@ -72,11 +74,21 @@ const GiftCardsPage = () => {
           <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none mt-1">Issue & Manage Gift Cards</p>
         </div>
         <div className="flex gap-3">
+          <Tooltip text="Refresh Gift Cards">
+            <Button shape="rounded-sm" variant="outline"
+              className="border-gray-200 text-gray-500 group"
+              iconLeft={<HiArrowPath size={16} className={`${isFetching ? 'animate-spin text-brand-gold' : 'text-gray-400 group-hover:text-white'} transition-colors`} />}
+              onClick={() => refetch()}
+              disabled={isLoading || isFetching}
+            >
+              {isFetching ? "Refreshing..." : "Refresh"}
+            </Button>
+          </Tooltip>
           <Button
             onClick={handleAdd}
             shape="rounded-sm"
             variant="primary"
-            isLoading={isLoading}
+            disabled={isLoading || isFetching}
             iconLeft={<HiPlus size={18} />}
           >
             Issue New Card
@@ -126,10 +138,9 @@ const GiftCardsPage = () => {
           </div>
         </div>
 
-        {/* Content Area */}
         <div className="p-6 min-h-[400px] flex flex-col">
-          {isLoading ? (
-            <SVGLoaderFetch asTable={false} text="Loading cards..." />
+          {(isLoading || isFetching) ? (
+            <CardSkeleton viewType={viewType} count={8} />
           ) : giftCards.length === 0 ? (
             <NoRecordFound asTable={false} text="No gift cards found." />
           ) : viewType === "grid" ? (
@@ -160,12 +171,16 @@ const GiftCardsPage = () => {
                         <span className="text-[10px] font-bold text-white/80">{card.expiryDate ? new Date(card.expiryDate).toLocaleDateString() : "Never"}</span>
                       </div>
                       <div className="flex gap-2">
-                        <button onClick={() => handleEdit(card)} className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-white/60 hover:bg-brand-gold hover:text-white transition-all">
-                          <HiPencil size={14} />
-                        </button>
-                        <button onClick={() => setDeleteId(card._id)} className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-white/60 hover:bg-red-500 hover:text-white transition-all">
-                          <HiTrash size={14} />
-                        </button>
+                        <Tooltip text="Edit Card Details">
+                          <button onClick={() => handleEdit(card)} className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-white/60 hover:bg-brand-gold hover:text-white transition-all">
+                            <HiPencil size={14} />
+                          </button>
+                        </Tooltip>
+                        <Tooltip text="Delete Card">
+                          <button onClick={() => setDeleteId(card._id)} className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center text-white/60 hover:bg-red-500 hover:text-white transition-all">
+                            <HiTrash size={14} />
+                          </button>
+                        </Tooltip>
                       </div>
                     </div>
                   </div>
@@ -216,12 +231,16 @@ const GiftCardsPage = () => {
                       </td>
                       <td className="py-4 text-right">
                         <div className="flex justify-end gap-2">
-                          <Button variant="ghost" onClick={() => handleEdit(card)} className="!p-2 text-gray-400 hover:text-brand-gold">
-                            <HiPencil size={18} />
-                          </Button>
-                          <Button variant="ghost" onClick={() => setDeleteId(card._id)} className="!p-2 text-gray-400 hover:text-red-500">
-                            <HiTrash size={18} />
-                          </Button>
+                          <Tooltip text="Edit Card Details">
+                            <Button variant="ghost" onClick={() => handleEdit(card)} className="!p-2 text-gray-400 hover:text-brand-gold">
+                              <HiPencil size={18} />
+                            </Button>
+                          </Tooltip>
+                          <Tooltip text="Delete Card">
+                            <Button variant="ghost" onClick={() => setDeleteId(card._id)} className="!p-2 text-gray-400 hover:text-red-500">
+                              <HiTrash size={18} />
+                            </Button>
+                          </Tooltip>
                         </div>
                       </td>
                     </tr>

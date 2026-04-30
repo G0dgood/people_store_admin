@@ -53,6 +53,7 @@ const moduleIconMap: Record<string, string | React.ReactNode> = {
   brands: "star",
   deals: <RiPercentLine size={14} />,
   "gift-boxes": <HiOutlineGift size={16} />,
+  "gift-cards": <HiCreditCard size={16} />,
   advert: "Frame",
   notifications: "Bell outline",
   users: "users",
@@ -207,9 +208,10 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
         ],
         navGroups: [
           {
-            title: "Commerce",
+            title: "Inventory",
             items: [
               { name: "Products", href: "/admin/products", icon: moduleIconMap["products"], moduleId: "products" as any },
+              { name: "Media Library", href: "/admin/products/media", icon: moduleIconMap["media"], moduleId: "media" as any },
               { name: "Categories", href: "/admin/categories", icon: moduleIconMap["categories"], moduleId: "categories" as any },
               { name: "Brands", href: "/admin/brands", icon: moduleIconMap["brands"], moduleId: "brands" as any },
               { name: "Deals", href: "/admin/deals", icon: moduleIconMap["deals"], moduleId: "deals" as any },
@@ -217,17 +219,11 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
             ]
           },
           {
-            title: "Inventory",
-            items: [
-              { name: "Media Library", href: "/admin/products/media", icon: moduleIconMap["media"], moduleId: "media" as any },
-              { name: "Gift Boxes", href: "/admin/gift-boxes", icon: <HiOutlineGift size={16} />, moduleId: "gift-boxes" as any },
-              { name: "Gift Cards", href: "/admin/gift-cards", icon: <HiCreditCard size={16} />, moduleId: "gift-cards" as any },
-            ]
-          },
-          {
             title: "Marketing",
             items: [
               { name: "Coupon Codes", href: "/admin/coupons", icon: moduleIconMap["marketing"], moduleId: "marketing" as any },
+              { name: "Gift Boxes", href: "/admin/gift-boxes", icon: moduleIconMap["gift-boxes"], moduleId: "gift-boxes" as any },
+              { name: "Gift Cards", href: "/admin/gift-cards", icon: moduleIconMap["gift-cards"], moduleId: "gift-cards" as any },
               { name: "Adverts", href: "/admin/advert", icon: moduleIconMap["advert"], moduleId: "advert" as any },
             ]
           },
@@ -239,12 +235,17 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
             ]
           },
           {
-            title: "Users",
+            title: "Governance & Staff",
             items: [
-              { name: "Customers", href: "/admin/customers", icon: moduleIconMap["customers"], moduleId: "customers" as any },
               { name: "Staff Management", href: "/admin/users", icon: moduleIconMap["users"], moduleId: "users" as any },
-              { name: "Roles", href: "/admin/roles", icon: moduleIconMap["roles"], moduleId: "roles" as any },
+              { name: "Roles & Policies", href: "/admin/roles", icon: moduleIconMap["roles"], moduleId: "roles" as any },
               { name: "Permissions", href: "/admin/permissions", icon: <HiShieldCheck size={14} />, moduleId: "permissions" as any },
+            ]
+          },
+          {
+            title: "Customers",
+            items: [
+              { name: "All Customers", href: "/admin/customers", icon: moduleIconMap["customers"], moduleId: "customers" as any },
             ]
           },
           {
@@ -261,7 +262,7 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
 
     // 2. If we have real permissions from the DB, use them (For other roles)
     if (userPrivileges?.role?.permissions && userPrivileges.role.permissions.length > 0) {
-      const categoryOrder = ["System", "Commerce", "Inventory", "Finance", "Marketing", "Users", "Admin"];
+      const categoryOrder = ["System", "Inventory", "Finance", "Marketing", "Users", "Admin"];
       const coreModuleIds = ["dashboard", "orders"];
 
       const coreItems = userPrivileges.role.permissions
@@ -300,20 +301,20 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
       }, {} as Record<string, any[]>);
 
       // Inject new modules
-      if (!grouped["Inventory"]) grouped["Inventory"] = [];
-      if (!grouped["Inventory"].some(item => item.href === "/admin/gift-boxes")) {
-        grouped["Inventory"].push({
+      if (!grouped["Marketing"]) grouped["Marketing"] = [];
+      if (!grouped["Marketing"].some(item => item.href === "/admin/gift-boxes")) {
+        grouped["Marketing"].push({
           name: "Gift Boxes",
           href: "/admin/gift-boxes",
           icon: moduleIconMap["gift-boxes"] || <HiOutlineGift size={16} />,
           moduleId: "gift-boxes" as any,
         });
       }
-      if (!grouped["Inventory"].some(item => item.href === "/admin/gift-cards")) {
-        grouped["Inventory"].push({
+      if (!grouped["Marketing"].some(item => item.href === "/admin/gift-cards")) {
+        grouped["Marketing"].push({
           name: "Gift Cards",
           href: "/admin/gift-cards",
-          icon: <HiCreditCard size={16} />,
+          icon: moduleIconMap["gift-cards"] || <HiCreditCard size={16} />,
           moduleId: "gift-cards" as any,
         });
       }

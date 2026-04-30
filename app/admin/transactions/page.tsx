@@ -14,6 +14,9 @@ import { HiOutlineDocumentText } from "react-icons/hi2";
 
 import { useGetTransactionsQuery, useGetTransactionStatsQuery } from "@/lib/redux/services/transactionApi";
 import { NoRecordFound, SVGLoaderFetch } from "../../components/Options";
+import { Tooltip } from "@/app/components/Tooltip";
+import { HiArrowPath } from "react-icons/hi2";
+import { StatCardSkeleton } from "../../components/Skeleton/StatCardSkeleton";
 
 const statusStyles = {
 	Success: { color: "text-emerald-500", bg: "bg-emerald-500" },
@@ -30,7 +33,7 @@ export default function TransactionsPage() {
 	const [isDetailDrawerOpen, setIsDetailDrawerOpen] = useState(false);
 	const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
 
-	const { data: transactionsResponse, isLoading } = useGetTransactionsQuery({
+	const { data: transactionsResponse, isLoading, refetch, isFetching } = useGetTransactionsQuery({
 		status: activeTab === "All transactions" ? undefined : activeTab,
 		page: currentPage,
 		limit: rowsPerPage
@@ -63,34 +66,45 @@ export default function TransactionsPage() {
 			<div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
 				{/* Stats Section (Left 2 columns in a 2x2 grid) */}
 				<div className="xl:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
-					<StatCard
-						title="Total Revenue"
-						value={isLoadingStats ? "..." : `₦${stats?.totalRevenue?.toLocaleString() || '0'}`}
-						trendValue="14.4%"
-						trendIsUp={true}
-						periodLabel="Last 7 days"
-					/>
-					<StatCard
-						title="Completed Transactions"
-						value={isLoadingStats ? "..." : stats?.successCount?.toString() || '0'}
-						trendValue="20%"
-						trendIsUp={true}
-						periodLabel="Last 7 days"
-					/>
-					<StatCard
-						title="Pending Transactions"
-						value={isLoadingStats ? "..." : stats?.pendingCount?.toString() || '0'}
-						trendValue="85%"
-						trendIsUp={true}
-						periodLabel="Last 7 days"
-					/>
-					<StatCard
-						title="Failed Transactions"
-						value={isLoadingStats ? "..." : stats?.failedCount?.toString() || '0'}
-						trendValue="15%"
-						trendIsUp={false}
-						periodLabel="Last 7 days"
-					/>
+					{isLoadingStats ? (
+						<>
+							<StatCardSkeleton />
+							<StatCardSkeleton />
+							<StatCardSkeleton />
+							<StatCardSkeleton />
+						</>
+					) : (
+						<>
+							<StatCard
+								title="Total Revenue"
+								value={`₦${stats?.totalRevenue?.toLocaleString() || '0'}`}
+								trendValue="14.4%"
+								trendIsUp={true}
+								periodLabel="Last 7 days"
+							/>
+							<StatCard
+								title="Completed Transactions"
+								value={stats?.successCount?.toString() || '0'}
+								trendValue="20%"
+								trendIsUp={true}
+								periodLabel="Last 7 days"
+							/>
+							<StatCard
+								title="Pending Transactions"
+								value={stats?.pendingCount?.toString() || '0'}
+								trendValue="85%"
+								trendIsUp={true}
+								periodLabel="Last 7 days"
+							/>
+							<StatCard
+								title="Failed Transactions"
+								value={stats?.failedCount?.toString() || '0'}
+								trendValue="15%"
+								trendIsUp={false}
+								periodLabel="Last 7 days"
+							/>
+						</>
+					)}
 				</div>
 
 				{/* Payment Method Card (Right 2 columns) */}
@@ -143,17 +157,29 @@ export default function TransactionsPage() {
 							<div className="flex flex-col gap-3">
 								<div className="flex justify-between items-center">
 									<span className="text-xs font-bold text-gray-400">Total Count:</span>
-									<span className="text-xs font-bold text-brand-charcoal">{stats?.transactionCount || 0}</span>
+									{isLoadingStats ? (
+										<div className="h-3 w-12 bg-gray-100 rounded animate-pulse"></div>
+									) : (
+										<span className="text-xs font-bold text-brand-charcoal">{stats?.transactionCount || 0}</span>
+									)}
 								</div>
 								<div className="flex justify-between items-center">
 									<span className="text-xs font-bold text-gray-400">Success Rate:</span>
-									<span className="text-xs font-bold text-brand-gold">
-										{stats?.transactionCount ? Math.round((stats.successCount / stats.transactionCount) * 100) : 0}%
-									</span>
+									{isLoadingStats ? (
+										<div className="h-3 w-10 bg-gray-100 rounded animate-pulse"></div>
+									) : (
+										<span className="text-xs font-bold text-brand-gold">
+											{stats?.transactionCount ? Math.round((stats.successCount / stats.transactionCount) * 100) : 0}%
+										</span>
+									)}
 								</div>
 								<div className="flex justify-between items-center">
 									<span className="text-xs font-bold text-gray-400">Revenue:</span>
-									<span className="text-xs font-bold text-brand-charcoal">₦{stats?.totalRevenue?.toLocaleString() || 0}</span>
+									{isLoadingStats ? (
+										<div className="h-3 w-16 bg-gray-100 rounded animate-pulse"></div>
+									) : (
+										<span className="text-xs font-bold text-brand-charcoal">₦{stats?.totalRevenue?.toLocaleString() || 0}</span>
+									)}
 								</div>
 							</div>
 						</div>
@@ -180,6 +206,16 @@ export default function TransactionsPage() {
 						onChange={setActiveTab} id={""} />
 
 					<div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
+						<Tooltip text="Refresh Transaction List">
+							<Button shape="rounded-sm" variant="outline"
+								className="border-gray-200 text-gray-500 group h-[38px]"
+								iconLeft={<HiArrowPath size={16} className={`${isFetching ? 'animate-spin text-brand-gold' : 'text-gray-400 group-hover:text-white'} transition-colors`} />}
+								onClick={() => refetch()}
+								disabled={isLoading || isFetching}
+							>
+								{isFetching ? "Refreshing..." : "Refresh"}
+							</Button>
+						</Tooltip>
 						<Input shape="rounded-sm" type="text"
 							placeholder="Search payment history"
 							containerClassName="w-full lg:w-80 xl:w-96"
@@ -243,15 +279,17 @@ export default function TransactionsPage() {
 									</td>
 									<td className="text-right">
 										<div className="flex justify-end gap-2 pr-4">
-											<Button shape="rounded-sm" variant="outline"
-												className="!p-1.5 text-gray-400 hover:text-brand-gold hover:bg-gray-50 transition-all"
-												onClick={() => {
-													setSelectedTransaction(tx);
-													setIsDetailDrawerOpen(true);
-												}}
-											>
-												<HiOutlineDocumentText size={14} />
-											</Button>
+											<Tooltip text="View Receipt & Details">
+												<Button shape="rounded-sm" variant="outline"
+													className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
+													onClick={() => {
+														setSelectedTransaction(tx);
+														setIsDetailDrawerOpen(true);
+													}}
+												>
+													<HiOutlineDocumentText size={14} />
+												</Button>
+											</Tooltip>
 										</div>
 									</td>
 								</tr>

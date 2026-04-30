@@ -27,11 +27,13 @@ import {
 import { useSocket } from "@/app/context/SocketContext";
 import { toast } from "sonner";
 import { SVGLoaderFetch } from "../../components/Options";
+import { Tooltip } from "@/app/components/Tooltip";
+import { HiArrowPath } from "react-icons/hi2";
 
 export default function DealsPage() {
- const { data: timerResponse, isLoading: isLoadingTimer, refetch: refetchTimer } = useGetTimerQuery();
- const { data: dealsResponse, isLoading: isLoadingDeals } = useGetDealsQuery();
- const { data: statsResponse, isLoading: isLoadingStats } = useGetDealStatsQuery();
+ const { data: timerResponse, isLoading: isLoadingTimer, refetch: refetchTimer, isFetching: isFetchingTimer } = useGetTimerQuery();
+ const { data: dealsResponse, isLoading: isLoadingDeals, refetch: refetchDeals, isFetching: isFetchingDeals } = useGetDealsQuery();
+ const { data: statsResponse, isLoading: isLoadingStats, refetch: refetchStats, isFetching: isFetchingStats } = useGetDealStatsQuery();
  const [updateTimer, { isLoading: isUpdatingTimer }] = useUpdateTimerMutation();
  const [deleteOffer, { isLoading: isDeletingOffer }] = useDeleteOfferMutation();
  const { on, off } = useSocket();
@@ -171,13 +173,29 @@ export default function DealsPage() {
      <h2 className="text-xl font-black text-[#1D3557]">Offer Countdown Management</h2>
      <p className="text-xs text-gray-400 font-bold">Configure the global countdown timer for your active deals.</p>
     </div>
-    <Button shape="rounded-sm" variant="primary"
-     className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold shadow-md shadow-brand-gold/10 h-10 px-6 text-[10px] font-black uppercase tracking-widest"
-     iconLeft={<HiOutlinePlusCircle size={18} />}
-     onClick={() => setIsTimerModalOpen(true)}
-    >
-     Update Global Timer
-    </Button>
+    <div className="flex flex-col md:flex-row justify-end items-center gap-3">
+     <Tooltip text="Refresh Deals & Timer">
+      <Button shape="rounded-sm" variant="outline"
+        className="border-gray-200 text-gray-500 group h-10"
+        iconLeft={<HiArrowPath size={16} className={`${(isFetchingTimer || isFetchingDeals || isFetchingStats) ? 'animate-spin text-brand-gold' : 'text-gray-400 group-hover:text-white'} transition-colors`} />}
+        onClick={() => {
+          refetchTimer();
+          refetchDeals();
+          refetchStats();
+        }}
+        disabled={isLoadingTimer || isFetchingTimer || isFetchingDeals || isFetchingStats}
+      >
+        {(isFetchingTimer || isFetchingDeals || isFetchingStats) ? "Refreshing..." : "Refresh"}
+      </Button>
+     </Tooltip>
+     <Button shape="rounded-sm" variant="primary"
+      className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold shadow-md shadow-brand-gold/10 h-10 px-6 text-[10px] font-black uppercase tracking-widest"
+      iconLeft={<HiOutlinePlusCircle size={18} />}
+      onClick={() => setIsTimerModalOpen(true)}
+     >
+      Update Global Timer
+     </Button>
+    </div>
    </div>
 
    {/* Timer Display Card */}

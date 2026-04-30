@@ -16,8 +16,10 @@ import { BackgroundLibraryModal } from "../../components/Admin/BackgroundLibrary
 import { BackgroundOrchestration } from "@/app/components/Admin/BackgroundOrchestration";
 import { CopywritingTiming } from "@/app/components/Admin/CopywritingTiming";
 import { Icon } from "@/app/components/Icon";
-import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import { useSocket } from "@/app/context/SocketContext";
+import { Tooltip } from "../../components/Tooltip";
+import { HiArrowPath } from "react-icons/hi2";
+import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 
 const INITIAL_CONFIG: AdvertConfig = {
   backgroundImages: [],
@@ -36,7 +38,7 @@ const INITIAL_CONFIG: AdvertConfig = {
 };
 
 export default function AdvertManagement() {
-  const { data: advertResponse, isLoading: isAdvertLoading, refetch: refetchAdvert } = useGetAdvertConfigQuery();
+  const { data: advertResponse, isLoading: isAdvertLoading, refetch: refetchAdvert, isFetching: isFetchingAdvert } = useGetAdvertConfigQuery();
   const { data: productsResponse, isLoading: isProductsLoading } = useGetProductsQuery();
   const { data: categoriesResponse, isLoading: isCategoriesLoading } = useGetCategoriesQuery();
   const { data: mediaResponse, isLoading: isMediaLoading } = useGetMediaItemsQuery();
@@ -220,6 +222,16 @@ export default function AdvertManagement() {
         </div>
 
         <div className="flex items-center gap-6">
+          <Tooltip text="Refresh Advert Config">
+            <Button shape="rounded-sm" variant="outline"
+              className="border-gray-200 text-gray-500 group h-10"
+              iconLeft={<HiArrowPath size={16} className={`${isFetchingAdvert ? 'animate-spin text-brand-gold' : 'text-gray-400 group-hover:text-brand-gold'} transition-colors`} />}
+              onClick={() => refetchAdvert()}
+              disabled={isAdvertLoading || isFetchingAdvert}
+            >
+              {isFetchingAdvert ? "Synchronizing..." : "Refresh"}
+            </Button>
+          </Tooltip>
           <div className="flex flex-col items-end gap-1.5 mr-4">
             <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">Layout Architecture</span>
             <TabFilter

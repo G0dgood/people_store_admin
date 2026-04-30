@@ -10,7 +10,8 @@ import ModalBody from "../../components/Modal/ModalBody";
 import ModalFooter from "../../components/Modal/ModalFooter";
 import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import { SecurityHelpDrawer } from "../../components/Admin/SecurityHelpDrawer";
-import { HiLockClosed, HiKey, HiShieldCheck, HiEye, HiEyeSlash } from "react-icons/hi2";
+import { HiLockClosed, HiKey, HiShieldCheck, HiEye, HiEyeSlash, HiArrowPath } from "react-icons/hi2";
+import { Tooltip } from "@/app/components/Tooltip";
 import { useAppSelector, useAppDispatch } from "@/lib/redux/hooks";
 import { selectCurrentUser, updateUser } from "@/lib/redux/features/authSlice";
 import { useGetCurrentUserQuery, useUpdateAccountMutation, useUpdateAvatarMutation, useChangePasswordMutation } from "@/lib/redux/services/authApi";
@@ -22,7 +23,7 @@ export default function ProfilePage() {
  const user = useAppSelector(selectCurrentUser);
 
  // Get the loading states to show the skeleton
- const { refetch, isLoading } = useGetCurrentUserQuery(undefined);
+ const { refetch, isLoading, isFetching } = useGetCurrentUserQuery(undefined);
 
  const [updateAccount, { isLoading: isUpdatingAccount }] = useUpdateAccountMutation();
  const [updateAvatar, { isLoading: isUpdatingAvatar }] = useUpdateAvatarMutation();
@@ -165,6 +166,15 @@ export default function ProfilePage() {
      {/* Profile Summary Card */}
      <div className="bg-white rounded-[6px] border border-gray-200 shadow-sm p-8 flex flex-col items-center text-center relative">
       <div className="absolute top-6 right-6 flex gap-3 text-gray-400">
+       <Tooltip text="Refresh Account Details">
+        <Button variant="outline" shape="rounded-sm" 
+          className="!p-1.5 text-gray-400 group"
+          onClick={() => refetch()}
+          disabled={isLoading || isFetching}
+        >
+          <HiArrowPath size={16} className={`${isFetching ? 'animate-spin text-brand-gold' : 'text-gray-400 group-hover:text-brand-gold'} transition-colors`} />
+        </Button>
+       </Tooltip>
        <Button variant="outline" shape="rounded-sm" className="!p-1.5 text-gray-400">
         <Icon name="settings" folder="dashboardIcon" size="sm" />
        </Button>

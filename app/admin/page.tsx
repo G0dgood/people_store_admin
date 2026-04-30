@@ -13,13 +13,24 @@ import { useRouter } from "next/navigation";
 
 import { useGetOrderStatsQuery } from "@/lib/redux/services/orderApi";
 import { useGetCustomerStatsQuery } from "@/lib/redux/services/customerApi";
+import { HiArrowPath } from "react-icons/hi2";
+import { Tooltip } from "../components/Tooltip";
+import { Button } from "../components/Button";
+import { StatCardSkeleton } from "../components/Skeleton/StatCardSkeleton";
 
 export default function AdminDashboard() {
   const router = useRouter();
   const [activeInsightSection, setActiveInsightSection] = useState<'revenue' | 'funnel' | 'traffic' | null>(null);
 
-  const { data: orderStatsResponse, isLoading: isLoadingOrders } = useGetOrderStatsQuery();
-  const { data: customerStatsResponse, isLoading: isLoadingCustomers } = useGetCustomerStatsQuery();
+  const { data: orderStatsResponse, isLoading: isLoadingOrders, refetch: refetchOrders, isFetching: isFetchingOrders } = useGetOrderStatsQuery();
+  const { data: customerStatsResponse, isLoading: isLoadingCustomers, refetch: refetchCustomers, isFetching: isFetchingCustomers } = useGetCustomerStatsQuery();
+
+  const isGlobalFetching = isFetchingOrders || isFetchingCustomers;
+
+  const handleRefresh = () => {
+    refetchOrders();
+    refetchCustomers();
+  };
 
   const orderStats = orderStatsResponse?.data;
   const customerStats = customerStatsResponse?.data;
@@ -33,34 +44,64 @@ export default function AdminDashboard() {
         activeSection={activeInsightSection}
       />
 
+      {/* Dashboard Header */}
+      <div className="flex justify-between items-center mb-2">
+        <div className="flex flex-col">
+          <h1 className="text-2xl font-black text-[#1D3557]">Command Center</h1>
+          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none mt-1">Live Administrative Overview</p>
+        </div>
+        <Tooltip text="Refresh Dashboard Metrics">
+          <Button shape="rounded-sm" variant="outline"
+            className="border-gray-200 text-gray-500 group h-10 px-6"
+            iconLeft={<HiArrowPath size={16} className={`${isGlobalFetching ? 'animate-spin text-brand-gold' : 'text-gray-400 group-hover:text-brand-gold'} transition-colors`} />}
+            onClick={handleRefresh}
+            disabled={isLoadingOrders || isGlobalFetching}
+          >
+            <span className="text-[10px] font-black uppercase tracking-widest">
+              {isGlobalFetching ? "Synchronizing..." : "Refresh Pulse"}
+            </span>
+          </Button>
+        </Tooltip>
+      </div>
+
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <StatCard
-          title="Total Sales"
-          value={isLoadingOrders ? "..." : "₦" + (orderStats?.totalRevenue || 0).toLocaleString()}
-          trendLabel="Revenue"
-          trendValue="10.4%"
-          trendIsUp={true}
-          onViewDetails={() => setActiveInsightSection('revenue')}
-        />
-        <StatCard
-          title="Total Orders"
-          value={isLoadingOrders ? "..." : (orderStats?.totalOrders || 0).toLocaleString()}
-          trendLabel="Orders"
-          trendValue="14.4%"
-          trendIsUp={true}
-          onViewDetails={() => setActiveInsightSection('funnel')}
-        />
-        <StatCard
-          title="Active Customers"
-          value={isLoadingCustomers ? "..." : (customerStats?.activeCustomers || 0).toLocaleString()}
-          trendLabel="Users"
-          trendValue={isLoadingOrders ? "..." : (orderStats?.pendingOrders || 0).toString()}
-          trendIsUp={true}
-          previousLabel="Pending Orders"
-          previousValue={isLoadingOrders ? "..." : (orderStats?.pendingOrders || 0).toString()}
-          onViewDetails={() => setActiveInsightSection('traffic')}
-        />
+        {(isLoadingOrders || isLoadingCustomers) ? (
+          <>
+            <StatCardSkeleton />
+            <StatCardSkeleton />
+            <StatCardSkeleton />
+          </>
+        ) : (
+          <>
+            <StatCard
+              title="Total Sales"
+              value={"₦" + (orderStats?.totalRevenue || 0).toLocaleString()}
+              trendLabel="Revenue"
+              trendValue="10.4%"
+              trendIsUp={true}
+              onViewDetails={() => setActiveInsightSection('revenue')}
+            />
+            <StatCard
+              title="Total Orders"
+              value={(orderStats?.totalOrders || 0).toLocaleString()}
+              trendLabel="Orders"
+              trendValue="14.4%"
+              trendIsUp={true}
+              onViewDetails={() => setActiveInsightSection('funnel')}
+            />
+            <StatCard
+              title="Active Customers"
+              value={(customerStats?.activeCustomers || 0).toLocaleString()}
+              trendLabel="Users"
+              trendValue={(orderStats?.pendingOrders || 0).toString()}
+              trendIsUp={true}
+              previousLabel="Pending Orders"
+              previousValue={(orderStats?.pendingOrders || 0).toString()}
+              onViewDetails={() => setActiveInsightSection('traffic')}
+            />
+          </>
+        )}
       </div>
 
    <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">

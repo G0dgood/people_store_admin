@@ -26,9 +26,11 @@ import { toast } from "sonner";
 import { NoRecordFound, SVGLoaderFetch } from "@/app/components/Options";
 import moment from "moment";
 import { StatusBadge } from "@/app/components/StatusBadge";
+import { Tooltip } from "@/app/components/Tooltip";
+import { HiArrowPath } from "react-icons/hi2";
 
 export default function FAQManagementPage() {
-  const { data: faqsData, isLoading } = useGetFaqsQuery();
+  const { data: faqsData, isLoading, refetch, isFetching } = useGetFaqsQuery();
   const [deleteFaq] = useDeleteFaqMutation();
 
   const faqs = faqsData?.data || [];
@@ -82,7 +84,17 @@ export default function FAQManagementPage() {
   return (
     <div className="flex flex-col gap-8">
       {/* Top Actions */}
-      <div className="flex justify-end items-center">
+      <div className="flex justify-end items-center gap-3">
+        <Tooltip text="Refresh FAQ List">
+          <Button shape="rounded-sm" variant="outline"
+            className="border-gray-200 text-gray-500 group"
+            iconLeft={<HiArrowPath size={16} className={`${isFetching ? 'animate-spin text-brand-gold' : 'text-gray-400 group-hover:text-white'} transition-colors`} />}
+            onClick={() => refetch()}
+            disabled={isLoading || isFetching}
+          >
+            {isFetching ? "Refreshing..." : "Refresh"}
+          </Button>
+        </Tooltip>
         <Button shape="rounded-sm" variant="primary"
           iconLeft={<HiOutlinePlusCircle size={18} />}
           onClick={() => {
@@ -172,24 +184,28 @@ export default function FAQManagementPage() {
                   </td>
                   <td className="pr-8 py-5 text-right">
                     <div className="flex justify-end items-center gap-2">
-                      <Button shape="rounded-sm" variant="outline"
-                        className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
-                        onClick={() => {
-                          setSelectedFAQ(faq);
-                          setIsModalOpen(true);
-                        }}
-                      >
-                        <HiOutlinePencil size={14} />
-                      </Button>
-                      <Button shape="rounded-sm" variant="outline"
-                        className="!p-1.5 text-gray-400 hover:text-white hover:bg-rose-500 hover:border-rose-500 transition-all"
-                        onClick={() => {
-                          setSelectedFAQ(faq);
-                          setIsDeleteModalOpen(true);
-                        }}
-                      >
-                        <HiOutlineTrash size={14} />
-                      </Button>
+                      <Tooltip text="Edit FAQ Entry">
+                        <Button shape="rounded-sm" variant="outline"
+                          className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
+                          onClick={() => {
+                            setSelectedFAQ(faq);
+                            setIsModalOpen(true);
+                          }}
+                        >
+                          <HiOutlinePencil size={14} />
+                        </Button>
+                      </Tooltip>
+                      <Tooltip text="Delete FAQ Entry">
+                        <Button shape="rounded-sm" variant="outline"
+                          className="!p-1.5 text-gray-400 hover:text-white hover:bg-rose-500 hover:border-rose-500 transition-all"
+                          onClick={() => {
+                            setSelectedFAQ(faq);
+                            setIsDeleteModalOpen(true);
+                          }}
+                        >
+                          <HiOutlineTrash size={14} />
+                        </Button>
+                      </Tooltip>
                     </div>
                   </td>
                 </tr>

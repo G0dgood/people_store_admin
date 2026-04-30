@@ -214,6 +214,8 @@ export default function EditProduct() {
 
    if (response.success) {
     emit("PRODUCT_UPDATED", { type: "update", product: response.data });
+    setIsPublishConfirmOpen(false);
+    setIsDraftConfirmOpen(false);
     if (submitStatus === "Published") {
      setIsPublishSuccessOpen(true);
     } else {
@@ -855,27 +857,23 @@ export default function EditProduct() {
    <ConfirmationModal
     isOpen={isPublishConfirmOpen}
     onClose={() => setIsPublishConfirmOpen(false)}
-    onConfirm={() => {
-     setIsPublishConfirmOpen(false);
-     handleSubmit("Published");
-    }}
+    onConfirm={() => handleSubmit("Published")}
     title="Confirm Update"
     message="Are you sure you want to update and publish these changes? The storefront will reflect these changes immediately."
     confirmText="Yes, update catalog"
     type="success"
+    isLoading={isSubmitting}
    />
 
    <ConfirmationModal
     isOpen={isDraftConfirmOpen}
     onClose={() => setIsDraftConfirmOpen(false)}
-    onConfirm={() => {
-     setIsDraftConfirmOpen(false);
-     handleSubmit("Draft");
-    }}
+    onConfirm={() => handleSubmit("Draft")}
     title="Save as Draft"
     message="Are you sure you want to save these changes as a draft? The product will be hidden from the storefront."
     confirmText="Yes, save draft"
     type="info"
+    isLoading={isSubmitting}
    />
 
    <Modal

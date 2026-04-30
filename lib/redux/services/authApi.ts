@@ -131,10 +131,30 @@ export const authApi = baseApi.injectEndpoints({
       ],
     }),
     resetStaffPassword: builder.mutation({
-      query: (userId) => ({
+      query: ({ userId, newPassword }) => ({
         url: `/users/${userId}/reset-password`,
         method: 'PATCH',
+        body: { newPassword }
       }),
+    }),
+    bulkDeleteStaff: builder.mutation({
+      query: (userIds) => ({
+        url: '/users/bulk-delete',
+        method: 'POST',
+        body: { userIds }
+      }),
+      invalidatesTags: [{ type: 'User', id: 'LIST' }],
+    }),
+    bulkLockStaff: builder.mutation({
+      query: ({ userIds, status }) => ({
+        url: '/users/bulk-lock',
+        method: 'PATCH',
+        body: { userIds, status }
+      }),
+      invalidatesTags: (result, error, { userIds }) => [
+        ...userIds.map((id: string) => ({ type: 'User' as const, id })),
+        { type: 'User', id: 'LIST' }
+      ],
     }),
   }),
   overrideExisting: true,
@@ -155,5 +175,7 @@ export const {
   useUpdateStaffMutation,
   useDeleteStaffMutation,
   useLockStaffSessionMutation,
-  useResetStaffPasswordMutation
+  useResetStaffPasswordMutation,
+  useBulkDeleteStaffMutation,
+  useBulkLockStaffMutation
 } = authApi;

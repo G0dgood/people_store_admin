@@ -27,6 +27,15 @@ export const LoginForm = ({ }: LoginFormProps) => {
   const [rememberMe, setRememberMe] = useState(false);
   const [showAccessKey, setShowAccessKey] = useState(false);
 
+  // Load remembered email on mount
+  React.useEffect(() => {
+    const savedEmail = localStorage.getItem("remembered_admin_email");
+    if (savedEmail) {
+      setEmail(savedEmail);
+      setRememberMe(true);
+    }
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -34,6 +43,13 @@ export const LoginForm = ({ }: LoginFormProps) => {
       const response = await login({ email, password }).unwrap();
 
       if (response?.success && response?.data) {
+        // Handle Remember Me
+        if (rememberMe) {
+          localStorage.setItem("remembered_admin_email", email);
+        } else {
+          localStorage.removeItem("remembered_admin_email");
+        }
+
         dispatch(setCredentials({
           user: response.data.user,
           accessToken: response.data.accessToken
