@@ -54,20 +54,32 @@ const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
         const otherAttrs = Object.entries(attrs)
           .filter(([key]) => key.toLowerCase() !== 'color')
           .map(([_, val]) => {
-            if (Array.isArray(val)) return val.join(", ");
-            if (typeof val === 'string') {
+            let cleaned = val;
+            if (Array.isArray(val)) {
+              cleaned = val.join(", ");
+            } else if (typeof val === 'string') {
               try {
                 const parsed = JSON.parse(val);
-                if (Array.isArray(parsed)) return parsed.join(", ");
-              } catch (e) {}
-              return val.replace(/[\[\]"]/g, "");
+                if (Array.isArray(parsed)) {
+                  cleaned = parsed.join(", ");
+                } else {
+                  cleaned = parsed;
+                }
+              } catch (e) {
+                cleaned = val;
+              }
+              cleaned = String(cleaned).replace(/[\[\]"]/g, "").trim();
             }
-            return val;
-          });
+            return cleaned;
+          })
+          .filter(Boolean);
+
+        // Deduplicate values (e.g. if size and volume are both "100ml")
+        const uniqueAttrs = Array.from(new Set(otherAttrs));
 
         return {
-          label: otherAttrs.join(" / ") || `Variant ${idx + 1}`,
-          color: typeof color === 'string' ? color.replace(/[\[\]"]/g, "") : color,
+          label: uniqueAttrs.join(" / ") || `Variant ${idx + 1}`,
+          color: typeof color === 'string' ? color.replace(/[\[\]"]/g, "").trim() : color,
           price: `₦${v.price.toLocaleString()}`,
           isActive: true
         };
