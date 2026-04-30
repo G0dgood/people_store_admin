@@ -6,6 +6,7 @@ import { Button } from "../Button";
 import { Icon } from "../Icon";
 import { toast } from "sonner";
 import { HiXMark } from "react-icons/hi2";
+import { useApiError } from "@/app/hooks/useApiError";
 
 interface UploadMediaModalProps {
   isOpen: boolean;
@@ -20,7 +21,8 @@ const ALLOWED_TYPES = ["image/jpeg", "image/png", "video/mp4"];
 import { useUploadMediaMutation } from "@/lib/redux/services/mediaApi";
 
 export function UploadMediaModal({ isOpen, onClose, onUploadSuccess, onlyStaging }: UploadMediaModalProps) {
-  const [uploadMedia, { isLoading: isUploading }] = useUploadMediaMutation();
+  const [uploadMedia, { isLoading: isUploading, isError, error }] = useUploadMediaMutation();
+  useApiError(isError, error, "Failed to upload assets");
   const [stagedFiles, setStagedFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -93,7 +95,7 @@ export function UploadMediaModal({ isOpen, onClose, onUploadSuccess, onlyStaging
       onClose();
     } catch (err: any) {
       console.error("UPLOAD ERROR:", err);
-      toast.error(err?.data?.message || "Failed to upload assets. Please try again.");
+      // Error handled by hook
     }
   };
 

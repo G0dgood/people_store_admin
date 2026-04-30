@@ -48,12 +48,21 @@ export const QuickAddProductModal: React.FC<QuickAddProductModalProps> = ({
   useApiError(isError, error, "Failed to update products");
 
   const products = productsData?.data?.products || [];
-  const productOptions = products.map((p: any) => ({
-    value: p._id,
-    label: `${p.name} (₦${p.price?.toLocaleString()})`,
-    image: p.productImage,
-    status: p.status
-  }));
+  const productOptions = products.map((p: any) => {
+    const brandName = p.brand?.name || (typeof p.brand === 'string' ? p.brand : "");
+    const isAlreadyInTarget = isCategory
+      ? (typeof p.category === 'object' ? p.category?._id === category?._id : p.category === category?._id)
+      : (typeof p.brand === 'object' ? p.brand?._id === brand?._id : p.brand === brand?._id);
+
+    return {
+      value: p._id,
+      label: p.name,
+      subLabel: `₦${p.price?.toLocaleString()}${brandName ? ` • ${brandName}` : ' • Independent'}`,
+      image: p.productImage,
+      status: p.status,
+      isCurrent: isAlreadyInTarget
+    };
+  });
 
   const categoryOptions = [
     { value: "", label: "All Categories" },
@@ -69,10 +78,10 @@ export const QuickAddProductModal: React.FC<QuickAddProductModalProps> = ({
 
     try {
       const updatePromises = selectedProductIds.map(productId => {
-        const data = isCategory 
-          ? { category: category._id } 
-          : { brand: brand._id };
-        
+        const data = isCategory
+          ? { category: category?._id }
+          : { brand: brand?._id };
+
         return updateProduct({ productId, data }).unwrap();
       });
 

@@ -12,6 +12,7 @@ import { useCreateBrandMutation } from "@/lib/redux/services/brandApi";
 import { useGetCategoriesQuery } from "@/lib/redux/services/categoryApi";
 import { toast } from "sonner";
 import { ImageUpload } from "../Form/ImageUpload";
+import { useApiError } from "@/app/hooks/useApiError";
 
 interface AddBrandModalProps {
   isOpen: boolean;
@@ -33,7 +34,8 @@ export function AddBrandModal({ isOpen, onClose }: AddBrandModalProps) {
     status: "Active",
   });
 
-  const [createBrand, { isLoading: isCreating }] = useCreateBrandMutation();
+  const [createBrand, { isLoading: isCreating, isError, error }] = useCreateBrandMutation();
+  useApiError(isError, error, "Failed to Create Brand");
   const { data: categoriesData } = useGetCategoriesQuery();
   const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
@@ -55,9 +57,7 @@ export function AddBrandModal({ isOpen, onClose }: AddBrandModalProps) {
       });
       onClose();
     } catch (err: any) {
-      toast.error("Failed to Create Brand", {
-        description: err?.data?.message || "Something went wrong."
-      });
+      // Error handled by hook
     }
   };
 

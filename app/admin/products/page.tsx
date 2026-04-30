@@ -12,18 +12,20 @@ import Checkbox from "@/app/components/Checkbox";
 import { Input } from "@/app/components/Form";
 import { ProductsMoreActionsDrawer } from "../../components/Admin/ProductsMoreActionsDrawer";
 import { EditProductDrawer } from "../../components/Admin/EditProductDrawer";
+import { ViewProductModal } from "../../components/Admin/ViewProductModal";
 import { BulkActionsDrawer } from "../../components/Admin/BulkActionsDrawer";
 import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import { toast } from "sonner";
 import { NoRecordFound, SVGLoaderFetch } from "@/app/components/Options";
 import { Tooltip } from "../../components/Tooltip";
-import { HiArrowPath } from "react-icons/hi2";
+import { HiArrowPath, HiOutlineEye } from "react-icons/hi2";
 
 import { StockAdjustmentDrawer } from "../../components/Admin/StockAdjustmentDrawer";
 import { useAddProductMutation, useGetProductsQuery, useDeleteProductMutation, useUpdateProductMutation, Product } from "@/lib/redux/services/productApi";
 import { LuCopy, LuPackageSearch, LuZap } from "react-icons/lu";
 import { HiPencil } from "react-icons/hi2";
 import { usePrivilege } from "@/lib/contexts/PrivilegeContext";
+import { useApiError } from "../../hooks/useApiError";
 
 const statusStyles = {
   Published: "text-emerald-500 bg-emerald-50/50",
@@ -36,9 +38,13 @@ export default function ProductListing() {
   const { data: response, isLoading, refetch, isFetching } = useGetProductsQuery();
   const products = response?.data?.products || [];
 
-  const [deleteProduct, { isLoading: isDeleting }] = useDeleteProductMutation();
-  const [addProduct, { isLoading: isDuplicating }] = useAddProductMutation();
-  const [updateProduct] = useUpdateProductMutation();
+  const [deleteProduct, { isLoading: isDeleting, isError: isDeleteError, error: deleteError }] = useDeleteProductMutation();
+  const [addProduct, { isLoading: isDuplicating, isError: isAddError, error: addError }] = useAddProductMutation();
+  const [updateProduct, { isError: isUpdateError, error: updateError }] = useUpdateProductMutation();
+
+  useApiError(isDeleteError, deleteError, "Failed to delete product");
+  useApiError(isAddError, addError, "Failed to duplicate product");
+  useApiError(isUpdateError, updateError, "Failed to update product");
   const { canAccess } = usePrivilege();
 
   const [activeTab, setActiveTab] = useState("Published");
@@ -56,6 +62,8 @@ export default function ProductListing() {
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [selectedProductForView, setSelectedProductForView] = useState<Product | null>(null);
   const [isArchiveConfirmOpen, setIsArchiveConfirmOpen] = useState(false);
   const [isStatusConfirmOpen, setIsStatusConfirmOpen] = useState(false);
   const [productForStatusToggle, setProductForStatusToggle] = useState<Product | null>(null);
@@ -77,10 +85,13 @@ export default function ProductListing() {
   const handleDuplicateAsDraft = async (product: Product) => {
     try {
       const formData = new FormData();
-      formData.append("name", `${product.name} (Copy)`);
-      formData.append("description", product.description);
-      formData.append("price", product.price.toString());
-      formData.append("category", product.category?._id || "");
+      formData.append("name", `${product?.name || "Product"} (Copy)`);
+      formData.append("description", product?.description || "");
+      formData.append("price", (product?.price || 0).toString());
+      formData.append("category", product?.category?._id || "");
+      if (product?.brand) {
+        formData.append("brand", typeof product.brand === 'object' ? product.brand._id : product.brand);
+      }
       formData.append("stock", "0");
       formData.append("status", "Draft");
 
@@ -98,8 +109,7 @@ export default function ProductListing() {
       await addProduct(formData).unwrap();
       toast.success("Product duplicated as draft!");
     } catch (err) {
-      console.error(err);
-      toast.error("Failed to duplicate product");
+      // Error handled by hook
     }
   };
 
@@ -115,13 +125,14 @@ export default function ProductListing() {
       setIsStatusConfirmOpen(false);
       setProductForStatusToggle(null);
     } catch (err) {
-      toast.error("Failed to update status");
+      // Error handled by hook
     }
   };
 
   // ... existing filter logic ...
   const filteredProducts = products.filter((product: Product) => {
-    const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    if (!product) return false;
+    const matchesSearch = (product.name || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
       (product.category?.name || "").toLowerCase().includes(searchQuery.toLowerCase());
 
     if (!matchesSearch) return false;
@@ -151,7 +162,7 @@ export default function ProductListing() {
       setIsDeleteModalOpen(false);
       setProductToDelete(null);
     } catch (err) {
-      toast.error("Failed to delete product");
+      // Error handled by hook
     }
   };
 
@@ -274,6 +285,7 @@ export default function ProductListing() {
                 </th>
                 <th>Product</th>
                 <th>Category</th>
+                <th>Brand</th>
                 <th>Price</th>
                 <th>Stock</th>
                 <th>Status</th>
@@ -296,24 +308,29 @@ export default function ProductListing() {
                   <td>
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 rounded-[6px] border border-gray-200 overflow-hidden bg-white p-1 shadow-sm ring-1 ring-gray-100">
-                        <img src={product.productImage} alt={product.name} className="w-full h-full object-contain" />
+                        <img src={product?.productImage} alt={product?.name} className="w-full h-full object-contain" />
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-sm font-bold text-[#1D3557] leading-tight group-hover:text-brand-gold transition-colors">{product.name}</span>
-                        <span className="text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-wider">ID: {product._id.slice(-6)}</span>
+                        <span className="text-sm font-bold text-[#1D3557] leading-tight group-hover:text-brand-gold transition-colors">{product?.name}</span>
+                        <span className="text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-wider">ID: {product?._id?.slice(-6) || "N/A"}</span>
                       </div>
                     </div>
                   </td>
                   <td>
-                    <span className="text-sm font-bold text-gray-500">{product.category?.name || "Uncategorized"}</span>
+                    <span className="text-sm font-bold text-gray-500">{product?.category?.name || "Uncategorized"}</span>
                   </td>
                   <td>
-                    <span className="text-sm font-black text-brand-gold">₦{product.price.toLocaleString()}</span>
+                    <span className="text-xs font-bold text-brand-gold bg-brand-gold/5 px-2 py-1 rounded-[4px]">
+                      {(product?.brand as any)?.name || "Independent"}
+                    </span>
+                  </td>
+                  <td>
+                    <span className="text-sm font-black text-brand-gold">₦{product?.price?.toLocaleString() || "0"}</span>
                   </td>
                   <td>
                     <div className="flex flex-col gap-1">
-                      <span className={`text-sm font-bold ${product.stock === 0 ? "text-rose-500" : "text-gray-700"}`}>
-                        {product.stock} units
+                      <span className={`text-sm font-bold ${product?.stock === 0 ? "text-rose-500" : "text-gray-700"}`}>
+                        {product?.stock || 0} units
                       </span>
                     </div>
                   </td>
@@ -339,6 +356,17 @@ export default function ProductListing() {
                   </td>
                   <td className="text-right">
                     <div className="flex justify-end items-center gap-2">
+                      <Tooltip text="View Details" position="top">
+                        <Button shape="rounded-sm" variant="outline"
+                          className="!p-1.5 text-gray-400 hover:text-white hover:bg-blue-500 hover:border-blue-500 transition-all"
+                          onClick={() => {
+                            setSelectedProductForView(product);
+                            setIsViewModalOpen(true);
+                          }}
+                        >
+                          <HiOutlineEye size={18} />
+                        </Button>
+                      </Tooltip>
                       <Tooltip text="Adjust Stock" position="top">
                         <Button shape="rounded-sm" variant="outline"
                           className="!p-1.5 text-gray-400 hover:text-emerald-500 hover:bg-emerald-50 hover:border-emerald-100 transition-all"
@@ -504,6 +532,14 @@ export default function ProductListing() {
         }
         confirmText={productForStatusToggle?.status === "Published" ? "Yes, unpublish" : "Yes, publish"}
         type={productForStatusToggle?.status === "Published" ? "danger" : "success"}
+      />
+      <ViewProductModal
+        isOpen={isViewModalOpen}
+        onClose={() => {
+          setIsViewModalOpen(false);
+          setSelectedProductForView(null);
+        }}
+        product={selectedProductForView}
       />
     </div>
   );

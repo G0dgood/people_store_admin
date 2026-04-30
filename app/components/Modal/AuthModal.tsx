@@ -15,13 +15,16 @@ import { toast } from "sonner";
 import { FaGoogle, FaFacebook } from "react-icons/fa";
 import { LuCamera, LuUser, LuEye, LuEyeOff } from "react-icons/lu";
 import { useCustomerAuth } from "../../context/CustomerAuthContext";
+import { useApiError } from "@/app/hooks/useApiError";
 
 const LoginForm = ({ onSwitch }: { onSwitch: () => void }) => {
   const [showPassword, setShowPassword] = React.useState(false);
   const { setView, closeModal } = useAuthModal();
   const dispatch = useAppDispatch();
-  const [login, { isLoading }] = useLoginCustomerMutation();
+  const [login, { isLoading, isError, error }] = useLoginCustomerMutation();
   const { setCustomerData } = useCustomerAuth();
+
+  useApiError(isError, error, "Login Failed");
 
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -45,7 +48,7 @@ const LoginForm = ({ onSwitch }: { onSwitch: () => void }) => {
         closeModal();
       }
     } catch (err: any) {
-      toast.error("Login Failed", { description: err?.data?.message || "Invalid credentials." });
+      // Error handled by hook
     }
   };
 
@@ -156,8 +159,10 @@ const RegisterForm = ({
   const [showPassword, setShowPassword] = React.useState(false);
   const { closeModal } = useAuthModal();
   const dispatch = useAppDispatch();
-  const [register, { isLoading }] = useRegisterCustomerMutation();
+  const [register, { isLoading, isError, error }] = useRegisterCustomerMutation();
   const { setCustomerData } = useCustomerAuth();
+
+  useApiError(isError, error, "Registration Failed");
 
   const [fullName, setFullName] = React.useState("");
   const [email, setEmail] = React.useState("");
@@ -196,7 +201,7 @@ const RegisterForm = ({
         closeModal();
       }
     } catch (err: any) {
-      toast.error("Registration Failed", { description: err?.data?.message || "Something went wrong." });
+      // Error handled by hook
     }
   };
 

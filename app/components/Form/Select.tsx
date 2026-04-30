@@ -7,8 +7,10 @@ import { Tag } from "./Tag";
 interface Option {
   value: string;
   label: string;
+  subLabel?: string;
   image?: string;
   status?: string;
+  isCurrent?: boolean;
 }
 
 interface SelectProps<T extends boolean = false> {
@@ -56,6 +58,7 @@ export const Select = <T extends boolean = false>({
   }, []);
 
   const handleSelect = (option: Option) => {
+    if (option.isCurrent) return;
     if (isMulti) {
       const currentValues = Array.isArray(value) ? (value as string[]) : [];
       const newValue = currentValues.includes(option.value)
@@ -168,6 +171,7 @@ export const Select = <T extends boolean = false>({
                       className={`
                         w-full text-left px-4 py-3 text-sm transition-colors flex items-center gap-3
                         ${isSelected ? "bg-brand-gold/5 text-brand-gold font-black" : "text-gray-700 hover:bg-gray-50"}
+                        ${option.isCurrent ? "opacity-50 cursor-not-allowed pointer-events-none grayscale-[0.5]" : ""}
                       `}
                     >
                       {option.image && (
@@ -179,7 +183,13 @@ export const Select = <T extends boolean = false>({
                            {option.status === "Draft" && (
                              <span className="text-[8px] font-black bg-gray-100 text-gray-400 px-1 py-0.5 rounded uppercase">Draft</span>
                            )}
+                           {option.isCurrent && (
+                             <span className="text-[8px] font-black bg-emerald-100 text-emerald-600 px-1 py-0.5 rounded uppercase">Already Added</span>
+                           )}
                         </div>
+                        {option.subLabel && (
+                          <span className="text-[10px] font-bold text-gray-400 mt-0.5 truncate">{option.subLabel}</span>
+                        )}
                       </div>
                       {isSelected && isMulti && <Icon name="check" folder="icon" size="xs" className="text-brand-gold" />}
                     </button>

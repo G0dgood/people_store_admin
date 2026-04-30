@@ -67,7 +67,7 @@ export const BrandProductsModal: React.FC<BrandProductsModalProps> = ({
       title={`Products by ${brand?.name || "Brand"}`}
       size="xl"
     >
-      <ModalBody className="flex flex-col gap-6 py-6 max-h-[70vh] overflow-y-auto custom-scrollbar">
+      <ModalBody className="flex flex-col gap-6 py-6">
         {/* Brand Header Summary */}
         <div className="relative p-5 rounded-2xl border border-gray-100 shadow-lg overflow-hidden group min-h-[120px] flex items-center">
           {/* Cover Image/Video Background */}

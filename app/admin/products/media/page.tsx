@@ -16,6 +16,7 @@ import { toast } from "sonner";
 import { SVGLoaderFetch, NoRecordFound } from "@/app/components/Options";
 import { useEffect } from "react";
 import { Tooltip } from "@/app/components/Tooltip";
+import { useApiError } from "@/app/hooks/useApiError";
 import { HiArrowPath } from "react-icons/hi2";
 import { MediaSkeleton } from "@/app/components/Admin/MediaSkeleton";
 
@@ -25,7 +26,8 @@ export default function ProductMediaListing() {
  const { data: response, isLoading, refetch, isFetching } = useGetMediaItemsQuery();
  const mediaData = response?.data || [];
 
- const [deleteMedia, { isLoading: isDeleting }] = useDeleteMediaMutation();
+ const [deleteMedia, { isLoading: isDeleting, isError, error }] = useDeleteMediaMutation();
+ useApiError(isError, error, "Failed to delete media");
 
  const [activeTab, setActiveTab] = useState("All media");
  const [currentPage, setCurrentPage] = useState(1);
@@ -73,7 +75,7 @@ export default function ProductMediaListing() {
    setIsDeleteModalOpen(false);
    setMediaToDelete(null);
   } catch (err) {
-   toast.error("Failed to delete media");
+   // Error handled by hook
   }
  };
 

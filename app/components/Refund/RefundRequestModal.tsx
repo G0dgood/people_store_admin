@@ -11,6 +11,7 @@ import { Icon } from "../Icon";
 import { PiPaperclipBold } from "react-icons/pi";
 import { Select } from "../Form/Select";
 import { useCustomerAuth } from "@/app/context/CustomerAuthContext";
+import { useApiError } from "@/app/hooks/useApiError";
 
 const REFUND_REASONS = [
     { value: "Defective item", label: "Defective item" },
@@ -44,8 +45,11 @@ export const RefundRequestModal: React.FC<RefundRequestModalProps> = ({ isOpen, 
         }
     }, [initialOrder, isOpen]);
 
-    const [requestRefund, { isLoading: isSubmitting }] = useRequestRefundMutation();
-    const [uploadMedia] = useUploadMediaMutation();
+    const [requestRefund, { isLoading: isSubmitting, isError: isSubmitError, error: submitError }] = useRequestRefundMutation();
+    const [uploadMedia, { isError: isUploadError, error: uploadError }] = useUploadMediaMutation();
+
+    useApiError(isSubmitError, submitError, "Failed to submit refund request");
+    useApiError(isUploadError, uploadError, "Image upload failed");
 
     const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
@@ -76,7 +80,7 @@ export const RefundRequestModal: React.FC<RefundRequestModalProps> = ({ isOpen, 
             }
         } catch (error: any) {
             console.error("Upload failed:", error);
-            toast.error(error?.data?.message || "Image upload failed. Please try again.");
+            // Error handled by hook
         } finally {
             setIsUploading(false);
             // Clear the input so the same file can be uploaded again if removed
@@ -109,7 +113,7 @@ export const RefundRequestModal: React.FC<RefundRequestModalProps> = ({ isOpen, 
             setDescription("");
             setAttachments([]);
         } catch (error: any) {
-            toast.error(error?.data?.message || "Failed to submit request. Ensure Order ID is valid.");
+            // Error handled by hook
         }
     };
 

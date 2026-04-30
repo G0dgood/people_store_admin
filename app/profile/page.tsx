@@ -12,6 +12,7 @@ import { Breadcrumbs } from "@/app/components/Breadcrumbs";
 import { useGetCurrentCustomerQuery, useUpdateCustomerProfileMutation } from "@/lib/redux/services/customerApi";
 import { toast } from "sonner";
 import { ProfileSkeleton } from "@/app/components/Skeleton/ProfileSkeleton";
+import { useApiError } from "@/app/hooks/useApiError";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
@@ -32,7 +33,9 @@ const itemVariants: Variants = {
 
 export default function ProfilePage() {
   const { data: customerResponse, isLoading: isProfileLoading } = useGetCurrentCustomerQuery();
-  const [updateProfile, { isLoading: isUpdating }] = useUpdateCustomerProfileMutation();
+  const [updateProfile, { isLoading: isUpdating, isError, error }] = useUpdateCustomerProfileMutation();
+
+  useApiError(isError, error, "Failed to update profile");
   const [formData, setFormData] = React.useState({
     fullName: "",
     email: "",
@@ -58,7 +61,7 @@ export default function ProfilePage() {
       await updateProfile(formData).unwrap();
       toast.success("Profile updated successfully");
     } catch (error: any) {
-      toast.error(error?.data?.message || "Failed to update profile");
+      // Error handled by hook
     }
   };
 

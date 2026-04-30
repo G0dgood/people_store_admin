@@ -85,7 +85,7 @@ export function EditBrandDrawer({ isOpen, onClose, brand }: EditBrandDrawerProps
             />
           </div>
 
-          <div className="grid grid-cols-1  gap-6">
+          <div className="grid grid-cols-1 gap-6">
             <ImageUpload
               label="Brand Logo"
               value={formData.logo}
