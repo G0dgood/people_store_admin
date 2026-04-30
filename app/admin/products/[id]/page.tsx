@@ -12,8 +12,10 @@ import ModalBody from "../../../components/Modal/ModalBody";
 import ModalFooter from "../../../components/Modal/ModalFooter";
 import { useRouter, useParams } from "next/navigation";
 import { UploadMediaModal } from "../../../components/Admin/UploadMediaModal";
+import { ProductMediaMetaSidebar } from "../../../components/Admin/ProductMediaMetaSidebar";
+import { PRODUCT_SIZE_OPTIONS } from "@/lib/constants/product-options";
 import Checkbox from "@/app/components/Checkbox";
-import { HiPhoto, HiArrowPath, HiXCircle, HiXMark, HiPencil, HiArrowLeft } from "react-icons/hi2";
+import { HiArrowPath, HiXMark, HiArrowLeft, HiCheckCircle, HiArchiveBox } from "react-icons/hi2";
 import { Tooltip } from "../../../components/Tooltip";
 import { AISettingsModal } from "../../../components/Admin/AISettingsModal";
 import { useUpdateProductMutation, useGetProductByIdQuery } from "@/lib/redux/services/productApi";
@@ -30,11 +32,15 @@ export default function EditProduct() {
   const { id } = useParams();
   const productId = id as string;
 
-  const { data: productResponse, isLoading: isLoadingProduct } = useGetProductByIdQuery(productId);
-  const [updateProduct, { isLoading: isSubmitting }] = useUpdateProductMutation();
-  const { data: categoriesResponse, isLoading: isLoadingCategories } = useGetCategoriesQuery();
+  const { data: productResponse, isLoading: isLoadingProduct, isError: isProductError, error: productError } = useGetProductByIdQuery(productId);
+  const [updateProduct, { isLoading: isSubmitting, isError: isUpdateError, error: updateError }] = useUpdateProductMutation();
+  const { data: categoriesResponse, isLoading: isLoadingCategories, isError: isCategoriesError, error: categoriesError } = useGetCategoriesQuery();
   const { data: brandsResponse } = useGetBrandsQuery();
   const { emit } = useSocket();
+
+  useApiError(isProductError, productError, "Failed to load product details");
+  useApiError(isCategoriesError, categoriesError, "Failed to load categories");
+  useApiError(isUpdateError, updateError, "Failed to update product");
 
   const product = productResponse?.data;
   const categories = categoriesResponse?.data || [];
@@ -56,9 +62,10 @@ export default function EditProduct() {
     taxIncluded: true,
     expiryStart: "",
     expiryEnd: "",
+    sku: "",
+    variants: [] as any[],
     colors: [] as string[],
-    size: "",
-    volume: "",
+    size: [] as string[],
     gender: "Unisex"
   });
 
@@ -111,9 +118,15 @@ export default function EditProduct() {
         taxIncluded: product?.taxIncluded || true,
         expiryStart: product?.expiryStart ? new Date(product?.expiryStart).toISOString().split('T')[0] : "",
         expiryEnd: product?.expiryEnd ? new Date(product?.expiryEnd).toISOString().split('T')[0] : "",
+        sku: product?.sku || "",
+        variants: product?.variants || [],
         colors: product?.colors || [],
-        size: product?.size || "",
-        volume: product?.volume || "",
+        size: (() => {
+          const raw = product?.size || product?.volume || [];
+          if (Array.isArray(raw)) return raw.flat();
+          if (typeof raw === "string") return raw.split(",").map(s => s.trim()).filter(Boolean);
+          return [];
+        })(),
         gender: product?.gender || "Unisex"
       });
 
@@ -185,7 +198,7 @@ export default function EditProduct() {
         name, description, price, category, discountPrice,
         stockStatus, stockQuantity, isUnlimited, isFeatured,
         taxIncluded, expiryStart, expiryEnd, tag, colors,
-        size, volume, gender
+        size, gender
       } = formData;
 
       if (!name || !description || !price || !category) {
@@ -210,9 +223,10 @@ export default function EditProduct() {
       if (expiryEnd) postData.append("expiryEnd", expiryEnd);
       postData.append("tags", JSON.stringify(tag ? [tag] : []));
       postData.append("colors", JSON.stringify(colors));
-      postData.append("size", size);
-      postData.append("volume", volume);
+      postData.append("size", JSON.stringify(size));
       postData.append("gender", gender);
+      postData.append("sku", formData.sku);
+      postData.append("variants", JSON.stringify(formData.variants));
 
       // Append existing media URLs or IDs if the backend supports it
       // For simplicity, we'll send the new files and the backend can decide what to do
@@ -314,6 +328,16 @@ export default function EditProduct() {
               />
             </div>
 
+            <div className="flex flex-col gap-2.5">
+              <label className="text-xs font-bold text-[#1D3557]">Product SKU <span className="text-gray-400 font-medium">(Unique Identifier)</span></label>
+              <Input shape="rounded-sm" type="text"
+                value={formData.sku}
+                onChange={(e) => handleInputChange("sku", e.target.value.toUpperCase())}
+                className="bg-gray-50/80 border-gray-50 text-sm font-bold text-gray-900 uppercase"
+                placeholder="e.g. PRD-001"
+              />
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="flex flex-col gap-2.5">
                 <label className="text-xs font-bold text-[#1D3557]">Gender <span className="text-red-500">*</span></label>
@@ -330,24 +354,21 @@ export default function EditProduct() {
                 />
               </div>
 
-              <div className="flex flex-col gap-2.5">
-                <label className="text-xs font-bold text-[#1D3557]">Size</label>
-                <Input shape="rounded-sm" type="text"
-                  value={formData.size}
-                  onChange={(e) => handleInputChange("size", e.target.value)}
-                  className="bg-gray-50/80 border-gray-50 text-sm font-medium text-gray-700"
-                  placeholder="e.g. XL, 42, 10"
-                />
-              </div>
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-2.5">
+                  <label className="text-xs font-bold text-[#1D3557]">Available Sizes</label>
+                  <Select
+                    isMulti
+                    searchable
+                    placeholder="Select sizes..."
+                    shape="rounded-sm"
+                    options={PRODUCT_SIZE_OPTIONS}
+                    value={formData.size}
+                    onChange={(val) => handleInputChange("size", val)}
+                  />
+                  <p className="text-[9px] text-gray-400 font-medium">Select one or more available sizes for this product</p>
+                </div>
 
-              <div className="flex flex-col gap-2.5">
-                <label className="text-xs font-bold text-[#1D3557]">Volume</label>
-                <Input shape="rounded-sm" type="text"
-                  value={formData.volume}
-                  onChange={(e) => handleInputChange("volume", e.target.value)}
-                  className="bg-gray-50/80 border-gray-50 text-sm font-medium text-gray-700"
-                  placeholder="e.g. 100ml, 50ml"
-                />
               </div>
             </div>
 
@@ -395,6 +416,189 @@ export default function EditProduct() {
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* Product Variants */}
+          <div className="bg-white rounded-sm shadow-sm p-8 flex flex-col gap-6">
+            <div className="flex items-center justify-between">
+              <h3 className="text-base font-bold text-[#1D3557]">Product Variants</h3>
+              <Button
+                shape="rounded-sm"
+                variant="outline"
+                className="text-[10px] font-bold"
+                onClick={() => {
+                  const newVariant = {
+                    sku: `${formData.sku || 'SKU'}-${formData.variants.length + 1}`,
+                    price: formData.price || "0",
+                    stock: formData.stockQuantity || "0",
+                    attributes: {
+                      color: formData.colors[0] || "",
+                      size: formData.size[0] || ""
+                    }
+                  };
+                  handleInputChange("variants", [...formData.variants, newVariant]);
+                }}
+              >
+                Add Variant
+              </Button>
+            </div>
+
+            {formData.variants.length > 0 ? (
+              <div className="flex flex-col gap-4">
+                {formData.variants.map((variant, vIdx) => (
+                  <div key={vIdx} className="p-4 bg-gray-50/50 border border-gray-200 rounded-[6px] flex flex-col gap-4 relative group">
+                    <button
+                      onClick={() => {
+                        const newVariants = formData.variants.filter((_, i) => i !== vIdx);
+                        handleInputChange("variants", newVariants);
+                      }}
+                      className="absolute top-2 right-2 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <HiXMark size={16} />
+                    </button>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-xs font-bold text-[#1D3557]">Variant SKU</label>
+                        <Input
+                          shape="rounded-sm"
+                          value={variant.sku}
+                          onChange={(e) => {
+                            const newVariants = [...formData.variants];
+                            newVariants[vIdx] = { ...variant, sku: e.target.value.toUpperCase() };
+                            handleInputChange("variants", newVariants);
+                          }}
+                          className="bg-white border-gray-200 text-xs font-bold"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-xs font-bold text-[#1D3557]">Price Override</label>
+                        <Input
+                          shape="rounded-sm"
+                          type="number"
+                          value={variant.price}
+                          onChange={(e) => {
+                            const newVariants = [...formData.variants];
+                            newVariants[vIdx] = { ...variant, price: e.target.value };
+                            handleInputChange("variants", newVariants);
+                          }}
+                          className="bg-white border-gray-200 text-xs font-bold"
+                        />
+                      </div>
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-xs font-bold text-[#1D3557]">Stock</label>
+                        <Input
+                          shape="rounded-sm"
+                          type="number"
+                          value={variant.stock}
+                          onChange={(e) => {
+                            const newVariants = [...formData.variants];
+                            newVariants[vIdx] = { ...variant, stock: e.target.value };
+                            handleInputChange("variants", newVariants);
+                          }}
+                          className="bg-white border-gray-200 text-xs font-bold"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {variant.attributes && Object.entries(variant.attributes).map(([attr, val], aIdx) => (
+                        <div key={aIdx} className="flex flex-col gap-1.5 min-w-[120px]">
+                          <label className="text-xs font-bold text-[#1D3557]">{attr}</label>
+                          {attr.toLowerCase() === 'color' ? (
+                            <div className="flex items-center gap-2">
+                              <div className="relative w-8 h-8 rounded-[4px] overflow-hidden border border-gray-200 shadow-sm shrink-0">
+                                <input
+                                  type="color"
+                                  value={val as string || "#000000"}
+                                  onChange={(e) => {
+                                    const newVariants = [...formData.variants];
+                                    newVariants[vIdx] = {
+                                      ...variant,
+                                      attributes: { ...variant.attributes, [attr]: e.target.value.toUpperCase() }
+                                    };
+                                    handleInputChange("variants", newVariants);
+                                  }}
+                                  className="absolute inset-[-4px] w-[calc(100%+8px)] h-[calc(100%+8px)] cursor-pointer border-none bg-transparent"
+                                />
+                              </div>
+                              <Input
+                                shape="rounded-sm"
+                                value={val as string}
+                                onChange={(e) => {
+                                  const newVariants = [...formData.variants];
+                                  newVariants[vIdx] = {
+                                    ...variant,
+                                    attributes: { ...variant.attributes, [attr]: e.target.value.toUpperCase() }
+                                  };
+                                  handleInputChange("variants", newVariants);
+                                }}
+                                placeholder="#000000"
+                                className="bg-white border-gray-200 text-[10px] font-mono h-8"
+                              />
+                            </div>
+                          ) : attr.toLowerCase() === 'size' ? (
+                            <Select
+                              isMulti
+                              options={PRODUCT_SIZE_OPTIONS}
+                              value={Array.isArray(val) ? val : (val ? [val as string] : [])}
+                              onChange={(selectedVal) => {
+                                const newVariants = [...formData.variants];
+                                newVariants[vIdx] = {
+                                  ...variant,
+                                  attributes: { ...variant.attributes, [attr]: selectedVal as string[] }
+                                };
+                                handleInputChange("variants", newVariants);
+                              }}
+                              placeholder="Size"
+                              shape="rounded-sm"
+                              className="h-8"
+                              searchable
+                            />
+                          ) : (
+                            <Input
+                              shape="rounded-sm"
+                              value={val as string}
+                              onChange={(e) => {
+                                const newVariants = [...formData.variants];
+                                newVariants[vIdx] = {
+                                  ...variant,
+                                  attributes: { ...variant.attributes, [attr]: e.target.value }
+                                };
+                                handleInputChange("variants", newVariants);
+                              }}
+                              placeholder={`Enter ${attr}`}
+                              className="bg-white border-gray-200 text-xs h-8"
+                            />
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="py-12 flex flex-col items-center justify-center border-2 border-dashed border-gray-100 rounded-[6px] bg-gray-50/30">
+                <p className="text-xs text-gray-400 font-medium">No variants added yet</p>
+                <button
+                  onClick={() => {
+                    const newVariant = {
+                      sku: `${formData.sku || 'SKU'}-1`,
+                      price: formData.price || "0",
+                      stock: formData.stockQuantity || "0",
+                      attributes: {
+                        color: formData.colors[0] || "",
+                        size: formData.size[0] ? [formData.size[0]] : []
+                      }
+                    };
+                    handleInputChange("variants", [...formData.variants, newVariant]);
+                  }}
+                  className="mt-2 text-[10px] font-bold text-brand-gold hover:underline"
+                >
+                  Create your first variant
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Pricing Section */}
@@ -600,295 +804,25 @@ export default function EditProduct() {
                 {product?.status === 'Published' ? 'Update Catalog' : 'Publish Product'}
               </Button>
             </div>
+
           </div>
         </div>
 
         {/* Right Column (Media & Meta) */}
-        <div className="flex flex-col gap-6">
-          {/* Upload Media */}
-          <div className="bg-white rounded-[6px] border border-gray-200 shadow-sm p-8 flex flex-col gap-6">
-            <h3 className="text-base font-bold text-[#1D3557]">Update Product Images</h3>
-
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center justify-between">
-                <label className="text-xs font-bold text-[#1D3557]">Primary Image</label>
-                {stagedMedia.length > 0 && (
-                  <button
-                    onClick={() => removeMedia(0)}
-                    className="text-[10px] font-bold text-red-500 hover:underline"
-                  >
-                    Remove
-                  </button>
-                )}
-              </div>
-              <div className="relative aspect-square w-full rounded-[6px] bg-gray-50/50 border border-gray-200 overflow-hidden group">
-                {stagedMedia.length > 0 ? (
-                  <img
-                    src={stagedMedia[0].url}
-                    alt="Preview"
-                    className="w-full h-full object-contain p-4"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gray-50/50 text-gray-300">
-                    <HiPhoto className="w-20 h-20" />
-                  </div>
-                )}
-
-                <div className="absolute bottom-4 left-4 right-4 flex justify-between gap-2">
-                  <Button shape="rounded-sm" variant="outline"
-                    className="bg-white/90 backdrop-blur-sm shadow-sm py-2 px-6 text-[10px]"
-                    iconLeft={<HiPhoto />}
-                    onClick={() => setIsUploadModalOpen(true)}
-                  >
-                    Change Primary
-                  </Button>
-                  <Button shape="rounded-sm" variant="outline"
-                    className="bg-white/90 backdrop-blur-sm shadow-sm py-2 px-6 text-[10px]"
-                    iconLeft={<HiArrowPath />}
-                    onClick={() => setIsUploadModalOpen(true)}
-                  >
-                    Replace All
-                  </Button>
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-3 gap-3">
-              {stagedMedia.slice(1).map((media, idx) => (
-                <div key={idx + 1} className="relative aspect-square rounded-[6px] border border-gray-200 overflow-hidden bg-white shadow-sm ring-1 ring-gray-100 group/thumb">
-                  <img src={media.url} alt={`Thumb ${idx}`} className="w-full h-full object-cover" />
-                  <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover/thumb:opacity-100 transition-opacity">
-                    <button
-                      onClick={() => makePrimary(idx + 1)}
-                      className="w-5 h-5 bg-white/90 rounded-full flex items-center justify-center text-emerald-500 hover:text-emerald-600 transition-colors shadow-sm"
-                      title="Make Primary"
-                    >
-                      <HiPhoto className="w-3.5 h-3.5" />
-                    </button>
-                    <button
-                      onClick={() => removeMedia(idx + 1)}
-                      className="w-5 h-5 bg-white/90 rounded-full flex items-center justify-center text-gray-400 hover:text-rose-500 transition-colors shadow-sm"
-                      title="Remove"
-                    >
-                      <HiXCircle className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              ))}
-
-              <div
-                className="aspect-square border-2 border-dashed border-brand-gold/30 rounded-[6px] flex flex-col items-center justify-center gap-2 bg-brand-gold/5 hover:bg-brand-gold/10 transition-all cursor-pointer group"
-                onClick={() => setIsUploadModalOpen(true)}
-              >
-                <div className="w-6 h-6 bg-brand-gold rounded-full flex items-center justify-center text-white scale-90 group-hover:scale-100 transition-transform">
-                  <Icon name="circle-plus" folder="dashboardIcon" size="xs" />
-                </div>
-                <span className="text-[10px] font-bold text-brand-gold">Add More</span>
-              </div>
-            </div>
-
-            <div className="h-px bg-gray-50 my-2" />
-
-            <div className="flex flex-col gap-6">
-              <div className="flex flex-col gap-2.5">
-                <label className="text-[11px] font-bold text-[#1D3557]">Product Categories</label>
-                <Select
-                  shape="rounded-sm"
-                  value={formData.category}
-                  onChange={(val) => handleInputChange("category", val as string)}
-                  placeholder="Select category"
-                  options={categories?.map(c => ({
-                    label: c?.name?.toUpperCase(),
-                    value: c?.name
-                  }))}
-                />
-              </div>
-
-              <div className="flex flex-col gap-2.5">
-                <label className="text-[11px] font-bold text-[#1D3557]">Product Brand</label>
-                <Select
-                  shape="rounded-sm"
-                  value={formData.brand}
-                  onChange={(val) => handleInputChange("brand", val as string)}
-                  placeholder="Select brand"
-                  options={brands?.map(b => ({
-                    label: b?.name?.toUpperCase(),
-                    value: b?._id
-                  }))}
-                />
-              </div>
-
-              <div className="flex flex-col gap-2.5">
-                <label className="text-[11px] font-bold text-[#1D3557]">Product Tag</label>
-                <Select
-                  shape="rounded-sm"
-                  value={formData.tag}
-                  onChange={(val) => handleInputChange("tag", val as string)}
-                  placeholder="Select tag"
-                  options={[
-                    { label: "New Arrival", value: "New Arrival" },
-                    { label: "Best Seller", value: "Best Seller" },
-                    { label: "Limited Edition", value: "Limited Edition" },
-                    { label: "Hot", value: "Hot" },
-                    { label: "Flash Sale", value: "Flash Sale" },
-                    { label: "Exclusive", value: "Exclusive" },
-                    { label: "Discount", value: "Discount" },
-                  ]}
-                />
-              </div>
-
-              <div className="flex flex-col gap-4">
-                <div className="flex justify-between items-center">
-                  <label className="text-[11px] font-bold text-[#1D3557]">
-                    {editingColorIndex !== null ? "Edit selected color" : "Select your color"}
-                  </label>
-                  <button
-                    onClick={() => {
-                      setShowColorPicker(!showColorPicker);
-                      if (showColorPicker) setEditingColorIndex(null);
-                    }}
-                    className="text-[10px] font-bold text-brand-gold hover:underline"
-                  >
-                    {showColorPicker ? "Close Picker" : editingColorIndex !== null ? "Change Color" : "Open Custom Picker"}
-                  </button>
-                </div>
-
-                {showColorPicker && (
-                  <div className="bg-gray-50/50 border border-dashed border-gray-200 rounded-[6px] p-4 flex flex-col gap-4 animate-in fade-in slide-in-from-top-2 duration-300">
-                    <div className="flex flex-col gap-2">
-                      <span className="text-[10px] font-medium text-gray-400">Modern Presets</span>
-                      <div className="flex flex-wrap gap-2">
-                        {["#1D3557", "#457B9D", "#A8DADC", "#2A9D8F", "#E9C46A", "#F4A261", "#E76F51", "#264653"].map((preset) => (
-                          <button
-                            key={preset}
-                            className="w-6 h-6 rounded-full border border-white shadow-sm transition-transform hover:scale-125"
-                            style={{ backgroundColor: preset }}
-                            onClick={() => {
-                              if (editingColorIndex !== null) {
-                                const newColors = [...formData.colors];
-                                newColors[editingColorIndex] = preset;
-                                handleInputChange("colors", newColors);
-                              } else if (!formData.colors.includes(preset)) {
-                                handleInputChange("colors", [...formData.colors, preset]);
-                              }
-                            }}
-                          />
-                        ))}
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      <div className="flex-1 h-px bg-gray-100" />
-                      <span className="text-[10px] font-medium text-gray-300 uppercase tracking-widest">or</span>
-                      <div className="flex-1 h-px bg-gray-100" />
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      <span className="text-[10px] font-medium text-gray-400">Custom Hex</span>
-                      <div className="flex-1 flex items-center gap-2">
-                        <div className="relative group">
-                          <input
-                            type="color"
-                            value={editingColorIndex !== null ? formData.colors[editingColorIndex] : "#000000"}
-                            className="w-8 h-8 rounded-[4px] cursor-pointer border-none bg-transparent"
-                            onChange={(e) => {
-                              const newColor = e.target.value.toUpperCase();
-                              if (editingColorIndex !== null) {
-                                const newColors = [...formData.colors];
-                                newColors[editingColorIndex] = newColor;
-                                handleInputChange("colors", newColors);
-                              } else if (!formData.colors.includes(newColor)) {
-                                handleInputChange("colors", [...formData.colors, newColor]);
-                              }
-                            }}
-                          />
-                        </div>
-                        <input
-                          type="text"
-                          value={editingColorIndex !== null ? formData.colors[editingColorIndex] : ""}
-                          placeholder="#000000"
-                          className="flex-1 h-8 bg-white border border-gray-200 rounded-[4px] px-2 text-[10px] font-mono text-gray-600 focus:outline-none focus:ring-1 focus:ring-blue-100"
-                          onChange={(e) => {
-                            const val = e.target.value;
-                            if (val.match(/^#[0-9A-F]{6}$/i)) {
-                              const newColor = val.toUpperCase();
-                              if (editingColorIndex !== null) {
-                                const newColors = [...formData.colors];
-                                newColors[editingColorIndex] = newColor;
-                                handleInputChange("colors", newColors);
-                              } else if (!formData.colors.includes(newColor)) {
-                                handleInputChange("colors", [...formData.colors, newColor]);
-                              }
-                            }
-                          }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                <div className="flex flex-wrap gap-3 items-center">
-                  {formData.colors?.map((color, i) => (
-                    <div
-                      key={i}
-                      onClick={() => {
-                        setEditingColorIndex(i);
-                        setShowColorPicker(true);
-                      }}
-                      className={`group relative w-10 h-10 rounded-[6px] shadow-sm border transition-all cursor-pointer overflow-hidden ${editingColorIndex === i ? "ring-2 ring-brand-gold border-transparent ring-offset-2" : "border-black/5 hover:scale-110"
-                        }`}
-                      style={{ backgroundColor: color }}
-                    >
-                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 flex transition-opacity">
-                        <div
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setEditingColorIndex(i);
-                            setShowColorPicker(true);
-                          }}
-                          className="flex-1 bg-brand-gold/90 hover:bg-brand-gold flex items-center justify-center transition-colors"
-                          title="Edit color"
-                        >
-                          <HiPencil className="text-white w-3.5 h-3.5" />
-                        </div>
-                        <div
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            const newColors = formData.colors.filter((_, idx) => idx !== i);
-                            handleInputChange("colors", newColors);
-                            if (editingColorIndex === i) setEditingColorIndex(null);
-                          }}
-                          className="flex-1 bg-rose-500/90 hover:bg-rose-600 flex items-center justify-center transition-colors border-l border-white/20"
-                          title="Remove color"
-                        >
-                          <HiXMark className="text-white w-3.5 h-3.5" />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                  <button
-                    onClick={() => {
-                      setEditingColorIndex(null);
-                      setShowColorPicker(!showColorPicker);
-                    }}
-                    className={`w-10 h-10 rounded-[6px] border-2 border-dashed flex items-center justify-center transition-all group ${showColorPicker && editingColorIndex === null
-                      ? "border-brand-gold bg-brand-gold/10 text-brand-gold"
-                      : "border-gray-200 text-gray-400 hover:border-brand-gold hover:text-brand-gold hover:bg-brand-gold/5"
-                      }`}
-                    title={showColorPicker ? "Close Picker" : "Add custom color"}
-                  >
-                    <Icon
-                      name="circle-plus"
-                      folder="dashboardIcon"
-                      size="xs"
-                      className={`transition-transform ${showColorPicker && editingColorIndex === null ? "rotate-45" : "group-hover:scale-110"}`}
-                    />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        <ProductMediaMetaSidebar
+          formData={formData}
+          handleInputChange={handleInputChange}
+          stagedMedia={stagedMedia}
+          removeMedia={removeMedia}
+          makePrimary={makePrimary}
+          setIsUploadModalOpen={setIsUploadModalOpen}
+          categories={categories || []}
+          brands={brands || []}
+          showColorPicker={showColorPicker}
+          setShowColorPicker={setShowColorPicker}
+          editingColorIndex={editingColorIndex}
+          setEditingColorIndex={setEditingColorIndex}
+        />
       </div>
 
       <ConfirmationModal
@@ -896,20 +830,9 @@ export default function EditProduct() {
         onClose={() => setIsPublishConfirmOpen(false)}
         onConfirm={() => handleSubmit("Published")}
         title="Confirm Update"
-        message="Are you sure you want to update and publish these changes? The storefront will reflect these changes immediately."
+        message="Are you sure you want to update this product? The storefront will reflect these changes immediately."
         confirmText="Yes, update catalog"
         type="success"
-        isLoading={isSubmitting}
-      />
-
-      <ConfirmationModal
-        isOpen={isDraftConfirmOpen}
-        onClose={() => setIsDraftConfirmOpen(false)}
-        onConfirm={() => handleSubmit("Draft")}
-        title="Save as Draft"
-        message="Are you sure you want to save these changes as a draft? The product will be hidden from the storefront."
-        confirmText="Yes, save draft"
-        type="info"
         isLoading={isSubmitting}
       />
 
@@ -920,9 +843,7 @@ export default function EditProduct() {
         size="md"
       >
         <ModalBody className="flex flex-col items-center text-center py-10 gap-6">
-          <div className="w-20 h-20 rounded-full bg-green-50 flex items-center justify-center text-green-500 shadow-inner">
-            <Icon name="task_alt" folder="icon" size="lg" className="w-10 h-10" />
-          </div>
+            <HiCheckCircle size={40} />
           <div className="flex flex-col gap-2">
             <h2 className="text-xl font-black text-[#1D3557]">Product Updated!</h2>
             <p className="text-sm font-medium text-gray-400 max-w-[280px] mx-auto leading-relaxed">
@@ -951,9 +872,7 @@ export default function EditProduct() {
         size="md"
       >
         <ModalBody className="flex flex-col items-center text-center py-10 gap-6">
-          <div className="w-20 h-20 rounded-full bg-brand-gold/10 flex items-center justify-center text-brand-gold shadow-inner border border-brand-gold/20">
-            <Icon name="drafts" folder="icon" size="lg" className="w-10 h-10" />
-          </div>
+            <HiArchiveBox size={40} />
           <div className="flex flex-col gap-2">
             <h2 className="text-xl font-black text-[#1D3557]">Draft Updated</h2>
             <p className="text-sm font-medium text-gray-400 max-w-[280px] mx-auto leading-relaxed">
@@ -985,8 +904,8 @@ export default function EditProduct() {
       <AISettingsModal
         isOpen={isAISettingsOpen}
         onClose={() => setIsAISettingsOpen(false)}
-        aiTone={aiTone}
-        setAiTone={setAiTone}
+        tone={aiTone}
+        onToneChange={setAiTone}
       />
 
       <UploadMediaModal
@@ -995,6 +914,6 @@ export default function EditProduct() {
         onUploadSuccess={handleMediaUpload}
         onlyStaging
       />
-    </div >
+    </div>
   );
 }

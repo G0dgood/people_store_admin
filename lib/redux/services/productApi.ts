@@ -14,12 +14,23 @@ export interface CategoryRef {
   image?: string;
 }
 
+export interface ProductVariant {
+  sku: string;
+  price: number;
+  discountPrice?: number;
+  stock: number;
+  stockStatus: string;
+  attributes: Record<string, string>;
+  image?: string;
+  _id?: string;
+}
+
 export interface Product {
   brand: any;
   gender: string;
   volume: string;
   size: string;
-  sku: ReactNode;
+  sku: string;
   image: string | Blob | undefined;
   _id: string;
   name: string;
@@ -39,6 +50,7 @@ export interface Product {
   expiryEnd?: string | null;
   productImage: string;
   media: ProductMedia[];
+  variants: ProductVariant[];
   owner: string;
   createdAt: string;
   updatedAt: string;

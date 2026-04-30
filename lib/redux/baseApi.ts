@@ -1,14 +1,35 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
+const rawBaseQuery = fetchBaseQuery({
+  baseUrl: `${process.env.NEXT_PUBLIC_API_URL}/api/v1`,
+  prepareHeaders: (headers) => {
+    return headers;
+  },
+  credentials: 'include',
+});
+
+const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
+  let result = await rawBaseQuery(args, api, extraOptions);
+
+  if (result.error && result.error.status === 401) {
+    if (typeof window !== 'undefined') {
+      // Avoid firing multiple events in a short window
+      const now = Date.now();
+      const lastExpired = (window as any)._lastSessionExpired || 0;
+      
+      if (now - lastExpired > 5000) { // 5 second throttle
+        (window as any)._lastSessionExpired = now;
+        window.dispatchEvent(new CustomEvent('session-expired'));
+      }
+    }
+  }
+
+  return result;
+};
+
 export const baseApi = createApi({
   reducerPath: 'api',
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${process.env.NEXT_PUBLIC_API_URL}/api/v1`,
-    prepareHeaders: (headers) => {
-      return headers;
-    },
-    credentials: 'include',
-  }),
+  baseQuery: baseQueryWithReauth,
   tagTypes: [
     'Product',
     'User',

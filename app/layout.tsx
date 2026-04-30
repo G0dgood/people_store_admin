@@ -17,6 +17,7 @@ import { RecentlyViewedProvider } from "./context/RecentlyViewedContext";
 import { FilterProvider } from "./context/FilterContext";
 import StoreProvider from "@/lib/redux/StoreProvider";
 import { AuthPersistence } from "./components/Auth/AuthPersistence";
+import { SessionProvider } from "./context/SessionContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -71,31 +72,33 @@ export default function RootLayout({
         <Script src="https://js.paystack.co/v1/inline.js" strategy="afterInteractive" />
         <Toaster richColors closeButton position="bottom-right" />
         <StoreProvider>
-          <CustomerAuthProvider>
-            <RecentlyViewedProvider>
-              <FilterProvider>
-                <AuthPersistence>
-                  <SocketProvider>
-                    <SocketNotificationListener />
-                    <OfflineBanner />
-                    <AuthModalProvider>
-                      <CartProvider>
-                        <WishlistProvider>
-                          <MobileMenuProvider>
-                            <MobileMenuSidebar />
-                            <PageWrapper>
-                              {children}
-                            </PageWrapper>
-                          </MobileMenuProvider>
-                        </WishlistProvider>
-                      </CartProvider>
-                      <AuthModal />
-                    </AuthModalProvider>
-                  </SocketProvider>
-                </AuthPersistence>
-              </FilterProvider>
-            </RecentlyViewedProvider>
-          </CustomerAuthProvider>
+          <SessionProvider>
+            <CustomerAuthProvider>
+              <RecentlyViewedProvider>
+                <FilterProvider>
+                  <AuthPersistence>
+                    <SocketProvider>
+                      <SocketNotificationListener />
+                      <OfflineBanner />
+                      <AuthModalProvider>
+                        <CartProvider>
+                          <WishlistProvider>
+                            <MobileMenuProvider>
+                              <MobileMenuSidebar />
+                              <PageWrapper>
+                                {children}
+                              </PageWrapper>
+                            </MobileMenuProvider>
+                          </WishlistProvider>
+                        </CartProvider>
+                        <AuthModal />
+                      </AuthModalProvider>
+                    </SocketProvider>
+                  </AuthPersistence>
+                </FilterProvider>
+              </RecentlyViewedProvider>
+            </CustomerAuthProvider>
+          </SessionProvider>
         </StoreProvider>
       </body>
     </html>

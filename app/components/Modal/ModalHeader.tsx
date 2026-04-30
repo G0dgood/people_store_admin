@@ -9,6 +9,7 @@ interface ModalHeaderProps {
   className?: string;
   hideBorder?: boolean;
   icon?: string;
+  showCloseButton?: boolean;
 }
 
 export default function ModalHeader({
@@ -17,6 +18,7 @@ export default function ModalHeader({
   className = "",
   hideBorder = false,
   icon,
+  showCloseButton = true,
 }: ModalHeaderProps) {
   return (
     <div
@@ -31,12 +33,14 @@ export default function ModalHeader({
           {title}
         </h3>
       </div>
-      <button
-        onClick={onClose}
-        className="cursor-pointer text-gray-600 transition-colors hover:text-gray-400"
-      >
-        <IoIosCloseCircleOutline className={`text-[20px]`} />
-      </button>
+      {showCloseButton && (
+        <button
+          onClick={onClose}
+          className="cursor-pointer text-gray-600 transition-colors hover:text-gray-400"
+        >
+          <IoIosCloseCircleOutline className={`text-[20px]`} />
+        </button>
+      )}
     </div>
   );
 }

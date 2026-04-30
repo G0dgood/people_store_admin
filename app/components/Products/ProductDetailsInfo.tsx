@@ -16,34 +16,79 @@ interface ProductDetailsInfoProps {
 
 const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
   const { addToCart } = useCart();
-  const [selectedSize, setSelectedSize] = React.useState(0);
   const router = useRouter();
+  const [selectedVariantIdx, setSelectedVariantIdx] = React.useState<number | null>(
+    product?.variants?.length > 0 ? 0 : null
+  );
+  const [selectedSize, setSelectedSize] = React.useState(0);
 
   if (!product) return null;
 
+  const currentPrice = React.useMemo(() => {
+    if (selectedVariantIdx !== null && product.variants?.[selectedVariantIdx]) {
+      return product.variants[selectedVariantIdx].price;
+    }
+    return product.price;
+  }, [product, selectedVariantIdx]);
+
+  const currentSKU = React.useMemo(() => {
+    if (selectedVariantIdx !== null && product.variants?.[selectedVariantIdx]) {
+      return product.variants[selectedVariantIdx].sku;
+    }
+    return product.sku || `PRD-${product._id?.slice(-6).toUpperCase()}`;
+  }, [product, selectedVariantIdx]);
+
+  const currentStock = React.useMemo(() => {
+    if (selectedVariantIdx !== null && product.variants?.[selectedVariantIdx]) {
+      return product.variants[selectedVariantIdx].stock;
+    }
+    return product.stock;
+  }, [product, selectedVariantIdx]);
+
   const sizes = React.useMemo(() => {
-    const rawSizes = product.size || product.volume || "One Size";
-    return rawSizes.split(",").map((s: string) => ({
-      label: s.trim(),
+    if (product.variants?.length > 0) {
+      return product.variants.map((v: any, idx: number) => {
+        const attributeValues = Object.values(v.attributes || {}).map(val => 
+          Array.isArray(val) ? val.join(", ") : val
+        );
+        return {
+          label: attributeValues.join(" / ") || `Variant ${idx + 1}`,
+          price: `₦${v.price.toLocaleString()}`,
+          isActive: true
+        };
+      });
+    }
+    const rawSizes = product.size || product.volume || ["One Size"];
+    const sizeArray = Array.isArray(rawSizes)
+      ? rawSizes
+      : typeof rawSizes === "string"
+        ? rawSizes.split(",").map(s => s.trim())
+        : ["One Size"];
+
+    return sizeArray.map((s: any) => ({
+      label: Array.isArray(s) ? s.join(", ") : String(s),
       price: `₦${product.price.toLocaleString()}`,
       isActive: true
     }));
-  }, [product.size, product.volume, product.price]);
+  }, [product, selectedVariantIdx]);
 
   const specs = [
+    { label: "SKU:", value: currentSKU },
     { label: "Brand:", value: product.brand?.name || "Artisanal House" },
     { label: "Category:", value: product.category?.name || "Boutique Collection" },
     { label: "Gender:", value: product.gender || "Unisex" },
     { label: "Stock Status:", value: product.stockStatus || "In Stock" },
-    { label: "Availability:", value: product.isUnlimited ? "Always Available" : `${product.stock || 0} pieces left` },
+    { label: "Availability:", value: product.isUnlimited ? "Always Available" : `${currentStock || 0} pieces left` },
   ];
 
   const handleAddToCart = () => {
     addToCart({
       id: product._id,
       title: product.name,
-      price: `₦${product.price.toLocaleString()}`,
+      price: `₦${currentPrice.toLocaleString()}`,
       image: product.productImage,
+      sku: currentSKU,
+      variant: selectedVariantIdx !== null ? sizes[selectedVariantIdx].label : undefined
     });
     toast.success("Added to Boutique Bag");
   };
@@ -52,8 +97,10 @@ const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
     addToCart({
       id: product._id,
       title: product.name,
-      price: `₦${product.price.toLocaleString()}`,
+      price: `₦${currentPrice.toLocaleString()}`,
       image: product.productImage,
+      sku: currentSKU,
+      variant: selectedVariantIdx !== null ? sizes[selectedVariantIdx].label : undefined
     });
     router.push("/checkout");
   };
@@ -122,19 +169,27 @@ const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
       </div>
 
       <div className="flex flex-col gap-6">
-        <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400 border-b border-gray-200 pb-2">Select Size</h3>
+        <h3 className="text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400 border-b border-gray-200 pb-2">
+          {product.variants?.length > 0 ? "Select Variant" : "Select Size"}
+        </h3>
         <div className="flex flex-wrap gap-4">
           {sizes.map((size: any, idx: number) => (
             <button
               key={idx}
-              onClick={() => setSelectedSize(idx)}
+              onClick={() => {
+                if (product.variants?.length > 0) {
+                  setSelectedVariantIdx(idx);
+                } else {
+                  setSelectedSize(idx);
+                }
+              }}
               className={`px-8 py-4 border transition-all duration-300 flex flex-col items-center gap-1 rounded-none
-                ${selectedSize === idx
+                ${(product.variants?.length > 0 ? selectedVariantIdx === idx : selectedSize === idx)
                   ? "border-brand-gold bg-black text-white shadow-xl scale-105"
                   : "border-gray-200 hover:border-brand-gold text-gray-500 hover:text-gray-900"}`}
             >
               <span className="text-xs font-bold uppercase tracking-widest">{size.label}</span>
-              <span className={`text-[10px] font-medium ${selectedSize === idx ? "text-brand-gold" : "text-gray-400"}`}>{size.price}</span>
+              <span className={`text-[10px] font-medium ${(product.variants?.length > 0 ? selectedVariantIdx === idx : selectedSize === idx) ? "text-brand-gold" : "text-gray-400"}`}>{size.price}</span>
             </button>
           ))}
         </div>

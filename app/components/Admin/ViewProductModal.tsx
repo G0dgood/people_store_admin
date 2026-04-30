@@ -30,12 +30,23 @@ export function ViewProductModal({ isOpen, onClose, product }: ViewProductModalP
     }
   }, [fullProduct]);
 
-  if (!fullProduct) return null;
+  const allMedia = React.useMemo(() => {
+    if (!fullProduct) return [];
+    const media = [
+      { url: fullProduct.productImage, type: "image" },
+      ...(fullProduct.media || []).map(m => ({ url: m.url, type: m.type }))
+    ].filter(m => m.url);
 
-  const allMedia = [
-    { url: fullProduct.productImage, type: "image" },
-    ...(fullProduct.media || []).map(m => ({ url: m.url, type: m.type }))
-  ].filter(m => m.url);
+    // Filter unique URLs
+    const seen = new Set();
+    return media.filter(m => {
+      if (seen.has(m.url)) return false;
+      seen.add(m.url);
+      return true;
+    });
+  }, [fullProduct]);
+
+  if (!fullProduct) return null;
 
   return (
     <Modal

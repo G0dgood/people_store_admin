@@ -244,7 +244,7 @@ const WishlistPage = () => {
                 </h2>
                 <div className="flex items-center justify-between mt-2">
                   <span className="text-2xl font-black text-gray-900">{selectedQuickViewItem.price}</span>
-                  <FavoriteButton 
+                  <FavoriteButton
                     item={selectedQuickViewItem}
                     variant="outline"
                     className="border-gray-200 !w-auto px-4 h-10 flex items-center gap-2"

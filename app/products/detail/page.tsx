@@ -72,10 +72,10 @@ function ProductDetailContent() {
                <Icon name="chevron_right" size="xs" />
                <Link href="/products" className="hover:text-brand-gold transition-colors">Boutique</Link>
                {product.category && (
-                 <>
-                   <Icon name="chevron_right" size="xs" />
-                   <Link href={`/products?category=${product.category.name}`} className="hover:text-brand-gold transition-colors">{product.category.name}</Link>
-                 </>
+                  <>
+                     <Icon name="chevron_right" size="xs" />
+                     <Link href={`/products?category=${product.category.name}`} className="hover:text-brand-gold transition-colors">{product.category.name}</Link>
+                  </>
                )}
                <Icon name="chevron_right" size="xs" />
                <span className="text-gray-900 font-bold whitespace-nowrap">{product.name}</span>
@@ -84,9 +84,14 @@ function ProductDetailContent() {
             {/* Top Product Section */}
             <div className="bg-white flex flex-col lg:flex-row gap-8 lg:gap-16">
                <div className="flex-1">
-                  <ProductGallery 
-                    images={[product.productImage]} 
-                    title={product.name}
+                  <ProductGallery
+                     images={[
+                        product.productImage,
+                        ...(product.media || [])
+                           .filter(m => m.type === "image" && m.url !== product.productImage)
+                           .map(m => m.url)
+                     ]}
+                     title={product.name}
                   />
                </div>
                <div className="flex-1">

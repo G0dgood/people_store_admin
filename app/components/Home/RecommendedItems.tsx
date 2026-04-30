@@ -8,6 +8,7 @@ import { useCart } from "@/app/context/CartContext";
 import { useRecentlyViewed } from "@/app/context/RecentlyViewedContext";
 import { toast } from "sonner";
 import { useGetRecommendedProductsQuery } from "@/lib/redux/services/productApi";
+import { RecommendedItemsSkeleton } from "../Skeleton/RecommendedItemsSkeleton";
 
 const RecommendedItems = () => {
   const { addToCart } = useCart();
@@ -45,16 +46,7 @@ const RecommendedItems = () => {
     setIsModalOpen(false);
   };
 
-  if (isLoading) return (
-    <section className="w-full">
-      <h3 className="text-xl md:text-2xl font-bold mb-6 md:mb-8 text-gray-900">Recommended items</h3>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-5">
-        {[1, 2, 3, 4, 5].map((i) => (
-          <div key={i} className="aspect-[4/5] bg-gray-50 animate-pulse rounded-lg" />
-        ))}
-      </div>
-    </section>
-  );
+  if (isLoading) return <RecommendedItemsSkeleton />;
 
   if (items.length === 0) return null;
 
@@ -62,13 +54,13 @@ const RecommendedItems = () => {
     <section className="w-full">
       <h3 className="text-xl md:text-2xl font-bold mb-6 md:mb-8 text-gray-900">Recommended items</h3>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-5">
-         {items.map((item, idx) => (
+        {items.map((item, idx) => (
           <div
             key={idx}
-            className="bg-white border border-gray-200 p-5 flex flex-col gap-4 hover:border-brand-gold/20 transition-all duration-300 cursor-pointer group relative"
+            className="bg-white p-5 flex flex-col gap-4 border border-gray-200 hover:border-brand-gold/20 transition-all duration-300 cursor-pointer group relative"
           >
-            <Link 
-              href={`/products/detail?id=${item.id}`} 
+            <Link
+              href={`/products/detail?id=${item.id}`}
               className="flex flex-col gap-4 h-full"
               onClick={() => addToRecentlyViewed({
                 id: item.id,
@@ -85,10 +77,10 @@ const RecommendedItems = () => {
                   className="object-contain group-hover:scale-110 transition-transform duration-500"
                   sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
                 />
-                
+
                 {/* Quick View Button Overlay */}
                 <div className="absolute bottom-0 left-0 right-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-10">
-                  <button 
+                  <button
                     onClick={(e) => handleQuickView(e, item)}
                     className="w-full py-3 bg-black/80 backdrop-blur-md text-white text-[9px] font-bold uppercase tracking-[0.2em] hover:bg-brand-gold transition-all"
                   >
@@ -106,7 +98,7 @@ const RecommendedItems = () => {
 
             {/* Heart Icon Overlay */}
             <div className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <FavoriteButton 
+              <FavoriteButton
                 item={{
                   id: item.id,
                   title: item.title,
@@ -123,8 +115,8 @@ const RecommendedItems = () => {
       </div>
 
       {/* Quick View Modal */}
-      <Modal 
-        isOpen={isModalOpen} 
+      <Modal
+        isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         size="lg"
       >
@@ -148,7 +140,7 @@ const RecommendedItems = () => {
                 </h2>
                 <div className="flex items-center justify-between mt-2">
                   <span className="text-2xl font-black text-gray-900">{selectedItem.price}</span>
-                  <FavoriteButton 
+                  <FavoriteButton
                     item={{
                       id: selectedItem.id,
                       title: selectedItem.title,
@@ -173,13 +165,13 @@ const RecommendedItems = () => {
               </div>
 
               <div className="mt-auto flex flex-col gap-4">
-                <Button 
+                <Button
                   onClick={() => handleAddToCart(selectedItem)}
                   className="w-full bg-black text-white h-12 font-bold uppercase tracking-[0.2em] text-[11px] hover:bg-brand-gold transition-all"
                 >
                   Add to Cart
                 </Button>
-                 <Link 
+                <Link
                   href={`/products/detail?id=${selectedItem.id}`}
                   className="text-center text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-brand-gold transition-colors"
                   onClick={() => {

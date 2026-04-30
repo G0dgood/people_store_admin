@@ -13,15 +13,15 @@ import { Button } from "../Button";
 interface AISettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  aiTone: string;
-  setAiTone: (tone: string) => void;
+  tone: string;
+  onToneChange: (tone: string) => void;
 }
 
 export const AISettingsModal: React.FC<AISettingsModalProps> = ({
   isOpen,
   onClose,
-  aiTone,
-  setAiTone,
+  tone,
+  onToneChange,
 }) => {
   // Internal states for toggles to make the component interactive
   const [autoFormat, setAutoFormat] = useState(true);
@@ -44,8 +44,8 @@ export const AISettingsModal: React.FC<AISettingsModalProps> = ({
           </h4>
           <TabFilter
             tabs={["Professional", "Casual", "Luxury", "Technical"]}
-            activeTab={aiTone}
-            onChange={(tab) => setAiTone(tab as string)}
+            activeTab={tone}
+            onChange={(tab) => onToneChange(tab as string)}
             fullWidth
           />
         </div>

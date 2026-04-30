@@ -19,6 +19,8 @@ export interface CartItem {
   price: string;
   image: string;
   quantity: number;
+  sku?: string;
+  variant?: string;
   meta?: {
     size?: string;
     color?: string;
@@ -94,7 +96,9 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
             product: item.id,
             quantity: item.quantity,
             itemType: item.itemType || "Product",
-            meta: item.meta
+            meta: item.meta,
+            sku: item.sku,
+            variant: item.variant
           }));
           
           try {
@@ -129,6 +133,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
           title: isPopulated ? (itemData.name || itemData.title) : (item.itemType === "GiftBox" ? "Gift Box" : "Unknown Item"),
           price: String(isPopulated ? (itemData.price || 0) : 0),
           image: isPopulated ? (itemData.productImage || itemData.image || "") : "",
+          sku: item.sku,
+          variant: item.variant,
           quantity: item.quantity,
           meta: item.meta,
           itemType: item.itemType
@@ -143,16 +149,18 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
           product: item.id, 
           itemType: item.itemType || "Product",
           quantity: 1, 
-          meta: item.meta 
+          meta: item.meta,
+          sku: item.sku,
+          variant: item.variant 
         }).unwrap();
       } catch (err) {
         // Error handled by useApiError hook
       }
     } else {
       setLocalCartItems((prev: CartItem[]) => {
-        const existing = prev.find(i => i.id === item.id);
+        const existing = prev.find(i => i.id === item.id && i.sku === item.sku);
         if (existing) {
-          return prev.map(i => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i);
+          return prev.map(i => (i.id === item.id && i.sku === item.sku) ? { ...i, quantity: i.quantity + 1 } : i);
         }
         return [...prev, { ...item, quantity: 1 }];
       });

@@ -16,6 +16,7 @@ interface ModalProps {
   className?: string;
   hideHeaderBorder?: boolean;
   header?: React.ReactNode;
+  showCloseButton?: boolean;
 }
 
 export default function Modal({
@@ -28,6 +29,7 @@ export default function Modal({
   className = "",
   hideHeaderBorder = true,
   header,
+  showCloseButton = true,
 }: ModalProps) {
   const [mounted, setMounted] = React.useState(false);
   const { isAdminDark } = useAdminTheme();
@@ -89,6 +91,7 @@ export default function Modal({
                 onClose={onClose}
                 className={className}
                 hideBorder={hideHeaderBorder}
+                showCloseButton={showCloseButton}
               />
             )}
 

@@ -14,7 +14,14 @@ export const cartApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Cart"],
     }),
-    addToCart: builder.mutation<any, { product: string; itemType?: "Product" | "GiftBox"; quantity?: number; meta?: any }>({
+    addToCart: builder.mutation<any, { 
+      product: string; 
+      itemType?: "Product" | "GiftBox"; 
+      quantity?: number; 
+      meta?: any;
+      sku?: string;
+      variant?: string;
+    }>({
       query: (body) => ({
         url: "/cart/add",
         method: "POST",

@@ -8,6 +8,7 @@ import { PrivilegeProvider } from "@/lib/contexts/PrivilegeContext";
 import { usePathname, useRouter } from "next/navigation";
 import { AdminThemeProvider, useAdminTheme } from "../context/AdminThemeContext";
 import { usePrivilege, ModuleId } from "@/lib/contexts/PrivilegeContext";
+import { useGetCurrentUserQuery } from "@/lib/redux/services/authApi";
 import { toast } from "sonner";
 
 function AdminLayoutContent({
@@ -21,11 +22,20 @@ function AdminLayoutContent({
   const { isAdminDark } = useAdminTheme();
   const { canAccess, isLoading, userPrivileges } = usePrivilege();
 
+  const { data: userData, isLoading: isUserLoading, isError: isUserError } = useGetCurrentUserQuery();
+
   useEffect(() => {
     if (mobileMenuOpen) {
       setMobileMenuOpen(false);
     }
   }, [pathname]);
+
+  // Global Authentication Protection
+  useEffect(() => {
+    if (!isUserLoading && (isUserError || !userData)) {
+      router.push("/login");
+    }
+  }, [userData, isUserLoading, isUserError, router]);
 
   // Route-level permission protection
   useEffect(() => {
@@ -50,10 +60,12 @@ function AdminLayoutContent({
       "/admin/advert": "advert",
       "/admin/reviews": "reviews",
       "/admin/coupons": "marketing",
+      "/admin/gift-boxes": "gift-boxes",
+      "/admin/gift-cards": "gift-cards",
     };
 
     // Find the matching module for the current path
-    const matchingRoute = Object.keys(routeModuleMap).find(route => 
+    const matchingRoute = Object.keys(routeModuleMap).find(route =>
       pathname === route || pathname.startsWith(route + "/")
     );
 
@@ -67,6 +79,11 @@ function AdminLayoutContent({
       }
     }
   }, [pathname, isLoading, userPrivileges, canAccess, router]);
+
+  // Prevent rendering anything if we're not authenticated or loading to avoid the 401 loop
+  if (!isUserLoading && (isUserError || !userData)) {
+    return null;
+  }
 
   return (
     <div className={`admin-theme ${isAdminDark ? 'admin-dark' : ''} min-h-screen transition-colors duration-500`}>

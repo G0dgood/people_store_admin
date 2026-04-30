@@ -53,7 +53,7 @@ const ProductReviews = ({ product }: { product: any }) => {
   if (!product) return null;
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
@@ -73,22 +73,22 @@ const ProductReviews = ({ product }: { product: any }) => {
 
         <div className="flex-1 flex flex-col gap-3">
           {[5, 4, 3, 2, 1].map((stars) => {
-             const percentages = { 5: 85, 4: 10, 3: 3, 2: 2, 1: 0 };
-             const pct = percentages[stars as keyof typeof percentages];
-             return (
-               <div key={stars} className="flex items-center gap-4">
-                  <span className="text-xs font-bold text-gray-500 w-12">{stars} Stars</span>
-                  <div className="flex-1 h-2 bg-gray-200 overflow-hidden">
-                    <motion.div 
-                      initial={{ width: 0 }}
-                      animate={{ width: `${pct}%` }}
-                      transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
-                      className="h-full bg-brand-blue"
-                    />
-                  </div>
-                  <span className="text-xs font-bold text-gray-400 w-10 text-right">{pct}%</span>
-               </div>
-             );
+            const percentages = { 5: 85, 4: 10, 3: 3, 2: 2, 1: 0 };
+            const pct = percentages[stars as keyof typeof percentages];
+            return (
+              <div key={stars} className="flex items-center gap-4">
+                <span className="text-xs font-bold text-gray-500 w-12">{stars} Stars</span>
+                <div className="flex-1 h-2 bg-gray-200 overflow-hidden">
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: `${pct}%` }}
+                    transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
+                    className="h-full bg-brand-blue"
+                  />
+                </div>
+                <span className="text-xs font-bold text-gray-400 w-10 text-right">{pct}%</span>
+              </div>
+            );
           })}
         </div>
       </div>
@@ -97,7 +97,7 @@ const ProductReviews = ({ product }: { product: any }) => {
       <div className="flex flex-col gap-8">
         <div className="flex items-center justify-between">
           <h3 className="text-xl font-bold text-gray-900 tracking-tight">User Reviews</h3>
-          <button 
+          <button
             onClick={() => setIsReviewModalOpen(true)}
             className="text-sm font-bold text-brand-blue hover:underline cursor-pointer"
           >
@@ -105,7 +105,7 @@ const ProductReviews = ({ product }: { product: any }) => {
           </button>
         </div>
 
-        <ReviewModal 
+        <ReviewModal
           isOpen={isReviewModalOpen}
           onClose={() => setIsReviewModalOpen(false)}
           productName={product.name}
@@ -122,22 +122,22 @@ const ProductReviews = ({ product }: { product: any }) => {
                   <div>
                     <h4 className="font-bold text-gray-900">{review.user}</h4>
                     <div className="flex items-center gap-2 mt-0.5">
-                       <div className="flex gap-0.5">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <Icon key={star} name="star" size="xs" className={star <= review.rating ? "text-orange-400" : "text-gray-200"} />
-                          ))}
-                       </div>
-                       <span className="text-[10px] text-gray-400 font-medium">• {review.date}</span>
+                      <div className="flex gap-0.5">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Icon key={star} name="star" size="xs" className={star <= review.rating ? "text-orange-400" : "text-gray-200"} />
+                        ))}
+                      </div>
+                      <span className="text-[10px] text-gray-400 font-medium">• {review.date}</span>
                     </div>
                   </div>
                 </div>
 
-                {review.verified && (
+                {/* {review.verified && (
                   <div className="flex items-center gap-1.5 px-3 py-1 bg-brand-blue-light text-[10px] font-black text-blue-600 uppercase tracking-wider border border-blue-100">
                     <Icon name="check" size="xs" />
                     Verified
                   </div>
-                )}
+                )} */}
               </div>
 
               <p className="text-gray-600 text-sm leading-relaxed max-w-[900px]">

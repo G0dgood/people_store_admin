@@ -11,8 +11,10 @@ import { useApiError } from "@/app/hooks/useApiError";
 interface UploadMediaModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onUploadSuccess?: (files: File[]) => void;
+  onUpload?: (files: File[]) => void;
+  onUploadSuccess?: (files: File[]) => void; // Keeping for backward compatibility if needed
   onlyStaging?: boolean;
+  maxFiles?: number;
 }
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
@@ -20,7 +22,7 @@ const ALLOWED_TYPES = ["image/jpeg", "image/png", "video/mp4"];
 
 import { useUploadMediaMutation } from "@/lib/redux/services/mediaApi";
 
-export function UploadMediaModal({ isOpen, onClose, onUploadSuccess, onlyStaging }: UploadMediaModalProps) {
+export function UploadMediaModal({ isOpen, onClose, onUpload, onUploadSuccess, onlyStaging, maxFiles }: UploadMediaModalProps) {
   const [uploadMedia, { isLoading: isUploading, isError, error }] = useUploadMediaMutation();
   useApiError(isError, error, "Failed to upload assets");
   const [stagedFiles, setStagedFiles] = useState<File[]>([]);
@@ -76,6 +78,7 @@ export function UploadMediaModal({ isOpen, onClose, onUploadSuccess, onlyStaging
     }
 
     if (onlyStaging) {
+      onUpload?.(stagedFiles);
       onUploadSuccess?.(stagedFiles);
       setStagedFiles([]);
       onClose();
@@ -90,6 +93,7 @@ export function UploadMediaModal({ isOpen, onClose, onUploadSuccess, onlyStaging
     try {
       await uploadMedia(formData).unwrap();
       toast.success("Assets uploaded successfully!");
+      onUpload?.(stagedFiles);
       onUploadSuccess?.(stagedFiles);
       setStagedFiles([]);
       onClose();

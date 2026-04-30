@@ -365,16 +365,28 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
 
   const handleLogout = async () => {
     try {
-      await logout({}).unwrap();
+      await logout(undefined).unwrap();
       dispatch(logOut());
+      
+      // Clear all local storage and cookies manually as a fallback
+      localStorage.clear();
+      document.cookie.split(";").forEach((c) => {
+        document.cookie = c
+          .replace(/^ +/, "")
+          .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+      });
+
       toast.success("Session Terminated", {
         description: "You have been successfully logged out."
       });
-      router.push("/login");
+      
+      // Absolute navigation to clear all states
+      window.location.href = "/login";
     } catch (err) {
       // Even if the backend call fails (e.g. timeout), we should still clear local state
       dispatch(logOut());
-      router.push("/login");
+      localStorage.clear();
+      window.location.href = "/login";
     }
   };
 

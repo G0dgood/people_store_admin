@@ -328,13 +328,13 @@ export default function ProductListing() {
                     <span className="text-sm font-black text-brand-gold">₦{product?.price?.toLocaleString() || "0"}</span>
                   </td>
                   <td>
-                    <div className="flex flex-col gap-1">
+                    <div className="flex flex-col gap-1 whitespace-nowrap">
                       <span className={`text-sm font-bold ${product?.stock === 0 ? "text-rose-500" : "text-gray-700"}`}>
                         {product?.stock || 0} units
                       </span>
                     </div>
                   </td>
-                    <td>
+                  <td>
                     <Tooltip text={product.status === "Published" ? "Unpublish Product" : "Publish Product"} position="top">
                       <button
                         onClick={() => {
