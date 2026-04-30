@@ -214,6 +214,7 @@ export default function CategoriesPage() {
                 <th>Category Name</th>
                 <th>Created At</th>
                 <th>Attributes</th>
+                <th>Products</th>
                 <th className="text-right">Action</th>
               </tr>
             </thead>
@@ -265,6 +266,14 @@ export default function CategoriesPage() {
                         {c.hasML && <span className="px-2 py-0.5 bg-emerald-50 text-emerald-500 text-[9px] font-black rounded uppercase">Volume</span>}
                         {c.hasSex && <span className="px-2 py-0.5 bg-purple-50 text-purple-500 text-[9px] font-black rounded uppercase">Gender</span>}
                         {!c.hasSize && !c.hasML && !c.hasSex && <span className="text-[10px] text-gray-300 font-bold italic">No attributes</span>}
+                      </div>
+                    </td>
+                    <td>
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-brand-gold/5 border border-brand-gold/10 flex items-center justify-center">
+                          <span className="text-[11px] font-black text-brand-gold">{c.productCount || 0}</span>
+                        </div>
+                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Products</span>
                       </div>
                     </td>
                     <td className="text-right">

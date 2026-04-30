@@ -33,7 +33,7 @@ export function StockAdjustmentDrawer({ isOpen, onClose, product }: StockAdjustm
     try {
       await updateProduct({
         productId: product._id,
-        data: { 
+        data: {
           stock,
           stockStatus: stock > 0 ? "In Stock" : "Out of Stock"
         }
@@ -47,7 +47,7 @@ export function StockAdjustmentDrawer({ isOpen, onClose, product }: StockAdjustm
 
   return (
     <Drawer isOpen={isOpen} onClose={onClose} title="Adjust Inventory" width="max-w-sm">
-      <div className="flex flex-col gap-8 p-8">
+      <div className="flex flex-col gap-8">
         <div className="flex items-center gap-4 bg-gray-50 p-4 rounded-xl border border-gray-100">
           <div className="w-16 h-16 rounded-lg overflow-hidden border border-gray-200 bg-white">
             <img src={product?.productImage} alt="" className="w-full h-full object-contain" />
@@ -61,7 +61,7 @@ export function StockAdjustmentDrawer({ isOpen, onClose, product }: StockAdjustm
         <div className="flex flex-col gap-4">
           <label className="text-xs font-black text-gray-500 uppercase tracking-widest">Quantity in Stock</label>
           <div className="flex items-center gap-4">
-            <button 
+            <button
               onClick={() => handleAdjust(-1)}
               className="w-12 h-12 rounded-xl border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-rose-50 hover:text-rose-500 hover:border-rose-100 transition-all"
             >
@@ -74,7 +74,7 @@ export function StockAdjustmentDrawer({ isOpen, onClose, product }: StockAdjustm
               className="text-center text-2xl font-black h-12"
               shape="rounded-sm"
             />
-            <button 
+            <button
               onClick={() => handleAdjust(1)}
               className="w-12 h-12 rounded-xl border border-gray-200 flex items-center justify-center text-gray-400 hover:bg-emerald-50 hover:text-emerald-500 hover:border-emerald-100 transition-all"
             >
@@ -84,18 +84,18 @@ export function StockAdjustmentDrawer({ isOpen, onClose, product }: StockAdjustm
         </div>
 
         <div className="grid grid-cols-2 gap-4">
-           <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 flex flex-col gap-1">
-             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Current Status</span>
-             <span className={`text-xs font-black ${stock > 0 ? "text-emerald-500" : "text-rose-500"}`}>
-               {stock > 0 ? "In Stock" : "Out of Stock"}
-             </span>
-           </div>
-           <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 flex flex-col gap-1">
-             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total Value</span>
-             <span className="text-xs font-black text-brand-gold">
-               ₦{(stock * (product?.price || 0)).toLocaleString()}
-             </span>
-           </div>
+          <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 flex flex-col gap-1">
+            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Current Status</span>
+            <span className={`text-xs font-black ${stock > 0 ? "text-emerald-500" : "text-rose-500"}`}>
+              {stock > 0 ? "In Stock" : "Out of Stock"}
+            </span>
+          </div>
+          <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 flex flex-col gap-1">
+            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Total Value</span>
+            <span className="text-xs font-black text-brand-gold">
+              ₦{(stock * (product?.price || 0)).toLocaleString()}
+            </span>
+          </div>
         </div>
 
         <div className="flex gap-4 pt-4 border-t border-gray-100">

@@ -10,6 +10,8 @@ import { Icon } from "../Icon";
 import { useUpdateProductMutation, Product } from "@/lib/redux/services/productApi";
 import { toast } from "sonner";
 
+import { ImageUpload } from "../Form/ImageUpload";
+
 interface EditProductDrawerProps {
   isOpen: boolean;
   onClose: () => void;
@@ -27,10 +29,12 @@ export function EditProductDrawer({ isOpen, onClose, product }: EditProductDrawe
     price: number;
     stock: number;
     status: "Published" | "Draft";
+    productImage: string;
   }>({
     price: 0,
     stock: 0,
     status: "Published",
+    productImage: "",
   });
 
   useEffect(() => {
@@ -38,7 +42,8 @@ export function EditProductDrawer({ isOpen, onClose, product }: EditProductDrawe
       setFormData({
         price: product.price,
         stock: product.stock,
-        status: product.status || "Published",
+        status: (product.status as any) || "Published",
+        productImage: product.productImage || "",
       });
     }
   }, [product]);
@@ -50,7 +55,7 @@ export function EditProductDrawer({ isOpen, onClose, product }: EditProductDrawe
     try {
       await updateProduct({
         productId: product._id,
-        data: formData
+        data: formData as any
       }).unwrap();
       toast.success("Product updated successfully");
       onClose();
@@ -65,15 +70,12 @@ export function EditProductDrawer({ isOpen, onClose, product }: EditProductDrawe
     <Drawer isOpen={isOpen} onClose={onClose} title="Quick Edit Product">
       <form onSubmit={handleSubmit} className="flex flex-col h-full gap-8">
         <div className="flex flex-col gap-6">
-          {/* Header Info */}
-          <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-xl border border-gray-200">
-            <div className="w-12 h-12 rounded-lg bg-white border border-gray-200 p-1">
-              <img src={product.productImage} alt="" className="w-full h-full object-contain" />
-            </div>
-            <div className="flex flex-col gap-0.5">
-              <span className="text-sm font-black text-[#1D3557] truncate max-w-[200px]">{product.name}</span>
-              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">ID: {product._id.slice(-6)}</span>
-            </div>
+          <div className="flex flex-col gap-2">
+            <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Product Image</label>
+            <ImageUpload 
+              value={formData.productImage}
+              onChange={(url) => setFormData({ ...formData, productImage: url })}
+            />
           </div>
 
           <div className="flex flex-col gap-2">
@@ -118,6 +120,7 @@ export function EditProductDrawer({ isOpen, onClose, product }: EditProductDrawe
             shape="rounded-sm"
             variant="primary"
             type="submit"
+            isLoading={isLoading}
             className="w-full h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
           >
             Update Catalog

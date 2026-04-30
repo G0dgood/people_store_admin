@@ -46,9 +46,9 @@ export default function CustomersListing() {
     if (!customerToToggle) return;
     try {
       const newStatus = customerToToggle.status === "active" ? "deactivated" : "active";
-      await toggleStatus({ id: customerToToggle._id, status: newStatus }).unwrap();
+      await toggleStatus({ id: customerToToggle?._id, status: newStatus }).unwrap();
       toast.success(`Customer ${newStatus === 'active' ? 'Activated' : 'Deactivated'}`, {
-        description: `${customerToToggle.fullName}'s account status has been updated.`
+        description: `${customerToToggle?.fullName}'s account status has been updated.`
       });
       setCustomerToToggle(null);
     } catch (err: any) {
@@ -59,10 +59,10 @@ export default function CustomersListing() {
   };
 
   const toggleAll = () => {
-    if (selectedIds.length === customersData.length) {
+    if (selectedIds?.length === customersData?.length) {
       setSelectedIds([]);
     } else {
-      setSelectedIds(customersData.map((c: any) => c._id));
+      setSelectedIds(customersData?.map((c: any) => c?._id));
     }
   };
 
@@ -169,8 +169,8 @@ export default function CustomersListing() {
 
           <div className="flex items-center gap-2">
             <Tooltip text="Refresh List">
-              <Button 
-                shape="rounded-sm" 
+              <Button
+                shape="rounded-sm"
                 variant="outline"
                 className="!p-1.5 text-gray-400 hover:text-brand-gold transition-all"
                 onClick={() => {

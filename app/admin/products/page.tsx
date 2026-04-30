@@ -57,6 +57,8 @@ export default function ProductListing() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
   const [isArchiveConfirmOpen, setIsArchiveConfirmOpen] = useState(false);
+  const [isStatusConfirmOpen, setIsStatusConfirmOpen] = useState(false);
+  const [productForStatusToggle, setProductForStatusToggle] = useState<Product | null>(null);
 
   const toggleAll = (visibleProducts: Product[]) => {
     if (selectedIds.length === visibleProducts.length && visibleProducts.length > 0) {
@@ -101,14 +103,17 @@ export default function ProductListing() {
     }
   };
 
-  const handleToggleStatus = async (product: Product) => {
+  const handleToggleStatus = async () => {
+    if (!productForStatusToggle) return;
     try {
-      const newStatus = product.status === "Published" ? "Draft" : "Published";
+      const newStatus = productForStatusToggle.status === "Published" ? "Draft" : "Published";
       await updateProduct({
-        productId: product._id,
+        productId: productForStatusToggle._id,
         data: { status: newStatus as any }
       }).unwrap();
       toast.success(`Product marked as ${newStatus}`);
+      setIsStatusConfirmOpen(false);
+      setProductForStatusToggle(null);
     } catch (err) {
       toast.error("Failed to update status");
     }
@@ -312,10 +317,13 @@ export default function ProductListing() {
                       </span>
                     </div>
                   </td>
-                  <td>
+                    <td>
                     <Tooltip text={product.status === "Published" ? "Unpublish Product" : "Publish Product"} position="top">
                       <button
-                        onClick={() => handleToggleStatus(product)}
+                        onClick={() => {
+                          setProductForStatusToggle(product);
+                          setIsStatusConfirmOpen(true);
+                        }}
                         className={`px-3 py-1.5 rounded-[6px] text-[10px] font-bold transition-all hover:ring-2 hover:ring-offset-1 group relative overflow-hidden min-w-[80px]
                   ${product.status === "Published"
                             ? "text-emerald-500 bg-emerald-50/50 hover:bg-rose-500 hover:text-white"
@@ -479,6 +487,23 @@ export default function ProductListing() {
         message="Are you sure you want to archive all products with 0 stock units? They will be moved to the Draft status and hidden from the storefront."
         confirmText="Yes, archive all"
         type="danger"
+      />
+
+      <ConfirmationModal
+        isOpen={isStatusConfirmOpen}
+        onClose={() => {
+          setIsStatusConfirmOpen(false);
+          setProductForStatusToggle(null);
+        }}
+        onConfirm={handleToggleStatus}
+        title={productForStatusToggle?.status === "Published" ? "Unpublish Product" : "Publish Product"}
+        message={
+          productForStatusToggle?.status === "Published"
+            ? `Are you sure you want to unpublish "${productForStatusToggle?.name}"? It will be hidden from the storefront boutique.`
+            : `Are you sure you want to publish "${productForStatusToggle?.name}"? It will become visible and available for purchase on the storefront.`
+        }
+        confirmText={productForStatusToggle?.status === "Published" ? "Yes, unpublish" : "Yes, publish"}
+        type={productForStatusToggle?.status === "Published" ? "danger" : "success"}
       />
     </div>
   );

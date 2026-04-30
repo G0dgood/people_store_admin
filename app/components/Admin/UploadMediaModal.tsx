@@ -139,8 +139,17 @@ export function UploadMediaModal({ isOpen, onClose, onUploadSuccess, onlyStaging
               {stagedFiles.map((file, idx) => (
                 <div key={idx} className="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-xl group/item">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400">
-                      <Icon name={file.type.startsWith("video") ? "videocam" : "image"} folder="icon" size="xs" />
+                    <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400 overflow-hidden border border-gray-100">
+                      {file.type.startsWith("image") ? (
+                        <img 
+                          src={URL.createObjectURL(file)} 
+                          alt="" 
+                          className="w-full h-full object-cover"
+                          onLoad={(e) => URL.revokeObjectURL((e.target as HTMLImageElement).src)}
+                        />
+                      ) : (
+                        <Icon name={file.type.startsWith("video") ? "videocam" : "image"} folder="icon" size="xs" />
+                      )}
                     </div>
                     <div className="flex flex-col">
                       <span className="text-[11px] font-bold text-gray-900 truncate max-w-[200px]">{file.name}</span>

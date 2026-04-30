@@ -46,7 +46,7 @@ export interface Product {
 
 export const productApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getProducts: builder.query<ApiResponse<{ products: Product[], pagination: any }>, { limit?: number, category?: string, search?: string, page?: number, status?: string } | void>({
+    getProducts: builder.query<ApiResponse<{ products: Product[], pagination: any }>, { limit?: number, category?: string, search?: string, page?: number, status?: string, brand?: string } | void>({
       query: (params) => ({
         url: '/products',
         params: params || {}

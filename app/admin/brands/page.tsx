@@ -14,7 +14,9 @@ import { BulkActionsDrawer } from "../../components/Admin/BulkActionsDrawer";
 import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import { BrandsMoreActionsDrawer } from "../../components/Admin/BrandsMoreActionsDrawer";
 import { Tooltip } from "../../components/Tooltip";
-import { HiOutlineArrowPath } from "react-icons/hi2";
+import { QuickAddProductModal } from "../../components/Admin/QuickAddProductModal";
+import { BrandProductsModal } from "../../components/Admin/BrandProductsModal";
+import { HiOutlineArrowPath, HiOutlineEye } from "react-icons/hi2";
 
 import { useGetBrandsQuery, useDeleteBrandMutation } from "@/lib/redux/services/brandApi";
 import { toast } from "sonner";
@@ -34,6 +36,10 @@ export default function BrandsListing() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [brandToEdit, setBrandToEdit] = useState<any>(null);
+  const [isQuickAddModalOpen, setIsQuickAddModalOpen] = useState(false);
+  const [selectedBrandForQuickAdd, setSelectedBrandForQuickAdd] = useState<any>(null);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [selectedBrandForView, setSelectedBrandForView] = useState<any>(null);
 
   const { data: response, isLoading, refetch, isFetching } = useGetBrandsQuery({
     page: currentPage,
@@ -203,7 +209,29 @@ export default function BrandsListing() {
                       </span>
                     </td>
                     <td className="text-right">
-                      <div className="flex justify-end items-center gap-4">
+                      <div className="flex justify-end items-center gap-2">
+                        <Tooltip text="View Products" position="top">
+                          <Button shape="rounded-sm" variant="outline"
+                            className="!p-1.5 text-gray-400 hover:text-white hover:bg-[#1D3557] hover:border-[#1D3557] transition-all"
+                            onClick={() => {
+                              setSelectedBrandForView(brand);
+                              setIsViewModalOpen(true);
+                            }}
+                          >
+                            <HiOutlineEye className="w-4 h-4" />
+                          </Button>
+                        </Tooltip>
+                        <Tooltip text="Add Product to Brand" position="top">
+                          <Button shape="rounded-sm" variant="outline"
+                            className="!p-1.5 text-gray-400 hover:text-white hover:bg-emerald-500 hover:border-emerald-500 transition-all"
+                            onClick={() => {
+                              setSelectedBrandForQuickAdd(brand);
+                              setIsQuickAddModalOpen(true);
+                            }}
+                          >
+                            <Icon name="circle-plus" folder="dashboardIcon" size="sm" />
+                          </Button>
+                        </Tooltip>
                         <Tooltip text="Edit Brand" position="top">
                           <Button shape="rounded-sm" variant="outline"
                             className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
@@ -322,6 +350,24 @@ export default function BrandsListing() {
         message="Are you sure you want to deactivate all brands currently marked as 'Inactive'? They will no longer be visible on the storefront."
         confirmText="Yes, deactivate all"
         type="danger"
+      />
+
+      <QuickAddProductModal
+        isOpen={isQuickAddModalOpen}
+        onClose={() => {
+          setIsQuickAddModalOpen(false);
+          setSelectedBrandForQuickAdd(null);
+        }}
+        brand={selectedBrandForQuickAdd}
+      />
+
+      <BrandProductsModal
+        isOpen={isViewModalOpen}
+        onClose={() => {
+          setIsViewModalOpen(false);
+          setSelectedBrandForView(null);
+        }}
+        brand={selectedBrandForView}
       />
     </div>
   );

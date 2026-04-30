@@ -7,6 +7,8 @@ import { Tag } from "./Tag";
 interface Option {
   value: string;
   label: string;
+  image?: string;
+  status?: string;
 }
 
 interface SelectProps<T extends boolean = false> {
@@ -15,6 +17,8 @@ interface SelectProps<T extends boolean = false> {
   onChange?: (value: T extends true ? string[] : string) => void;
   placeholder?: string;
   isMulti?: T;
+  searchable?: boolean;
+  searchPlaceholder?: string;
   className?: string;
   shape?: "rounded" | "rounded-sm" | "pill";
 }
@@ -25,10 +29,13 @@ export const Select = <T extends boolean = false>({
   onChange,
   placeholder = "Select",
   isMulti = false as T,
+  searchable = false,
+  searchPlaceholder = "Search...",
   className = "",
   shape = "rounded",
 }: SelectProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
 
   const shapes = {
@@ -41,6 +48,7 @@ export const Select = <T extends boolean = false>({
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
         setIsOpen(false);
+        setSearchQuery("");
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -57,8 +65,13 @@ export const Select = <T extends boolean = false>({
     } else {
       onChange?.(option.value as any);
       setIsOpen(false);
+      setSearchQuery("");
     }
   };
+
+  const filteredOptions = searchable 
+    ? options.filter(o => o.label.toLowerCase().includes(searchQuery.toLowerCase()))
+    : options;
 
   const selectedOptions = isMulti
     ? options.filter((o) => (value as string[])?.includes(o.value))
@@ -97,9 +110,17 @@ export const Select = <T extends boolean = false>({
               <span className="text-gray-400 truncate">{placeholder}</span>
             )
           ) : (
-            <span className={`${selectedOptions ? "text-gray-900 font-bold" : "text-gray-400"} truncate`}>
-              {(selectedOptions as Option)?.label || placeholder}
-            </span>
+            <div className="flex items-center gap-2 truncate">
+               {(selectedOptions as Option)?.image && (
+                 <img src={(selectedOptions as Option).image} alt="" className="w-5 h-5 rounded-sm object-cover flex-shrink-0" />
+               )}
+               <span className={`${selectedOptions ? "text-gray-900 font-bold" : "text-gray-400"} truncate`}>
+                 {(selectedOptions as Option)?.label || placeholder}
+               </span>
+               {(selectedOptions as Option)?.status === "Draft" && (
+                 <span className="text-[8px] font-black bg-gray-100 text-gray-400 px-1 py-0.5 rounded uppercase ml-1">Draft</span>
+               )}
+            </div>
           )}
         </div>
         <Icon
@@ -110,27 +131,62 @@ export const Select = <T extends boolean = false>({
       </div>
 
       {isOpen && (
-        <div className={`absolute z-50 w-full mt-1 bg-white border border-gray-200 shadow-xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200 ${shapes[shape]}`}>
+        <div className={`absolute z-[100] w-full mt-1 bg-white border border-gray-200 shadow-xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200 ${shapes[shape]}`}>
+          {searchable && (
+            <div className="p-2 border-b border-gray-50">
+              <div className="relative">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder={searchPlaceholder}
+                  className="w-full pl-8 pr-3 py-2 text-xs border border-gray-100 rounded-md outline-none focus:border-brand-gold/30 transition-colors"
+                  onClick={(e) => e.stopPropagation()}
+                />
+                <Icon name="search-01" folder="dashboardIcon" size="xs" className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400" />
+              </div>
+            </div>
+          )}
           <ul className="max-h-60 overflow-y-auto">
-            {options.map((option) => {
-              const isSelected = isMulti
-                ? (value as string[])?.includes(option.value)
-                : value === option.value;
+            {filteredOptions.length === 0 ? (
+              <li className="px-4 py-6 text-center text-xs font-bold text-gray-300">
+                No results found
+              </li>
+            ) : (
+              filteredOptions.map((option) => {
+                const isSelected = isMulti
+                  ? (value as string[])?.includes(option.value)
+                  : value === option.value;
 
-              return (
-                <li key={option.value}>
-                  <button
-                    onClick={() => handleSelect(option)}
-                    className={`
-                      w-full text-left px-4 py-3 text-sm transition-colors
-                      ${isSelected ? "bg-brand-gold/10 text-brand-gold font-black" : "text-gray-700 hover:bg-gray-50"}
-                    `}
-                  >
-                    {option.label}
-                  </button>
-                </li>
-              );
-            })}
+                return (
+                  <li key={option.value}>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleSelect(option);
+                      }}
+                      className={`
+                        w-full text-left px-4 py-3 text-sm transition-colors flex items-center gap-3
+                        ${isSelected ? "bg-brand-gold/5 text-brand-gold font-black" : "text-gray-700 hover:bg-gray-50"}
+                      `}
+                    >
+                      {option.image && (
+                         <img src={option.image} alt="" className="w-8 h-8 rounded-[4px] object-cover flex-shrink-0 border border-gray-100" />
+                      )}
+                      <div className="flex flex-col min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                           <span className="truncate">{option.label}</span>
+                           {option.status === "Draft" && (
+                             <span className="text-[8px] font-black bg-gray-100 text-gray-400 px-1 py-0.5 rounded uppercase">Draft</span>
+                           )}
+                        </div>
+                      </div>
+                      {isSelected && isMulti && <Icon name="check" folder="icon" size="xs" className="text-brand-gold" />}
+                    </button>
+                  </li>
+                );
+              })
+            )}
           </ul>
         </div>
       )}

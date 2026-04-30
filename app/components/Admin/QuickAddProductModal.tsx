@@ -13,48 +13,70 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Checkbox from "../../components/Checkbox";
 
+import { useGetCategoriesQuery } from "@/lib/redux/services/categoryApi";
+import { Select } from "../Form";
+
 interface QuickAddProductModalProps {
   isOpen: boolean;
   onClose: () => void;
-  category: any;
+  category?: any;
+  brand?: any;
 }
 
 export const QuickAddProductModal: React.FC<QuickAddProductModalProps> = ({
   isOpen,
   onClose,
-  category
+  category,
+  brand
 }) => {
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState("");
   const [selectedProductIds, setSelectedProductIds] = useState<string[]>([]);
+  const [filterCategoryId, setFilterCategoryId] = useState<string>("");
 
-  // We fetch products to assign them to this category
-  // In a real app, you might want to fetch products NOT in this category
-  const { data: productsData, isLoading } = useGetProductsQuery({ search: searchQuery });
+  const target = category || brand;
+  const isCategory = !!category;
+
+  const { data: categoriesData } = useGetCategoriesQuery();
+  const { data: productsData, isLoading } = useGetProductsQuery({
+    search: "",
+    category: filterCategoryId || undefined
+  }, { skip: !isOpen });
+
   const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
 
   const products = productsData?.data?.products || [];
+  const productOptions = products.map((p: any) => ({
+    value: p._id,
+    label: `${p.name} (₦${p.price?.toLocaleString()})`,
+    image: p.productImage,
+    status: p.status
+  }));
 
-  const handleToggleProduct = (id: string) => {
-    setSelectedProductIds(prev =>
-      prev.includes(id) ? prev.filter(p => p !== id) : [...prev, id]
-    );
-  };
+  const categoryOptions = [
+    { value: "", label: "All Categories" },
+    ...(categoriesData?.data || []).map((cat: any) => ({
+      value: cat._id,
+      label: cat.name,
+      image: cat.image
+    }))
+  ];
 
   const handleBulkAssign = async () => {
-    if (selectedProductIds.length === 0) return;
+    if (selectedProductIds.length === 0 || !target) return;
 
     try {
-      // For each product, update its category
-      // In a robust API, we'd have a bulk update endpoint
       const updatePromises = selectedProductIds.map(productId => {
         const formData = new FormData();
-        formData.append("category", category.name);
+        if (isCategory) {
+          formData.append("category", category._id);
+        } else {
+          formData.append("brand", brand._id);
+        }
         return updateProduct({ productId, data: formData as any }).unwrap();
       });
 
       await Promise.all(updatePromises);
-      toast.success(`Successfully added ${selectedProductIds.length} products to ${category.name}`);
+      toast.success(`Successfully added ${selectedProductIds.length} products to ${target.name}`);
       onClose();
       setSelectedProductIds([]);
     } catch (error) {
@@ -64,25 +86,30 @@ export const QuickAddProductModal: React.FC<QuickAddProductModalProps> = ({
 
   const handleCreateNew = () => {
     onClose();
-    router.push(`/admin/products/new?category=${encodeURIComponent(category.name)}`);
+    const queryParam = isCategory ? `category=${encodeURIComponent(category.name)}` : `brand=${encodeURIComponent(brand.name)}`;
+    router.push(`/admin/products/new?${queryParam}`);
   };
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={`Add Products to ${category?.name || "Category"}`}
+      title={`Add Products to ${target?.name || "Library"}`}
       size="xl"
     >
-      <ModalBody className="flex flex-col gap-6 py-4">
-        {/* Category Header */}
+      <ModalBody className="flex flex-col gap-6 py-4 min-h-[500px]">
+        {/* Header */}
         <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-[8px] border border-gray-100">
-          <div className="w-12 h-12 bg-white rounded-[6px] border border-gray-200 p-1">
-            <img src={category?.image} alt="" className="w-full h-full object-contain" />
+          <div className="w-12 h-12 bg-white rounded-[6px] border border-gray-200 p-1 flex items-center justify-center overflow-hidden">
+            {isCategory ? (
+              <img src={category?.image} alt="" className="w-full h-full object-contain" />
+            ) : (
+              brand?.logo ? <img src={brand.logo} alt="" className="w-full h-full object-contain" /> : <Icon name="Image" folder="dashboardIcon" size="sm" className="text-gray-300" />
+            )}
           </div>
           <div className="flex flex-col">
-            <span className="text-sm font-black text-gray-900">{category?.name}</span>
-            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Target Category</span>
+            <span className="text-sm font-black text-gray-900">{target?.name}</span>
+            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Target {isCategory ? "Category" : "Brand"}</span>
           </div>
           <Button
             variant="ghost"
@@ -94,74 +121,65 @@ export const QuickAddProductModal: React.FC<QuickAddProductModalProps> = ({
           </Button>
         </div>
 
-        {/* Search */}
-        <div className="flex flex-col gap-2.5">
-          <label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">Search Catalog</label>
-          <Input
-            shape="rounded-sm"
-            placeholder="Search by name or SKU..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-white border-gray-200"
-            suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
-          />
+        {/* Filters & Search */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex flex-col gap-2.5">
+            <label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">Filter by Category</label>
+            <Select
+              options={categoryOptions}
+              value={filterCategoryId}
+              onChange={(val) => setFilterCategoryId(val as string)}
+              placeholder="Select Category"
+              shape="rounded-sm"
+              searchable
+            />
+          </div>
+          <div className="flex flex-col gap-2.5">
+            <label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">Select Products</label>
+            <Select
+              isMulti
+              searchable
+              options={productOptions}
+              value={selectedProductIds}
+              onChange={(val) => setSelectedProductIds(val as string[])}
+              placeholder="Search products..."
+              shape="rounded-sm"
+            />
+          </div>
         </div>
 
-        {/* Product List */}
-        <div className="flex flex-col gap-2 max-h-[480px] overflow-y-auto pr-2 custom-scrollbar">
-          {isLoading ? (
-            <div className="flex flex-col gap-2">
-              {[1, 2, 3].map(i => (
-                <div key={i} className="h-16 bg-gray-50 animate-pulse rounded-[8px]" />
-              ))}
-            </div>
-          ) : products.length === 0 ? (
-            <div className="py-10 text-center flex flex-col items-center gap-3">
-              <Icon name="fluent-mdl2_product-list" folder="dashboardIcon" size="lg" className="text-gray-200" />
-              <p className="text-sm font-bold text-gray-300">No products found matching your search</p>
-            </div>
-          ) : (
-            products.map((product: any) => (
-              <div
-                key={product._id}
-                className={`flex items-center gap-3 p-3 rounded-[8px] border transition-all cursor-pointer group ${selectedProductIds.includes(product._id)
-                    ? "bg-brand-gold/5 border-brand-gold/20"
-                    : "bg-white border-gray-100 hover:border-brand-gold/30 hover:shadow-sm"
-                  }`}
-                onClick={() => handleToggleProduct(product._id)}
-              >
-                <Checkbox
-                  checked={selectedProductIds.includes(product._id)}
-                  onChange={() => handleToggleProduct(product._id)}
-                />
-                <div className="w-10 h-10 bg-gray-50 rounded-[4px] border border-gray-100 overflow-hidden flex-shrink-0">
-                  <Image
-                    src={product.productImage || "/placeholder-product.png"}
-                    alt=""
-                    width={40}
-                    height={40}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="flex flex-col min-w-0 flex-1">
-                  <span className="text-sm font-bold text-gray-900 truncate">{product.name}</span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-medium text-gray-400 uppercase tracking-tighter">Current:</span>
-                    <span className="text-[10px] font-bold text-brand-gold bg-brand-gold/5 px-1.5 rounded truncate max-w-[100px]">
-                      {typeof product.category === 'object' ? product.category?.name : product.category || "Uncategorized"}
-                    </span>
+        {/* Selected Products Preview */}
+        {selectedProductIds.length > 0 && (
+          <div className="flex flex-col gap-3 mt-2">
+            <label className="text-[11px] font-bold text-gray-400 uppercase tracking-widest ml-1">Selected Products ({selectedProductIds.length})</label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 max-h-[220px] overflow-y-auto pr-2 custom-scrollbar">
+              {selectedProductIds.map(id => {
+                const product = products.find((p: any) => p._id === id);
+                if (!product) return null;
+                return (
+                  <div key={id} className="flex items-center gap-3 p-2 bg-white border border-gray-100 rounded-[8px] group">
+                    <div className="w-8 h-8 bg-gray-50 rounded-[4px] overflow-hidden flex-shrink-0">
+                      <Image
+                        src={product.productImage || "/placeholder-product.png"}
+                        alt=""
+                        width={32}
+                        height={32}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <span className="text-[11px] font-bold text-gray-900 truncate flex-1">{product.name}</span>
+                    <button
+                      onClick={() => setSelectedProductIds(prev => prev.filter(p => p !== id))}
+                      className="p-1 hover:bg-rose-50 text-gray-400 hover:text-rose-500 rounded-md transition-colors"
+                    >
+                      <Icon name="close" folder="icon" size="xs" />
+                    </button>
                   </div>
-                </div>
-                <div className="text-right flex flex-col items-end">
-                  <span className="text-xs font-black text-gray-900">₦{product.price?.toLocaleString()}</span>
-                  <span className={`text-[9px] font-bold uppercase ${product.stock > 0 ? "text-emerald-500" : "text-rose-500"}`}>
-                    {product.stock > 0 ? `${product.stock} In Stock` : "Out of Stock"}
-                  </span>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </ModalBody>
       <ModalFooter className="flex justify-between items-center py-6 bg-gray-50/50">
         <span className="text-xs font-bold text-gray-400">

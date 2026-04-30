@@ -11,8 +11,7 @@ import { Icon } from "../Icon";
 import { useCreateBrandMutation } from "@/lib/redux/services/brandApi";
 import { useGetCategoriesQuery } from "@/lib/redux/services/categoryApi";
 import { toast } from "sonner";
-import { MediaSelectionModal } from "./MediaSelectionModal";
-import { UploadCouponAssetModal } from "./UploadCouponAssetModal";
+import { ImageUpload } from "../Form/ImageUpload";
 
 interface AddBrandModalProps {
   isOpen: boolean;
@@ -76,41 +75,12 @@ export function AddBrandModal({ isOpen, onClose }: AddBrandModalProps) {
             />
           </div>
 
-          <div className="flex flex-col gap-2">
-            <label className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Brand Logo</label>
-            {formData.logo ? (
-              <div className="relative w-full h-32 rounded-xl overflow-hidden border border-gray-200 group">
-                <img src={formData.logo} alt="Brand Preview" className="w-full h-full object-contain p-4 bg-gray-50" />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setIsMediaModalOpen(true)}
-                    className="bg-white text-black px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-brand-gold hover:text-white transition-all"
-                  >
-                    Change
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setFormData({ ...formData, logo: "" })}
-                    className="bg-red-500 text-white px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-red-600 transition-all"
-                  >
-                    Remove
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setIsMediaModalOpen(true)}
-                className="w-full h-32 rounded-xl border-2 border-dashed border-gray-200 flex flex-col items-center justify-center gap-2 hover:border-brand-gold hover:bg-gray-50 transition-all group"
-              >
-                <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-white transition-colors">
-                  <Icon name="photo" folder="icon" size="sm" className="text-gray-400" />
-                </div>
-                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest group-hover:text-brand-gold">Select Brand Logo</span>
-              </button>
-            )}
-          </div>
+          <ImageUpload
+            label="Brand Logo"
+            value={formData.logo}
+            onChange={(url) => setFormData({ ...formData, logo: url })}
+            placeholder="Click or drag to upload brand logo"
+          />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col gap-2">
@@ -154,18 +124,6 @@ export function AddBrandModal({ isOpen, onClose }: AddBrandModalProps) {
         </ModalFooter>
       </form>
 
-      <MediaSelectionModal
-        isOpen={isMediaModalOpen}
-        onClose={() => setIsMediaModalOpen(false)}
-        onSelect={(url) => setFormData({ ...formData, logo: url })}
-        title="Select Brand Logo"
-        onUploadClick={() => setIsUploadModalOpen(true)}
-      />
-
-      <UploadCouponAssetModal
-        isOpen={isUploadModalOpen}
-        onClose={() => setIsUploadModalOpen(false)}
-      />
     </Modal>
   );
 }

@@ -440,7 +440,14 @@ export default function CreateProduct() {
       </div>
 
       <div className="flex flex-col gap-2.5">
-       <label className="text-xs font-bold text-[#1D3557]">Expiration</label>
+       <div className="flex items-center gap-2">
+        <label className="text-xs font-bold text-[#1D3557]">Expiration</label>
+        <Tooltip text="Define the start and end dates for the product's availability. The product will only be visible on the boutique during this period." position="top">
+          <button type="button" className="text-gray-400 hover:text-brand-gold transition-colors">
+            <Icon name="info-circle" folder="dashboardIcon" size="xs" />
+          </button>
+        </Tooltip>
+       </div>
        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Input shape="rounded-sm"
          type="date"
