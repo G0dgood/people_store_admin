@@ -23,6 +23,7 @@ interface ProductProps {
    image: string;
    stock: number;
    isUnlimited: boolean;
+   media?: { type: string, url: string }[];
    onQuickView?: (product: any) => void;
 }
 

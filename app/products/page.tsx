@@ -110,6 +110,7 @@ const ProductsPage = () => {
     stockStatus: p.stockStatus || "In Stock",
     stock: p.stock || 0,
     isUnlimited: p.isUnlimited || false,
+    media: p.media || [],
     isNew: new Date(p.createdAt) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
     isFeatured: p.isFeatured
   }));

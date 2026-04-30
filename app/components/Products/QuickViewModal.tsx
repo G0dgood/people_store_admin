@@ -17,8 +17,22 @@ interface QuickViewModalProps {
 
 export const QuickViewModal: React.FC<QuickViewModalProps> = ({ isOpen, onClose, product }) => {
   const { addToCart } = useCart();
+  const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (product?.image) {
+      setSelectedImage(product.image);
+    }
+  }, [product]);
 
   if (!product) return null;
+
+  const images = [
+    product.image,
+    ...(product.media || [])
+      .filter((m: any) => m.type === "image" && m.url !== product.image)
+      .map((m: any) => m.url)
+  ].filter(Boolean);
 
   const handleAddToCart = () => {
     addToCart({
@@ -39,13 +53,37 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ isOpen, onClose,
     >
       <div className="flex flex-col md:flex-row gap-8 py-2">
         {/* Image Section */}
-        <div className="w-full md:w-1/2 aspect-square relative bg-white border border-gray-100 p-8 rounded-xl overflow-hidden">
-          <Image
-            src={product.image}
-            alt={product.name}
-            fill
-            className="object-contain p-4 transition-transform duration-700 hover:scale-110"
-          />
+        <div className="w-full md:w-1/2 flex flex-col gap-4">
+          <div className="aspect-square relative bg-white border border-gray-100 p-8 rounded-xl overflow-hidden">
+            <Image
+              src={selectedImage || product.image}
+              alt={product.name || "Product Image"}
+              fill
+              className="object-contain p-4 transition-all duration-700 hover:scale-110"
+            />
+          </div>
+          
+          {/* Sub Images Gallery */}
+          {images.length > 1 && (
+            <div className="flex gap-2 overflow-x-auto scrollbar-none pb-2">
+              {images.map((img, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setSelectedImage(img)}
+                  className={`relative w-16 h-16 flex-shrink-0 border rounded-lg overflow-hidden transition-all ${
+                    selectedImage === img ? "border-brand-gold ring-1 ring-brand-gold" : "border-gray-200 hover:border-brand-gold"
+                  }`}
+                >
+                  <Image
+                    src={img}
+                    alt={`${product.name || "Product"} thumbnail ${idx + 1}`}
+                    fill
+                    className="object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Info Section */}
@@ -53,8 +91,8 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ isOpen, onClose,
           <div className="flex flex-col gap-2">
             <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-brand-gold">Featured Collection</span>
             <h2 className="text-2xl font-outfit font-light uppercase tracking-widest text-gray-900 leading-tight">
-              {product.name.split(' ').map((word: string, i: number) => 
-                i === product.name.split(' ').length - 1 ? <span key={i} className="font-bold">{word}</span> : word + ' '
+              {(product.name || "").split(' ').map((word: string, i: number) => 
+                i === (product.name || "").split(' ').length - 1 ? <span key={i} className="font-bold">{word}</span> : word + ' '
               )}
             </h2>
             <div className="flex items-center justify-between mt-2">

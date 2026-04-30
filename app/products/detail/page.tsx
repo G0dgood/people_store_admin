@@ -33,7 +33,8 @@ function ProductDetailContent() {
       id: p._id,
       name: p.name,
       price: `₦${p.price.toLocaleString()}`,
-      image: p.productImage || "/placeholder.png"
+      image: p.productImage || "/placeholder.png",
+      media: p.media || []
    }));
 
    if (isLoading) {

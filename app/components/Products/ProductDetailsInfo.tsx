@@ -48,11 +48,26 @@ const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
   const sizes = React.useMemo(() => {
     if (product.variants?.length > 0) {
       return product.variants.map((v: any, idx: number) => {
-        const attributeValues = Object.values(v.attributes || {}).map(val => 
-          Array.isArray(val) ? val.join(", ") : val
-        );
+        const attrs = v.attributes || {};
+        const color = attrs.color || attrs.Color;
+        
+        const otherAttrs = Object.entries(attrs)
+          .filter(([key]) => key.toLowerCase() !== 'color')
+          .map(([_, val]) => {
+            if (Array.isArray(val)) return val.join(", ");
+            if (typeof val === 'string') {
+              try {
+                const parsed = JSON.parse(val);
+                if (Array.isArray(parsed)) return parsed.join(", ");
+              } catch (e) {}
+              return val.replace(/[\[\]"]/g, "");
+            }
+            return val;
+          });
+
         return {
-          label: attributeValues.join(" / ") || `Variant ${idx + 1}`,
+          label: otherAttrs.join(" / ") || `Variant ${idx + 1}`,
+          color: typeof color === 'string' ? color.replace(/[\[\]"]/g, "") : color,
           price: `₦${v.price.toLocaleString()}`,
           isActive: true
         };
@@ -66,7 +81,7 @@ const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
         : ["One Size"];
 
     return sizeArray.map((s: any) => ({
-      label: Array.isArray(s) ? s.join(", ") : String(s),
+      label: typeof s === 'string' ? s.replace(/[\[\]"]/g, "") : (Array.isArray(s) ? s.join(", ") : String(s)),
       price: `₦${product.price.toLocaleString()}`,
       isActive: true
     }));
@@ -183,13 +198,21 @@ const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
                   setSelectedSize(idx);
                 }
               }}
-              className={`px-8 py-4 border transition-all duration-300 flex flex-col items-center gap-1 rounded-none
+              className={`px-6 py-3 border transition-all duration-300 flex items-center gap-4 rounded-none
                 ${(product.variants?.length > 0 ? selectedVariantIdx === idx : selectedSize === idx)
                   ? "border-brand-gold bg-black text-white shadow-xl scale-105"
                   : "border-gray-200 hover:border-brand-gold text-gray-500 hover:text-gray-900"}`}
             >
-              <span className="text-xs font-bold uppercase tracking-widest">{size.label}</span>
-              <span className={`text-[10px] font-medium ${(product.variants?.length > 0 ? selectedVariantIdx === idx : selectedSize === idx) ? "text-brand-gold" : "text-gray-400"}`}>{size.price}</span>
+              {size.color && (
+                <div 
+                  className="w-4 h-4 rounded-full border border-white/20 shadow-sm"
+                  style={{ backgroundColor: size.color }}
+                />
+              )}
+              <div className="flex flex-col items-start gap-0.5">
+                <span className="text-[11px] font-bold uppercase tracking-widest leading-none">{size.label}</span>
+                <span className={`text-[9px] font-medium leading-none mt-1 ${(product.variants?.length > 0 ? selectedVariantIdx === idx : selectedSize === idx) ? "text-brand-gold" : "text-gray-400"}`}>{size.price}</span>
+              </div>
             </button>
           ))}
         </div>

@@ -838,62 +838,55 @@ export default function EditProduct() {
 
       <Modal
         isOpen={isPublishSuccessOpen}
-        onClose={() => setIsPublishSuccessOpen(false)}
-        title=""
-        size="md"
+        onClose={() => {
+          setIsPublishSuccessOpen(false);
+          router.push("/admin/products");
+        }}
+        size="sm"
       >
-        <ModalBody className="flex flex-col items-center text-center py-10 gap-6">
-            <HiCheckCircle size={40} />
-          <div className="flex flex-col gap-2">
-            <h2 className="text-xl font-black text-[#1D3557]">Product Updated!</h2>
-            <p className="text-sm font-medium text-gray-400 max-w-[280px] mx-auto leading-relaxed">
-              Your changes have been successfully saved and the product is now updated in the catalog.
-            </p>
+        <ModalBody className="flex flex-col items-center text-center p-8">
+          <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-500 mb-6 animate-bounce">
+            <HiCheckCircle size={60} />
           </div>
+          <h2 className="text-xl font-bold text-[#1D3557] mb-2">Product Updated!</h2>
+          <p className="text-sm text-gray-500">Your changes have been successfully saved and the product is now updated in the catalog.</p>
         </ModalBody>
-        <ModalFooter className="flex flex-col gap-3 pb-8">
-          <Button shape="rounded-sm"
-            variant="primary"
-            className="w-full h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-brand-gold/20"
-            onClick={() => {
-              setIsPublishSuccessOpen(false);
-              router.push("/admin/products");
-            }}
-          >
-            Done, back to products
+        <ModalFooter className="flex justify-center pb-8 border-t-0">
+          <Button shape="rounded-sm" variant="primary" onClick={() => router.push("/admin/products")}>
+            Back to Inventory
           </Button>
         </ModalFooter>
       </Modal>
 
       <Modal
         isOpen={isDraftSuccessOpen}
-        onClose={() => setIsDraftSuccessOpen(false)}
-        title=""
-        size="md"
+        onClose={() => {
+          setIsDraftSuccessOpen(false);
+          router.push("/admin/products");
+        }}
+        size="sm"
       >
-        <ModalBody className="flex flex-col items-center text-center py-10 gap-6">
-            <HiArchiveBox size={40} />
-          <div className="flex flex-col gap-2">
-            <h2 className="text-xl font-black text-[#1D3557]">Draft Updated</h2>
-            <p className="text-sm font-medium text-gray-400 max-w-[280px] mx-auto leading-relaxed">
-              The draft has been updated successfully. You can continue editing or return to the product list.
-            </p>
+        <ModalBody className="flex flex-col items-center text-center p-8">
+          <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center text-blue-500 mb-6 animate-pulse">
+            <HiArchiveBox size={60} />
           </div>
+          <h2 className="text-xl font-bold text-[#1D3557] mb-2">Draft Updated</h2>
+          <p className="text-sm text-gray-500">The draft has been updated successfully. You can continue editing or return to the product list.</p>
         </ModalBody>
-        <ModalFooter className="flex flex-col gap-3 pb-8">
+        <ModalFooter className="flex flex-col gap-3 pb-8 border-t-0 px-8">
           <Button shape="rounded-sm"
             variant="primary"
-            className="w-full h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-brand-gold/20"
+            className="w-full"
             onClick={() => {
               setIsDraftSuccessOpen(false);
               router.push("/admin/products");
             }}
           >
-            Back to catalog
+            Back to Inventory
           </Button>
           <Button shape="rounded-sm"
             variant="ghost"
-            className="w-full h-12 text-[11px] font-bold text-gray-400"
+            className="w-full text-xs font-bold text-gray-400"
             onClick={() => setIsDraftSuccessOpen(false)}
           >
             Continue editing

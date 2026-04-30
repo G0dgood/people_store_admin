@@ -8,6 +8,7 @@ interface RelatedProduct {
   name: string;
   price: string;
   image: string;
+  media?: { type: string, url: string }[];
 }
 
 interface RelatedProductsProps {
