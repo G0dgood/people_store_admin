@@ -12,23 +12,50 @@ interface RealtimeUsersProps {
   onViewInsight?: () => void;
 }
 import { useGetOrderStatsQuery } from "@/lib/redux/services/orderApi";
+import { useSocket } from "@/app/context/SocketContext";
 
 
 
 export const RealtimeUsers: React.FC<RealtimeUsersProps> = ({ onViewInsight }) => {
-  const { data: statsResponse, isLoading } = useGetOrderStatsQuery();
+  const { data: statsResponse, isLoading, refetch } = useGetOrderStatsQuery();
   const totalOrders = statsResponse?.data?.totalOrders || 0;
+  const { socket } = useSocket();
+
+  console.log("statsResponse---->", statsResponse)
+
+  // Socket listener for real-time updates
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleUpdate = () => {
+      refetch();
+    };
+
+    socket.on("newOrder", handleUpdate);
+    socket.on("orderStatusChanged", handleUpdate);
+    socket.on("orderListUpdate", handleUpdate);
+
+    return () => {
+      socket.off("newOrder", handleUpdate);
+      socket.off("orderStatusChanged", handleUpdate);
+      socket.off("orderListUpdate", handleUpdate);
+    };
+  }, [socket, refetch]);
 
   // Generate semi-random live-looking data based on totalOrders
   const [chartData, setChartData] = useState<number[]>([]);
 
   useEffect(() => {
     if (totalOrders > 0) {
-      const base = totalOrders / 30;
-      const data = Array.from({ length: 30 }, () => Math.floor(base + Math.random() * (base * 0.5)));
+      // Improved scaling for low volumes to ensure visibility
+      const base = Math.max(2, totalOrders / 10);
+      const data = Array.from({ length: 30 }, () =>
+        Math.floor(base + Math.random() * (base * 0.8))
+      );
       setChartData(data);
     } else {
-      setChartData(Array(30).fill(0));
+      // Mock some activity for a "live" feel even if 0 real orders
+      setChartData(Array.from({ length: 30 }, () => Math.floor(Math.random() * 5)));
     }
   }, [totalOrders]);
 
@@ -129,38 +156,48 @@ export const RealtimeUsers: React.FC<RealtimeUsersProps> = ({ onViewInsight }) =
         {/* Chart Monitor Glass Effect */}
         <div className="absolute inset-0 bg-gradient-to-b from-gray-50/50 to-transparent rounded-2xl opacity-0 group-hover/chart:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-        <div className="h-28 w-full">
+        <div className="h-50 w-full relative flex items-center justify-center">
           <AdminChart
-            type="bar"
+            type="doughnut"
             data={{
-              labels: Array(30).fill(''),
+              labels: [],
               datasets: [{
-                data: chartData,
-                backgroundColor: (context: any) => {
-                  const chart = context.chart;
-                  const { ctx, chartArea } = chart;
-                  if (!chartArea) return '#C5A059';
-                  const gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top);
-                  gradient.addColorStop(0, '#C5A059');
-                  gradient.addColorStop(1, '#D4AF37');
-                  return gradient;
-                },
-                borderRadius: 3,
-                hoverBackgroundColor: '#1D3557',
-                barThickness: 4,
-                gap: 2
+                data: [
+                  statsResponse?.data?.pendingOrders || 0,
+                  statsResponse?.data?.processingOrders || 0,
+                  statsResponse?.data?.completedOrders || 0
+                ],
+                backgroundColor: [
+                  '#F59E0B', // Amber 500
+                  '#3B82F6', // Blue 500
+                  '#10B981'  // Emerald 500
+                ],
+                borderWidth: 0,
+                hoverOffset: 15,
+                cutout: '70%'
               }]
             }}
             options={{
               maintainAspectRatio: false,
-              scales: { x: { display: false }, y: { display: false } },
-              plugins: { tooltip: { enabled: false } }
+              plugins: {
+                tooltip: {
+                  enabled: true,
+                  callbacks: {
+                    label: (context: any) => ` ${context.label}: ${context.raw} Orders`
+                  }
+                }
+              }
             }}
           />
+          {/* Central Stats Overlay */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none translate-y-1">
+            <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest opacity-60">Status</span>
+            <span className="text-xl font-black text-[#1D3557]">{totalOrders}</span>
+          </div>
         </div>
       </div>
 
-      <div className="flex flex-col gap-6 pt-6 mt-2 relative z-10">
+      <div className="flex flex-col gap-6 pt-6 mt-4 relative z-10">
         <div className="flex justify-between items-center bg-gray-50/50 p-2 rounded-lg border border-gray-200/50">
           <h4 className="text-[12px] font-black text-[#1D3557] uppercase tracking-widest pl-1">Order Status Distribution</h4>
           <span className="text-[10px] font-black text-brand-gold bg-white px-2 py-0.5 rounded border border-gray-200 shadow-sm">LIVE</span>
@@ -173,15 +210,16 @@ export const RealtimeUsers: React.FC<RealtimeUsersProps> = ({ onViewInsight }) =
         ].map((s, i) => {
           const percentage = totalOrders > 0 ? (s.val / totalOrders) * 100 : 0;
           return (
-            <div key={s.label} className="flex flex-col gap-3">
+            <div key={s.label} className="flex flex-col gap-2">
               <div className="flex justify-between items-center group/row">
                 <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-xl bg-white border border-gray-200 shadow-sm flex items-center justify-center text-lg ${s.color} transition-all duration-500 group-hover/row:scale-110 group-hover/row:rotate-3`}>
-                    {s.icon}
-                  </div>
-                  <div className="flex flex-col gap-0.5">
-                    <span className="text-[11px] font-black text-[#1D3557] tracking-tight">{s.val.toLocaleString()}</span>
-                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter opacity-70">{s.label}</span>
+                  {/* Status Dot */}
+                  <div className={`w-2.5 h-2.5 rounded-full ${s.color.replace('text-', 'bg-')} shadow-[0_0_8px_currentColor] animate-pulse`}
+                    style={{ color: s.color.includes('amber') ? '#F59E0B' : s.color.includes('blue') ? '#3B82F6' : '#10B981' }} />
+
+                  <div className="flex flex-col">
+                    <span className="text-[12px] font-black text-[#1D3557] tracking-tight">{s.val.toLocaleString()}</span>
+                    <span className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.1em] opacity-70">{s.label}</span>
                   </div>
                 </div>
                 <div className={`flex items-center gap-1 text-[10px] font-black px-2.5 py-1 rounded-lg border shadow-sm transition-all duration-300 ${s.isUp ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-amber-50 text-amber-600 border-amber-100'}`}>

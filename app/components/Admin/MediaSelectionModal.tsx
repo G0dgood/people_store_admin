@@ -13,7 +13,7 @@ import { Button } from "../Button";
 interface MediaSelectionModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelect: (url: string) => void;
+  onSelect: (url: string, thumbnailUrl?: string, type?: 'image' | 'video') => void;
   title?: string;
   onUploadClick?: () => void;
 }
@@ -72,7 +72,7 @@ export function MediaSelectionModal({ isOpen, onClose, onSelect, title = "Select
                 <div
                   key={item._id}
                   onClick={() => {
-                    onSelect(item.url);
+                    onSelect(item.url, item.thumbnailUrl, item.type);
                     onClose();
                   }}
                   className="group relative aspect-square bg-gray-50 rounded-xl border border-gray-200 overflow-hidden cursor-pointer hover:border-brand-gold hover:shadow-lg transition-all"

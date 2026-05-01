@@ -38,18 +38,7 @@ export const RecommendedProducts: React.FC<RecommendedProductsProps> = ({ produc
   };
 
   if (products.length === 0) {
-    return (
-      <div className="flex flex-col mt-8 border border-gray-200 overflow-hidden">
-        <div className="p-4 border-b border-gray-200 bg-white">
-          <h2 className="text-lg font-bold text-gray-900">You may also like</h2>
-        </div>
-        <EmptyState
-          icon={<HiOutlineSparkles size={36} />}
-          title="No Recommendations"
-          description="We are curating a special collection of artisanal pieces just for you. Please check back soon."
-        />
-      </div>
-    );
+    return null;
   }
 
   return (

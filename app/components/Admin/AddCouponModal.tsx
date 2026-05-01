@@ -33,6 +33,8 @@ const statusOptions = [
 export function AddCouponModal({ isOpen, onClose }: AddCouponModalProps) {
   const [formData, setFormData] = useState({
     code: "",
+    title: "",
+    description: "",
     discount: "",
     type: "Percentage",
     startDate: "",
@@ -63,6 +65,8 @@ export function AddCouponModal({ isOpen, onClose }: AddCouponModalProps) {
       
       setFormData({
         code: "",
+        title: "",
+        description: "",
         discount: "",
         type: "Percentage",
         startDate: "",
@@ -122,15 +126,39 @@ export function AddCouponModal({ isOpen, onClose }: AddCouponModalProps) {
             )}
           </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="flex flex-col gap-2">
+              <label className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Coupon Code</label>
+              <Input
+                shape="rounded-sm"
+                placeholder="e.g. FLASH50"
+                value={formData.code}
+                onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+                className="h-12 border-gray-200 font-bold"
+                required
+              />
+            </div>
+            <div className="flex flex-col gap-2">
+              <label className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Public Title</label>
+              <Input
+                shape="rounded-sm"
+                placeholder="e.g. Black Friday Special"
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                className="h-12 border-gray-200 font-bold"
+                required
+              />
+            </div>
+          </div>
+
           <div className="flex flex-col gap-2">
-            <label className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Coupon Code</label>
+            <label className="text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Short Description</label>
             <Input
               shape="rounded-sm"
-              placeholder="e.g. FLASH50"
-              value={formData.code}
-              onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+              placeholder="e.g. Get 50% off all artisanal items this weekend only."
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               className="h-12 border-gray-200 font-bold"
-              required
             />
           </div>
 

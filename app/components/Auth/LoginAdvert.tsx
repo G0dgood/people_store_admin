@@ -118,7 +118,7 @@ export const LoginAdvert = () => {
             <AnimatePresence mode="popLayout">
                 {itemsToDisplay.map((item, i) => (
                 <motion.div
-                  key={item.id}
+                  key={item._id || item.id || `list-${i}`}
                   initial={{ opacity: 0, scale: 0.9, x: 20 }}
                   animate={{ opacity: 1, scale: 1, x: 0 }}
                   exit={{ opacity: 0, scale: 0.8, x: -20 }}
@@ -128,7 +128,7 @@ export const LoginAdvert = () => {
                 >
                   <div className="flex flex-col items-end text-right">
                     <span className="text-xs font-black uppercase tracking-[0.2em] text-white/50 group-hover:text-brand-gold transition-colors">
-                      {item.category}
+                      {typeof item.category === 'object' ? item.category.name : item.category}
                     </span>
                     <span className="text-lg font-bold text-white group-hover:text-blue-200 transition-colors">
                       {item.name}
@@ -152,7 +152,7 @@ export const LoginAdvert = () => {
             <AnimatePresence mode="popLayout">
               {itemsToDisplay.slice(0, 8).map((item, i) => (
                 <motion.div
-                  key={item.id}
+                  key={item._id || item.id || `grid-${i}`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.9 }}
@@ -164,7 +164,9 @@ export const LoginAdvert = () => {
                     <img src={item.productImage || item.image} alt={item.name} className="w-full h-full object-contain group-hover:scale-125 transition-transform duration-500" />
                   </div>
                   <div className="flex flex-col text-right">
-                    <span className="text-[8px] font-black text-brand-gold uppercase tracking-widest">{item.category}</span>
+                    <span className="text-[8px] font-black text-brand-gold uppercase tracking-widest">
+                      {typeof item.category === 'object' ? item.category.name : item.category}
+                    </span>
                     <span className="text-[11px] font-bold text-white truncate">{item.name}</span>
                     <span className="text-[10px] font-black text-white/60">{item.price}</span>
                   </div>
@@ -180,7 +182,7 @@ export const LoginAdvert = () => {
               <AnimatePresence mode="popLayout">
                 {itemsToDisplay.map((item, i) => (
                   <motion.div
-                    key={item.id}
+                    key={item._id || item.id || `strip-${i}`}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, scale: 0.8 }}

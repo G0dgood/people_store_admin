@@ -1,7 +1,10 @@
+import { ReactNode } from 'react';
 import { baseApi } from '../baseApi';
 import { ApiResponse, PaginatedResponse } from '@/lib/types/api';
 
 export interface Coupon {
+  title: ReactNode;
+  description: ReactNode; 
   _id: string;
   code: string;
   discount: string;
@@ -13,6 +16,9 @@ export interface Coupon {
   usageLimit?: number;
   minAmount?: string;
   bgColor?: string;
+  imagePosition?: string;
+  thumbnailUrl?: string;
+  mediaType?: 'image' | 'video';
   createdAt: string;
   updatedAt: string;
 }
