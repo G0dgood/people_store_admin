@@ -8,6 +8,8 @@ import { Button } from "@/app/components/Button/Button";
 import { FavoriteButton } from "../Other";
 import { useCart } from "@/app/context/CartContext";
 import { toast } from "sonner";
+import { Icon } from "../Icon";
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 
 const containerVariants: Variants = {
  hidden: { opacity: 0 },
@@ -60,6 +62,17 @@ const CategorySection: React.FC<CategorySectionProps> = ({
  priority = false
 }) => {
  const { addToCart } = useCart();
+ const scrollRef = React.useRef<HTMLDivElement>(null);
+
+ const scroll = (direction: "left" | "right") => {
+  if (scrollRef.current) {
+   const { scrollLeft, clientWidth } = scrollRef.current;
+   const scrollTo = direction === "left" ? scrollLeft - clientWidth : scrollLeft + clientWidth;
+   scrollRef.current.scrollTo({ left: scrollTo, behavior: "smooth" });
+  }
+ };
+
+ const showNav = products.length > 4;
 
  const handleAddToCart = (e: React.MouseEvent, item: CategoryProduct) => {
   e.preventDefault();
@@ -108,16 +121,38 @@ const CategorySection: React.FC<CategorySectionProps> = ({
     </div>
    </div>
 
-   {/* Product Grid */}
-   <motion.div
-    variants={containerVariants}
-    initial="hidden"
-    whileInView="visible"
-    viewport={{ once: true, margin: "-100px" }}
-    className="flex-1 grid grid-cols-2 md:grid-cols-4"
-   >
-    {products.map((item, idx) => (
-     <div key={idx} className="flex h-full relative group">
+   {/* Product Grid / Scrollable Area */}
+   <div className="flex-1 relative group/section overflow-hidden">
+    {showNav && (
+     <>
+      <button
+       onClick={() => scroll("left")}
+       className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 bg-white/90 backdrop-blur-md border border-gray-200 rounded-full flex items-center justify-center text-gray-900 opacity-0 group-hover/section:opacity-100 transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold shadow-lg"
+      >
+       <HiChevronLeft size={20} />
+      </button>
+      <button
+       onClick={() => scroll("right")}
+       className="absolute right-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 bg-white/90 backdrop-blur-md border border-gray-200 rounded-full flex items-center justify-center text-gray-900 opacity-0 group-hover/section:opacity-100 transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold shadow-lg"
+      >
+       <HiChevronRight size={20} />
+      </button>
+     </>
+    )}
+    
+    <motion.div
+     ref={scrollRef}
+     variants={containerVariants}
+     initial="hidden"
+     whileInView="visible"
+     viewport={{ once: true, margin: "-100px" }}
+     className={`flex-1 h-full overflow-x-auto scrollbar-none flex ${showNav ? "snap-x snap-mandatory" : "grid grid-cols-2 md:grid-cols-4"}`}
+    >
+     {products.map((item, idx) => (
+      <div 
+        key={idx} 
+        className={`relative group shrink-0 ${showNav ? "w-1/2 md:w-1/4 snap-start" : "w-full h-full"}`}
+      >
       <Link
        href={`/products/detail?id=${item.id}`}
        className="flex flex-col p-4 md:p-6 gap-3 hover:bg-gray-50 transition-all duration-500 cursor-pointer w-full h-full pb-16 border-r border-b border-gray-200"
@@ -169,9 +204,10 @@ const CategorySection: React.FC<CategorySectionProps> = ({
         Add to Cart
        </Button>
       </div>
-     </div>
-    ))}
-   </motion.div>
+      </div>
+     ))}
+    </motion.div>
+   </div>
   </section>
  );
 };

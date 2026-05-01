@@ -80,6 +80,18 @@ export const boutiqueApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [{ type: 'Review', id: 'LIST' }],
     }),
+    getRecentlyViewed: builder.query<ApiResponse<{ products: Product[] }>, void>({
+      query: () => '/recently-viewed',
+      providesTags: ['Product'],
+    }),
+    addToRecentlyViewed: builder.mutation<ApiResponse<any>, { productId: string }>({
+      query: (body) => ({
+        url: '/recently-viewed/add',
+        method: 'POST',
+        body
+      }),
+      invalidatesTags: ['Product'],
+    }),
   }),
   overrideExisting: true,
 });
@@ -98,5 +110,7 @@ export const {
   useGetPublicTimerQuery,
   useGetPublicFaqsQuery,
   useGetPublicReviewsByProductQuery,
-  useSubmitReviewMutation
+  useSubmitReviewMutation,
+  useGetRecentlyViewedQuery,
+  useAddToRecentlyViewedMutation
 } = boutiqueApi;

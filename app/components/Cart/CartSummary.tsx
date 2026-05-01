@@ -22,8 +22,18 @@ const CartSummary = () => {
       return acc + (isNaN(p) ? 0 : p) * item.quantity;
    }, 0);
 
-   const discount = subtotal > 0 ? 6000 : 0; 
-   const tax = subtotal > 0 ? 1400 : 0; 
+   const discount = cartItems.reduce((acc, item) => {
+      if (!item.originalPrice) return acc;
+      const original = parseFloat(String(item.originalPrice).replace(/[₦$,]/g, ""));
+      const current = typeof item.price === "number" ? item.price : parseFloat(String(item.price).replace(/[₦$,]/g, ""));
+      
+      if (!isNaN(original) && !isNaN(current) && original > current) {
+         return acc + (original - current) * item.quantity;
+      }
+      return acc;
+   }, 0);
+
+   const tax = subtotal > 0 ? Math.round(subtotal * 0.075) : 0; // 7.5% VAT
    const total = Math.max(0, subtotal - discount + tax);
 
    const handleCheckout = () => {

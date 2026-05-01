@@ -11,6 +11,7 @@ import { InquiryForm } from "@/app/components/Home/InquiryForm";
 import { ArtisanalCollections } from "@/app/components/Home/ArtisanalCollections";
 import { RegionSuppliers } from "@/app/components/Home/RegionSuppliers";
 import RecommendedItems from "./components/Home/RecommendedItems";
+import RecentlyViewed from "./components/Home/RecentlyViewed";
 import { useGetPublicBrandsQuery, useGetPublicProductsQuery } from "@/lib/redux/services/boutiqueApi";
 import { CategorySectionSkeleton } from "./components/Skeleton/CategorySectionSkeleton";
 
@@ -81,6 +82,7 @@ const Home = () => {
 
     {/* <InquiryForm /> */}
 
+    <RecentlyViewed />
     <RecommendedItems />
 
     <ArtisanalCollections />

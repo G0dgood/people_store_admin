@@ -48,18 +48,7 @@ const SavedForLater = () => {
   };
 
   if (wishlistItems.length === 0) {
-    return (
-      <section className="bg-white border border-gray-200 overflow-hidden ">
-        <div className="p-6 border-b border-gray-200">
-          <h3 className="text-xl font-bold text-gray-900">Saved for later</h3>
-        </div>
-        <EmptyState
-          icon={<HiOutlineHeart size={36} />}
-          title="No Saved Items"
-          description="Pieces you admire and save for later will appear in this curated collection."
-        />
-      </section>
-    );
+    return null;
   }
 
   return (

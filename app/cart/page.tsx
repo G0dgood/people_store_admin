@@ -11,6 +11,7 @@ import { CartSummary } from "@/app/components/Cart/CartSummary";
 import { SavedForLater } from "@/app/components/Cart/SavedForLater";
 import { ServiceBadges } from "@/app/components/Cart/ServiceBadges";
 import { ClearCartModal } from "@/app/components/Modal";
+import RecentlyViewed from "@/app/components/Home/RecentlyViewed";
 
 import { useCart } from "@/app/context/CartContext";
 
@@ -80,6 +81,7 @@ export default function CartPage() {
         <div className="flex flex-col gap-8">
           <ServiceBadges />
           <SavedForLater />
+          <RecentlyViewed />
         </div>
       </div>
 

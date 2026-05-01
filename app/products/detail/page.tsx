@@ -13,9 +13,10 @@ import { DiscountBanner } from "@/app/components/Products/DiscountBanner";
 import { RelatedProducts } from "@/app/components/Products/RelatedProducts";
 
 import { useSearchParams } from "next/navigation";
-import { useGetPublicProductByIdQuery, useGetPublicRelatedProductsQuery } from "@/lib/redux/services/boutiqueApi";
+import { useGetPublicProductByIdQuery, useGetPublicRelatedProductsQuery, useAddToRecentlyViewedMutation } from "@/lib/redux/services/boutiqueApi";
 import { ProductDetailSkeleton } from "@/app/components/Skeleton/ProductDetailSkeleton";
 import { useApiError } from "@/app/hooks/useApiError";
+import { useEffect } from "react";
 
 function ProductDetailContent() {
    const searchParams = useSearchParams();
@@ -25,6 +26,14 @@ function ProductDetailContent() {
       skip: !id
    });
    useApiError(isErrorProduct, errorProduct, "Failed to load product details");
+
+   const [addToRecentlyViewed] = useAddToRecentlyViewedMutation();
+
+   useEffect(() => {
+      if (id) {
+         addToRecentlyViewed({ productId: id });
+      }
+   }, [id, addToRecentlyViewed]);
 
    const { data: relatedResponse, isLoading: isLoadingRelated, isError: isErrorRelated, error: errorRelated } = useGetPublicRelatedProductsQuery(id || "", {
       skip: !id

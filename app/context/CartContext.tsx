@@ -17,6 +17,7 @@ export interface CartItem {
   id: string;
   title: string;
   price: string;
+  originalPrice?: string;
   image: string;
   quantity: number;
   sku?: string;
@@ -132,6 +133,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
           id: isPopulated ? (itemData._id || itemData.id) : (itemData || item._id),
           title: isPopulated ? (itemData.name || itemData.title) : (item.itemType === "GiftBox" ? "Gift Box" : "Unknown Item"),
           price: String(isPopulated ? (itemData.price || 0) : 0),
+          originalPrice: isPopulated && itemData.discountPrice ? String(itemData.discountPrice) : undefined,
           image: isPopulated ? (itemData.productImage || itemData.image || "") : "",
           sku: item.sku,
           variant: item.variant,
