@@ -10,6 +10,8 @@ import { AdminThemeProvider, useAdminTheme } from "../context/AdminThemeContext"
 import { usePrivilege, ModuleId } from "@/lib/contexts/PrivilegeContext";
 import { useGetCurrentUserQuery } from "@/lib/redux/services/authApi";
 import { toast } from "sonner";
+import { SocketProvider, useSocket } from "../context/SocketContext";
+import { toastSuccess } from "../utils/toastWithSound";
 
 function AdminLayoutContent({
   children,
@@ -22,7 +24,21 @@ function AdminLayoutContent({
   const { isAdminDark } = useAdminTheme();
   const { canAccess, isLoading, userPrivileges } = usePrivilege();
 
-  const { data: userData, isLoading: isUserLoading, isError: isUserError } = useGetCurrentUserQuery();
+   const { data: userData, isLoading: isUserLoading, isError: isUserError } = useGetCurrentUserQuery();
+   const { on, off } = useSocket();
+
+   // Real-time Order Notification
+   useEffect(() => {
+     const handleNewOrder = (order: any) => {
+       toastSuccess(`New Order Received!`, {
+         description: `Order #${order.orderId || order._id.slice(-6).toUpperCase()} from ${order.customer?.fullName || 'Guest'}`,
+         duration: 8000,
+       });
+     };
+
+     on("newOrder", handleNewOrder);
+     return () => off("newOrder", handleNewOrder);
+   }, [on, off]);
 
   useEffect(() => {
     if (mobileMenuOpen) {
@@ -111,11 +127,13 @@ export default function AdminLayout({
   return (
     <UserProvider>
       <PrivilegeProvider>
-        <AdminThemeProvider>
-          <AdminLayoutContent>
-            {children}
-          </AdminLayoutContent>
-        </AdminThemeProvider>
+        <SocketProvider>
+          <AdminThemeProvider>
+            <AdminLayoutContent>
+              {children}
+            </AdminLayoutContent>
+          </AdminThemeProvider>
+        </SocketProvider>
       </PrivilegeProvider>
     </UserProvider>
   );

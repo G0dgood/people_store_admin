@@ -9,8 +9,9 @@ import {
   useAddToCartMutation, 
   useUpdateCartItemMutation, 
   useRemoveFromCartMutation, 
-  useClearCartMutation 
+  useClearCartMutation
 } from "@/lib/redux/services/cartApi";
+import { useValidateCouponMutation } from "@/lib/redux/services/boutiqueApi";
 import { useSocket } from "./SocketContext";
 
 export interface CartItem {
@@ -31,12 +32,24 @@ export interface CartItem {
   itemType?: "Product" | "GiftBox";
 }
 
+export interface Coupon {
+  _id: string;
+  code: string;
+  discount: string;
+  type: "Percentage" | "Fixed Rate" | "Shipping";
+  minAmount?: string;
+}
+
 interface CartContextType {
   cartItems: CartItem[];
   addToCart: (item: Omit<CartItem, "quantity">) => void;
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
+  applyCoupon: (code: string) => Promise<void>;
+  removeCoupon: () => void;
+  isLoading: boolean;
+  appliedCoupon: Coupon | null;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -44,16 +57,18 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [localCartItems, setLocalCartItems] = useState<CartItem[]>([]);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
   
   const { isAuthenticated } = useCustomerAuth();
 
   // RTK Query hooks
-  const { data: backendCartData, refetch } = useGetCartQuery(undefined, { skip: !isAuthenticated });
+  const { data: backendCartData, refetch, isLoading: isBackendLoading } = useGetCartQuery(undefined, { skip: !isAuthenticated });
   const [syncCart, { isError: isSyncError, error: syncError }] = useSyncCartMutation();
   const [addToCartMut, { isError: isAddError, error: addError }] = useAddToCartMutation();
   const [updateCartItemMut, { isError: isUpdateError, error: updateError }] = useUpdateCartItemMutation();
   const [removeFromCartMut, { isError: isRemoveError, error: removeError }] = useRemoveFromCartMutation();
   const [clearCartMut, { isError: isClearError, error: clearError }] = useClearCartMutation();
+  const [validateCouponMut, { isLoading: isValidatingCoupon }] = useValidateCouponMutation();
   
   const { on, off } = useSocket();
 
@@ -208,7 +223,26 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     } else {
       setLocalCartItems([]);
     }
+    setAppliedCoupon(null);
   }, [isAuthenticated, clearCartMut]);
+
+  const applyCoupon = async (code: string) => {
+    const subtotal = cartItems.reduce((acc, item) => {
+      const p = parseFloat(String(item.price).replace(/[₦$,]/g, ""));
+      return acc + (isNaN(p) ? 0 : p) * item.quantity;
+    }, 0);
+
+    try {
+      const result = await validateCouponMut({ code, subtotal }).unwrap();
+      setAppliedCoupon(result.data);
+    } catch (err: any) {
+      throw err;
+    }
+  };
+
+  const removeCoupon = () => {
+    setAppliedCoupon(null);
+  };
 
   return (
     <CartContext.Provider value={{ 
@@ -216,7 +250,11 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       addToCart, 
       removeFromCart, 
       updateQuantity, 
-      clearCart 
+      clearCart,
+      applyCoupon,
+      removeCoupon,
+      isLoading: !isInitialized || (isAuthenticated && isBackendLoading),
+      appliedCoupon
     }}>
       {children}
     </CartContext.Provider>

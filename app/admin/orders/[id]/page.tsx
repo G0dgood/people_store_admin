@@ -190,21 +190,35 @@ export default function OrderDetails() {
             <h3 className="text-xl font-black text-gray-900">Operational Timeline</h3>
             <div className="flex flex-col gap-6 relative">
               <div className="absolute left-4 top-4 bottom-4 w-0.5 bg-gray-50"></div>
-              {[
-                { title: "Status Update", date: new Date(order.updatedAt).toLocaleString(), desc: `Order is currently ${order.status}`, icon: <Icon name={statusStyles[order.status]?.icon} folder="dashboardIcon" size="sm" />, active: true },
-                { title: "Order Placed", date: new Date(order.createdAt).toLocaleString(), desc: "Order successfully submitted by customer.", icon: <HiCheckCircle /> },
-              ].map((log, i) => (
-                <div key={i} className="flex gap-6 relative z-10">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center border-4 border-white shadow-sm ${log.active ? (order.status === "Cancelled" ? "bg-rose-500" : "bg-brand-gold") + " text-white" : "bg-gray-100 text-gray-400"}`}>
-                    <span className="flex items-center justify-center">{log.icon}</span>
+              {order.history && order.history.length > 0 ? (
+                order.history.slice().reverse().map((log: any, i: number) => (
+                  <div key={i} className="flex gap-6 relative z-10">
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center border-4 border-white shadow-sm ${i === 0 ? (log.status === "Cancelled" ? "bg-rose-500" : "bg-brand-gold") + " text-white" : "bg-gray-100 text-gray-400"}`}>
+                      <span className="flex items-center justify-center">
+                        <Icon name={statusStyles[log.status]?.icon || "verified"} folder="dashboardIcon" size="xs" />
+                      </span>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <p className={`text-sm font-black ${i === 0 ? "text-gray-900" : "text-gray-500"}`}>{log.status}</p>
+                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">
+                        {new Date(log.timestamp).toLocaleString()}
+                      </p>
+                      <p className="text-xs font-medium text-gray-400 mt-1">{log.message}</p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="flex gap-6 relative z-10">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center border-4 border-white shadow-sm bg-brand-gold text-white`}>
+                    <span className="flex items-center justify-center"><HiCheckCircle /></span>
                   </div>
                   <div className="flex flex-col gap-1">
-                    <p className={`text-sm font-black ${log.active ? "text-gray-900" : "text-gray-500"}`}>{log.title}</p>
-                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">{log.date}</p>
-                    <p className="text-xs font-medium text-gray-400 mt-1">{log.desc}</p>
+                    <p className="text-sm font-black text-gray-900">Order Placed</p>
+                    <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest leading-none">{new Date(order.createdAt).toLocaleString()}</p>
+                    <p className="text-xs font-medium text-gray-400 mt-1">Order successfully submitted.</p>
                   </div>
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </div>

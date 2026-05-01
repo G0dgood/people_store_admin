@@ -22,7 +22,7 @@ const itemVariants = {
 };
 
 export const OrderSummary: React.FC = () => {
-  const { cartItems } = useCart();
+  const { cartItems, appliedCoupon } = useCart();
 
   const parsePrice = (priceStr: string) => {
     const p = parseFloat(priceStr.replace(/[^0-9.]/g, "")) || 0;
@@ -33,8 +33,34 @@ export const OrderSummary: React.FC = () => {
     return acc + parsePrice(item.price) * item.quantity;
   }, 0);
 
-  const estimatedTax = subtotal * 0.05; // 5% tax
-  const total = subtotal + estimatedTax;
+  const productDiscount = cartItems.reduce((acc, item) => {
+    if (!item.originalPrice) return acc;
+    const original = parseFloat(String(item.originalPrice).replace(/[₦$,]/g, ""));
+    const current = parsePrice(item.price);
+    
+    if (!isNaN(original) && !isNaN(current) && original > current) {
+       return acc + (original - current) * item.quantity;
+    }
+    return acc;
+  }, 0);
+
+  const couponDiscount = React.useMemo(() => {
+    if (!appliedCoupon) return 0;
+    const discountVal = parseFloat(appliedCoupon.discount.replace(/[%₦$,]/g, ""));
+    if (isNaN(discountVal)) return 0;
+
+    if (appliedCoupon.type === "Percentage") {
+       return (subtotal * discountVal) / 100;
+    } else if (appliedCoupon.type === "Fixed Rate") {
+       return discountVal;
+    }
+    return 0;
+  }, [appliedCoupon, subtotal]);
+
+  const discount = productDiscount + couponDiscount;
+  const estimatedTax = subtotal > 0 ? Math.round((subtotal - discount) * 0.075) : 0; // 7.5% VAT
+  const total = Math.max(0, subtotal - discount + estimatedTax);
+
   const { customer, isAuthenticated } = useCustomerAuth();
   const router = useRouter();
 
@@ -62,14 +88,14 @@ export const OrderSummary: React.FC = () => {
       // Create the order on the backend
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/orders/create`, {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json'
         },
         credentials: 'include',
         body: JSON.stringify(orderData)
       });
       const orderResult = await response.json();
-      
+
       if (!orderResult.success) {
         throw new Error(orderResult.message || "Failed to create order");
       }
@@ -93,14 +119,14 @@ export const OrderSummary: React.FC = () => {
         },
         callback: (response: any) => {
           const loadingToast = toast.loading("Verifying payment...");
-          
+
           // Use an IIFE to handle the async verification
           (async () => {
             try {
               // 3. Verify on backend
               const verifyResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/transactions/verify-paystack`, {
                 method: 'POST',
-                headers: { 
+                headers: {
                   'Content-Type': 'application/json'
                 },
                 credentials: 'include',
@@ -109,9 +135,9 @@ export const OrderSummary: React.FC = () => {
                   orderId: orderId
                 })
               });
-              
+
               const verifyResult = await verifyResponse.json();
-              
+
               if (verifyResult.success) {
                 toast.dismiss(loadingToast);
                 toast.success("Payment successful!");
@@ -184,6 +210,10 @@ export const OrderSummary: React.FC = () => {
               <span className="text-gray-900 font-bold">{formatPrice(subtotal)}</span>
             </div>
             <div className="flex justify-between text-[13px]">
+              <span className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">Discount</span>
+              <span className="text-brand-gold font-bold">- {formatPrice(discount)}</span>
+            </div>
+            <div className="flex justify-between text-[13px]">
               <span className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">Shipping</span>
               <span className="text-blue-600 font-bold uppercase tracking-widest text-[11px]">{subtotal > 0 ? "Free" : formatPrice(0)}</span>
             </div>
@@ -217,10 +247,6 @@ export const OrderSummary: React.FC = () => {
           </Button>
 
           <div className="mt-8 flex flex-col gap-4">
-            <div className="flex items-center justify-center gap-2.5 px-4 py-2.5 bg-brand-gold-light rounded-full w-fit mx-auto border border-blue-100 shadow-sm shadow-blue-100/50">
-              <Icon name="verified_user" size="xs" className="text-blue-600" />
-              <span className="text-[10px] font-black text-blue-700 uppercase tracking-widest">Secure 256-bit SSL encryption</span>
-            </div>
 
             <div className="flex items-center justify-center gap-4 opacity-50 hover:opacity-100 transition-opacity">
               <Image src="/payment/Payment=payment, Pay-type=visa.png" alt="Visa" width={32} height={20} className="object-contain grayscale hover:grayscale-0 transition-all cursor-crosshair" />

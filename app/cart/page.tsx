@@ -12,11 +12,12 @@ import { SavedForLater } from "@/app/components/Cart/SavedForLater";
 import { ServiceBadges } from "@/app/components/Cart/ServiceBadges";
 import { ClearCartModal } from "@/app/components/Modal";
 import RecentlyViewed from "@/app/components/Home/RecentlyViewed";
+import { CartSkeleton } from "@/app/components/Skeleton/CartSkeleton";
 
 import { useCart } from "@/app/context/CartContext";
 
 export default function CartPage() {
-  const { cartItems, clearCart } = useCart();
+  const { cartItems, clearCart, isLoading } = useCart();
   const [isClearModalOpen, setIsClearModalOpen] = React.useState(false);
 
   return (
@@ -24,9 +25,13 @@ export default function CartPage() {
       <Header />
 
       <div className="flex-1 max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 py-4 md:py-8 flex flex-col gap-6 md:gap-10 w-full">
-        <h2 className="text-2xl md:text-4xl font-outfit font-light text-gray-900 uppercase tracking-[0.1em]"> My <span className="font-bold">cart</span> <span className="text-sm md:text-lg text-gray-400 normal-case tracking-normal ml-2">({cartItems.length} items)</span></h2>
+        {isLoading ? (
+          <CartSkeleton />
+        ) : (
+          <>
+            <h2 className="text-2xl md:text-4xl font-outfit font-light text-gray-900 uppercase tracking-[0.1em]"> My <span className="font-bold">cart</span> <span className="text-sm md:text-lg text-gray-400 normal-case tracking-normal ml-2">({cartItems.length} items)</span></h2>
 
-        <div className="flex flex-col lg:flex-row gap-8 items-start">
+            <div className="flex flex-col lg:flex-row gap-8 items-start">
           {/* Cart List Container */}
           <div className="flex-1 bg-white flex flex-col w-full">
             {cartItems.length > 0 ? (
@@ -83,6 +88,8 @@ export default function CartPage() {
           <SavedForLater />
           <RecentlyViewed />
         </div>
+          </>
+        )}
       </div>
 
       <ClearCartModal

@@ -18,6 +18,11 @@ export interface OrderRecord {
     shippingAddress: string;
     createdAt: string;
     updatedAt: string;
+    history?: {
+        status: string;
+        timestamp: string;
+        message: string;
+    }[];
 }
 
 export const orderApi = baseApi.injectEndpoints({

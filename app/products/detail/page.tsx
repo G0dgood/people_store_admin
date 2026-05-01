@@ -13,7 +13,8 @@ import { DiscountBanner } from "@/app/components/Products/DiscountBanner";
 import { RelatedProducts } from "@/app/components/Products/RelatedProducts";
 
 import { useSearchParams } from "next/navigation";
-import { useGetPublicProductByIdQuery, useGetPublicRelatedProductsQuery, useAddToRecentlyViewedMutation } from "@/lib/redux/services/boutiqueApi";
+import { useGetPublicProductByIdQuery, useGetPublicRelatedProductsQuery } from "@/lib/redux/services/boutiqueApi";
+import { useAddToRecentlyViewedMutation } from "@/lib/redux/services/recentlyViewedApi";
 import { ProductDetailSkeleton } from "@/app/components/Skeleton/ProductDetailSkeleton";
 import { useApiError } from "@/app/hooks/useApiError";
 import { useEffect } from "react";
@@ -31,7 +32,7 @@ function ProductDetailContent() {
 
    useEffect(() => {
       if (id) {
-         addToRecentlyViewed({ productId: id });
+         addToRecentlyViewed(id);
       }
    }, [id, addToRecentlyViewed]);
 

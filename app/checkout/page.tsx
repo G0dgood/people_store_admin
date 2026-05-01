@@ -22,7 +22,9 @@ export default function CheckoutPage() {
         />
       </div>
 
-      <Header />
+      <div className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <Header />
+      </div>
 
       <div className="flex-1 max-w-[1440px] w-full mx-auto px-6 md:px-10 lg:px-16 py-8 md:py-12">
         {/* Breadcrumbs */}

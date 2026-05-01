@@ -11,18 +11,21 @@ import { useCustomerAuth } from "@/app/context/CustomerAuthContext";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { formatPrice } from "@/app/utils/formatPrice";
+import { useValidateCouponMutation } from "@/lib/redux/services/boutiqueApi";
 
 const CartSummary = () => {
-   const { cartItems } = useCart();
+   const { cartItems, appliedCoupon, applyCoupon, removeCoupon } = useCart();
    const { isAuthenticated } = useCustomerAuth();
    const router = useRouter();
+   const [couponCode, setCouponCode] = React.useState("");
+   const [isValidating, setIsValidating] = React.useState(false);
 
    const subtotal = cartItems.reduce((acc, item) => {
       const p = typeof item.price === "number" ? item.price : parseFloat(String(item.price).replace(/[₦$,]/g, ""));
       return acc + (isNaN(p) ? 0 : p) * item.quantity;
    }, 0);
 
-   const discount = cartItems.reduce((acc, item) => {
+   const productDiscount = cartItems.reduce((acc, item) => {
       if (!item.originalPrice) return acc;
       const original = parseFloat(String(item.originalPrice).replace(/[₦$,]/g, ""));
       const current = typeof item.price === "number" ? item.price : parseFloat(String(item.price).replace(/[₦$,]/g, ""));
@@ -33,8 +36,36 @@ const CartSummary = () => {
       return acc;
    }, 0);
 
-   const tax = subtotal > 0 ? Math.round(subtotal * 0.075) : 0; // 7.5% VAT
+   const couponDiscount = React.useMemo(() => {
+      if (!appliedCoupon) return 0;
+      const discountVal = parseFloat(appliedCoupon.discount.replace(/[%₦$,]/g, ""));
+      if (isNaN(discountVal)) return 0;
+
+      if (appliedCoupon.type === "Percentage") {
+         return (subtotal * discountVal) / 100;
+      } else if (appliedCoupon.type === "Fixed Rate") {
+         return discountVal;
+      }
+      return 0;
+   }, [appliedCoupon, subtotal]);
+
+   const discount = productDiscount + couponDiscount;
+
+   const tax = subtotal > 0 ? Math.round((subtotal - discount) * 0.075) : 0; // 7.5% VAT on discounted price
    const total = Math.max(0, subtotal - discount + tax);
+
+   const handleApplyCoupon = async () => {
+      if (!couponCode) return;
+      setIsValidating(true);
+      try {
+         await applyCoupon(couponCode);
+         toast.success("Promotion code applied!");
+      } catch (err: any) {
+         toast.error(err.data?.message || "Invalid promotion code");
+      } finally {
+         setIsValidating(false);
+      }
+   };
 
    const handleCheckout = () => {
       if (cartItems.length === 0) return;
@@ -57,13 +88,27 @@ const CartSummary = () => {
             <div className="flex border border-gray-200 overflow-hidden bg-gray-50/50">
                <input
                   type="text"
+                  value={couponCode}
+                  onChange={(e) => setCouponCode(e.target.value)}
                   placeholder="Enter code"
                   className="flex-1 h-12 px-5 bg-transparent outline-none focus:bg-white transition-all text-[11px] font-bold uppercase tracking-widest text-gray-900 placeholder-gray-300"
                />
-               <Button className="h-12 px-6 bg-black text-white font-bold hover:bg-brand-gold transition-all text-[10px] uppercase tracking-widest shadow-none cursor-pointer rounded-none">
-                  Apply
+               <Button 
+                  onClick={handleApplyCoupon}
+                  disabled={isValidating || !couponCode}
+                  className="h-12 px-6 bg-black text-white font-bold hover:bg-brand-gold transition-all text-[10px] uppercase tracking-widest shadow-none cursor-pointer rounded-none disabled:bg-gray-300"
+               >
+                  {isValidating ? "..." : "Apply"}
                </Button>
             </div>
+            {appliedCoupon && (
+               <div className="flex items-center justify-between text-[10px] font-bold text-green-600 bg-green-50 p-3 border border-green-100">
+                  <span>Code {appliedCoupon.code} Applied</span>
+                  <button onClick={removeCoupon} className="text-gray-400 hover:text-red-500">
+                     <Icon name="close" size="xs" />
+                  </button>
+               </div>
+            )}
          </div>
 
          {/* Summary Section */}

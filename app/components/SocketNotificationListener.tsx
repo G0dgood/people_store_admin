@@ -3,20 +3,26 @@
 import React, { useEffect } from "react";
 import { useSocket } from "@/app/context/SocketContext";
 import { toast } from "sonner";
-import { Icon } from "./Icon";
+import { useCustomerAuth } from "../context/CustomerAuthContext";
+import { toastSuccess, toastInfo } from "../utils/toastWithSound";
+import { OrderDeliveredModal } from "./Modal/OrderDeliveredModal";
 import { useDispatch } from "react-redux";
+import { Icon } from "./Icon";
 import { roleApi } from "@/lib/redux/services/roleApi";
 
 export const SocketNotificationListener = () => {
   const { on, off, isConnected } = useSocket();
+  const { customer } = useCustomerAuth();
   const dispatch = useDispatch();
+  const [isDeliveredModalOpen, setIsDeliveredModalOpen] = React.useState(false);
+  const [deliveredOrder, setDeliveredOrder] = React.useState<any>(null);
 
   useEffect(() => {
     if (!isConnected) return;
 
     const handlePermissionsUpdated = (data: any) => {
       console.log("🚀 Permissions Updated Signal:", data);
-      
+
       // Force refresh the role privileges globally
       if (data.roleId) {
         dispatch(roleApi.util.invalidateTags([{ type: 'Role', id: data.roleId }]));
@@ -37,7 +43,7 @@ export const SocketNotificationListener = () => {
 
     const handleNewCustomer = (data: any) => {
       console.log("🚀 New Customer Registered:", data);
-      
+
       toast.success("New Member Joined!", {
         description: `${data.name} just created an account.`,
         duration: 5000,
@@ -51,37 +57,66 @@ export const SocketNotificationListener = () => {
 
     const handleRefundUpdate = (data: any) => {
       console.log("🚀 Refund Update Received:", data);
-      
+
       const isNew = data.status === "Pending";
-      
+
       toast(isNew ? "New Refund Request" : "Refund Status Updated", {
-        description: isNew 
+        description: isNew
           ? `A new refund request for Order ${data.order?.orderId || "..."} has been submitted.`
           : `Refund request for ${data.order?.orderId || "..."} is now ${data.status}.`,
         duration: 6000,
         icon: (
           <div className={`p-1 rounded-full ${isNew ? "bg-amber-100" : "bg-blue-100"}`}>
-            <Icon 
-              name={isNew ? "cached" : "verified"} 
-              folder="icon" 
-              size="xs" 
-              className={isNew ? "text-amber-600" : "text-blue-600"} 
+            <Icon
+              name={isNew ? "cached" : "verified"}
+              folder="icon"
+              size="xs"
+              className={isNew ? "text-amber-600" : "text-blue-600"}
             />
           </div>
         ),
       });
     };
 
+    const handleOrderStatusChanged = (order: any) => {
+      // Only show for the customer who owns the order
+      if (customer && (order.customer?._id === customer._id || order.customer === customer._id)) {
+        toastInfo("Order Status Updated", {
+          description: `Your order #${order.orderId || order._id.slice(-6).toUpperCase()} is now ${order.status}.`,
+          duration: 8000,
+          icon: (
+            <div className="bg-brand-gold/10 p-1.5 rounded-full ring-4 ring-brand-gold/5">
+              <Icon name="shopping_bag" size="xs" className="text-brand-gold" />
+            </div>
+          ),
+        });
+
+        // If delivered, show the special modal
+        if (order.status === "Delivered") {
+          setDeliveredOrder(order);
+          setIsDeliveredModalOpen(true);
+        }
+      }
+    };
+
     on("permissions_updated", handlePermissionsUpdated);
     on("newCustomer", handleNewCustomer);
     on("refund:update", handleRefundUpdate);
+    on("orderStatusChanged", handleOrderStatusChanged);
 
     return () => {
       off("permissions_updated", handlePermissionsUpdated);
       off("newCustomer", handleNewCustomer);
       off("refund:update", handleRefundUpdate);
+      off("orderStatusChanged", handleOrderStatusChanged);
     };
   }, [isConnected, on, off, dispatch]);
 
-  return null; // This component doesn't render anything
+  return (
+    <OrderDeliveredModal
+      isOpen={isDeliveredModalOpen}
+      onClose={() => setIsDeliveredModalOpen(false)}
+      order={deliveredOrder}
+    />
+  );
 };
