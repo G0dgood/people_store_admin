@@ -121,7 +121,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
       </FilterSection>
 
       {/* Brands */}
-      <FilterSection title="Artisanal Houses">
+      <FilterSection title="Brand">
         {isLoadingBrands ? (
           <div className="p-2 text-gray-400 italic font-medium">Syncing...</div>
         ) : (
@@ -140,7 +140,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
           onClick={() => setFilters(prev => ({ ...prev, brand: "" }))}
           className="text-brand-gold text-[10px] font-bold uppercase tracking-widest mt-2 cursor-pointer hover:tracking-[0.15em] transition-all duration-300"
         >
-          View all houses
+          View all brands
         </span>
       </FilterSection>
 
@@ -150,42 +150,61 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
           <Radio
             key={status}
             name="availability"
-            label={status}
-            checked={filters.condition === status} // Reusing condition for now or I should add a new field
+            label={
+              <span className="text-[11px] font-bold uppercase tracking-widest text-gray-600">
+                {status}
+              </span>
+            }
+            checked={filters.status === status}
             onChange={() => handleConditionChange(status)}
+            className="py-1"
           />
         ))}
       </FilterSection>
 
       {/* Price Range */}
-      <FilterSection title="Price range">
-        <div className="px-1 pt-2 pb-6">
+      <FilterSection title="Price range" defaultOpen={true}>
+        <div className="px-1 pt-2 pb-6 w-full max-w-[200px]">
           <RangeSlider
             min={minPrice}
             max={maxPrice}
             step={100}
             value={[filters.minPrice ?? minPrice, filters.maxPrice ?? maxPrice]}
             onChange={handlePriceRangeChange}
+            className="!w-full"
           />
         </div>
-        <div className="flex gap-2">
-          <div className="flex flex-col gap-1 flex-1">
-            <span className="text-xs text-gray-400 font-bold uppercase tracking-widest">Min Price</span>
-            <input
-              type="number"
-              value={filters.minPrice ?? minPrice}
-              onChange={handleMinPriceChange}
-              className="w-full border border-gray-200 px-3 py-2 text-[10px] font-bold uppercase tracking-widest outline-none focus:border-brand-gold bg-gray-50/50"
-            />
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center gap-2">
+            <div className="flex-1">
+              <span className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em] mb-1.5 block">Min Price</span>
+              <div className="relative group">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-gray-400 group-focus-within:text-brand-gold transition-colors">₦</span>
+                <input
+                  type="number"
+                  value={filters.minPrice ?? minPrice}
+                  onChange={handleMinPriceChange}
+                  className="w-full border border-gray-100 bg-gray-50/50 py-2.5 pl-7 pr-3 text-[10px] font-bold uppercase tracking-widest outline-none focus:border-brand-gold focus:bg-white transition-all"
+                />
+              </div>
+            </div>
+            <div className="w-2 h-px bg-gray-200 mt-6" />
+            <div className="flex-1">
+              <span className="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em] mb-1.5 block">Max Price</span>
+              <div className="relative group">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-gray-400 group-focus-within:text-brand-gold transition-colors">₦</span>
+                <input
+                  type="number"
+                  value={filters.maxPrice ?? maxPrice}
+                  onChange={handleMaxPriceChange}
+                  className="w-full border border-gray-100 bg-gray-50/50 py-2.5 pl-7 pr-3 text-[10px] font-bold uppercase tracking-widest outline-none focus:border-brand-gold focus:bg-white transition-all"
+                />
+              </div>
+            </div>
           </div>
-          <div className="flex flex-col gap-1 flex-1">
-            <span className="text-[10px] uppercase tracking-widest font-bold text-gray-400">Max Price</span>
-            <input
-              type="number"
-              value={filters.maxPrice ?? maxPrice}
-              onChange={handleMaxPriceChange}
-              className="w-full border border-gray-200 px-3 py-2 text-[10px] font-bold uppercase tracking-widest outline-none focus:border-brand-gold bg-gray-50/50"
-            />
+          <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest">
+            <span className="text-gray-400">Total Range:</span>
+            <span className="text-brand-gold">₦{((filters.maxPrice ?? maxPrice) - (filters.minPrice ?? minPrice)).toLocaleString()}</span>
           </div>
         </div>
       </FilterSection>
@@ -199,7 +218,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
             onClick={() => handleRatingToggle(val)}
           >
             <div className="flex items-center gap-3">
-              <div className={`w-4 h-4 border flex items-center justify-center transition-colors ${filters.rating === val ? "bg-brand-gold border-brand-gold" : "border-gray-200 group-hover:border-brand-gold"}`}>
+              <div className={`w-4 h-4 border flex items-center justify-center transition-colors ${filters.rating === val ? "!bg-brand-gold !border-brand-gold" : "border-gray-200 group-hover:border-brand-gold"}`}>
                 {filters.rating === val && <Icon name="check" size="xs" className="text-white" />}
               </div>
               <div className="flex items-center gap-2">

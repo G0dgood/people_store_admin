@@ -38,7 +38,13 @@ export const RelatedProducts: React.FC<RelatedProductsProps> = ({ products }) =>
           >
             <div className="w-full aspect-square relative bg-white border border-gray-200 flex items-center justify-center p-6 group-hover:border-brand-gold transition-colors overflow-hidden">
               <div className="relative w-full h-full transition-transform duration-700 group-hover:scale-110">
-                <Image src={item.image} alt={item.name} fill className="object-contain p-2" />
+                <Image 
+                  src={item.image} 
+                  alt={item.name} 
+                  fill 
+                  className="object-contain p-2" 
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 25vw, 15vw"
+                />
               </div>
 
               {/* Quick View Button Overlay - Positioned at bottom */}

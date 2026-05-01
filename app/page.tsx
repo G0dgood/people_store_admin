@@ -11,33 +11,42 @@ import { InquiryForm } from "@/app/components/Home/InquiryForm";
 import { ExtraServices } from "@/app/components/Home/ExtraServices";
 import { RegionSuppliers } from "@/app/components/Home/RegionSuppliers";
 import RecommendedItems from "./components/Home/RecommendedItems";
+import { useGetPublicBrandsQuery, useGetPublicProductsQuery } from "@/lib/redux/services/boutiqueApi";
 
+const BrandCategorySection = ({ brand, index }: { brand: any, index: number }) => {
+ const { data: productsData } = useGetPublicProductsQuery({
+  brand: brand._id,
+  limit: 8
+ });
 
-const fragranceProducts = [
- { name: "Midnight Bloom", price: "85", image: "/brandImage/product_1.png" },
- { name: "Gucci Guilty", price: "155", image: "/brandImage/gucci_guilty.png" },
- { name: "Gucci Intense Oud", price: "165", image: "/brandImage/product_gucci.png" },
- { name: "Fendi Fan di Fendi", price: "135", image: "/brandImage/product_fendi_2.jpeg" },
- { name: "Amber Wood", price: "110", image: "/brandImage/product_5.png" },
- { name: "Fendi Furiosa", price: "155", image: "/brandImage/product_fendi_3.jpeg" },
- { name: "Jasmine Night", price: "88", image: "/brandImage/product_7.png" },
- { name: "Sandalwood Essence", price: "92", image: "/brandImage/product_8.png" }
-];
+ const formattedProducts = (productsData?.data?.products || []).map((p: any) => ({
+  id: p._id,
+  name: p.name,
+  price: p.price.toString(),
+  image: p.productImage || "/placeholder.png"
+ }));
 
-const skincareProducts = [
- { name: "Hyaluronic Serum", price: "45", image: "/brandImage/product_9.png" },
- { name: "Retinol Cream", price: "58", image: "/brandImage/product_10.png" },
- { name: "Vitamin C Glow", price: "42", image: "/brandImage/product_11.png" },
- { name: "Cleansing Balm", price: "35", image: "/brandImage/product_12.png" },
- { name: "Eye Repair Gel", price: "38", image: "/brandImage/product_13.png" },
- { name: "Hydrating Mist", price: "28", image: "/brandImage/product_9.png" },
- { name: "SPF 50 Shield", price: "32", image: "/brandImage/product_10.png" },
- { name: "Night Recovery", price: "65", image: "/brandImage/product_11.png" }
-];
+ if (formattedProducts.length === 0) return null;
 
-
+ return (
+  <CategorySection
+   title={brand.name}
+   category={brand.category}
+   brandName={brand.name}
+   bannerImage={brand.coverImage || brand.logo || "/brandImage/brand_banner.png"}
+   products={formattedProducts}
+   priority={index === 0}
+  />
+ );
+};
 
 const Home = () => {
+ const { data: brandsData } = useGetPublicBrandsQuery();
+ const brands = brandsData?.data || [];
+
+ console.log('brands----->', brands);
+
+
  return (
   <div className="min-h-screen bg-white flex flex-col font-sans text-black">
    <Header />
@@ -54,18 +63,10 @@ const Home = () => {
 
     <DealsSection />
 
-    <CategorySection
-     title="Signature Fragrance"
-     bannerImage="/brandImage/brand_banner.png"
-     products={fragranceProducts}
-     priority={true}
-    />
-
-    <CategorySection
-     title="Advanced Skincare"
-     bannerImage="/brandImage/serene_story.png"
-     products={skincareProducts}
-    />
+    {/* Dynamic Brand Sections */}
+    {brands.map((brand: any, idx: number) => (
+     <BrandCategorySection key={brand._id} brand={brand} index={idx} />
+    ))}
 
     {/* <InquiryForm /> */}
 
@@ -75,9 +76,7 @@ const Home = () => {
 
     {/* <RegionSuppliers /> */}
 
-
    </div>
-
 
    <Footer />
   </div>

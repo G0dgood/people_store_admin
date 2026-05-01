@@ -155,6 +155,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ isOpen, onClose,
               alt={product.name || "Product Image"}
               fill
               className="object-contain p-4 transition-all duration-700 hover:scale-110"
+              sizes="(max-width: 768px) 100vw, 400px"
             />
           </div>
           
@@ -174,6 +175,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ isOpen, onClose,
                     alt={`${product.name || "Product"} thumbnail ${idx + 1}`}
                     fill
                     className="object-cover"
+                    sizes="64px"
                   />
                 </button>
               ))}

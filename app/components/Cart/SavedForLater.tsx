@@ -5,10 +5,11 @@ import { Icon } from "../Icon";
 import { Button } from "../Button";
 import Modal from "../Modal/Modal";
 import { toast } from "sonner";
-import { FavoriteButton } from "../Other";
 
 import { useCart } from "@/app/context/CartContext";
 import { useWishlist } from "@/app/context/WishlistContext";
+import { EmptyState } from "../Admin/EmptyState";
+import { HiOutlineHeart } from "react-icons/hi2";
 import { formatPrice } from "@/app/utils/formatPrice";
 
 const SavedForLater = () => {
@@ -52,17 +53,18 @@ const SavedForLater = () => {
         <div className="p-6 border-b border-gray-200">
           <h3 className="text-xl font-bold text-gray-900">Saved for later</h3>
         </div>
-        <div className="p-12 flex flex-col items-center text-center gap-2">
-          <p className="text-gray-900 font-bold">No saved items</p>
-          <p className="text-gray-500 text-sm">Items you save for later will appear here.</p>
-        </div>
+        <EmptyState
+          icon={<HiOutlineHeart size={36} />}
+          title="No Saved Items"
+          description="Pieces you admire and save for later will appear in this curated collection."
+        />
       </section>
     );
   }
 
   return (
-    <section className="bg-white overflow-hidden ">
-      <div className="p-6">
+    <section className="bg-white border border-gray-200 overflow-hidden ">
+      <div className="p-6 border-b border-gray-200">
         <h3 className="text-xl font-bold text-gray-900">Saved for later ({wishlistItems.length})</h3>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">

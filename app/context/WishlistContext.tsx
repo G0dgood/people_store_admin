@@ -24,6 +24,8 @@ export interface WishlistItem {
   category?: string;
   brand?: string;
   condition?: string;
+  stock?: number;
+  isUnlimited?: boolean;
 }
 
 interface WishlistContextType {
@@ -103,6 +105,8 @@ export const WishlistProvider = ({ children }: { children: React.ReactNode }) =>
       rating: p.ratings || 0,
       orders: p.soldCount || 0,
       shipping: "Standard Shipping", // Placeholder
+      stock: p.stock || 0,
+      isUnlimited: p.isUnlimited || false,
     }));
   }, [backendWishlistData]);
 

@@ -16,6 +16,7 @@ import { Pagination } from "@/app/components/Navigation/Pagination";
 import { QuickViewModal } from "@/app/components/Products/QuickViewModal";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
+import { useSearchParams } from "next/navigation";
 import { useGetPublicProductsQuery, useGetPublicCategoriesQuery, useGetPublicBrandsQuery } from "@/lib/redux/services/boutiqueApi";
 
 import { useFilter } from "@/app/context/FilterContext";
@@ -55,15 +56,31 @@ const ProductsPage = () => {
     };
   }, [isFilterDrawerOpen]);
 
-  const searchParams = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
-  const searchBarQuery = searchParams?.get("search")?.toLowerCase() || "";
+  const searchParams = useSearchParams();
+  const searchBarQuery = searchParams.get("search")?.toLowerCase() || "";
+
+  React.useEffect(() => {
+    const brandParam = searchParams.get("brand");
+    const categoryParam = searchParams.get("category");
+    
+    if (brandParam || categoryParam) {
+      setFilters(prev => ({
+        ...prev,
+        brand: brandParam || prev.brand,
+        category: categoryParam || prev.category
+      }));
+    }
+  }, [searchParams, setFilters]);
 
   const { data: productsResponse, isLoading: isLoadingProducts, refetch: refetchProducts } = useGetPublicProductsQuery({
     category: filters.category || undefined,
+    brand: filters.brand || undefined,
     search: searchBarQuery,
     page: currentPage,
     limit: rowsPerPage,
-    sort: sortBy
+    sort: sortBy,
+    minPrice: filters.minPrice || undefined,
+    maxPrice: filters.maxPrice || undefined
   });
 
   const { on, off } = useSocket();
@@ -290,7 +307,6 @@ const ProductsPage = () => {
                   </button>
                 </div>
               </div>
-              jnvjnk
             </motion.div>
           </>
         )}

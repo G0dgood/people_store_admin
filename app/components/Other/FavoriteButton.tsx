@@ -29,13 +29,13 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
   const { wishlistItems, addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const { isAuthenticated } = useCustomerAuth();
   const { openLogin } = useAuthModal();
-  
+
   const isFavorite = item ? isInWishlist(item.id) : false;
 
   const handleToggle = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     if (!item) return;
 
     if (!isAuthenticated) {
@@ -61,7 +61,7 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
   const baseStyles = "transition-all duration-200 flex items-center justify-center cursor-pointer";
 
   const variants = {
-    outline: "border border-gray-200 text-gray-900 hover:text-red-500 hover:border-red-500 bg-white",
+    outline: "border border-gray-300 text-gray-300 hover:text-red-500 hover:border-red-500 bg-white",
     ghost: "text-gray-400 hover:text-red-500",
     none: "",
   };

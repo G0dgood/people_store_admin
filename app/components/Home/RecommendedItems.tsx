@@ -9,6 +9,9 @@ import { useRecentlyViewed } from "@/app/context/RecentlyViewedContext";
 import { toast } from "sonner";
 import { useGetRecommendedProductsQuery } from "@/lib/redux/services/productApi";
 import { RecommendedItemsSkeleton } from "../Skeleton/RecommendedItemsSkeleton";
+import { EmptyState } from "../Admin/EmptyState";
+import { HiOutlineSparkles } from "react-icons/hi2";
+import { Icon } from "../Icon";
 
 const RecommendedItems = () => {
   const { addToCart } = useCart();
@@ -48,20 +51,35 @@ const RecommendedItems = () => {
 
   if (isLoading) return <RecommendedItemsSkeleton />;
 
-  if (items.length === 0) return null;
+  if (items.length === 0) {
+    return (
+      <section className="w-full border border-gray-200 overflow-hidden bg-white mt-8">
+        <div className="p-6 border-b border-gray-200">
+          <h3 className="text-xl font-bold text-gray-900">Recommended items</h3>
+        </div>
+        <EmptyState 
+          icon={<HiOutlineSparkles size={36} />}
+          title="No Recommendations"
+          description="We are curating a special collection of artisanal pieces just for you. Please check back soon."
+        />
+      </section>
+    );
+  }
 
   return (
-    <section className="w-full">
-      <h3 className="text-xl md:text-2xl font-bold mb-6 md:mb-8 text-gray-900">Recommended items</h3>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-5">
+    <section className="w-full border border-gray-200 overflow-hidden bg-white mt-8">
+      <div className="p-6 border-b border-gray-200">
+        <h3 className="text-xl font-bold text-gray-900">Recommended items</h3>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
         {items.map((item, idx) => (
           <div
             key={idx}
-            className="bg-white p-5 flex flex-col gap-4 border border-gray-200 hover:border-brand-gold/20 transition-all duration-300 cursor-pointer group relative"
+            className="p-6 flex flex-col gap-4 hover:bg-gray-50 transition-colors group cursor-pointer border-b border-gray-100 last:border-b-0 md:border-b-0 md:border-r last:md:border-r-0 lg:border-r border-gray-100"
           >
             <Link
               href={`/products/detail?id=${item.id}`}
-              className="flex flex-col gap-4 h-full"
+              className="flex flex-col gap-4"
               onClick={() => addToRecentlyViewed({
                 id: item.id,
                 title: item.title,
@@ -69,45 +87,54 @@ const RecommendedItems = () => {
                 image: item.image
               })}
             >
-              <div className="w-full aspect-square relative mb-2 overflow-hidden bg-gray-50/50">
+              <div className="w-full aspect-square relative bg-white border border-gray-200 flex items-center justify-center p-14 md:p-10 overflow-hidden">
                 <Image
                   src={item.image}
                   alt={item.title}
                   fill
-                  className="object-contain group-hover:scale-110 transition-transform duration-500"
-                  sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, 20vw"
+                  className="object-contain scale-75 group-hover:scale-80 transition-transform duration-300"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 25vw, 20vw"
                 />
 
                 {/* Quick View Button Overlay */}
                 <div className="absolute bottom-0 left-0 right-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-10">
                   <button
                     onClick={(e) => handleQuickView(e, item)}
-                    className="w-full py-3 bg-black/80 backdrop-blur-md text-white text-[9px] font-bold uppercase tracking-[0.2em] hover:bg-brand-gold transition-all"
+                    className="w-full py-2 bg-black/80 backdrop-blur-md text-white text-[9px] font-bold uppercase tracking-[0.2em] hover:bg-brand-gold transition-all"
                   >
                     Quick View
                   </button>
                 </div>
               </div>
-              <div className="flex flex-col gap-2">
-                <span className="font-black text-neutral-900 text-lg tracking-tight">{item.price}</span>
-                <p className="text-[13px] text-gray-500 font-medium line-clamp-2 leading-snug group-hover:text-brand-gold transition-colors">
+              
+              <div className="flex flex-col gap-1">
+                <span className="font-bold text-gray-900">{item.price}</span>
+                <p className="text-gray-500 text-sm leading-tight line-clamp-2 group-hover:text-brand-gold transition-colors font-medium">
                   {item.title}
                 </p>
               </div>
             </Link>
 
-            {/* Heart Icon Overlay */}
-            <div className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-              <FavoriteButton
+            <div className="flex flex-row gap-2 mt-auto">
+              <Button 
+                onClick={() => handleAddToCart(item)}
+                variant="secondary" 
+                size="sm" 
+                className="flex-1 font-bold hover:bg-brand-gold hover:text-white shadow-none justify-center text-[10px] h-10"
+                iconLeft={<Icon name="shopping_cart" size="xs" />}
+              >
+                Add to Cart
+              </Button>
+              <FavoriteButton 
                 item={{
                   id: item.id,
                   title: item.title,
                   price: item.price,
                   image: item.image,
                 } as any}
-                variant="ghost"
+                variant="outline"
                 size="sm"
-                className="bg-white/60 hover:bg-white backdrop-blur-sm shadow-sm"
+                className="!w-10 !h-10 border-gray-200 shrink-0"
               />
             </div>
           </div>

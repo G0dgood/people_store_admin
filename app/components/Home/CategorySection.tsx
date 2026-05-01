@@ -42,6 +42,8 @@ interface CategoryProduct {
 
 interface CategorySectionProps {
   title: string;
+  category?: string;
+  brandName?: string;
   bannerImage: string;
   products: CategoryProduct[];
   reverse?: boolean;
@@ -50,6 +52,8 @@ interface CategorySectionProps {
 
 const CategorySection: React.FC<CategorySectionProps> = ({
   title,
+  category,
+  brandName,
   bannerImage,
   products,
   reverse = false,
@@ -83,10 +87,17 @@ const CategorySection: React.FC<CategorySectionProps> = ({
         />
         <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors"></div>
         <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-10">
-          <h3 className="text-xl md:text-2xl font-outfit font-light text-white uppercase tracking-[0.2em] mb-4 drop-shadow-lg">
-            {title}
-          </h3>
-          <Link href="/products">
+          <div className="flex flex-col gap-1 mb-4">
+            {category && (
+              <span className="text-[10px] text-white/80 uppercase tracking-[0.4em] font-bold">
+                {category}
+              </span>
+            )}
+            <h3 className="text-xl md:text-2xl font-outfit font-light text-white uppercase tracking-[0.2em] drop-shadow-lg">
+              {title}
+            </h3>
+          </div>
+          <Link href={brandName ? `/products?brand=${encodeURIComponent(brandName)}` : "/products"}>
             <Button
               variant="ghost"
               className="bg-white text-black hover:bg-brand-gold hover:text-white font-bold w-fit py-2.5 px-6 h-auto text-[10px] uppercase tracking-[0.2em] border-none transition-all active:scale-95 shadow-lg"
@@ -108,7 +119,7 @@ const CategorySection: React.FC<CategorySectionProps> = ({
         {products.map((item, idx) => (
           <div key={idx} className="flex h-full relative group">
             <Link
-              href="/products/detail"
+              href={`/products/detail?id=${item.id}`}
               className="flex flex-col p-4 md:p-6 gap-3 hover:bg-gray-50 transition-all duration-500 cursor-pointer w-full h-full pb-16 border-r border-b border-gray-200"
             >
               <motion.div variants={itemVariants} className="flex flex-col gap-4 h-full">

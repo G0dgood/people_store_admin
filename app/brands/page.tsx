@@ -41,7 +41,7 @@ const BrandsPage = () => {
                <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center text-gray-200 border border-gray-100">
                   <HiShoppingBag size={40} />
                </div>
-               <h3 className="text-2xl font-bold text-[#1D3557]">No Artisanal Houses Found</h3>
+               <h3 className="text-2xl font-bold text-[#1D3557]">No Brands Found</h3>
                <p className="text-gray-400 max-w-sm">We are currently curating new collections. Please check back soon for our latest arrivals.</p>
             </div>
          );

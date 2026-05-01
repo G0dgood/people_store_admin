@@ -7,6 +7,9 @@ import { Button } from "../Button/Button";
 import { FavoriteButton } from "../Other";
 import { useCart } from "@/app/context/CartContext";
 import { toast } from "sonner";
+import { EmptyState } from "../Admin/EmptyState";
+import { HiOutlineSparkles } from "react-icons/hi2";
+import { Icon } from "../Icon";
 
 interface RecommendedProduct {
   id: string;
@@ -34,55 +37,75 @@ export const RecommendedProducts: React.FC<RecommendedProductsProps> = ({ produc
     toast.success("Added to cart");
   };
 
+  if (products.length === 0) {
+    return (
+      <div className="flex flex-col mt-8 border border-gray-200 overflow-hidden">
+        <div className="p-4 border-b border-gray-200 bg-white">
+          <h2 className="text-lg font-bold text-gray-900">You may also like</h2>
+        </div>
+        <EmptyState
+          icon={<HiOutlineSparkles size={36} />}
+          title="No Recommendations"
+          description="We are curating a special collection of artisanal pieces just for you. Please check back soon."
+        />
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col gap-4 mt-8 px-4 md:px-0 md:hidden">
-      <h2 className="text-lg font-bold text-gray-900">You may also like</h2>
-      
-      <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-none -mx-4 px-4 md:mx-0 md:px-0">
+    <div className="flex flex-col mt-8 border border-gray-200 overflow-hidden bg-white">
+      <div className="p-6 border-b border-gray-200">
+        <h3 className="text-xl font-bold text-gray-900">You may also like</h3>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
         {products.map((product) => (
-          <div 
+          <div
             key={product.id}
-            className="flex-shrink-0 w-[160px] bg-white border border-gray-200 p-3 flex flex-col gap-2 transition-all relative group cursor-pointer active:scale-[0.98]"
+            className="p-6 flex flex-col gap-4 hover:bg-gray-50 transition-colors group cursor-pointer border-b border-gray-100 last:border-b-0 md:border-b-0 md:border-r last:md:border-r-0 lg:border-r border-gray-100"
           >
-            <Link href={`/products/detail`} className="flex flex-col flex-1">
-              <div className="w-full aspect-square relative mb-1">
-                <Image 
-                  src={product.image} 
-                  alt={product.title} 
-                  fill 
-                  className="object-contain p-2 group-hover:scale-110 transition-transform duration-300"
+            <Link href={`/products/detail?id=${product.id}`} className="flex flex-col gap-4">
+              <div className="w-full aspect-square relative bg-white border border-gray-200 flex items-center justify-center p-14 md:p-10 overflow-hidden">
+                <Image
+                  src={product.image}
+                  alt={product.title}
+                  fill
+                  className="object-contain scale-75 group-hover:scale-80 transition-transform duration-300"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
+
+                {/* Quick View Button Overlay */}
+                <div className="absolute bottom-0 left-0 right-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-10">
+                  <div className="w-full py-2 bg-black/80 backdrop-blur-md text-white text-[9px] font-bold uppercase tracking-[0.2em] hover:bg-brand-gold transition-all text-center">
+                    Quick View
+                  </div>
+                </div>
               </div>
-              <div className="flex flex-col gap-1 mb-2">
-                <span className="text-sm font-bold text-gray-900">{product.price}</span>
-                <p className="text-[11px] text-gray-500 line-clamp-2 leading-relaxed group-hover:text-brand-gold transition-colors">
+
+              <div className="flex flex-col gap-1">
+                <span className="font-bold text-gray-900">{product.price}</span>
+                <p className="text-gray-500 text-sm leading-tight line-clamp-2 group-hover:text-brand-gold transition-colors font-medium">
                   {product.title}
                 </p>
               </div>
             </Link>
-            
-            <div className="flex flex-col gap-2">
-               <div className="flex gap-2 w-full">
-                <FavoriteButton 
-                  item={product as any}
-                  variant="outline"
-                  size="sm"
-                  className="!w-8 !h-8 border-gray-200 shrink-0"
-                />
-                <Link href="/products/detail" className="flex-1">
-                   <Button variant="ghost" size="sm" className="w-full text-[10px] h-8 font-bold border border-gray-200 bg-gray-50/50 hover:bg-gray-100">
-                     Details
-                   </Button>
-                </Link>
-               </div>
-               <Button 
+
+            <div className="flex flex-row gap-2 mt-auto">
+              <Button
                 onClick={(e) => handleAddToCart(e, product)}
-                variant="primary" 
-                size="sm" 
-                className="w-full text-[10px] h-8 font-bold shadow-none"
-               >
-                 Add to Cart
-               </Button>
+                variant="secondary"
+                size="sm"
+                className="flex-1 font-bold hover:bg-brand-gold hover:text-white shadow-none justify-center text-[10px] h-10"
+                iconLeft={<Icon name="shopping_cart" size="xs" />}
+              >
+                Add to Cart
+              </Button>
+              <FavoriteButton
+                item={product as any}
+                variant="outline"
+                size="sm"
+                className="!w-10 !h-10 border-gray-200 shrink-0"
+              />
             </div>
           </div>
         ))}

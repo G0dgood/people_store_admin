@@ -248,6 +248,8 @@ const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
               title: product.name,
               price: typeof product.price === 'number' ? `₦${product.price.toLocaleString()}` : product.price,
               image: product.image,
+              stock: product.stock,
+              isUnlimited: product.isUnlimited,
             } as any}
             variant="outline"
             className="!w-auto px-6 h-14 border-gray-200 flex items-center gap-3 transition-all hover:border-brand-gold hover:text-brand-gold"
