@@ -7,6 +7,7 @@ import Checkbox from "@/app/components/Checkbox";
 import { RangeSlider } from "../Form/RangeSlider";
 import { Rating } from "../Other/Rating";
 import { FilterState } from "@/app/types/products";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface FilterSectionProps {
   title: string;
@@ -211,25 +212,35 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
 
       {/* Ratings */}
       <FilterSection title="Ratings">
-        {[5, 4, 3, 2].map((val) => (
+        {[5, 4, 3, 2, 1].map((val) => (
           <div
             key={val}
-            className="flex items-center justify-between group cursor-pointer py-1"
+            className="flex items-center justify-between group cursor-pointer py-1.5"
             onClick={() => handleRatingToggle(val)}
           >
             <div className="flex items-center gap-3">
-              <div className={`w-4 h-4 border flex items-center justify-center transition-colors ${filters.rating === val ? "!bg-brand-gold !border-brand-gold" : "border-gray-200 group-hover:border-brand-gold"}`}>
+              <div className={`w-4 h-4 border flex items-center justify-center transition-all duration-300 ${filters.rating === val ? "bg-brand-gold border-brand-gold shadow-sm" : "border-gray-200 group-hover:border-brand-gold"}`}>
                 {filters.rating === val && <Icon name="check" size="xs" className="text-white" />}
               </div>
               <div className="flex items-center gap-2">
                 <Rating value={val} />
                 {val < 5 && (
-                  <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">
+                  <span className={`text-[9px] font-bold uppercase tracking-widest mt-0.5 transition-colors ${filters.rating === val ? "text-brand-gold" : "text-gray-400 group-hover:text-gray-600"}`}>
                     & Up
                   </span>
                 )}
               </div>
             </div>
+            <AnimatePresence>
+              {filters.rating === val && (
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                  className="w-1.5 h-1.5 rounded-full bg-brand-gold shadow-[0_0_8px_rgba(212,175,55,0.4)]"
+                />
+              )}
+            </AnimatePresence>
           </div>
         ))}
         <span

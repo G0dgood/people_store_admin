@@ -1,4 +1,4 @@
-"use client";
+"use client"; 
 
 import React from "react";
 import Image from "next/image";
@@ -7,19 +7,24 @@ import { StatusBadge } from "../StatusBadge";
 import { Button } from "../Button/Button";
 import { Icon } from "../Icon";
 import { RefundRequestModal } from "../Refund/RefundRequestModal";
+import { ReviewModal } from "../Modal/ReviewModal";
 
 interface OrderDetailModalProps {
   isOpen: boolean;
   onClose: () => void;
   order: any;
+  mode?: "view" | "review";
 }
 
 export const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
   isOpen,
   onClose,
   order,
+  mode = "view",
 }) => {
   const [isRefundModalOpen, setIsRefundModalOpen] = React.useState(false);
+  const [isReviewModalOpen, setIsReviewModalOpen] = React.useState(false);
+  const [selectedProduct, setSelectedProduct] = React.useState<any>(null);
 
   if (!order) return null;
 
@@ -45,8 +50,13 @@ export const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
           </div>
 
           {/* Items List */}
-          <div className="flex flex-col gap-4">
-            <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Curated Pieces</span>
+          <div className={`flex flex-col gap-4 ${mode === "review" ? "ring-2 ring-brand-gold/20 p-4 bg-brand-gold/5 rounded-2xl" : ""}`}>
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Curated Pieces</span>
+              {mode === "review" && (
+                <span className="text-[9px] font-bold text-brand-gold uppercase tracking-widest animate-pulse">Select an item to review</span>
+              )}
+            </div>
             <div className="flex flex-col gap-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
               {order.items.map((item: any, idx: number) => (
                 <div key={idx} className="flex items-center gap-4 p-3 bg-gray-50 rounded-xl border border-gray-100">
@@ -66,6 +76,18 @@ export const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
                       <span className="text-[10px] font-bold text-brand-gold uppercase">₦{item.price.toLocaleString()}</span>
                     </div>
                   </div>
+                  {order.status === "Delivered" && (
+                    <button
+                      onClick={() => {
+                        setSelectedProduct(item.product);
+                        setIsReviewModalOpen(true);
+                      }}
+                      className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-[9px] font-black uppercase tracking-widest text-gray-900 hover:border-brand-gold hover:text-brand-gold transition-all shadow-sm active:scale-95"
+                    >
+                      <Icon name="star" size="xs" />
+                      Review
+                    </button>
+                  )}
                 </div>
               ))}
             </div>
@@ -125,6 +147,15 @@ export const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
         onClose={() => setIsRefundModalOpen(false)}
         initialOrder={order}
       />
+
+      {selectedProduct && (
+        <ReviewModal
+          isOpen={isReviewModalOpen}
+          onClose={() => setIsReviewModalOpen(false)}
+          productId={selectedProduct._id}
+          productName={selectedProduct.name}
+        />
+      )}
     </>
   );
 };

@@ -24,6 +24,7 @@ import { DEFAULT_FILTERS } from "@/app/types/products";
 import { ViewMode } from "../types/products";
 import { useSocket } from "@/app/context/SocketContext";
 import { toast } from "sonner";
+import { useApiError } from "@/app/hooks/useApiError";
 
 const ProductsPage = () => {
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
@@ -38,11 +39,13 @@ const ProductsPage = () => {
   };
   const [rowsPerPage, setRowsPerPage] = useState(12);
 
-  const { data: categoriesResponse, isLoading: isLoadingCategories } = useGetPublicCategoriesQuery();
+  const { data: categoriesResponse, isLoading: isLoadingCategories, isError: isErrorCategories, error: errorCategories } = useGetPublicCategoriesQuery();
   const categories = categoriesResponse?.data || [];
+  useApiError(isErrorCategories, errorCategories, "Failed to load categories");
 
-  const { data: brandsResponse, isLoading: isLoadingBrands } = useGetPublicBrandsQuery();
+  const { data: brandsResponse, isLoading: isLoadingBrands, isError: isErrorBrands, error: errorBrands } = useGetPublicBrandsQuery();
   const brands = brandsResponse?.data || [];
+  useApiError(isErrorBrands, errorBrands, "Failed to load brands");
 
   // Lock body scroll when mobile filter drawer is open
   React.useEffect(() => {
@@ -72,7 +75,7 @@ const ProductsPage = () => {
     }
   }, [searchParams, setFilters]);
 
-  const { data: productsResponse, isLoading: isLoadingProducts, refetch: refetchProducts } = useGetPublicProductsQuery({
+  const { data: productsResponse, isLoading: isLoadingProducts, isError: isErrorProducts, error: errorProducts, refetch: refetchProducts } = useGetPublicProductsQuery({
     category: filters.category || undefined,
     brand: filters.brand || undefined,
     search: searchBarQuery,
@@ -80,8 +83,10 @@ const ProductsPage = () => {
     limit: rowsPerPage,
     sort: sortBy,
     minPrice: filters.minPrice || undefined,
-    maxPrice: filters.maxPrice || undefined
+    maxPrice: filters.maxPrice || undefined,
+    rating: filters.rating || undefined
   });
+  useApiError(isErrorProducts, errorProducts, "Failed to load products");
 
   const { on, off } = useSocket();
 

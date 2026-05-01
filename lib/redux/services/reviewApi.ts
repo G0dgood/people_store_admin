@@ -69,5 +69,5 @@ export const {
     useUpdateReviewStatusMutation,
     useReplyToReviewMutation,
     useDeleteReviewMutation,
-    useBulkReviewActionMutation
+    useBulkReviewActionMutation,
 } = reviewApi;

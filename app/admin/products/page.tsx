@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Icon } from "../../components/Icon";
 import { Button } from "../../components/Button";
-import { SearchInput } from "../../components/Form/SpecialInputs";
 import { TabFilter } from "../../components/Admin/TabFilter";
 import { Pagination } from "../../components/Admin/Pagination";
 import { RowsPerPage } from "@/app/components/rows-per-page";
@@ -180,7 +179,7 @@ export default function ProductListing() {
   return (
     <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-2">
-        <div className="bg-white p-6 rounded-[6px] border border-gray-100 shadow-sm flex items-center justify-between">
+        <div className="bg-white p-6 rounded-[6px] border border-gray-200 flex items-center justify-between">
           <div className="flex flex-col gap-1">
             <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Products</span>
             <span className="text-2xl font-black text-[#1D3557]">{products.length}</span>
@@ -189,7 +188,7 @@ export default function ProductListing() {
             <LuPackageSearch size={24} />
           </div>
         </div>
-        <div className="bg-white p-6 rounded-[6px] border border-gray-100 shadow-sm flex items-center justify-between">
+        <div className="bg-white p-6 rounded-[6px] border border-gray-200 flex items-center justify-between">
           <div className="flex flex-col gap-1">
             <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Live Products</span>
             <span className="text-2xl font-black text-emerald-600">{products.filter(p => p.status === "Published").length}</span>
@@ -198,7 +197,7 @@ export default function ProductListing() {
             <LuZap size={24} />
           </div>
         </div>
-        <div className="bg-white p-6 rounded-[6px] border border-gray-100 shadow-sm flex items-center justify-between">
+        <div className="bg-white p-6 rounded-[6px] border border-gray-200 flex items-center justify-between">
           <div className="flex flex-col gap-1">
             <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Drafts</span>
             <span className="text-2xl font-black text-amber-600">{products.filter(p => p.status === "Draft").length}</span>
@@ -226,7 +225,6 @@ export default function ProductListing() {
             <Link href="/admin/products/new">
               <Button shape="rounded-sm" variant="primary"
                 iconLeft={<Icon name="circle-plus" folder="dashboardIcon" size="sm" />}
-                className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold"
               >
                 Add New Product
               </Button>

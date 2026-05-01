@@ -8,10 +8,11 @@ import { HeroUserCard } from "@/app/components/Home/HeroUserCard";
 import { DealsSection } from "@/app/components/Home/DealsSection";
 import { CategorySection } from "@/app/components/Home/CategorySection";
 import { InquiryForm } from "@/app/components/Home/InquiryForm";
-import { ExtraServices } from "@/app/components/Home/ExtraServices";
+import { ArtisanalCollections } from "@/app/components/Home/ArtisanalCollections";
 import { RegionSuppliers } from "@/app/components/Home/RegionSuppliers";
 import RecommendedItems from "./components/Home/RecommendedItems";
 import { useGetPublicBrandsQuery, useGetPublicProductsQuery } from "@/lib/redux/services/boutiqueApi";
+import { CategorySectionSkeleton } from "./components/Skeleton/CategorySectionSkeleton";
 
 const BrandCategorySection = ({ brand, index }: { brand: any, index: number }) => {
  const { data: productsData } = useGetPublicProductsQuery({
@@ -41,10 +42,8 @@ const BrandCategorySection = ({ brand, index }: { brand: any, index: number }) =
 };
 
 const Home = () => {
- const { data: brandsData } = useGetPublicBrandsQuery();
+ const { data: brandsData, isLoading: isLoadingBrands } = useGetPublicBrandsQuery();
  const brands = brandsData?.data || [];
-
- console.log('brands----->', brands);
 
 
  return (
@@ -63,16 +62,28 @@ const Home = () => {
 
     <DealsSection />
 
-    {/* Dynamic Brand Sections */}
-    {brands.map((brand: any, idx: number) => (
-     <BrandCategorySection key={brand._id} brand={brand} index={idx} />
-    ))}
+    <div>
+     {/* Dynamic Brand Sections */}
+     {isLoadingBrands ? (
+      <>
+       <CategorySectionSkeleton />
+       <CategorySectionSkeleton />
+       <CategorySectionSkeleton />
+      </>
+     ) : (
+      brands?.map((brand: any, idx: number) => (
+       <BrandCategorySection key={brand._id} brand={brand} index={idx} />
+      ))
+     )}
+
+    </div>
+
 
     {/* <InquiryForm /> */}
 
     <RecommendedItems />
 
-    {/* <ExtraServices /> */}
+    <ArtisanalCollections />
 
     {/* <RegionSuppliers /> */}
 

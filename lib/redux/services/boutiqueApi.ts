@@ -7,6 +7,7 @@ import { Coupon } from './couponApi';
 import { AdvertConfig } from './advertApi';
 import { DealRecord } from './dealApi';
 import { FAQItem } from './faqApi';
+import { ReviewRecord } from './reviewApi';
 
 export const boutiqueApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -63,6 +64,22 @@ export const boutiqueApi = baseApi.injectEndpoints({
       query: () => '/faqs',
       providesTags: ['FAQ'],
     }),
+    getPublicReviewsByProduct: builder.query<ApiResponse<ReviewRecord[]>, string>({
+      query: (productId) => `/reviews/product/${productId}`,
+      providesTags: (result) => 
+          result ? [
+              ...result.data.map(({ _id }) => ({ type: 'Review' as const, id: _id })),
+              { type: 'Review', id: 'LIST' }
+          ] : [{ type: 'Review', id: 'LIST' }],
+    }),
+    submitReview: builder.mutation<ApiResponse<ReviewRecord>, FormData>({
+      query: (formData) => ({
+          url: '/reviews',
+          method: 'POST',
+          body: formData
+      }),
+      invalidatesTags: [{ type: 'Review', id: 'LIST' }],
+    }),
   }),
   overrideExisting: true,
 });
@@ -80,4 +97,6 @@ export const {
   useGetPublicDealsQuery,
   useGetPublicTimerQuery,
   useGetPublicFaqsQuery,
+  useGetPublicReviewsByProductQuery,
+  useSubmitReviewMutation
 } = boutiqueApi;

@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { io } from "socket.io-client";
 import { Icon } from "../../components/Icon";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Form/Inputs";
@@ -29,9 +30,9 @@ import { Tooltip } from "../../components/Tooltip";
 import { HiArrowPath } from "react-icons/hi2";
 
 const statusStyles = {
-  Published: "text-blue-500 bg-brand-gold-light",
-  Pending: "text-amber-500 bg-amber-50/50",
-  Spam: "text-rose-500 bg-rose-50/50",
+  Published: "text-emerald-600 bg-emerald-50",
+  Pending: "text-amber-600 bg-amber-50",
+  Spam: "text-rose-600 bg-rose-50",
 };
 
 export default function ReviewListing() {
@@ -51,6 +52,28 @@ export default function ReviewListing() {
   const [updateReviewStatus] = useUpdateReviewStatusMutation();
   const [deleteReview] = useDeleteReviewMutation();
   const [bulkAction] = useBulkReviewActionMutation();
+ 
+  useEffect(() => {
+    const socket = io(process.env.NEXT_PUBLIC_API_URL, {
+        withCredentials: true,
+        transports: ['websocket']
+    });
+
+    socket.on("new-review", (newReview) => {
+        toast.info(`New review from ${newReview.customer?.fullName || 'a customer'}!`, {
+            description: `Product: ${newReview.product?.name}`,
+            action: {
+                label: "Refresh",
+                onClick: () => refetch()
+            }
+        });
+        refetch();
+    });
+
+    return () => {
+        socket.disconnect();
+    };
+  }, [refetch]);
 
   const reviewsData = response?.data?.reviews || [];
   const pagination = response?.data?.pagination;
@@ -226,7 +249,7 @@ export default function ReviewListing() {
                   <td>
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-[6px] border border-gray-200 overflow-hidden bg-white p-1 shadow-sm">
-                        <img src={review.product?.mainImage} alt={review.product?.name} className="w-full h-full object-contain" />
+                        <img src={review.product?.productImage} alt={review.product?.name} className="w-full h-full object-contain" />
                       </div>
                       <span className="text-xs font-bold text-gray-500 max-w-[120px] truncate">{review.product?.name}</span>
                     </div>

@@ -226,7 +226,7 @@ export default function CategoriesPage() {
          <tr key={idx} className="group">
           <td className="pl-6">
            <Checkbox
-            checked={selectedIds.includes(c._id)}
+            checked={selectedIds?.includes(c._id)}
             onChange={() => toggleItem(c._id)}
            />
           </td>

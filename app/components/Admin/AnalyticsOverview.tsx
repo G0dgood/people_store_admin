@@ -26,7 +26,7 @@ export const AnalyticsOverview: React.FC = () => {
   const productStats = productStatsResponse?.data;
   const revenueHistory = revenueHistoryResponse?.data || [];
 
-  // ... (handleClickOutside effect) ...
+
 
   const stats = [
     {

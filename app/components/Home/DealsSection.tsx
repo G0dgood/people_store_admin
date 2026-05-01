@@ -122,7 +122,7 @@ const DealsSection = () => {
   }
 
   return (
-    <section className="w-full bg-white flex flex-col md:flex-row overflow-hidden rounded-md border border-gray-200">
+    <section className="w-full bg-white flex flex-col md:flex-row overflow-hidden border border-gray-200">
       <div className="w-full md:w-80 p-8 border-b md:border-b-0 md:border-r border-gray-200 flex md:flex-col justify-between md:justify-center items-center md:items-start gap-6 bg-gray-50/50">
         <div className="flex flex-col gap-1">
           <h3 className="text-xl md:text-2xl font-outfit font-bold text-gray-900 uppercase tracking-wider">Limited <span className="text-brand-gold">Offers</span></h3>
@@ -176,7 +176,7 @@ const DealsSection = () => {
             {/* Hover Actions */}
             <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 pointer-events-none z-10">
               <div className="flex gap-2 pointer-events-auto">
-                <FavoriteButton 
+                <FavoriteButton
                   item={{
                     id: prod.product?._id || prod.id,
                     title: prod.product?.name || prod.name,

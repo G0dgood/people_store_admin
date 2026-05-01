@@ -8,10 +8,13 @@ import { toast } from "sonner";
 import { Icon } from "../Icon";
 
 import { useGetPublicRecommendedProductsQuery } from "@/lib/redux/services/boutiqueApi";
+import { useApiError } from "@/app/hooks/useApiError";
 
 const YouMayLike = () => {
   const { addToCart } = useCart();
-  const { data: recommendedResponse, isLoading } = useGetPublicRecommendedProductsQuery();
+  const { data: recommendedResponse, isLoading, isError, error } = useGetPublicRecommendedProductsQuery();
+
+  useApiError(isError, error, "Failed to load recommendations");
 
   const items = (recommendedResponse?.data || []).slice(0, 5).map(p => ({
     id: p._id,

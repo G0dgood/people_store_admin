@@ -15,18 +15,21 @@ import { RelatedProducts } from "@/app/components/Products/RelatedProducts";
 import { useSearchParams } from "next/navigation";
 import { useGetPublicProductByIdQuery, useGetPublicRelatedProductsQuery } from "@/lib/redux/services/boutiqueApi";
 import { ProductDetailSkeleton } from "@/app/components/Skeleton/ProductDetailSkeleton";
+import { useApiError } from "@/app/hooks/useApiError";
 
 function ProductDetailContent() {
    const searchParams = useSearchParams();
    const id = searchParams.get("id");
 
-   const { data: productResponse, isLoading } = useGetPublicProductByIdQuery(id || "", {
+   const { data: productResponse, isLoading, isError: isErrorProduct, error: errorProduct } = useGetPublicProductByIdQuery(id || "", {
       skip: !id
    });
+   useApiError(isErrorProduct, errorProduct, "Failed to load product details");
 
-   const { data: relatedResponse, isLoading: isLoadingRelated } = useGetPublicRelatedProductsQuery(id || "", {
+   const { data: relatedResponse, isLoading: isLoadingRelated, isError: isErrorRelated, error: errorRelated } = useGetPublicRelatedProductsQuery(id || "", {
       skip: !id
    });
+   useApiError(isErrorRelated, errorRelated, "Failed to load related products");
 
    const product = productResponse?.data;
    const relatedProducts = (relatedResponse?.data || []).map(p => ({
