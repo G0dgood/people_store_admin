@@ -5,7 +5,6 @@ import { Icon } from "../Icon";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCart } from "@/app/context/CartContext";
 import { useCustomerAuth } from "../../context/CustomerAuthContext";
-import { useMobileMenu } from "../../context/MobileMenuContext";
 import Link from "next/link";
 
 interface ProductMobileHeaderProps {
@@ -17,7 +16,6 @@ export const ProductMobileHeader: React.FC<ProductMobileHeaderProps> = ({ title 
   const searchParams = useSearchParams();
   const { cartItems } = useCart();
   const { isAuthenticated, customer } = useCustomerAuth();
-  const { setIsCartOpen } = useMobileMenu();
   
   const [searchValue, setSearchValue] = useState(searchParams.get("search") || "");
 
@@ -46,8 +44,8 @@ export const ProductMobileHeader: React.FC<ProductMobileHeaderProps> = ({ title 
           </h1>
         </div>
         <div className="flex items-center gap-4">
-          <button 
-            onClick={() => setIsCartOpen(true)}
+          <Link 
+            href="/cart"
             className="p-1 hover:bg-gray-100 transition-colors relative"
           >
             <Icon name="shopping_cart" size="md" />
@@ -56,7 +54,7 @@ export const ProductMobileHeader: React.FC<ProductMobileHeaderProps> = ({ title 
                 {cartCount}
               </span>
             )}
-          </button>
+          </Link>
           <Link 
             href={isAuthenticated ? "/profile" : "/login"}
             className="p-1 hover:bg-gray-100 transition-colors"
