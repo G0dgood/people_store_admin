@@ -8,7 +8,7 @@ import { WishlistProvider } from "./context/WishlistContext";
 import { MobileMenuSidebar } from "./components/Mobile/MobileMenuSidebar";
 import { PageWrapper } from "./components/Mobile/PageWrapper";
 import { AuthModal } from "./components/Modal/AuthModal";
-import { Toaster } from "sonner";
+import { DynamicToaster } from "./components/ui/DynamicToaster";
 import { SocketProvider } from "@/app/context/SocketContext";
 import { SocketNotificationListener } from "./components/SocketNotificationListener";
 import OfflineBanner from "@/app/components/ui/OfflineBanner";
@@ -72,7 +72,7 @@ export default function RootLayout({
     >
       <body className="min-h-full font-inter">
         <Script src="https://js.paystack.co/v1/inline.js" strategy="afterInteractive" />
-        <Toaster richColors closeButton position="bottom-right" />
+        <DynamicToaster />
         <StoreProvider>
           <AdminSessionProvider>
             <CustomerSessionProvider>
