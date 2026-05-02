@@ -120,7 +120,7 @@ export default function AdminDashboard() {
     {/* Sidebar Analytics */}
     <div className="xl:col-span-4 flex flex-col gap-6">
      {/* Realtime Users */}
-     <RealtimeUsers onViewInsight={() => setActiveInsightSection(null)} />
+     <RealtimeUsers onViewInsight={() => setActiveInsightSection('funnel')} />
 
      {/* Top Products */}
      <TopProducts onViewAll={() => router.push("/admin/products")} />
