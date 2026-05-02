@@ -9,6 +9,8 @@ import { OrderDeliveredModal } from "./Modal/OrderDeliveredModal";
 import { useDispatch } from "react-redux";
 import { Icon } from "./Icon";
 import { roleApi } from "@/lib/redux/services/roleApi";
+import { cartApi } from "@/lib/redux/services/cartApi";
+import { getIsNavigating } from "../utils/navigationState";
 
 export const SocketNotificationListener = () => {
   const { on, off, isConnected } = useSocket();
@@ -99,16 +101,31 @@ export const SocketNotificationListener = () => {
       }
     };
 
+    const handleCartUpdated = (data: any) => {
+      console.log("🚀 Cart Updated via Socket:", data);
+      
+      // Invalidate cart tags to trigger a re-fetch on this device
+      dispatch(cartApi.util.invalidateTags(["Cart"]));
+      
+      // Optional: show a small notification if it's a significant change
+      if (data.message && !getIsNavigating()) {
+        // We might want to be careful not to show too many toasts
+        // toastInfo("Cart Synced", { description: data.message });
+      }
+    };
+
     on("permissions_updated", handlePermissionsUpdated);
     on("newCustomer", handleNewCustomer);
     on("refund:update", handleRefundUpdate);
     on("orderStatusChanged", handleOrderStatusChanged);
+    on("cart_updated", handleCartUpdated);
 
     return () => {
       off("permissions_updated", handlePermissionsUpdated);
       off("newCustomer", handleNewCustomer);
       off("refund:update", handleRefundUpdate);
       off("orderStatusChanged", handleOrderStatusChanged);
+      off("cart_updated", handleCartUpdated);
     };
   }, [isConnected, on, off, dispatch]);
 

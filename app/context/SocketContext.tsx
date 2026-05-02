@@ -5,6 +5,8 @@ import { io, Socket } from 'socket.io-client';
 import { toastSuccess, toastInfo } from '@/app/utils/toastWithSound';
 import { getIsNavigating } from '@/app/utils/navigationState';
 import { shouldPlaySound, getComponentSoundType, loadSoundPreferences, type SoundPreferences, type SoundType } from '@/app/utils/soundPreferences';
+import { useAppSelector } from '@/lib/redux/hooks';
+import { selectCurrentUser } from '@/lib/redux/features/authSlice';
 
 // Socket connection status
 export type SocketStatus = 'connecting' | 'connected' | 'disconnected' | 'error' | 'reconnecting' | 'offline';
@@ -309,6 +311,15 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children, config
 			disconnect();
 		};
 	}, [autoConnect, connect, disconnect]);
+
+	const currentUser = useAppSelector(selectCurrentUser);
+
+	// Join private room when user is logged in
+	useEffect(() => {
+		if (socket && status === 'connected' && currentUser?._id) {
+			socket.emit('join', currentUser._id);
+		}
+	}, [socket, status, currentUser]);
 
 	const contextValue: SocketContextType = {
 		status,
