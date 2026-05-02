@@ -218,24 +218,6 @@ const ListingControlBar: React.FC<ListingControlBarProps> = ({
 
       {/* Mobile Bar */}
       <div className="flex md:hidden flex-col gap-4 md:px-4 px-0">
-        <div className="relative group">
-          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <Icon 
-              name="search" 
-              size="xs" 
-              className={`transition-colors ${filters.search ? "text-brand-gold" : "text-gray-300"}`} 
-            />
-          </div>
-          <input
-            type="text"
-            value={filters.search || ""}
-            onChange={(e) => onFiltersChange({ ...filters, search: e.target.value })}
-            placeholder="Search products..."
-            className={`w-full h-12 pl-10 pr-4 text-[10px] font-bold uppercase tracking-[0.2em] text-gray-900 placeholder:text-gray-400 focus:bg-white focus:border-brand-gold outline-none transition-all ${
-              filters.search ? "border-brand-gold bg-white" : "border-gray-200 bg-gray-50"
-            }`}
-          />
-        </div>
 
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
