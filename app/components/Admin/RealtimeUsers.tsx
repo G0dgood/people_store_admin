@@ -21,7 +21,7 @@ export const RealtimeUsers: React.FC<RealtimeUsersProps> = ({ onViewInsight }) =
   const totalOrders = statsResponse?.data?.totalOrders || 0;
   const { socket } = useSocket();
 
-  console.log("statsResponse---->", statsResponse)
+
 
   // Socket listener for real-time updates
   useEffect(() => {
@@ -131,19 +131,19 @@ export const RealtimeUsers: React.FC<RealtimeUsersProps> = ({ onViewInsight }) =
                     label="Force Refresh"
                     subtext="Manual data pull"
                     icon={<HiArrowPath />}
-                    onSelect={() => { console.log("Refresh"); setIsDropdownOpen(false); }}
+                    onSelect={() => { setIsDropdownOpen(false); }}
                   />
                   <DropdownItem
                     label="Mute Live Feed"
                     subtext="Stop realtime updates"
                     icon={<HiPower />}
-                    onSelect={() => { console.log("Mute"); setIsDropdownOpen(false); }}
+                    onSelect={() => { setIsDropdownOpen(false); }}
                   />
                   <DropdownItem
                     label="Alert Config"
                     subtext="Set user spike thresholds"
                     icon={<HiBell />}
-                    onSelect={() => { console.log("Alerts"); setIsDropdownOpen(false); }}
+                    onSelect={() => { setIsDropdownOpen(false); }}
                   />
                 </DropdownMenu>
               </motion.div>

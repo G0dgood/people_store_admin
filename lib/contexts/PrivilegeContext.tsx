@@ -12,10 +12,10 @@ import {
   selectIsAdmin,
   selectIsSuperAdmin,
 } from "@/lib/redux/features/privilegeSlice";
-import { 
-  useGetRolePrivilegesQuery, 
-  RoleModulePermission, 
-  UserRole 
+import {
+  useGetRolePrivilegesQuery,
+  RoleModulePermission,
+  UserRole
 } from "@/lib/redux/services/roleApi";
 import { selectCurrentUser } from "@/lib/redux/features/authSlice";
 import { toast } from "sonner";
@@ -27,7 +27,7 @@ import { logOut as logOutAuth } from "@/lib/redux/features/authSlice";
 
 export type PermissionAction = "view" | "create" | "edit" | "delete";
 
-export type ModuleId = 
+export type ModuleId =
   | "dashboard" | "support" | "faq" | "notifications" | "settings"
   | "orders" | "transactions" | "refunds" | "products" | "media" | "products/media"
   | "categories" | "brands" | "reviews" | "marketing" | "deals"
@@ -60,11 +60,11 @@ export const PrivilegeProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   // 1. Fetch all roles to find the ID for the current user's role name
   const { data: allRoles = [], isLoading: isRolesLoading } = useGetRolesQuery();
-  
+
   // 2. Find the roleId for the user's current role string
   // Smart matching: lowercase, remove spaces and underscores
   const normalize = (s: string) => s?.toLowerCase().replace(/[\s_]/g, "") || "";
-  
+
   const currentRole = allRoles.find(r => normalize(r.name) === normalize(user?.role));
   const roleId = currentRole?._id;
 
@@ -106,12 +106,12 @@ export const PrivilegeProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   useEffect(() => {
     const handlePermissionsUpdate = (data: { roleId: string, adminId?: string, description?: string }) => {
-      console.log("🔔 Permissions update received via socket:", data);
-      
+
+
       // If the updated role is the current user's role, refresh their privileges
       if (data.roleId === roleId) {
         refetchPrivileges();
-        
+
         // Don't show toast to the admin who just saved the changes
         if (data.adminId !== user?._id) {
           toast.info("Access permissions updated", {
@@ -119,23 +119,22 @@ export const PrivilegeProvider: React.FC<{ children: React.ReactNode }> = ({ chi
           });
         }
       }
-      
+
       // Always refresh the roles list to keep state consistent across the UI
       refetchRoles();
     };
 
     const handleForceLogout = (data: { userId: string, reason?: string }) => {
-      console.log("⚠️ Force logout received via socket:", data);
       if (data.userId === user?._id) {
         // Clear everything
         dispatch(logOutAuth());
         dispatch(clearReduxPrivileges());
         localStorage.removeItem("userPrivileges");
-        
+
         toast.error("Session Terminated", {
           description: data.reason || "Your administrative access has been revoked or locked by a superior administrator."
         });
-        
+
         router.push("/admin/login");
       }
     };

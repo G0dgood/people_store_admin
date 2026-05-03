@@ -506,7 +506,6 @@ export default function ProductListing() {
         isOpen={isArchiveConfirmOpen}
         onClose={() => setIsArchiveConfirmOpen(false)}
         onConfirm={() => {
-          console.log("Archiving out-of-stock products...");
           setIsArchiveConfirmOpen(false);
         }}
         title="Archive Out of Stock"

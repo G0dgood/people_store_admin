@@ -5,11 +5,8 @@ import { Icon } from "../Icon";
 import { Button } from "../Button";
 import Modal from "../Modal/Modal";
 import { toast } from "sonner";
-
 import { useCart } from "@/app/context/CartContext";
 import { useWishlist } from "@/app/context/WishlistContext";
-import { EmptyState } from "../Admin/EmptyState";
-import { HiOutlineHeart } from "react-icons/hi2";
 import { formatPrice } from "@/app/utils/formatPrice";
 
 const SavedForLater = () => {

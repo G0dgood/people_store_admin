@@ -74,7 +74,7 @@ export function SupportChatDrawer({ isOpen, onClose, ticketId }: SupportChatDraw
    const eventName = `ticket:${ticketId}`;
 
    const handleUpdate = (updatedTicket: any) => {
-    console.log("Socket update received:", updatedTicket);
+
     (dispatch as any)(
      ticketApi.util.updateQueryData('getTicketById', ticketId, (draft: any) => {
       if (draft.data) {

@@ -32,7 +32,7 @@ export function CategoriesMoreActionsDrawer({
       description: "Download the complete category hierarchy as a CSV or Excel file.",
       icon: "cloud_download",
       folder: "icon",
-      onClick: () => console.log("Exporting categories..."),
+      onClick: () => {},
     },
     {
       id: "clean-empty",
@@ -52,7 +52,7 @@ export function CategoriesMoreActionsDrawer({
       description: "Enable a drag-and-drop interface to change the display sequence.",
       icon: "sort",
       folder: "icon",
-      onClick: () => console.log("Opening bulk reorder interface..."),
+      onClick: () => {},
     },
     {
       id: "tax-rules",
@@ -60,7 +60,7 @@ export function CategoriesMoreActionsDrawer({
       description: "Apply a global tax or shipping rule to all selected categories.",
       icon: "verified_user",
       folder: "icon",
-      onClick: () => console.log("Assigning tax rules..."),
+      onClick: () => {},
     },
   ];
 

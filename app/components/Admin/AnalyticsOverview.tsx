@@ -75,19 +75,19 @@ export const AnalyticsOverview: React.FC = () => {
                     label="Print Detailed Report"
                     subtext="Generate printer-friendly PDF"
                     icon={<HiPrinter />}
-                    onSelect={() => { console.log("Print"); setIsDropdownOpen(false); }}
+                    onSelect={() => { setIsDropdownOpen(false); }}
                   />
                   <DropdownItem
                     label="Export as Image"
                     subtext="Download chart as PNG"
                     icon={<HiPhoto />}
-                    onSelect={() => { console.log("Export Image"); setIsDropdownOpen(false); }}
+                    onSelect={() => { setIsDropdownOpen(false); }}
                   />
                   <DropdownItem
                     label="Report Settings"
                     subtext="Adjust data visualization"
                     icon={<HiCog6Tooth />}
-                    onSelect={() => { console.log("Settings"); setIsDropdownOpen(false); }}
+                    onSelect={() => { setIsDropdownOpen(false); }}
                   />
                 </DropdownMenu>
               </div>

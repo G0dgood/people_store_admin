@@ -143,10 +143,7 @@ const ProductReviews = ({ product }: { product: any }) => {
     skip: !product?._id
   });
   const reviews = reviewsResponse?.data || [];
-
-  console.log("DEBUG: Product ID:", product?._id);
-  console.log("DEBUG: Reviews Response:", reviewsResponse);
-  console.log("DEBUG: Reviews List:", reviews);
+ 
 
   useApiError(isError, error, "Failed to load reviews");
 

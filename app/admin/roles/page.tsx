@@ -287,7 +287,6 @@ export default function RolesManagement() {
     isOpen={isSyncConfirmOpen}
     onClose={() => setIsSyncConfirmOpen(false)}
     onConfirm={() => {
-     console.log("Global sync initiated...");
      setIsSyncConfirmOpen(false);
      toast.success("Governance Synchronized", {
       description: "Role policies have been forced across all server instances."

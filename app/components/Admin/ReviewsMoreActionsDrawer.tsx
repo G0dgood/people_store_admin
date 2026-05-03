@@ -60,7 +60,7 @@ export function ReviewsMoreActionsDrawer({
       description: "Run an AI-powered sentiment analysis across the latest 100 reviews.",
       icon: "description",
       folder: "icon",
-      onClick: () => console.log("Running sentiment analysis..."),
+      onClick: () => {},
     },
   ];
 

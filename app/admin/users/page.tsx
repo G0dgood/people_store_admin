@@ -352,7 +352,6 @@ export default function UsersManagement() {
       icon: "cloud_download",
       folder: "icon",
       onClick: () => {
-       console.log("Exporting selected staff data...");
        setSelectedIds([]);
       },
      },

@@ -18,7 +18,7 @@ export function BrandsMoreActionsDrawer({ isOpen, onClose, onDeactivateInactive 
       description: "Download the complete brand database as a CSV or PDF file.",
       icon: "cloud_download",
       folder: "icon",
-      onClick: () => console.log("Exporting brands..."),
+      onClick: () => {},
     },
     {
       id: "deactivate",
@@ -38,7 +38,7 @@ export function BrandsMoreActionsDrawer({ isOpen, onClose, onDeactivateInactive 
       description: "Move multiple selected brands to a different product category.",
       icon: "move_to_inbox",
       folder: "icon",
-      onClick: () => console.log("Opening batch category update..."),
+      onClick: () => {},
     },
     {
       id: "global-settings",
@@ -46,7 +46,7 @@ export function BrandsMoreActionsDrawer({ isOpen, onClose, onDeactivateInactive 
       description: "Configure default rating visibility and storefront priority rules.",
       icon: "tune",
       folder: "icon",
-      onClick: () => console.log("Opening global brand settings..."),
+      onClick: () => {},
     },
   ];
 

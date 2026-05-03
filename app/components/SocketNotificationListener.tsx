@@ -23,7 +23,6 @@ export const SocketNotificationListener = () => {
     if (!isConnected) return;
 
     const handlePermissionsUpdated = (data: any) => {
-      console.log("🚀 Permissions Updated Signal:", data);
 
       // Force refresh the role privileges globally
       if (data.roleId) {
@@ -44,7 +43,6 @@ export const SocketNotificationListener = () => {
     };
 
     const handleNewCustomer = (data: any) => {
-      console.log("🚀 New Customer Registered:", data);
 
       toast.success("New Member Joined!", {
         description: `${data.name} just created an account.`,
@@ -58,7 +56,6 @@ export const SocketNotificationListener = () => {
     };
 
     const handleRefundUpdate = (data: any) => {
-      console.log("🚀 Refund Update Received:", data);
 
       const isNew = data.status === "Pending";
 
@@ -101,12 +98,11 @@ export const SocketNotificationListener = () => {
       }
     };
 
-    const handleCartUpdated = (data: any) => {
-      console.log("🚀 Cart Updated via Socket:", data);
-      
+    const handleCartUpdated = (data: any) => { 
+
       // Invalidate cart tags to trigger a re-fetch on this device
       dispatch(cartApi.util.invalidateTags(["Cart"]));
-      
+
       // Optional: show a small notification if it's a significant change
       if (data.message && !getIsNavigating()) {
         // We might want to be careful not to show too many toasts

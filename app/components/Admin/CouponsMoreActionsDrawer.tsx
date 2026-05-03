@@ -18,7 +18,7 @@ export function CouponsMoreActionsDrawer({ isOpen, onClose, onDeleteExpired }: C
       description: "Download all coupon data as a CSV or Excel file.",
       icon: "cloud_download",
       folder: "icon",
-      onClick: () => console.log("Exporting coupons..."),
+      onClick: () => {},
     },
     {
       id: "delete-expired",
@@ -38,7 +38,7 @@ export function CouponsMoreActionsDrawer({ isOpen, onClose, onDeleteExpired }: C
       description: "Set all currently active coupons to 'Inactive' status.",
       icon: "menu-close",
       folder: "dashboardIcon",
-      onClick: () => console.log("Bulk deactivating coupons..."),
+      onClick: () => {},
     },
     {
       id: "generate-qr",
@@ -46,7 +46,7 @@ export function CouponsMoreActionsDrawer({ isOpen, onClose, onDeleteExpired }: C
       description: "Create printable QR codes for all active marketing coupons.",
       icon: "Frame",
       folder: "dashboardIcon",
-      onClick: () => console.log("Generating QR codes..."),
+      onClick: () => {},
     },
   ];
 

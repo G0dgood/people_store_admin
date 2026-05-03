@@ -77,7 +77,7 @@ export function OrdersMoreActionsDrawer({ isOpen, onClose, onBulkPrint }: Orders
                   onBulkPrint();
                   onClose();
                 } else {
-                  console.log(`Triggering ${action.title}`);
+                  
                   onClose();
                 }
               }}
@@ -113,7 +113,7 @@ export function OrdersMoreActionsDrawer({ isOpen, onClose, onBulkPrint }: Orders
         isOpen={isDeleteConfirmOpen}
         onClose={() => setIsDeleteConfirmOpen(false)}
         onConfirm={() => {
-          console.log("Bulk deleting cancelled orders...");
+          
           setIsDeleteConfirmOpen(false);
           onClose();
         }}

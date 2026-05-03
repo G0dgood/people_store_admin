@@ -51,7 +51,7 @@ export default function SupportPage() {
 
   useEffect(() => {
     const handleTicketUpdate = (updatedTicket: any) => {
-      console.log("Ticket list update received via socket");
+
       (dispatch as any)(ticketApi.util.invalidateTags([{ type: 'Ticket', id: 'LIST' }]));
     };
 

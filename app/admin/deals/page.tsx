@@ -377,7 +377,7 @@ export default function DealsPage() {
     isLoading={isUpdatingTimer}
     onUpdate={async (values) => {
      try {
-      console.log("Frontend sending timer update:", { ...values, isRunning });
+
       await updateTimer({ ...values, isRunning }).unwrap();
       toast.success("Global timer updated");
       setIsTimerModalOpen(false);

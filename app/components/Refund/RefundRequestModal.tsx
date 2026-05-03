@@ -61,12 +61,10 @@ export const RefundRequestModal: React.FC<RefundRequestModalProps> = ({ isOpen, 
             for (let i = 0; i < files.length; i++) {
                 formData.append('files', files[i]);
             }
-            
-            // Log for debugging
-            console.log("Uploading files:", files.length);
+             
             
             const result = await uploadMedia(formData).unwrap();
-            console.log("Upload result:", result);
+             
 
             const data = result.data as any;
             if (data && Array.isArray(data)) {

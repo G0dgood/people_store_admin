@@ -39,12 +39,12 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
           />
         </div>
 
-        <Button 
-          className="w-full h-12 font-bold" 
+        <Button
+          className="w-full h-12 font-bold"
           size="lg"
           onClick={() => {
             // Logic for sending reset link would go here
-            console.log("Reset link sent");
+
           }}
         >
           Send Reset Link

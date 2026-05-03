@@ -70,8 +70,7 @@ export function SecurityHelpDrawer({ isOpen, onClose }: SecurityHelpDrawerProps)
            <Button 
             variant="primary" 
             className="w-full h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
-            onClick={() => {
-              console.log("Escalating to support...");
+            onClick={() => { 
               onClose();
             }}
            >

@@ -354,8 +354,7 @@ export default function ProductMediaListing() {
    <ConfirmationModal
     isOpen={isPurgeConfirmOpen}
     onClose={() => setIsPurgeConfirmOpen(false)}
-    onConfirm={() => {
-     console.log("Purging unused assets...");
+    onConfirm={() => { 
      setIsPurgeConfirmOpen(false);
     }}
     title="Purge Unused Assets"

@@ -18,7 +18,7 @@ export function MediaMoreActionsDrawer({ isOpen, onClose, onPurgeUnused }: Media
       description: "Download a comprehensive CSV register of all asset URLs, dimensions, and product associations.",
       icon: "cloud_download",
       folder: "icon",
-      onClick: () => console.log("Exporting media registry..."),
+      onClick: () => {},
     },
     {
       id: "compress",
@@ -26,7 +26,7 @@ export function MediaMoreActionsDrawer({ isOpen, onClose, onPurgeUnused }: Media
       description: "Trigger a system-wide optimization pass to compress all catalog images for faster loading.",
       icon: "arrow-refresh-06",
       folder: "dashboardIcon",
-      onClick: () => console.log("Starting global compression..."),
+      onClick: () => {},
     },
     {
       id: "purge",
@@ -46,7 +46,7 @@ export function MediaMoreActionsDrawer({ isOpen, onClose, onPurgeUnused }: Media
       description: "Generate a report for assets missing SEO-critical alternative text descriptions.",
       icon: "description",
       folder: "icon",
-      onClick: () => console.log("Running SEO audit..."),
+      onClick: () => {},
     },
   ];
 

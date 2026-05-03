@@ -37,8 +37,7 @@ export function AddOrderModal({ isOpen, onClose }: AddOrderModalProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, this would call an API
-    console.log("Creating order:", formData);
+    // In a real app, this would call an API 
     onClose();
   };
 

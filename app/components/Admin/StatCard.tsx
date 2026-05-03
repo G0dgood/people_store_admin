@@ -52,25 +52,25 @@ export const StatCard: React.FC<StatCardProps> = ({
       label: "Refresh metric",
       subtext: "Poll latest data from the server",
       icon: <MdRefresh />,
-      onClick: () => console.log("Refresh", title)
+      onClick: () => {}
     },
     {
       label: "Export Trend",
       subtext: "Download CSV of current period",
       icon: <MdDownload />,
-      onClick: () => console.log("Export", title)
+      onClick: () => {}
     },
     {
       label: "Copy Analytics ID",
       subtext: "Useful for deep-link debugging",
       icon: <MdContentCopy />,
-      onClick: () => console.log("Copy ID", title)
+      onClick: () => {}
     },
     {
       label: "Pin to Home",
       subtext: "Keep this metric on login",
       icon: <MdPushPin />,
-      onClick: () => console.log("Pin", title)
+      onClick: () => {}
     }
   ];
 

@@ -18,7 +18,7 @@ export function RolesMoreActionsDrawer({ isOpen, onClose, onSyncPermissions }: R
       description: "Download a detailed record of all administrative actions and permission changes.",
       icon: "cloud_download",
       folder: "icon",
-      onClick: () => console.log("Exporting audit logs..."),
+      onClick: () => {},
     },
     {
       id: "sync",
@@ -38,7 +38,7 @@ export function RolesMoreActionsDrawer({ isOpen, onClose, onSyncPermissions }: R
       icon: "block",
       folder: "icon",
       variant: "danger",
-      onClick: () => console.log("Caution: Bulk deactivation triggered..."),
+      onClick: () => {},
     },
     {
       id: "reports",
@@ -46,7 +46,7 @@ export function RolesMoreActionsDrawer({ isOpen, onClose, onSyncPermissions }: R
       description: "Generate a summary of administrative logins and module access frequency.",
       icon: "description",
       folder: "icon",
-      onClick: () => console.log("Opening activity reports..."),
+      onClick: () => {},
     },
   ];
 

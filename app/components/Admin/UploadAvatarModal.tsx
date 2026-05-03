@@ -35,8 +35,7 @@ export function UploadAvatarModal({ isOpen, onClose, onUploadSuccess }: UploadAv
 
     setIsUploading(true);
     // Simulate API delay
-    setTimeout(() => {
-      console.log("Avatar updated successfully!");
+    setTimeout(() => { 
       setIsUploading(false);
       if (onUploadSuccess) {
         onUploadSuccess(previewUrl);

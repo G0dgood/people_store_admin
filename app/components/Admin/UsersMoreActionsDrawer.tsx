@@ -17,7 +17,7 @@ export function UsersMoreActionsDrawer({ isOpen, onClose }: UsersMoreActionsDraw
       description: "Download a complete CSV of all administrative accounts and their current status.",
       icon: "cloud_download",
       folder: "icon",
-      onClick: () => console.log("Exporting staff registry..."),
+      onClick: () => {},
     },
     {
       id: "audit",
@@ -25,7 +25,7 @@ export function UsersMoreActionsDrawer({ isOpen, onClose }: UsersMoreActionsDraw
       description: "Review detailed logs of logins, permission changes, and account escalations.",
       icon: "verified",
       folder: "icon",
-      onClick: () => console.log("Opening security audit logs..."),
+      onClick: () => {},
     },
     {
       id: "activity",
@@ -33,7 +33,7 @@ export function UsersMoreActionsDrawer({ isOpen, onClose }: UsersMoreActionsDraw
       description: "Analyze module usage frequency and administrative efficiency across the team.",
       icon: "description",
       folder: "icon",
-      onClick: () => console.log("Generating activity reports..."),
+      onClick: () => {},
     },
     {
       id: "bulk-invite",
@@ -41,7 +41,7 @@ export function UsersMoreActionsDrawer({ isOpen, onClose }: UsersMoreActionsDraw
       description: "Upload a list of emails to send bulk administrative access invitations.",
       icon: "circle-plus",
       folder: "dashboardIcon",
-      onClick: () => console.log("Opening bulk onboarding..."),
+      onClick: () => {},
     },
   ];
 

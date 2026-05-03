@@ -18,7 +18,7 @@ export function ProductsMoreActionsDrawer({ isOpen, onClose, onArchiveOutOfStock
       description: "Download your entire product list as a CSV or Excel file for external auditing.",
       icon: "cloud_download",
       folder: "icon",
-      onClick: () => console.log("Exporting catalog..."),
+      onClick: () => {},
     },
     {
       id: "sync",
@@ -26,7 +26,7 @@ export function ProductsMoreActionsDrawer({ isOpen, onClose, onArchiveOutOfStock
       description: "Synchronize inventory levels with your connected warehouse management system.",
       icon: "arrow-refresh-06",
       folder: "dashboardIcon",
-      onClick: () => console.log("Syncing stock..."),
+      onClick: () => {},
     },
     {
       id: "archive",
@@ -46,7 +46,7 @@ export function ProductsMoreActionsDrawer({ isOpen, onClose, onArchiveOutOfStock
       description: "Apply a percentage-based discount or markup across all selected categories.",
       icon: "verified_user",
       folder: "icon",
-      onClick: () => console.log("Opening price adjustment tool..."),
+      onClick: () => {},
     },
   ];
 
