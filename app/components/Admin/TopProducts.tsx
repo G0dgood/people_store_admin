@@ -2,7 +2,6 @@
 
 import React from "react";
 import { Icon } from "../Icon";
-import { MiniChart } from "./MiniChart";
 import { SearchInput } from "../Form";
 import { motion } from "framer-motion";
 
@@ -57,6 +56,7 @@ export const TopProducts: React.FC<TopProductsProps> = ({
       {/* Glass Search Bar */}
       <div className="relative z-10">
         <SearchInput
+          shape="rounded-sm"
           placeholder="Quick product lookup..."
           containerClassName="w-full"
         />
