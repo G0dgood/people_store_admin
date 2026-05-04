@@ -23,7 +23,7 @@ export const AuthPersistence = ({ children }: { children: React.ReactNode }) => 
     isFetching: isAdminFetching
   } = useGetCurrentUserQuery(undefined, {
     refetchOnMountOrArgChange: true,
-    skip: !isAdminPath && isAuthenticated, // Skip if already authenticated on non-admin path
+    skip: !isAdminPath || isAuthenticated, // Skip if not on admin path OR already authenticated
   });
 
   // Attempt to restore customer session (boutique side)
@@ -34,28 +34,34 @@ export const AuthPersistence = ({ children }: { children: React.ReactNode }) => 
     isFetching: isCustomerFetching
   } = useGetCurrentCustomerQuery(undefined, {
     refetchOnMountOrArgChange: true,
-    skip: isAdminPath && isAuthenticated, // Skip if already authenticated on admin path
+    skip: isAdminPath || isAuthenticated, // Skip if on admin path OR already authenticated
   });
 
   // Restore Admin Credentials
   useEffect(() => {
     if (isAdminSuccess && adminData?.success && adminData?.data) {
-      dispatch(setCredentials({
-        user: adminData.data,
-        accessToken: "" // Handled by cookies
-      }));
+      // Only set credentials if not already authenticated to avoid wiping existing token
+      if (!isAuthenticated) {
+        dispatch(setCredentials({
+          user: adminData.data,
+          accessToken: "" // Handled by cookies on refresh
+        }));
+      }
     }
-  }, [isAdminSuccess, adminData, dispatch]);
+  }, [isAdminSuccess, adminData, dispatch, isAuthenticated]);
 
   // Restore Customer Credentials
   useEffect(() => {
     if (isCustomerSuccess && customerData?.success && customerData?.data) {
-      dispatch(setCredentials({
-        user: customerData.data,
-        accessToken: "" // Handled by cookies
-      }));
+      // Only set credentials if not already authenticated
+      if (!isAuthenticated) {
+        dispatch(setCredentials({
+          user: customerData.data,
+          accessToken: "" // Handled by cookies on refresh
+        }));
+      }
     }
-  }, [isCustomerSuccess, customerData, dispatch]);
+  }, [isCustomerSuccess, customerData, dispatch, isAuthenticated]);
 
   const isLoading = isAdminPath 
     ? (isAdminLoading || isAdminFetching) 
