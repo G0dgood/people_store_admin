@@ -32,7 +32,7 @@ export function AdminSessionProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    const isAuthPage = pathname?.includes("/login");
+    const isAuthPage = pathname?.includes("/login") || pathname === "/";
     if (isAuthPage && isSessionExpired) {
       setIsSessionExpired(false);
     }
@@ -80,7 +80,7 @@ export function AdminSessionProvider({ children }: { children: ReactNode }) {
       {children}
       
       <Modal
-        isOpen={isSessionExpired}
+        isOpen={isSessionExpired && !pathname?.includes("/login") && pathname !== "/"}
         onClose={() => {}} // Prevent closing without clicking OK
         title="Admin Session Expired"
         size="sm"
