@@ -9,11 +9,13 @@ interface StockWarningProps {
 }
 
 export const StockWarning: React.FC<StockWarningProps & { isUnlimited?: boolean }> = ({
-  stock,
+  stock: rawStock,
   quantity,
   isUnlimited = false,
   className = "",
 }) => {
+  const stock = Number(rawStock);
+
   if (isUnlimited) {
     return (
       <div className={`flex items-center gap-1.5 ${className}`}>
