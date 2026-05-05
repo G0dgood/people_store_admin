@@ -82,7 +82,11 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     on("PRODUCT_UPDATED", handleProductUpdate);
-    return () => off("PRODUCT_UPDATED", handleProductUpdate);
+    on("cart_updated", handleProductUpdate); // Refresh on cart updates from other devices
+    return () => {
+      off("PRODUCT_UPDATED", handleProductUpdate);
+      off("cart_updated", handleProductUpdate);
+    };
   }, [on, off, isAuthenticated, refetch]);
 
   // Handle API Errors
