@@ -64,8 +64,6 @@ export const RecentlyViewedProvider = ({ children }: { children: React.ReactNode
       title: p.name,
       price: `₦${p.price.toLocaleString()}`,
       image: p.productImage || "/placeholder.png",
-      isUnlimited: p.isUnlimited,
-      stock: p.stock
     }));
   }, [backendHistoryData]);
 

@@ -123,7 +123,7 @@ export default function EditProduct() {
  const discountDropdownRef = useRef<HTMLDivElement>(null);
 
  const currencies = [
-  { code: "NGN", label: "Nigeria", symbol: "₦", flag: "/icon/flag.svg" },
+  { code: "NGN", label: "Nigeria", symbol: "₦", flag: "/country/Property 1=NG.svg" },
   { code: "USD", label: "USA", symbol: "$", flag: "/country/Property 1=US.png" },
   { code: "GBP", label: "UK", symbol: "£", flag: "/country/Property 1=GB.png" },
   { code: "EUR", label: "EU", symbol: "€", flag: "/country/Property 1=FR.png" },

@@ -58,7 +58,7 @@ export const ActionIcons: React.FC = () => {
             <span className="text-[14px] font-bold text-gray-900 leading-none">
               {isAuthenticated ? "Dashboard" : "My account"}
             </span>
-            <Icon name="expand_more" size="xs" className="text-gray-400 group-hover:text-brand-gold transition-colors" />
+            <Icon name="expand_more" size="sm" className="text-gray-400 group-hover:text-brand-gold transition-colors" />
           </div>
         </div>
 
@@ -86,7 +86,7 @@ export const ActionIcons: React.FC = () => {
                     </Link>
                   </>
                 )}
-                <Link href="/admin" className="px-5 py-2.5 text-[11px] font-bold uppercase tracking-wider text-gray-600 hover:text-brand-gold hover:bg-gray-50/50 transition-all border-t border-gray-50">
+                <Link href="/login" className="px-5 py-2.5 text-[11px] font-bold uppercase tracking-wider text-gray-600 hover:text-brand-gold hover:bg-gray-50/50 transition-all border-t border-gray-50">
                   Admin Dashboard
                 </Link>
                 {isAuthenticated && (

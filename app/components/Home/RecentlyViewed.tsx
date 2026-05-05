@@ -18,6 +18,8 @@ const RecentlyViewed = () => {
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+
+
   const handleQuickView = (e: React.MouseEvent, item: any) => {
     e.preventDefault();
     e.stopPropagation();
@@ -31,8 +33,6 @@ const RecentlyViewed = () => {
       title: item.title,
       price: item.price,
       image: item.image,
-      stock: item.stock,
-      isUnlimited: item.isUnlimited
     });
     toast.success(`${item.title} added to cart`);
     setIsModalOpen(false);
@@ -79,15 +79,9 @@ const RecentlyViewed = () => {
               </div>
 
               <div className="flex flex-col gap-1">
-                <div className="flex items-center justify-between">
 
-                  <span className="font-bold text-gray-900">{item.price}</span>
-                  <StockWarning
-                    stock={item.stock}
-                    quantity={0}
-                    isUnlimited={item.isUnlimited}
-                  />
-                </div>
+                <span className="font-bold text-gray-900">{item.price}</span>
+
                 <p className="text-gray-500 text-sm leading-tight line-clamp-2 group-hover:text-brand-gold transition-colors font-medium">
                   {item.title}
                 </p>

@@ -87,9 +87,9 @@ export const RelatedProducts: React.FC<RelatedProductsProps> = ({ products }) =>
             <Button
               onClick={(e) => handleAddToCart(e, item)}
               variant="secondary"
-              size="sm"
+              size="md"
               className="w-full font-bold hover:bg-brand-gold hover:text-white shadow-none justify-center mt-auto"
-              iconLeft={<Icon name="shopping_cart" size="xs" />}
+              iconLeft={<Icon name="shopping_cart" size="sm" />}
             >
               Add to cart
             </Button>
