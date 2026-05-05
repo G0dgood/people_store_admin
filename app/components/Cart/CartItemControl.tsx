@@ -13,12 +13,13 @@ interface CartItemControlProps {
 import { useCart } from "@/app/context/CartContext";
 import { formatPrice } from "@/app/utils/formatPrice";
 import { QuantitySelector } from "../QuantitySelector";
+import { StockWarning } from "../StockWarning";
 
 const CartItemControl: React.FC<CartItemControlProps> = ({ id, price, quantity, stock }) => {
   const { updateQuantity } = useCart();
 
   return (
-    <div className="flex flex-col items-end gap-4 min-w-[140px]">
+    <div className="flex flex-col items-end gap-2 min-w-[140px]">
       <span className="font-outfit font-bold text-lg md:text-xl text-gray-900">{formatPrice(price)}</span>
       <QuantitySelector
         quantity={quantity}
@@ -26,6 +27,7 @@ const CartItemControl: React.FC<CartItemControlProps> = ({ id, price, quantity, 
         onIncrease={() => updateQuantity(id, quantity + 1)}
         onDecrease={() => updateQuantity(id, quantity - 1)}
       />
+      <StockWarning stock={stock || 0} quantity={quantity} />
     </div>
   );
 };
