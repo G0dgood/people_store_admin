@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { NoRecordFound, SVGLoaderFetch } from "@/app/components/Options";
 import { Tooltip } from "../../components/Tooltip";
 import { HiArrowPath, HiOutlineEye } from "react-icons/hi2";
+import { StockWarning } from "../../components/StockWarning";
 
 import { StockAdjustmentDrawer } from "../../components/Admin/StockAdjustmentDrawer";
 import { useAddProductMutation, useGetProductsQuery, useDeleteProductMutation, useUpdateProductMutation, Product } from "@/lib/redux/services/productApi";
@@ -326,11 +327,11 @@ export default function ProductListing() {
                     <span className="text-sm font-black text-brand-gold">₦{product?.price?.toLocaleString() || "0"}</span>
                   </td>
                   <td>
-                    <div className="flex flex-col gap-1 whitespace-nowrap">
-                      <span className={`text-sm font-bold ${product?.stock === 0 ? "text-rose-500" : "text-gray-700"}`}>
-                        {product?.stock || 0} units
-                      </span>
-                    </div>
+                    <StockWarning 
+                      stock={product.stock || 0} 
+                      quantity={0} 
+                      isUnlimited={product.isUnlimited} 
+                    />
                   </td>
                   <td>
                     <Tooltip text={product.status === "Published" ? "Unpublish Product" : "Publish Product"} position="top">
