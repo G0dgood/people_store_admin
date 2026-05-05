@@ -8,6 +8,10 @@ import { Button } from "../Button/Button";
 import { FavoriteButton } from "../Other";
 import { useCart } from "@/app/context/CartContext";
 import { toast } from "sonner";
+import { StockWarning } from "../StockWarning";
+import { useState, useEffect, useMemo } from "react";
+import { useGetPublicDealsQuery, useGetPublicTimerQuery } from "@/lib/redux/services/boutiqueApi";
+import { useSocket } from "@/app/context/SocketContext"; 
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -34,9 +38,7 @@ const itemVariants: Variants = {
   }
 };
 
-import { useState, useEffect, useMemo } from "react";
-import { useGetPublicDealsQuery, useGetPublicTimerQuery } from "@/lib/redux/services/boutiqueApi";
-import { useSocket } from "@/app/context/SocketContext";
+
 
 const DealsSection = () => {
   const { addToCart } = useCart();
@@ -170,6 +172,12 @@ const DealsSection = () => {
                 <p className="text-xs md:text-sm text-center line-clamp-1 text-gray-600 group-hover:text-brand-gold transition-colors font-medium">
                   {prod.product?.name || "Premium Fragrance"}
                 </p>
+                <StockWarning
+                  stock={prod.product?.stock || 0}
+                  quantity={0}
+                  isUnlimited={prod.product?.isUnlimited}
+                  className="justify-center"
+                />
               </motion.div>
             </Link>
 

@@ -13,8 +13,11 @@ import { EmptyState } from "../Admin/EmptyState";
 import { HiOutlineSparkles } from "react-icons/hi2";
 import { Icon } from "../Icon";
 import { ProductGridItem } from "../Products/ProductItems";
+import { StockWarning } from "../StockWarning";
+
 
 const RecommendedItems = () => {
+  const { addToCart } = useCart();
   const { addToRecentlyViewed } = useRecentlyViewed();
   const { data: recommendedData, isLoading } = useGetRecommendedProductsQuery();
   const [selectedItem, setSelectedItem] = useState<any>(null);
@@ -31,21 +34,26 @@ const RecommendedItems = () => {
       stock: p.stock || 0,
       isUnlimited: p.isUnlimited || false,
       rating: p.ratings || 0,
-      orders: p.views || 0, // Fallback to views as orders if not available
+      orders: p.views || 0,
       shipping: "Free Shipping",
       media: p.media
     }));
   }, [recommendedData]);
 
   const handleQuickView = (product: any) => {
-    setSelectedItem({
-      id: product.id,
-      title: product.title,
-      price: product.price,
-      image: product.image,
-      description: product.description,
-    });
+    setSelectedItem(product);
     setIsModalOpen(true);
+  };
+
+  const handleAddToCart = (item: any) => {
+    addToCart({
+      id: item.id,
+      title: item.title,
+      price: item.price,
+      image: item.image,
+    });
+    toast.success(`${item.title} added to cart`);
+    setIsModalOpen(false);
   };
 
   if (isLoading) return <RecommendedItemsSkeleton />;
@@ -56,7 +64,7 @@ const RecommendedItems = () => {
         <div className="p-6 border-b border-gray-200">
           <h3 className="text-xl font-bold text-gray-900 tracking-tight">Recommended Items</h3>
         </div>
-        <EmptyState 
+        <EmptyState
           icon={<HiOutlineSparkles size={36} />}
           title="No Recommendations"
           description="We are curating a special collection of artisanal pieces just for you. Please check back soon."
@@ -69,24 +77,24 @@ const RecommendedItems = () => {
     <section className="w-full border border-gray-200 overflow-hidden bg-white mt-8">
       <div className="p-6 border-b border-gray-200 flex justify-between items-center">
         <h3 className="text-xl font-bold text-gray-900 tracking-tight uppercase tracking-widest">Recommended items</h3>
-        <Link 
-           href="/products" 
-           className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 hover:text-brand-gold transition-colors flex items-center gap-2 group/view"
-         >
-           Shop All
-           <div className="w-5 h-5 rounded-full border border-gray-100 flex items-center justify-center group-hover/view:border-brand-gold group-hover/view:bg-brand-gold group-hover/view:text-white transition-all duration-300">
-             <Icon name="arrow_forward" size="xs" />
-           </div>
-         </Link>
+        <Link
+          href="/products"
+          className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 hover:text-brand-gold transition-colors flex items-center gap-2 group/view"
+        >
+          Shop All
+          <div className="w-5 h-5 rounded-full border border-gray-100 flex items-center justify-center group-hover/view:border-brand-gold group-hover/view:bg-brand-gold group-hover/view:text-white transition-all duration-300">
+            <Icon name="arrow_forward" size="xs" />
+          </div>
+        </Link>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 border-t border-gray-100">
         {products.map((product, idx) => (
           <div key={idx} className="border-r border-b border-gray-100 last:border-r-0 lg:[&:nth-child(4)]:border-r-0 xl:[&:nth-child(5)]:border-r-0">
-            <ProductGridItem 
+            <ProductGridItem
               product={{
                 ...product,
                 onQuickView: handleQuickView
-              }} 
+              }}
             />
           </div>
         ))}
@@ -117,7 +125,14 @@ const RecommendedItems = () => {
                   {selectedItem.title}
                 </h2>
                 <div className="flex items-center justify-between mt-2">
-                  <span className="text-2xl font-black text-gray-900">{selectedItem.price}</span>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-2xl font-black text-gray-900">{selectedItem.price}</span>
+                    <StockWarning
+                      stock={selectedItem.stock}
+                      quantity={0}
+                      isUnlimited={selectedItem.isUnlimited}
+                    />
+                  </div>
                   <FavoriteButton
                     item={{
                       id: selectedItem.id,
