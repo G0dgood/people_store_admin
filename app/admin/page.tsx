@@ -18,6 +18,7 @@ import { Tooltip } from "../components/Tooltip";
 import { Button } from "../components/Button";
 import { StatCardSkeleton } from "../components/Skeleton/StatCardSkeleton";
 import { useGetBrandStatsQuery } from "@/lib/redux/services/brandApi";
+import { useGetProductStatsQuery } from "@/lib/redux/services/productApi";
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -26,18 +27,20 @@ export default function AdminDashboard() {
   const { data: orderStatsResponse, isLoading: isLoadingOrders, refetch: refetchOrders, isFetching: isFetchingOrders } = useGetOrderStatsQuery();
   const { data: customerStatsResponse, isLoading: isLoadingCustomers, refetch: refetchCustomers, isFetching: isFetchingCustomers } = useGetCustomerStatsQuery();
   const { data: brandStatsResponse, isLoading: isLoadingBrands, refetch: refetchBrands, isFetching: isFetchingBrands } = useGetBrandStatsQuery();
+  const { data: productStatsResponse, isLoading: isLoadingProductStats, refetch: refetchProductStats, isFetching: isFetchingProductStats } = useGetProductStatsQuery();
 
-  const isGlobalFetching = isFetchingOrders || isFetchingCustomers || isFetchingBrands;
+  const isGlobalFetching = isFetchingOrders || isFetchingCustomers || isFetchingBrands || isFetchingProductStats;
 
   const handleRefresh = () => {
     refetchOrders();
     refetchCustomers();
     refetchBrands();
+    refetchProductStats();
   };
 
   const orderStats = orderStatsResponse?.data;
-  const customerStats = customerStatsResponse?.data;
   const brandStats = brandStatsResponse?.data;
+  const productStats = productStatsResponse?.data;
 
   return (
     <div className="flex flex-col gap-6">
@@ -106,14 +109,14 @@ export default function AdminDashboard() {
               onViewDetails={() => router.push("/admin/brands")}
             />
             <StatCard
-              title="Active Customers"
-              value={(customerStats?.activeCustomers || 0).toLocaleString()}
-              trendLabel="Users"
-              trendValue={(orderStats?.pendingOrders || 0).toString()}
+              title="Total Inventory"
+              value={(productStats?.totalStock || 0).toLocaleString()}
+              trendLabel="Stock Units"
+              trendValue={(productStats?.totalProducts || 0).toString()}
               trendIsUp={true}
-              previousLabel="Pending Orders"
-              previousValue={(orderStats?.pendingOrders || 0).toString()}
-              onViewDetails={() => setActiveInsightSection('traffic')}
+              previousLabel="Unique Products"
+              previousValue={(productStats?.totalProducts || 0).toString()}
+              onViewDetails={() => router.push("/admin/products")}
             />
           </>
         )}

@@ -101,7 +101,7 @@ export const productApi = baseApi.injectEndpoints({
       query: () => '/products/best-selling',
       providesTags: ['Product'],
     }),
-    getProductStats: builder.query<ApiResponse<{ totalProducts: number, stockProducts: number, outOfStock: number }>, void>({
+    getProductStats: builder.query<ApiResponse<{ totalProducts: number, stockProducts: number, outOfStock: number, totalStock: number }>, void>({
       query: () => '/products/stats',
       providesTags: ['Product'],
     }),
