@@ -10,8 +10,11 @@ import { toast } from "sonner";
 import { EmptyState } from "../Admin/EmptyState";
 import { HiOutlineSparkles } from "react-icons/hi2";
 import { Icon } from "../Icon";
+import { StockWarning } from "../StockWarning";
 
 interface RecommendedProduct {
+  isUnlimited: boolean | undefined;
+  stock: number;
   id: string;
   title: string;
   price: string;
@@ -72,7 +75,16 @@ export const RecommendedProducts: React.FC<RecommendedProductsProps> = ({ produc
               </div>
 
               <div className="flex flex-col gap-1">
-                <span className="font-bold text-gray-900">{product.price}</span>
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-gray-900">{product.price}</span>
+
+
+                  <StockWarning
+                    stock={product.stock}
+                    quantity={0}
+                    isUnlimited={product.isUnlimited}
+                  />
+                </div>
                 <p className="text-gray-500 text-sm leading-tight line-clamp-2 group-hover:text-brand-gold transition-colors font-medium">
                   {product.title}
                 </p>

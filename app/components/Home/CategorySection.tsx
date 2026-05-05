@@ -8,6 +8,7 @@ import { Button } from "@/app/components/Button/Button";
 import { FavoriteButton } from "../Other";
 import { useCart } from "@/app/context/CartContext";
 import { toast } from "sonner";
+import { Icon } from "../Icon";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 import { StockWarning } from "../StockWarning";
 
@@ -36,12 +37,12 @@ const itemVariants: Variants = {
 };
 
 interface CategoryProduct {
+  isUnlimited: boolean | undefined;
+  stock: number;
   id?: string;
   name: string;
   price: string;
   image: string;
-  stock?: number;
-  isUnlimited?: boolean;
 }
 
 interface CategorySectionProps {
@@ -74,7 +75,7 @@ const CategorySection: React.FC<CategorySectionProps> = ({
     }
   };
 
-  const showNav = products?.length > 4;
+  const showNav = products.length > 4;
 
   const handleAddToCart = (e: React.MouseEvent, item: CategoryProduct) => {
     e.preventDefault();
@@ -150,7 +151,7 @@ const CategorySection: React.FC<CategorySectionProps> = ({
           viewport={{ once: true, margin: "-100px" }}
           className={`flex-1 h-full overflow-x-auto scrollbar-none flex ${showNav ? "snap-x snap-mandatory" : "grid grid-cols-2 md:grid-cols-4"}`}
         >
-          {products.map((item, idx) => (
+          {products?.map((item, idx) => (
             <div
               key={idx}
               className={`relative group shrink-0 ${showNav ? "w-1/2 md:w-1/4 snap-start" : "w-full h-full"}`}
@@ -172,17 +173,20 @@ const CategorySection: React.FC<CategorySectionProps> = ({
                     )}
                   </div>
                   <div className="flex flex-col gap-1">
-                    <h4 className="text-[11px] md:text-[13px] font-bold uppercase tracking-wider text-gray-900 group-hover:text-brand-gold transition-colors leading-tight">
+                    <h4 className="text-[10px] md:text-[12px] font-bold uppercase tracking-wider text-gray-900 group-hover:text-brand-gold transition-colors leading-tight">
                       {item.name}
                     </h4>
-                    <p className="text-[10px] md:text-xs text-gray-500 font-medium tracking-wide">
-                      ₦{item.price}
-                    </p>
-                    <StockWarning
-                      stock={item.stock || 0}
-                      quantity={0}
-                      isUnlimited={item.isUnlimited}
-                    />
+                    <div>
+
+                      <p className="text-[10px] md:text-xs text-gray-500 font-medium tracking-wide mb-1">
+                        ₦{item.price}
+                      </p>
+                      <StockWarning
+                        stock={item.stock}
+                        quantity={0}
+                        isUnlimited={item.isUnlimited}
+                      />
+                    </div>
                   </div>
                 </motion.div>
               </Link>

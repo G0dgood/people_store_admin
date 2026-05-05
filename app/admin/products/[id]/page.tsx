@@ -69,9 +69,38 @@ export default function EditProduct() {
   gender: "Unisex"
  });
 
- const handleInputChange = (field: string, value: any) => {
-  setFormData(prev => ({ ...prev, [field]: value }));
- };
+  const getRecommendedStatus = (quantity: string | number) => {
+    const q = Number(quantity);
+    if (q === 0) return "Out of Stock";
+    if (q <= 5) return "Low Stock";
+    return "In Stock";
+  };
+
+  const [pendingStockStatus, setPendingStockStatus] = useState("");
+  const [isOverrideModalOpen, setIsOverrideModalOpen] = useState(false);
+
+  const handleInputChange = (field: string, value: any) => {
+    if (field === "stockQuantity") {
+      const recommended = getRecommendedStatus(value);
+      setFormData(prev => ({ 
+        ...prev, 
+        stockQuantity: value,
+        stockStatus: recommended
+      }));
+      return;
+    }
+
+    if (field === "stockStatus") {
+      const recommended = getRecommendedStatus(formData.stockQuantity);
+      if (value !== recommended) {
+        setPendingStockStatus(value);
+        setIsOverrideModalOpen(true);
+        return;
+      }
+    }
+
+    setFormData(prev => ({ ...prev, [field]: value }));
+  };
 
  // UI States
  const [isPublishConfirmOpen, setIsPublishConfirmOpen] = useState(false);
@@ -911,6 +940,20 @@ export default function EditProduct() {
     onUploadSuccess={handleMediaUpload}
     onlyStaging
    />
+
+   <ConfirmationModal
+     isOpen={isOverrideModalOpen}
+     onClose={() => setIsOverrideModalOpen(false)}
+     onConfirm={() => {
+      setFormData(prev => ({ ...prev, stockStatus: pendingStockStatus }));
+      setIsOverrideModalOpen(false);
+      toast.info(`Stock status manually overridden to ${pendingStockStatus}`);
+     }}
+     title="Override Stock Status?"
+     message={`The recommended status for ${formData.stockQuantity} units is "${getRecommendedStatus(formData.stockQuantity)}". Are you sure you want to manually set it to "${pendingStockStatus}"?`}
+     confirmText="Yes, Override"
+     type="warning"
+    />
   </div>
  );
 }

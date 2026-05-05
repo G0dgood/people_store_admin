@@ -12,9 +12,7 @@ import { RecommendedItemsSkeleton } from "../Skeleton/RecommendedItemsSkeleton";
 import { EmptyState } from "../Admin/EmptyState";
 import { HiOutlineSparkles } from "react-icons/hi2";
 import { Icon } from "../Icon";
-import { ProductGridItem } from "../Products/ProductItems";
 import { StockWarning } from "../StockWarning";
-
 
 const RecommendedItems = () => {
   const { addToCart } = useCart();
@@ -23,7 +21,7 @@ const RecommendedItems = () => {
   const [selectedItem, setSelectedItem] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const products = useMemo(() => {
+  const items = useMemo(() => {
     if (!recommendedData?.data) return [];
     return (recommendedData.data as any[]).map(p => ({
       id: p._id,
@@ -31,17 +29,15 @@ const RecommendedItems = () => {
       price: `\u20A6${p.price.toLocaleString()}`,
       image: p.productImage || "/placeholder.png",
       description: p.description,
-      stock: p.stock || 0,
-      isUnlimited: p.isUnlimited || false,
-      rating: p.ratings || 0,
-      orders: p.views || 0,
-      shipping: "Free Shipping",
-      media: p.media
+      isUnlimited: p.isUnlimited,
+      stock: p.stock
     }));
   }, [recommendedData]);
 
-  const handleQuickView = (product: any) => {
-    setSelectedItem(product);
+  const handleQuickView = (e: React.MouseEvent, item: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSelectedItem(item);
     setIsModalOpen(true);
   };
 
@@ -58,11 +54,11 @@ const RecommendedItems = () => {
 
   if (isLoading) return <RecommendedItemsSkeleton />;
 
-  if (products.length === 0) {
+  if (items.length === 0) {
     return (
       <section className="w-full border border-gray-200 overflow-hidden bg-white mt-8">
         <div className="p-6 border-b border-gray-200">
-          <h3 className="text-xl font-bold text-gray-900 tracking-tight">Recommended Items</h3>
+          <h3 className="text-xl font-bold text-gray-900">Recommended items</h3>
         </div>
         <EmptyState
           icon={<HiOutlineSparkles size={36} />}
@@ -75,27 +71,85 @@ const RecommendedItems = () => {
 
   return (
     <section className="w-full border border-gray-200 overflow-hidden bg-white mt-8">
-      <div className="p-6 border-b border-gray-200 flex justify-between items-center">
-        <h3 className="text-xl font-bold text-gray-900 tracking-tight uppercase tracking-widest">Recommended items</h3>
-        <Link
-          href="/products"
-          className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 hover:text-brand-gold transition-colors flex items-center gap-2 group/view"
-        >
-          Shop All
-          <div className="w-5 h-5 rounded-full border border-gray-100 flex items-center justify-center group-hover/view:border-brand-gold group-hover/view:bg-brand-gold group-hover/view:text-white transition-all duration-300">
-            <Icon name="arrow_forward" size="xs" />
-          </div>
-        </Link>
+      <div className="p-6 border-b border-gray-200">
+        <h3 className="text-xl font-bold text-gray-900">Recommended items</h3>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5 border-t border-gray-100">
-        {products.map((product, idx) => (
-          <div key={idx} className="border-r border-b border-gray-100 last:border-r-0 lg:[&:nth-child(4)]:border-r-0 xl:[&:nth-child(5)]:border-r-0">
-            <ProductGridItem
-              product={{
-                ...product,
-                onQuickView: handleQuickView
-              }}
-            />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
+        {items.map((item, idx) => (
+          <div
+            key={idx}
+            className="p-6 flex flex-col gap-4 hover:bg-gray-50 transition-colors group cursor-pointer border-b border-gray-100 last:border-b-0 md:border-b-0 md:border-r last:md:border-r-0 lg:border-r border-gray-100"
+          >
+            <Link
+              href={`/products/detail?id=${item.id}`}
+              className="flex flex-col gap-4"
+              onClick={() => addToRecentlyViewed({
+                id: item.id,
+                title: item.title,
+                price: item.price,
+                image: item.image,
+                isUnlimited: item.isUnlimited,
+                stock: item.stock
+              })}
+            >
+              <div className="w-full aspect-square relative bg-white border border-gray-200 flex items-center justify-center p-14 md:p-10 overflow-hidden">
+                <Image
+                  src={item.image}
+                  alt={item.title}
+                  fill
+                  className="object-contain scale-75 group-hover:scale-80 transition-transform duration-300"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 25vw, 20vw"
+                />
+
+                {/* Quick View Button Overlay */}
+                <div className="absolute bottom-0 left-0 right-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-10">
+                  <button
+                    onClick={(e) => handleQuickView(e, item)}
+                    className="w-full py-2 bg-black/80 backdrop-blur-md text-white text-[9px] font-bold uppercase tracking-[0.2em] hover:bg-brand-gold transition-all"
+                  >
+                    Quick View
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-1">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-gray-900">{item.price}</span>
+
+                  <StockWarning
+                    stock={item.stock}
+                    quantity={0}
+                    isUnlimited={item.isUnlimited}
+                  />
+                </div>
+                <p className="text-gray-500 text-sm leading-tight line-clamp-2 group-hover:text-brand-gold transition-colors font-medium">
+                  {item.title}
+                </p>
+              </div>
+            </Link>
+
+            <div className="flex flex-row gap-2 mt-auto">
+              <Button
+                onClick={() => handleAddToCart(item)}
+                variant="secondary"
+                size="sm"
+                className="flex-1 font-bold hover:bg-brand-gold hover:text-white shadow-none justify-center text-[10px] h-10"
+                iconLeft={<Icon name="shopping_cart" size="xs" />}
+              >
+                Add to Cart
+              </Button>
+              <FavoriteButton
+                item={{
+                  id: item.id,
+                  title: item.title,
+                  price: item.price,
+                  image: item.image,
+                } as any}
+                variant="outline"
+                size="sm"
+                className="!w-10 !h-10 border-gray-200 shrink-0"
+              />
+            </div>
           </div>
         ))}
       </div>
@@ -125,14 +179,7 @@ const RecommendedItems = () => {
                   {selectedItem.title}
                 </h2>
                 <div className="flex items-center justify-between mt-2">
-                  <div className="flex flex-col gap-1">
-                    <span className="text-2xl font-black text-gray-900">{selectedItem.price}</span>
-                    <StockWarning
-                      stock={selectedItem.stock}
-                      quantity={0}
-                      isUnlimited={selectedItem.isUnlimited}
-                    />
-                  </div>
+                  <span className="text-2xl font-black text-gray-900">{selectedItem.price}</span>
                   <FavoriteButton
                     item={{
                       id: selectedItem.id,
@@ -172,7 +219,9 @@ const RecommendedItems = () => {
                       id: selectedItem.id,
                       title: selectedItem.title,
                       price: selectedItem.price,
-                      image: selectedItem.image
+                      image: selectedItem.image,
+                      isUnlimited: selectedItem.isUnlimited,
+                      stock: selectedItem.stock
                     });
                     setIsModalOpen(false);
                   }}

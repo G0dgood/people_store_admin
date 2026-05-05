@@ -8,10 +8,6 @@ import { Button } from "../Button/Button";
 import { FavoriteButton } from "../Other";
 import { useCart } from "@/app/context/CartContext";
 import { toast } from "sonner";
-import { StockWarning } from "../StockWarning";
-import { useState, useEffect, useMemo } from "react";
-import { useGetPublicDealsQuery, useGetPublicTimerQuery } from "@/lib/redux/services/boutiqueApi";
-import { useSocket } from "@/app/context/SocketContext"; 
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -38,7 +34,10 @@ const itemVariants: Variants = {
   }
 };
 
-
+import { useState, useEffect, useMemo } from "react";
+import { useGetPublicDealsQuery, useGetPublicTimerQuery } from "@/lib/redux/services/boutiqueApi";
+import { useSocket } from "@/app/context/SocketContext";
+import { StockWarning } from "../StockWarning";
 
 const DealsSection = () => {
   const { addToCart } = useCart();
@@ -114,6 +113,8 @@ const DealsSection = () => {
       title: prod.product?.name || prod.name,
       price: prod.product?.price || 0,
       image: prod.product?.productImage || prod.image,
+      stock: prod.product?.stock,
+      isUnlimited: prod.product?.isUnlimited
     });
     toast.success("Added to cart");
   };
@@ -149,7 +150,7 @@ const DealsSection = () => {
         viewport={{ once: true, margin: "-100px" }}
         className="flex-1 flex overflow-x-auto scrollbar-none divide-x divide-gray-100"
       >
-        {dealProducts.map((prod, idx) => (
+        {dealProducts?.map((prod, idx) => (
           <div key={idx} className="flex-shrink-0 relative group">
             <Link href={`/products/detail?id=${prod.product?._id || prod.id}`}>
               <motion.div
@@ -172,11 +173,11 @@ const DealsSection = () => {
                 <p className="text-xs md:text-sm text-center line-clamp-1 text-gray-600 group-hover:text-brand-gold transition-colors font-medium">
                   {prod.product?.name || "Premium Fragrance"}
                 </p>
+
                 <StockWarning
-                  stock={prod.product?.stock || 0}
+                  stock={prod.product?.stock}
                   quantity={0}
                   isUnlimited={prod.product?.isUnlimited}
-                  className="justify-center"
                 />
               </motion.div>
             </Link>
@@ -190,6 +191,8 @@ const DealsSection = () => {
                     title: prod.product?.name || prod.name,
                     price: `\u20A6${(prod.product?.price || 0).toLocaleString()}`,
                     image: prod.product?.productImage || prod.image,
+                    stock: prod.product?.stock,
+                    isUnlimited: prod.product?.isUnlimited
                   } as any}
                   variant="outline"
                   size="sm"

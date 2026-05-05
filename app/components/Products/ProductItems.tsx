@@ -9,7 +9,6 @@ import { HiEye } from "react-icons/hi2";
 import { useCart } from "@/app/context/CartContext";
 import { useRecentlyViewed } from "@/app/context/RecentlyViewedContext";
 import { toast } from "sonner";
-import { Icon } from "../Icon";
 import { StockWarning } from "../StockWarning";
 
 interface ProductProps {
@@ -28,7 +27,7 @@ interface ProductProps {
    onQuickView?: (product: any) => void;
 }
 
-export const ProductGridItem: React.FC<{ product: ProductProps }> = ({ product }) => {
+export const ProductGridItem: React.FC<{ product: ProductProps, noBorderRight?: boolean }> = ({ product, noBorderRight }) => {
    const { addToCart } = useCart();
    const { addToRecentlyViewed } = useRecentlyViewed();
 
@@ -45,7 +44,7 @@ export const ProductGridItem: React.FC<{ product: ProductProps }> = ({ product }
    };
 
    return (
-      <div className="bg-white border border-gray-200 overflow-hidden transition-all group flex flex-col h-full relative">
+      <div className={`bg-white border border-gray-200 overflow-hidden transition-all group flex flex-col h-full relative`}>
          <Link
             href={`/products/detail?id=${product.id}`}
             className="flex flex-col flex-1"
@@ -53,7 +52,9 @@ export const ProductGridItem: React.FC<{ product: ProductProps }> = ({ product }
                id: product.id,
                title: product.title,
                price: product.price,
-               image: product.image
+               image: product.image,
+               isUnlimited: product.isUnlimited,
+               stock: product.stock
             })}
          >
             <div className="relative w-full aspect-square p-5 border-b border-gray-200 flex items-center justify-center">
@@ -74,25 +75,27 @@ export const ProductGridItem: React.FC<{ product: ProductProps }> = ({ product }
                   </button>
                </div>
             </div>
-            <div className="p-5 flex flex-col gap-2">
-               <div className="flex items-center justify-between">
-                  <span className="font-outfit font-bold text-lg text-gray-900">{product.price}</span>
+            <div className="p-5 flex flex-col gap-2 justify-between h-full">
+               <div>
+                  <div className="flex items-center justify-between">
+                     <span className="font-outfit font-bold text-lg text-gray-900">{product.price}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                     <Rating value={product.rating} />
+                     <span className="text-brand-gold text-sm font-medium">{product.rating}</span>
+                  </div>
+                  <span className="text-gray-600 text-[13px] uppercase tracking-wider leading-relaxed line-clamp-2 group-hover:text-brand-gold transition-colors font-bold">
+                     {product.title}
+                  </span>
+                  <p className="text-gray-400 text-[11px] line-clamp-1 leading-relaxed font-medium">
+                     {product.description}
+                  </p>
                </div>
-               <div className="flex items-center gap-2">
-                  <Rating value={product.rating} />
-                  <span className="text-brand-gold text-sm font-medium">{product.rating}</span>
-               </div>
-               <span className="text-gray-600 text-[13px] uppercase tracking-wider leading-relaxed line-clamp-2 group-hover:text-brand-gold transition-colors font-bold">
-                  {product.title}
-               </span>
-               <p className="text-gray-400 text-[11px] line-clamp-1 leading-relaxed font-medium">
-                  {product.description}
-               </p>
-               <StockWarning 
-                  stock={product.stock} 
-                  quantity={0} 
-                  isUnlimited={product.isUnlimited} 
-                  className="mt-1" 
+
+               <StockWarning
+                  stock={product.stock}
+                  quantity={0}
+                  isUnlimited={product.isUnlimited}
                />
             </div>
          </Link>
@@ -151,7 +154,9 @@ export const ProductListItem: React.FC<{
                   id: product.id,
                   title: product.title,
                   price: product.price,
-                  image: product.image
+                  image: product.image,
+                  isUnlimited: product.isUnlimited,
+                  stock: product.stock
                })}
             >
                <div className="relative w-full h-full transition-transform duration-300 hover:scale-110">
@@ -169,7 +174,9 @@ export const ProductListItem: React.FC<{
                         id: product.id,
                         title: product.title,
                         price: product.price,
-                        image: product.image
+                        image: product.image,
+                        isUnlimited: product.isUnlimited,
+                        stock: product.stock
                      })}
                   >
                      {product.title}
@@ -194,10 +201,10 @@ export const ProductListItem: React.FC<{
                         <div className="w-1 h-1 md:w-1.5 md:h-1.5 bg-gray-300" />
                         <span className="uppercase tracking-widest text-[10px]">{product.orders} orders</span>
                      </div>
-                     <StockWarning 
-                        stock={product.stock} 
-                        quantity={0} 
-                        isUnlimited={product.isUnlimited} 
+                     <StockWarning
+                        stock={product.stock}
+                        quantity={0}
+                        isUnlimited={product.isUnlimited}
                      />
                      {/* Shipping Info */}
                      <div className="flex items-center gap-1.5 text-brand-gold">

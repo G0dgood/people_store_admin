@@ -10,12 +10,12 @@ import { useApiError } from "../hooks/useApiError";
 import { usePathname } from "next/navigation";
 
 export interface RecentlyViewedItem {
+  isUnlimited: boolean | undefined;
+  stock: number;
   id: string;
   title: string;
   price: string;
   image: string;
-  stock?: number;
-  isUnlimited?: boolean;
 }
 
 interface RecentlyViewedContextType {
@@ -64,8 +64,8 @@ export const RecentlyViewedProvider = ({ children }: { children: React.ReactNode
       title: p.name,
       price: `₦${p.price.toLocaleString()}`,
       image: p.productImage || "/placeholder.png",
-      stock: p.stock,
       isUnlimited: p.isUnlimited,
+      stock: p.stock
     }));
   }, [backendHistoryData]);
 

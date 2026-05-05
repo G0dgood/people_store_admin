@@ -44,7 +44,7 @@ export const ProductPricingSection: React.FC<ProductPricingSectionProps> = ({
   }, []);
 
   return (
-    <div className="bg-white rounded-[6px] border border-gray-200 shadow-sm p-8 flex flex-col gap-8">
+    <div className="bg-white rounded-[6px] flex flex-col gap-8">
       <h3 className="text-base font-bold text-[#1D3557]">Pricing</h3>
 
       <div className="flex flex-col gap-2.5">

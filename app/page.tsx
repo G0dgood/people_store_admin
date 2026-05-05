@@ -26,8 +26,8 @@ const BrandCategorySection = ({ brand, index }: { brand: any, index: number }) =
   name: p.name,
   price: p.price.toString(),
   image: p.productImage || "/placeholder.png",
-  stock: p.stock || 0,
-  isUnlimited: p.isUnlimited || false
+  stock: p.stock,
+  isUnlimited: p.isUnlimited
  }));
 
  if (formattedProducts.length === 0) return null;

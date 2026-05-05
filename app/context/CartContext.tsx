@@ -31,6 +31,7 @@ export interface CartItem {
   };
   itemType?: "Product" | "GiftBox";
   stock?: number;
+  isUnlimited?: boolean;
 }
 
 export interface Coupon {
@@ -160,7 +161,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
           quantity: item.quantity,
           meta: item.meta,
           itemType: item.itemType,
-          stock: isPopulated ? (itemData.stock || 99) : 99
+          stock: isPopulated ? (itemData.stock || 0) : 0,
+          isUnlimited: isPopulated ? itemData.isUnlimited : false
         };
       })
     : localCartItems;
