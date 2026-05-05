@@ -13,6 +13,7 @@ interface CartItemProps {
    price: string;
    image: string;
    quantity: number;
+   stock?: number;
    meta?: {
       size?: string;
       color?: string;
@@ -24,7 +25,7 @@ interface CartItemProps {
 import { useCart } from "@/app/context/CartContext";
 import { useWishlist } from "@/app/context/WishlistContext";
 
-const CartItem: React.FC<CartItemProps> = ({ id, title, price, image, quantity, meta = {} }) => {
+const CartItem: React.FC<CartItemProps> = ({ id, title, price, image, quantity, stock, meta = {} }) => {
    const { removeFromCart } = useCart();
    const { addToWishlist } = useWishlist();
 
@@ -82,7 +83,7 @@ const CartItem: React.FC<CartItemProps> = ({ id, title, price, image, quantity, 
          </div>
 
          {/* Item Control & Price */}
-         <CartItemControl id={id} price={price} quantity={quantity} />
+         <CartItemControl id={id} price={price} quantity={quantity} stock={stock || 99} />
       </div>
    );
 };
