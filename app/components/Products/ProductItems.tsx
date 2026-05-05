@@ -10,6 +10,7 @@ import { useCart } from "@/app/context/CartContext";
 import { useRecentlyViewed } from "@/app/context/RecentlyViewedContext";
 import { toast } from "sonner";
 import { Icon } from "../Icon";
+import { StockWarning } from "../StockWarning";
 
 interface ProductProps {
    id: string;
@@ -87,12 +88,12 @@ export const ProductGridItem: React.FC<{ product: ProductProps }> = ({ product }
                <p className="text-gray-400 text-[11px] line-clamp-1 leading-relaxed font-medium">
                   {product.description}
                </p>
-               <div className="flex items-center gap-1.5 mt-1">
-                  <div className={`w-1 h-1 rounded-full ${product.stock > 0 || product.isUnlimited ? "bg-brand-gold" : "bg-rose-500"}`} />
-                  <span className={`text-[9px] font-bold uppercase tracking-widest ${product.stock > 0 || product.isUnlimited ? "text-gray-400" : "text-rose-500"}`}>
-                     {product.isUnlimited ? "Always Available" : product.stock > 0 ? `${product.stock} units left` : "Out of Stock"}
-                  </span>
-               </div>
+               <StockWarning 
+                  stock={product.stock} 
+                  quantity={0} 
+                  isUnlimited={product.isUnlimited} 
+                  className="mt-1" 
+               />
             </div>
          </Link>
 
@@ -193,12 +194,11 @@ export const ProductListItem: React.FC<{
                         <div className="w-1 h-1 md:w-1.5 md:h-1.5 bg-gray-300" />
                         <span className="uppercase tracking-widest text-[10px]">{product.orders} orders</span>
                      </div>
-                     <div className="flex items-center gap-1.5">
-                        <div className={`w-1 h-1 md:w-1.5 md:h-1.5 rounded-full ${product.stock > 0 || product.isUnlimited ? "bg-brand-gold" : "bg-rose-500"}`} />
-                        <span className={`font-bold uppercase tracking-widest text-[10px] ${product.stock > 0 || product.isUnlimited ? "text-gray-400" : "text-rose-500"}`}>
-                           {product.isUnlimited ? "Always Available" : product.stock > 0 ? `${product.stock} units left` : "Out of Stock"}
-                        </span>
-                     </div>
+                     <StockWarning 
+                        stock={product.stock} 
+                        quantity={0} 
+                        isUnlimited={product.isUnlimited} 
+                     />
                      {/* Shipping Info */}
                      <div className="flex items-center gap-1.5 text-brand-gold">
                         <div className="w-1 h-1 md:w-1.5 md:h-1.5 bg-brand-gold" />

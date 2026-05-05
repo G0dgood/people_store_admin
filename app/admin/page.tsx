@@ -17,6 +17,7 @@ import { HiArrowPath } from "react-icons/hi2";
 import { Tooltip } from "../components/Tooltip";
 import { Button } from "../components/Button";
 import { StatCardSkeleton } from "../components/Skeleton/StatCardSkeleton";
+import { useGetBrandStatsQuery } from "@/lib/redux/services/brandApi";
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -24,16 +25,19 @@ export default function AdminDashboard() {
 
   const { data: orderStatsResponse, isLoading: isLoadingOrders, refetch: refetchOrders, isFetching: isFetchingOrders } = useGetOrderStatsQuery();
   const { data: customerStatsResponse, isLoading: isLoadingCustomers, refetch: refetchCustomers, isFetching: isFetchingCustomers } = useGetCustomerStatsQuery();
+  const { data: brandStatsResponse, isLoading: isLoadingBrands, refetch: refetchBrands, isFetching: isFetchingBrands } = useGetBrandStatsQuery();
 
-  const isGlobalFetching = isFetchingOrders || isFetchingCustomers;
+  const isGlobalFetching = isFetchingOrders || isFetchingCustomers || isFetchingBrands;
 
   const handleRefresh = () => {
     refetchOrders();
     refetchCustomers();
+    refetchBrands();
   };
 
   const orderStats = orderStatsResponse?.data;
   const customerStats = customerStatsResponse?.data;
+  const brandStats = brandStatsResponse?.data;
 
   return (
     <div className="flex flex-col gap-6">
@@ -65,9 +69,10 @@ export default function AdminDashboard() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {(isLoadingOrders || isLoadingCustomers) ? (
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+        {(isLoadingOrders || isLoadingCustomers || isLoadingBrands) ? (
           <>
+            <StatCardSkeleton />
             <StatCardSkeleton />
             <StatCardSkeleton />
             <StatCardSkeleton />
@@ -91,6 +96,16 @@ export default function AdminDashboard() {
               onViewDetails={() => setActiveInsightSection('funnel')}
             />
             <StatCard
+              title="Total Stores"
+              value={(brandStats?.totalBrands || 0).toLocaleString()}
+              trendLabel="Live Brands"
+              trendValue={(brandStats?.activeBrands || 0).toString()}
+              trendIsUp={true}
+              previousLabel="Active Status"
+              previousValue={(brandStats?.activeBrands || 0).toString()}
+              onViewDetails={() => router.push("/admin/brands")}
+            />
+            <StatCard
               title="Active Customers"
               value={(customerStats?.activeCustomers || 0).toLocaleString()}
               trendLabel="Users"
@@ -104,34 +119,34 @@ export default function AdminDashboard() {
         )}
       </div>
 
-   <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
-    {/* Main Content Area */}
-    <div className="xl:col-span-8 flex flex-col gap-6">
-     {/* Analytics Overview */}
-     <AnalyticsOverview />
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
+        {/* Main Content Area */}
+        <div className="xl:col-span-8 flex flex-col gap-6">
+          {/* Analytics Overview */}
+          <AnalyticsOverview />
 
-     {/* Transaction Table */}
-     <TransactionTable />
+          {/* Transaction Table */}
+          <TransactionTable />
 
-     {/* Best Selling Product */}
-     <BestSellingProductTable />
+          {/* Best Selling Product */}
+          <BestSellingProductTable />
+        </div>
+
+        {/* Sidebar Analytics */}
+        <div className="xl:col-span-4 flex flex-col gap-6">
+          {/* Realtime Users */}
+          <RealtimeUsers onViewInsight={() => setActiveInsightSection('funnel')} />
+
+          {/* Top Products */}
+          <TopProducts onViewAll={() => router.push("/admin/products")} />
+
+          {/* Add New Product & Quick List */}
+          <QuickAddProduct
+            onAddNew={() => router.push("/admin/products")}
+            onAddProduct={(name) => console.log("Add", name)}
+          />
+        </div>
+      </div>
     </div>
-
-    {/* Sidebar Analytics */}
-    <div className="xl:col-span-4 flex flex-col gap-6">
-     {/* Realtime Users */}
-     <RealtimeUsers onViewInsight={() => setActiveInsightSection('funnel')} />
-
-     {/* Top Products */}
-     <TopProducts onViewAll={() => router.push("/admin/products")} />
-
-     {/* Add New Product & Quick List */}
-     <QuickAddProduct
-      onAddNew={() => router.push("/admin/products")}
-      onAddProduct={(name) => console.log("Add", name)}
-     />
-    </div>
-   </div>
-  </div>
- );
+  );
 }

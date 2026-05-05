@@ -50,6 +50,10 @@ export const brandApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Brand'],
     }),
+    getBrandStats: builder.query<ApiResponse<{ totalBrands: number; activeBrands: number }>, void>({
+      query: () => '/brands/stats',
+      providesTags: ['Brand'],
+    }),
   }),
   overrideExisting: true,
 });
@@ -60,4 +64,5 @@ export const {
   useCreateBrandMutation,
   useUpdateBrandMutation,
   useDeleteBrandMutation,
+  useGetBrandStatsQuery,
 } = brandApi;
