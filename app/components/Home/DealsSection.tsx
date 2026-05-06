@@ -111,7 +111,7 @@ const DealsSection = () => {
     addToCart({
       id: prod.product?._id || prod.id,
       title: prod.product?.name || prod.name,
-      price: prod.product?.price || 0,
+      price: (prod.product?.price * (1 - prod.discount / 100)).toString(),
       image: prod.product?.productImage || prod.image,
       stock: prod.product?.stock,
       isUnlimited: prod.product?.isUnlimited
@@ -170,15 +170,27 @@ const DealsSection = () => {
                     sizes="(max-width: 768px) 160px, 220px"
                   />
                 </div>
-                <p className="text-xs md:text-sm text-center line-clamp-1 text-gray-600 group-hover:text-brand-gold transition-colors font-medium">
-                  {prod.product?.name || "Premium Fragrance"}
-                </p>
+                <div className="flex flex-col items-start gap-1 w-full">
+                  <p className="text-xs md:text-sm text-start line-clamp-1 text-gray-600 group-hover:text-brand-gold transition-colors font-medium">
+                    {prod.product?.name || "Premium Fragrance"}
+                  </p>
+                  <div className="flex items-center justify-between gap-2 w-full">
+                    <span className="text-sm md:text-base font-bold text-gray-900">
+                      ₦{(prod.product?.price * (1 - prod.discount / 100)).toLocaleString()}
+                    </span>
+                    <span className="text-[10px] text-gray-400 line-through decoration-brand-gold">
+                      ₦{prod.product?.price?.toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-start justify-between w-full">
 
-                <StockWarning
-                  stock={prod.product?.stock}
-                  quantity={0}
-                  isUnlimited={prod.product?.isUnlimited}
-                />
+                  <StockWarning
+                    stock={prod.product?.stock}
+                    quantity={0}
+                    isUnlimited={prod.product?.isUnlimited}
+                  />
+                </div>
               </motion.div>
             </Link>
 
@@ -189,7 +201,7 @@ const DealsSection = () => {
                   item={{
                     id: prod.product?._id || prod.id,
                     title: prod.product?.name || prod.name,
-                    price: `\u20A6${(prod.product?.price || 0).toLocaleString()}`,
+                    price: `₦${(prod.product?.price * (1 - prod.discount / 100)).toLocaleString()}`,
                     image: prod.product?.productImage || prod.image,
                     stock: prod.product?.stock,
                     isUnlimited: prod.product?.isUnlimited
