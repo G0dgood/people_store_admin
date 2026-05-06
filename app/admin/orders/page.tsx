@@ -4,7 +4,7 @@ import { Icon } from "../../components/Icon";
 import { Button } from "../../components/Button";
 import { Input } from "../../components/Form/Inputs";
 import { StatCard } from "../../components/Admin/StatCard";
-import { TabFilter } from "../../components/Admin/TabFilter";
+import Dropdown from "../../components/Form/Dropdown";
 import { Pagination } from "../../components/Admin/Pagination";
 import Link from "next/link";
 import { useState } from "react";
@@ -143,10 +143,28 @@ export default function OrderListing() {
     <div className="bg-white border border-[#1C1C1C1A] rounded-[6px] overflow-hidden flex flex-col">
      {/* Filter Controls Row */}
      <div className="p-4 sm:p-6 flex flex-col lg:flex-row gap-6 items-center justify-between border-b border-gray-50">
-      <TabFilter
-       tabs={["All", "Pending", "Processing", "Shipped", "Delivered", "Cancelled"]}
-       activeTab={activeTab}
-       onChange={setActiveTab} id={""} />
+       <div className="w-full lg:w-64">
+        <Dropdown
+         options={[
+          { value: "All", label: "All Status" },
+          { value: "Pending", label: "Pending" },
+          { value: "Processing", label: "Processing" },
+          { value: "Shipped", label: "Shipped" },
+          { value: "Delivered", label: "Delivered" },
+          { value: "Cancelled", label: "Cancelled" },
+         ]}
+         value={activeTab}
+         onChange={setActiveTab}
+         getOptionDotColor={(opt) => {
+          if (opt.value === "Pending") return "#FB923C";
+          if (opt.value === "Processing") return "#10B981";
+          if (opt.value === "Shipped") return "#6B7280";
+          if (opt.value === "Delivered") return "#3B82F6";
+          if (opt.value === "Cancelled") return "#F43F5E";
+          return undefined;
+         }}
+        />
+       </div>
 
       <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
        <Input shape="rounded-sm"
