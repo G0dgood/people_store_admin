@@ -78,12 +78,12 @@ export const TopProducts: React.FC<TopProductsProps> = ({
               <div className="flex items-center gap-4 flex-1">
                 {/* Rank & MiniChart Container */}
                 <div className="relative">
-                  <div className="w-16 h-12 bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden p-1 flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
+                  <div className="w-16 h-12 bg-white rounded-xl border border-gray-200   overflow-hidden p-1 flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
                     <div className="absolute inset-0 bg-gradient-to-br from-brand-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                     <img src={p.productImage} className="w-full h-full object-contain" alt="" />
                   </div>
                   {/* Rank Badge */}
-                  <div className={`absolute -top-2 -left-2 w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-black border shadow-sm z-10 ${i === 0 ? "bg-[#1D3557] text-white border-[#1D3557]" : "bg-white text-gray-400 border-gray-200"
+                  <div className={`absolute -top-2 -left-2 w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-black border   z-10 ${i === 0 ? "bg-[#1D3557] text-white border-[#1D3557]" : "bg-white text-gray-400 border-gray-200"
                     }`}>
                     {i + 1}
                   </div>

@@ -40,7 +40,7 @@ export const UpdateRefundStatusModal: React.FC<UpdateStatusModalProps> = ({
       <div className="flex flex-col gap-8 py-4">
         {/* Target Info */}
         <div className="bg-gray-50 border border-gray-200 rounded-2xl p-5 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-brand-gold shadow-sm">
+          <div className="w-12 h-12 rounded-xl bg-white border border-gray-200 flex items-center justify-center text-brand-gold  ">
             <Icon name={isBulk ? "users" : "cached"} folder={isBulk ? "dashboardIcon" : "icon"} size="md" />
           </div>
           <div className="flex flex-col">
@@ -60,7 +60,7 @@ export const UpdateRefundStatusModal: React.FC<UpdateStatusModalProps> = ({
                 key={status.value}
                 onClick={() => setSelectedStatus(status.value)}
                 className={`w-full p-4 rounded-2xl border-2 transition-all cursor-pointer flex flex-col gap-3
-                   ${selectedStatus === status.value ? "bg-opacity-10 shadow-sm" : "border-gray-200 bg-white hover:border-gray-300"}
+                   ${selectedStatus === status.value ? "bg-opacity-10  " : "border-gray-200 bg-white hover:border-gray-300"}
                  `}
                 style={{
                   borderColor: selectedStatus === status.value ? status.color : undefined,
@@ -68,7 +68,7 @@ export const UpdateRefundStatusModal: React.FC<UpdateStatusModalProps> = ({
                 }}
               >
                 <div className="w-full flex items-center justify-between">
-                  <div 
+                  <div
                     className="w-8 h-8 rounded-full flex items-center justify-center text-white"
                     style={{ backgroundColor: selectedStatus === status.value ? status.color : "#f3f4f6", color: selectedStatus === status.value ? "white" : "#9ca3af" }}
                   >

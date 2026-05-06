@@ -306,7 +306,7 @@ export default function ProductListing() {
                   </td>
                   <td>
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-[6px] border border-gray-200 overflow-hidden bg-white p-1 shadow-sm ring-1 ring-gray-100">
+                      <div className="w-12 h-12 rounded-[6px] border border-gray-200 overflow-hidden bg-white p-1   ring-1 ring-gray-100">
                         <img src={product?.productImage} alt={product?.name} className="w-full h-full object-contain" />
                       </div>
                       <div className="flex flex-col">
@@ -327,10 +327,10 @@ export default function ProductListing() {
                     <span className="text-sm font-black text-brand-gold">₦{product?.price?.toLocaleString() || "0"}</span>
                   </td>
                   <td>
-                    <StockWarning 
-                      stock={product.stock || 0} 
-                      quantity={0} 
-                      isUnlimited={product.isUnlimited} 
+                    <StockWarning
+                      stock={product.stock || 0}
+                      quantity={0}
+                      isUnlimited={product.isUnlimited}
                     />
                   </td>
                   <td>

@@ -219,7 +219,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
             onClick={() => handleRatingToggle(val)}
           >
             <div className="flex items-center gap-3">
-              <div className={`w-4 h-4 border flex items-center justify-center transition-all duration-300 ${filters.rating === val ? "bg-brand-gold border-brand-gold shadow-sm" : "border-gray-200 group-hover:border-brand-gold"}`}>
+              <div className={`w-4 h-4 border flex items-center justify-center transition-all duration-300 ${filters.rating === val ? "bg-brand-gold border-brand-gold  " : "border-gray-200 group-hover:border-brand-gold"}`}>
                 {filters.rating === val && <Icon name="check" size="xs" className="text-white" />}
               </div>
               <div className="flex items-center gap-2">
@@ -233,7 +233,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
             </div>
             <AnimatePresence>
               {filters.rating === val && (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, scale: 0.5 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.5 }}

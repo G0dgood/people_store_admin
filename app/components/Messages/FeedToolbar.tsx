@@ -25,7 +25,7 @@ export const FeedToolbar: React.FC<FeedToolbarProps> = ({ activeTab, onTabChange
             {activeTab === tab && (
               <motion.div
                 layoutId="activeTab"
-                className="absolute inset-0 bg-white shadow-sm rounded-md z-[-1]"
+                className="absolute inset-0 bg-white   rounded-md z-[-1]"
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
               />
             )}
@@ -36,7 +36,7 @@ export const FeedToolbar: React.FC<FeedToolbarProps> = ({ activeTab, onTabChange
         ))}
       </div>
 
-      <motion.div 
+      <motion.div
         whileFocus={{ scale: 1.01 }}
         className="relative w-full sm:w-64"
       >

@@ -367,7 +367,7 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
     try {
       await logout(undefined).unwrap();
       dispatch(logOut());
-      
+
       // Clear all local storage and cookies manually as a fallback
       localStorage.clear();
       document.cookie.split(";").forEach((c) => {
@@ -379,7 +379,7 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
       toast.success("Session Terminated", {
         description: "You have been successfully logged out."
       });
-      
+
       // Absolute navigation to clear all states
       window.location.href = "/login";
     } catch (err) {
@@ -516,7 +516,7 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
             }}
             onMouseLeave={() => setHoveredItem(null)}
           >
-            <div className="w-10 h-10 rounded-full border border-gray-200 overflow-hidden shadow-sm flex-shrink-0 group-hover:border-brand-gold-light group-hover:shadow-md transition-all relative">
+            <div className="w-10 h-10 rounded-full border border-gray-200 overflow-hidden   flex-shrink-0 group-hover:border-brand-gold-light group-hover:shadow-md transition-all relative">
               <Image
                 src={user?.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.fullName || "A")}&background=C5A028&color=fff`}
                 alt="User"

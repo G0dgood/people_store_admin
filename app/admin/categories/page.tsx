@@ -188,11 +188,11 @@ export default function CategoriesPage() {
       />
       <RowsPerPage value={rowsPerPage} onChange={setRowsPerPage} />
       <Button shape="rounded-sm" variant="outline"
-       className="!p-2 text-gray-400 shadow-sm">
+       className="!p-2 text-gray-400  ">
        <Icon name="sort" folder="dashboardIcon" size="sm" />
       </Button>
       <Button shape="rounded-sm" variant="outline"
-       className="!p-2 text-gray-400 shadow-sm">
+       className="!p-2 text-gray-400  ">
        <Icon name="circle-plus" folder="dashboardIcon" size="sm" />
       </Button>
      </div>

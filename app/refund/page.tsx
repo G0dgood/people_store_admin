@@ -77,7 +77,7 @@ const RefundPage = () => {
             <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
               {eligibility.map((item, i) => (
                 <div key={i} className="bg-gray-50 p-8 rounded-3xl border border-gray-200 hover:border-brand-gold/30 transition-all group">
-                  <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-brand-gold shadow-sm mb-6 group-hover:scale-110 transition-transform">
+                  <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-brand-gold  mb-6 group-hover:scale-110 transition-transform">
                     {item.icon}
                   </div>
                   <h4 className="text-lg font-bold text-[#1D3557] mb-2">{item.title}</h4>
@@ -141,7 +141,7 @@ const RefundPage = () => {
                 <p className="text-brand-gold/80 font-medium">Our support team is ready to guide you through the process.</p>
               </div>
               <div className="flex items-center gap-4 relative z-10">
-                <button 
+                <button
                   onClick={() => setIsRequestModalOpen(true)}
                   className="bg-brand-gold text-white px-10 py-4 rounded-xl font-black uppercase tracking-widest text-xs shadow-xl shadow-blue-200 hover:scale-105 transition-transform"
                 >
@@ -157,9 +157,9 @@ const RefundPage = () => {
       </main>
 
 
-      <RefundRequestModal 
-        isOpen={isRequestModalOpen} 
-        onClose={() => setIsRequestModalOpen(false)} 
+      <RefundRequestModal
+        isOpen={isRequestModalOpen}
+        onClose={() => setIsRequestModalOpen(false)}
       />
       <Footer />
     </div>

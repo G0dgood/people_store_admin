@@ -13,7 +13,7 @@ import { useGetRolesQuery } from "@/lib/redux/services/roleApi";
 
 export default function GovernancePage() {
   const [activeTab, setActiveTab] = useState("Overview");
-  
+
   const { data: usersData, isLoading: isLoadingUsers } = useGetUsersQuery({ page: 1, limit: 100 });
   const { data: rolesData, isLoading: isLoadingRoles } = useGetRolesQuery();
 
@@ -37,27 +37,27 @@ export default function GovernancePage() {
             <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">System Access & Security Policy Management</p>
           </div>
           <div className="flex gap-3">
-             <Link href="/admin/users">
-               <Button shape="rounded-sm" variant="outline" iconLeft={<HiUsers size={16} />}>
-                 Staff Management
-               </Button>
-             </Link>
-             <Link href="/admin/roles">
-               <Button shape="rounded-sm" variant="primary" iconLeft={<HiShieldCheck size={16} />}>
-                 Role Matrix
-               </Button>
-             </Link>
+            <Link href="/admin/users">
+              <Button shape="rounded-sm" variant="outline" iconLeft={<HiUsers size={16} />}>
+                Staff Management
+              </Button>
+            </Link>
+            <Link href="/admin/roles">
+              <Button shape="rounded-sm" variant="primary" iconLeft={<HiShieldCheck size={16} />}>
+                Role Matrix
+              </Button>
+            </Link>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {stats.map((stat, i) => (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
-              key={stat.label} 
-              className="bg-white p-6 rounded-[8px] border border-gray-100 shadow-sm hover:shadow-md transition-all group"
+              key={stat.label}
+              className="bg-white p-6 rounded-[8px] border border-gray-100   hover:shadow-md transition-all group"
             >
               <div className="flex items-center gap-4">
                 <div className={`w-12 h-12 rounded-[6px] ${stat.bg} ${stat.color} flex items-center justify-center group-hover:scale-110 transition-transform`}>
@@ -75,11 +75,11 @@ export default function GovernancePage() {
 
       <div className="bg-white rounded-[6px] border border-[#1C1C1C1A] overflow-hidden flex flex-col">
         <div className="p-4 sm:p-6 flex flex-col lg:flex-row gap-6 items-center justify-between border-b border-gray-50 bg-gray-50/30">
-          <TabFilter 
-            tabs={["Overview", "Access Audit", "Recent Policy Changes"]} 
-            activeTab={activeTab} 
-            onChange={setActiveTab} 
-            id="gov-tabs" 
+          <TabFilter
+            tabs={["Overview", "Access Audit", "Recent Policy Changes"]}
+            activeTab={activeTab}
+            onChange={setActiveTab}
+            id="gov-tabs"
           />
           <Tooltip text="Refresh Governance Data">
             <Button shape="rounded-sm" variant="outline" className="!p-2.5 text-gray-400 hover:text-brand-gold border-gray-200">
@@ -89,27 +89,27 @@ export default function GovernancePage() {
         </div>
 
         <div className="p-8 flex flex-col items-center justify-center min-h-[400px] text-center gap-4">
-           <div className="w-20 h-20 rounded-full bg-brand-gold/5 flex items-center justify-center text-brand-gold animate-pulse">
-             <HiKey size={40} />
-           </div>
-           <div className="flex flex-col gap-2 max-w-md">
-             <h3 className="text-lg font-black text-[#1D3557]">Administrative Security Console</h3>
-             <p className="text-sm font-medium text-gray-400 leading-relaxed">
-               This hub provides high-level oversight of your administrative structure. Use the links above to manage individual staff accounts or fine-tune global role permissions.
-             </p>
-           </div>
-           <div className="flex gap-3 mt-4">
-             <Link href="/admin/roles">
-               <Button shape="rounded-sm" variant="outline" className="px-8 border-gray-200 font-black">
-                 Manage Roles
-               </Button>
-             </Link>
-             <Link href="/admin/users">
-               <Button shape="rounded-sm" variant="primary" className="px-8 font-black">
-                 Review Staff
-               </Button>
-             </Link>
-           </div>
+          <div className="w-20 h-20 rounded-full bg-brand-gold/5 flex items-center justify-center text-brand-gold animate-pulse">
+            <HiKey size={40} />
+          </div>
+          <div className="flex flex-col gap-2 max-w-md">
+            <h3 className="text-lg font-black text-[#1D3557]">Administrative Security Console</h3>
+            <p className="text-sm font-medium text-gray-400 leading-relaxed">
+              This hub provides high-level oversight of your administrative structure. Use the links above to manage individual staff accounts or fine-tune global role permissions.
+            </p>
+          </div>
+          <div className="flex gap-3 mt-4">
+            <Link href="/admin/roles">
+              <Button shape="rounded-sm" variant="outline" className="px-8 border-gray-200 font-black">
+                Manage Roles
+              </Button>
+            </Link>
+            <Link href="/admin/users">
+              <Button shape="rounded-sm" variant="primary" className="px-8 font-black">
+                Review Staff
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

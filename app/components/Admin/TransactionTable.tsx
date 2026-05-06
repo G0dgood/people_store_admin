@@ -22,7 +22,7 @@ export function TransactionTable() {
   const transactions = response?.data.transactions || [];
 
   return (
-    <div className="bg-white p-8 rounded-[6px] border border-gray-200 shadow-sm flex flex-col gap-6">
+    <div className="bg-white p-8 rounded-[6px] border border-gray-200   flex flex-col gap-6">
       <TransactionDetailDrawer
         isOpen={isDetailDrawerOpen}
         onClose={() => setIsDetailDrawerOpen(false)}
@@ -33,7 +33,7 @@ export function TransactionTable() {
         <Button
           shape="rounded-sm"
           iconRight={<Icon name="sort" folder="dashboardIcon" size="sm" />}
-          className="bg-brand-charcoal hover:bg-black text-white text-[11px] font-black px-6 h-9 rounded-[6px] shadow-sm"
+          className="bg-brand-charcoal hover:bg-black text-white text-[11px] font-black px-6 h-9 rounded-[6px]  "
         >
           Filter
         </Button>

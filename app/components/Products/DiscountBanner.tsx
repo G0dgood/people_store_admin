@@ -56,7 +56,7 @@ const DiscountBanner = () => {
     try {
       // 1. Copy to clipboard for convenience
       await navigator.clipboard.writeText(code);
-      
+
       // 2. If cart has items, try to apply it immediately
       if (cartItems.length > 0) {
         try {
@@ -142,7 +142,7 @@ const DiscountBanner = () => {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="text-sm text-white opacity-90 drop-shadow-sm font-bold italic"
+          className="text-sm text-white opacity-90 drop-  font-bold italic"
         >
           {currentBanner.subtitle}
         </motion.p>

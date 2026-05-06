@@ -52,17 +52,17 @@ export function AddCouponModal({ isOpen, onClose }: AddCouponModalProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       await createCoupon({
         ...formData,
         usageLimit: formData.usageLimit ? parseInt(formData.usageLimit) : 0,
       }).unwrap();
-      
+
       toast.success("Coupon Created Successfully", {
         description: `Coupon ${formData.code} is now active.`
       });
-      
+
       setFormData({
         code: "",
         title: "",
@@ -225,19 +225,17 @@ export function AddCouponModal({ isOpen, onClose }: AddCouponModalProps) {
                   key={item.color}
                   type="button"
                   onClick={() => setFormData({ ...formData, bgColor: item.color })}
-                  className={`group relative flex flex-col items-center gap-1.5 p-1 transition-all ${
-                    formData.bgColor === item.color ? "opacity-100" : "opacity-60 hover:opacity-100"
-                  }`}
-                >
-                  <div 
-                    className={`w-10 h-10 rounded-full border-2 transition-all ${
-                      formData.bgColor === item.color ? "border-brand-gold scale-110 shadow-lg" : "border-transparent"
+                  className={`group relative flex flex-col items-center gap-1.5 p-1 transition-all ${formData.bgColor === item.color ? "opacity-100" : "opacity-60 hover:opacity-100"
                     }`}
+                >
+                  <div
+                    className={`w-10 h-10 rounded-full border-2 transition-all ${formData.bgColor === item.color ? "border-brand-gold scale-110 shadow-lg" : "border-transparent"
+                      }`}
                     style={{ backgroundColor: item.color }}
                   >
                     {formData.bgColor === item.color && (
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-1.5 h-1.5 rounded-full bg-white shadow-sm" />
+                        <div className="w-1.5 h-1.5 rounded-full bg-white  " />
                       </div>
                     )}
                   </div>

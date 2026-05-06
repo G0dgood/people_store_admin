@@ -231,7 +231,7 @@ export default function UsersManagement() {
           </td>
           <td>
            <div className="flex items-center gap-4 py-2">
-            <div className="w-10 h-10 rounded-full border-2 border-white shadow-sm overflow-hidden bg-gray-100 flex-shrink-0 group-hover:scale-110 transition-transform duration-500">
+            <div className="w-10 h-10 rounded-full border-2 border-white   overflow-hidden bg-gray-100 flex-shrink-0 group-hover:scale-110 transition-transform duration-500">
              <img src={user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.fullName)}&background=1D3557&color=fff`} alt={user.fullName} className="w-full h-full object-cover" />
             </div>
             <div className="flex flex-col min-w-0">

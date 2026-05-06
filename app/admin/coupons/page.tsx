@@ -181,7 +181,7 @@ export default function CouponsListing() {
                           <>
                             <img src={coupon.thumbnailUrl || coupon.image} alt="" className="w-full h-full object-cover opacity-80" />
                             <div className="absolute inset-0 flex items-center justify-center">
-                              <Icon name="play" folder="dashboardIcon" size="sm" className="text-white drop-shadow-sm" />
+                              <Icon name="play" folder="dashboardIcon" size="sm" className="text-white drop- " />
                             </div>
                           </>
                         ) : coupon.image ? (

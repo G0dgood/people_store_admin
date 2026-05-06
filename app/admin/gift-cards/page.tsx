@@ -96,7 +96,7 @@ const GiftCardsPage = () => {
         </div>
       </div>
 
-      <div className="bg-white rounded-[6px] border border-gray-200 shadow-sm overflow-hidden flex flex-col">
+      <div className="bg-white rounded-[6px] border border-gray-200   overflow-hidden flex flex-col">
         {/* Filter Bar */}
         <div className="p-4 sm:p-6 flex flex-col lg:flex-row gap-6 items-center justify-between border-b border-gray-50">
           <TabFilter
@@ -121,7 +121,7 @@ const GiftCardsPage = () => {
               <Button
                 shape="rounded-sm"
                 variant="outline"
-                className={`!p-2.5 w-10 h-10 transition-all ${viewType === "grid" ? "border-brand-gold bg-brand-gold/10 text-brand-gold shadow-sm" : "text-gray-400 border-gray-100"}`}
+                className={`!p-2.5 w-10 h-10 transition-all ${viewType === "grid" ? "border-brand-gold bg-brand-gold/10 text-brand-gold  " : "text-gray-400 border-gray-100"}`}
                 onClick={() => setViewType("grid")}
               >
                 <HiSquares2X2 size={20} />
@@ -129,7 +129,7 @@ const GiftCardsPage = () => {
               <Button
                 shape="rounded-sm"
                 variant="outline"
-                className={`!p-2.5 w-10 h-10 transition-all ${viewType === "list" ? "border-brand-gold bg-brand-gold/10 text-brand-gold shadow-sm" : "text-gray-400 border-gray-100"}`}
+                className={`!p-2.5 w-10 h-10 transition-all ${viewType === "list" ? "border-brand-gold bg-brand-gold/10 text-brand-gold  " : "text-gray-400 border-gray-100"}`}
                 onClick={() => setViewType("list")}
               >
                 <HiListBullet size={20} />
@@ -146,8 +146,8 @@ const GiftCardsPage = () => {
           ) : viewType === "grid" ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {giftCards.map((card) => (
-                <div 
-                  key={card._id} 
+                <div
+                  key={card._id}
                   className="group relative rounded-[16px] overflow-hidden p-6 border border-white/5 hover:border-white/20 transition-all duration-500 shadow-xl shadow-black/20"
                   style={{ backgroundColor: card.color || "#1D3557" }}
                 >
@@ -187,8 +187,8 @@ const GiftCardsPage = () => {
 
                   <div className="absolute top-0 right-0">
                     <span className={`px-3 py-1 rounded-bl-[12px] text-[8px] font-black uppercase tracking-widest ${card.status === 'Active' ? 'bg-green-500 text-white' :
-                        card.status === 'Used' ? 'bg-blue-500 text-white' :
-                          'bg-red-500 text-white'
+                      card.status === 'Used' ? 'bg-blue-500 text-white' :
+                        'bg-red-500 text-white'
                       }`}>
                       {card.status}
                     </span>
@@ -223,8 +223,8 @@ const GiftCardsPage = () => {
                       <td className="py-4 text-xs font-bold text-gray-600">{card.expiryDate ? new Date(card.expiryDate).toLocaleDateString() : "No Expiry"}</td>
                       <td className="py-4">
                         <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest ${card.status === 'Active' ? 'bg-green-50 text-green-600' :
-                            card.status === 'Used' ? 'bg-blue-50 text-blue-600' :
-                              'bg-red-50 text-red-600'
+                          card.status === 'Used' ? 'bg-blue-50 text-blue-600' :
+                            'bg-red-50 text-red-600'
                           }`}>
                           {card.status}
                         </span>

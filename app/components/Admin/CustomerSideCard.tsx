@@ -45,11 +45,11 @@ export function CustomerSideCard({ customer, onClose }: CustomerSideCardProps) {
           <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest">
             Customer Info
           </span>
-          <div className="flex items-center gap-3 p-3 bg-white border border-gray-50 rounded-[6px] shadow-sm">
+          <div className="flex items-center gap-3 p-3 bg-white border border-gray-50 rounded-[6px]  ">
             <Icon name="ic_round-phone" folder="dashboardIcon" size="sm" className="text-gray-900" />
             <span className="text-sm font-semibold text-gray-700">{customer.phone}</span>
           </div>
-          <div className="flex items-center gap-3 p-3 bg-white border border-gray-50 rounded-[6px] shadow-sm">
+          <div className="flex items-center gap-3 p-3 bg-white border border-gray-50 rounded-[6px]  ">
             <Icon name="mdi_location (1)" folder="dashboardIcon" size="sm" className="text-gray-900" />
             <span className="text-sm font-semibold text-gray-700">{customer.address}</span>
           </div>
@@ -92,17 +92,17 @@ export function CustomerSideCard({ customer, onClose }: CustomerSideCardProps) {
             Order overview
           </span>
           <div className="grid grid-cols-3 gap-3">
-            <div className="p-3 bg-white border border-gray-50 rounded-[6px] flex flex-col items-center gap-1 shadow-sm">
+            <div className="p-3 bg-white border border-gray-50 rounded-[6px] flex flex-col items-center gap-1  ">
               <span className="text-lg font-bold text-[#1D3557]">150</span>
               <span className="text-[9px] font-bold text-gray-400 uppercase">Total order</span>
             </div>
-            <div className="p-3 bg-white border border-gray-50 rounded-[6px] flex flex-col items-center gap-1 shadow-sm border-brand-gold/10">
+            <div className="p-3 bg-white border border-gray-50 rounded-[6px] flex flex-col items-center gap-1   border-brand-gold/10">
               <span className="text-lg font-bold text-brand-gold">140</span>
               <span className="text-[9px] font-bold text-brand-gold/60 uppercase text-center">
                 Completed
               </span>
             </div>
-            <div className="p-3 bg-white border border-gray-50 rounded-[6px] flex flex-col items-center gap-1 shadow-sm border-rose-50">
+            <div className="p-3 bg-white border border-gray-50 rounded-[6px] flex flex-col items-center gap-1   border-rose-50">
               <span className="text-lg font-bold text-rose-500">10</span>
               <span className="text-[9px] font-bold text-rose-500/60 uppercase">Canceled</span>
             </div>

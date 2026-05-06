@@ -88,7 +88,7 @@ const Logo: React.FC<LogoProps> = ({
         {/* Box Body / Label */}
         <div className={`
           flex items-center justify-center transition-all duration-500
-          ${isLight ? "bg-brand-charcoal border-brand-gold-light/30 shadow-[0_4px_10px_rgba(0,0,0,0.1)]" : "bg-white border-brand-charcoal/10 shadow-sm"} 
+          ${isLight ? "bg-brand-charcoal border-brand-gold-light/30 shadow-[0_4px_10px_rgba(0,0,0,0.1)]" : "bg-white border-brand-charcoal/10  "} 
           border-[0.5px] ${style.box} rounded-[1px]
         `}>
           <span className={`

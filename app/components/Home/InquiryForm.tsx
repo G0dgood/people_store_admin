@@ -19,7 +19,7 @@ const InquiryForm = () => {
 
       <div className="relative z-10 w-full p-6 md:p-10 flex flex-col lg:flex-row justify-between gap-10">
         <div className="max-w-md text-white flex flex-col gap-4 z-10">
-          <h2 className="text-3xl md:text-[32px] font-bold leading-tight drop-shadow-sm pr-4 text-white">
+          <h2 className="text-3xl md:text-[32px] font-bold leading-tight drop-  pr-4 text-white">
             An easy way to send requests to all suppliers
           </h2>
           <p className="text-base text-white hidden md:block leading-relaxed max-w-[390px] drop-shadow-md">

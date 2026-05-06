@@ -210,7 +210,7 @@ export function SupportChatDrawer({ isOpen, onClose, ticketId }: SupportChatDraw
       {/* Chat Header */}
       <div className="flex items-center gap-4 pb-6 border-b border-gray-200">
        <div className="relative">
-        <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-sm">
+        <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white  ">
          <img src={"https://ui-avatars.com/api/?name=" + ticket?.customerName} alt="" className="w-full h-full object-cover" />
         </div>
         <div className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full"></div>
@@ -233,7 +233,7 @@ export function SupportChatDrawer({ isOpen, onClose, ticketId }: SupportChatDraw
        {allMessages.map((msg, idx) => (
         <div key={idx} className={`flex ${msg.sender === "Admin" ? "justify-end" : "justify-start"}`}>
          <div className={`max-w-[80%] flex flex-col gap-1.5 ${msg.sender === "Admin" ? "items-end" : "items-start"}`}>
-          <div className={`p-4 rounded-2xl text-xs font-bold leading-relaxed shadow-sm flex flex-col gap-3
+          <div className={`p-4 rounded-2xl text-xs font-bold leading-relaxed   flex flex-col gap-3
                                  ${msg.sender === "Admin"
             ? "bg-brand-gold text-white rounded-tr-none"
             : "bg-gray-100 text-[#1D3557] rounded-tl-none"}

@@ -8,8 +8,8 @@ export const MessageDropdown: React.FC = () => {
   const router = useRouter();
 
   return (
-    <div 
-      className="absolute top-full right-1/2 translate-x-1/2 pt-4 z-50 cursor-default" 
+    <div
+      className="absolute top-full right-1/2 translate-x-1/2 pt-4 z-50 cursor-default"
       onClick={e => e.preventDefault()}
     >
       <DropdownMenu width={320} className="shadow-2xl border-gray-200 p-0">
@@ -31,7 +31,7 @@ export const MessageDropdown: React.FC = () => {
               </div>
               <p className="text-xs text-brand-gold font-medium truncate mt-0.5">Can you confirm all dimensions...</p>
             </div>
-            <div className="w-2 h-2 bg-brand-gold rounded-full absolute top-5 right-4 shadow-sm"></div>
+            <div className="w-2 h-2 bg-brand-gold rounded-full absolute top-5 right-4  "></div>
           </div>
 
           {/* Notification 2 (Unread) */}
@@ -46,7 +46,7 @@ export const MessageDropdown: React.FC = () => {
               </div>
               <p className="text-xs text-brand-gold font-medium truncate mt-0.5">Your tracking number is #9034...</p>
             </div>
-            <div className="w-2 h-2 bg-brand-gold rounded-full absolute top-5 right-4 shadow-sm"></div>
+            <div className="w-2 h-2 bg-brand-gold rounded-full absolute top-5 right-4  "></div>
           </div>
 
           {/* Notification 3 (Read) */}
@@ -64,10 +64,10 @@ export const MessageDropdown: React.FC = () => {
           </div>
         </div>
 
-        <DropdownFooterAction 
-          label="View all messages" 
-          onClick={() => router.push('/messages')} 
-          icon="arrow_forward" 
+        <DropdownFooterAction
+          label="View all messages"
+          onClick={() => router.push('/messages')}
+          icon="arrow_forward"
         />
       </DropdownMenu>
     </div>

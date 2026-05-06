@@ -34,7 +34,7 @@ export const ProductMediaMetaSidebar: React.FC<ProductMediaMetaSidebarProps> = (
   return (
     <div className="flex flex-col gap-6">
       {/* Upload Media */}
-      <div className="bg-white rounded-[6px] border border-gray-200 shadow-sm p-8 flex flex-col gap-6">
+      <div className="bg-white rounded-[6px] border border-gray-200   p-8 flex flex-col gap-6">
         <h3 className="text-base font-bold text-[#1D3557]">Upload Product Image</h3>
 
         <div className="flex flex-col gap-4">
@@ -75,14 +75,14 @@ export const ProductMediaMetaSidebar: React.FC<ProductMediaMetaSidebarProps> = (
 
             <div className="absolute bottom-4 left-4 right-4 flex justify-between gap-2">
               <Button shape="rounded-sm" variant="outline"
-                className="bg-white/90 backdrop-blur-sm shadow-sm py-2 px-6 text-[10px]"
+                className="bg-white/90 backdrop-blur-sm   py-2 px-6 text-[10px]"
                 iconLeft={<HiPhoto />}
                 onClick={() => setIsUploadModalOpen(true)}
               >
                 {stagedMedia.length > 0 ? "Change Primary" : "Browse"}
               </Button>
               <Button shape="rounded-sm" variant="outline"
-                className="bg-white/90 backdrop-blur-sm shadow-sm py-2 px-6 text-[10px]"
+                className="bg-white/90 backdrop-blur-sm   py-2 px-6 text-[10px]"
                 iconLeft={<HiArrowPath />}
                 onClick={() => setIsUploadModalOpen(true)}
               >
@@ -94,7 +94,7 @@ export const ProductMediaMetaSidebar: React.FC<ProductMediaMetaSidebarProps> = (
 
         <div className="grid grid-cols-3 gap-3">
           {stagedMedia.slice(1).map((media, idx) => (
-            <div key={idx + 1} className="relative aspect-square rounded-[6px] border border-gray-200 overflow-hidden bg-white shadow-sm ring-1 ring-gray-100 group/thumb">
+            <div key={idx + 1} className="relative aspect-square rounded-[6px] border border-gray-200 overflow-hidden bg-white   ring-1 ring-gray-100 group/thumb">
               {(media.file?.type?.startsWith("video") || media.url?.match(/\.(mp4|webm|ogg)$/i)) ? (
                 <video src={media.url} className="w-full h-full object-cover" />
               ) : (
@@ -103,14 +103,14 @@ export const ProductMediaMetaSidebar: React.FC<ProductMediaMetaSidebarProps> = (
               <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover/thumb:opacity-100 transition-opacity">
                 <button
                   onClick={() => makePrimary(idx + 1)}
-                  className="w-5 h-5 bg-white/90 rounded-full flex items-center justify-center text-emerald-500 hover:text-emerald-600 transition-colors shadow-sm"
+                  className="w-5 h-5 bg-white/90 rounded-full flex items-center justify-center text-emerald-500 hover:text-emerald-600 transition-colors  "
                   title="Make Primary"
                 >
                   <HiPhoto className="w-3.5 h-3.5" />
                 </button>
                 <button
                   onClick={() => removeMedia(idx + 1)}
-                  className="w-5 h-5 bg-white/90 rounded-full flex items-center justify-center text-gray-400 hover:text-rose-500 transition-colors shadow-sm"
+                  className="w-5 h-5 bg-white/90 rounded-full flex items-center justify-center text-gray-400 hover:text-rose-500 transition-colors  "
                   title="Remove"
                 >
                   <HiXCircle className="w-4 h-4" />
@@ -205,7 +205,7 @@ export const ProductMediaMetaSidebar: React.FC<ProductMediaMetaSidebarProps> = (
                     {["#1D3557", "#457B9D", "#A8DADC", "#2A9D8F", "#E9C46A", "#F4A261", "#E76F51", "#264653"].map((preset) => (
                       <button
                         key={preset}
-                        className={`w-6 h-6 rounded-full border shadow-sm transition-transform hover:scale-125 ${formData.colors === preset ? "border-brand-gold ring-2 ring-brand-gold/20" : "border-white"}`}
+                        className={`w-6 h-6 rounded-full border   transition-transform hover:scale-125 ${formData.colors === preset ? "border-brand-gold ring-2 ring-brand-gold/20" : "border-white"}`}
                         style={{ backgroundColor: preset }}
                         onClick={() => {
                           handleInputChange("colors", preset);
@@ -255,7 +255,7 @@ export const ProductMediaMetaSidebar: React.FC<ProductMediaMetaSidebarProps> = (
             {formData.colors && (
               <div className="flex items-center gap-2 p-3 bg-gray-50/50 rounded-[6px] border border-gray-100 w-fit">
                 <div
-                  className="w-4 h-4 rounded-full border border-black/5 shadow-sm"
+                  className="w-4 h-4 rounded-full border border-black/5  "
                   style={{ backgroundColor: formData.colors }}
                 />
                 <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">{formData.colors}</span>

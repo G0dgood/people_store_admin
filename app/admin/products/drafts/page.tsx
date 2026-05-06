@@ -168,7 +168,7 @@ export default function DraftProductsListing() {
                   </td>
                   <td>
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-[6px] border border-gray-200 overflow-hidden bg-white p-1 shadow-sm ring-1 ring-gray-100">
+                      <div className="w-12 h-12 rounded-[6px] border border-gray-200 overflow-hidden bg-white p-1   ring-1 ring-gray-100">
                         <img src={product.productImage} alt={product.name} className="w-full h-full object-contain" />
                       </div>
                       <div className="flex flex-col">

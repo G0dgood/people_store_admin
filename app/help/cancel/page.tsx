@@ -44,7 +44,7 @@ const CancelOrderPage = () => {
                         priority
                     />
                     <div className="absolute inset-0 bg-gradient-to-r from-[#1D3557] via-[#1D3557]/80 to-transparent" />
-                    
+
                     <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 relative z-10">
                         <motion.div
                             initial={{ opacity: 0, x: -30 }}
@@ -73,7 +73,7 @@ const CancelOrderPage = () => {
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: i * 0.1 }}
-                                className="bg-white p-10 rounded-[40px] border border-gray-200 shadow-sm hover:shadow-2xl transition-all group"
+                                className="bg-white p-10 rounded-[40px] border border-gray-200   hover:shadow-2xl transition-all group"
                             >
                                 <div className="w-16 h-16 bg-brand-gold-light rounded-3xl flex items-center justify-center text-brand-gold mb-8 group-hover:bg-brand-gold group-hover:text-white transition-colors duration-500">
                                     {policy.icon}
@@ -94,7 +94,7 @@ const CancelOrderPage = () => {
                     {/* Interactive Action Area */}
                     <div className="mt-24 md:mt-40 bg-gray-50 rounded-[64px] p-10 md:p-24 overflow-hidden relative">
                         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-gold/5 rounded-full filter blur-[100px] translate-x-1/2 -translate-y-1/2" />
-                        
+
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center relative z-10">
                             <div className="flex flex-col gap-8">
                                 <div className="flex flex-col gap-4">
@@ -105,15 +105,15 @@ const CancelOrderPage = () => {
                                     If your order is within the 6-hour pre-orchestration window, please connect with our support concierge immediately to process your request.
                                 </p>
                                 <div className="flex flex-col md:flex-row gap-4 pt-2">
-                                    <Button 
+                                    <Button
                                         onClick={() => window.location.href = '/contact'}
-                                        variant="primary" 
+                                        variant="primary"
                                         className="px-12 py-5 bg-[#1D3557] text-white rounded-2xl font-black uppercase tracking-widest text-sm shadow-xl"
                                     >
                                         Request Cancellation
                                     </Button>
-                                    <Button 
-                                        variant="ghost" 
+                                    <Button
+                                        variant="ghost"
                                         className="px-12 py-5 border-gray-200 text-[#1D3557] rounded-2xl font-black uppercase tracking-widest text-sm"
                                     >
                                         View My Orders
@@ -121,7 +121,7 @@ const CancelOrderPage = () => {
                                 </div>
                             </div>
 
-                            <div className="flex flex-col gap-8 bg-white p-10 md:p-12 rounded-[48px] shadow-sm border border-gray-200">
+                            <div className="flex flex-col gap-8 bg-white p-10 md:p-12 rounded-[48px]   border border-gray-200">
                                 <div className="flex items-center gap-4 text-brand-gold">
                                     <HiShieldCheck size={32} />
                                     <h4 className="text-xl font-black text-[#1D3557]">Our Guarantee</h4>

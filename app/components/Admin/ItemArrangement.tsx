@@ -17,7 +17,7 @@ export const ItemArrangement: React.FC<ItemArrangementProps> = ({
  setConfig,
 }) => {
  return (
-  <section className="bg-white p-8 rounded-[6px] border border-gray-200 shadow-sm flex flex-col gap-6 xl:col-span-1">
+  <section className="bg-white p-8 rounded-[6px] border border-gray-200   flex flex-col gap-6 xl:col-span-1">
    <h3 className="text-lg font-black text-[#1D3557] flex items-center gap-2">
     <span className="w-8 h-8 rounded-[4px] bg-brand-gold/10 text-brand-gold flex items-center justify-center text-xs">04</span>
     Marketing Arrangement
@@ -68,7 +68,7 @@ export const ItemArrangement: React.FC<ItemArrangementProps> = ({
        <Reorder.Item
         key={item._id}
         value={item}
-        className="p-4 bg-white rounded-[4px] border border-gray-200 shadow-sm cursor-grab active:cursor-grabbing flex items-center justify-between group hover:border-brand-gold transition-colors"
+        className="p-4 bg-white rounded-[4px] border border-gray-200   cursor-grab active:cursor-grabbing flex items-center justify-between group hover:border-brand-gold transition-colors"
        >
         <div className="flex items-center gap-4">
          <div className="w-10 h-10 rounded-[6px] bg-gray-50 p-1">

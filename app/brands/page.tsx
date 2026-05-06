@@ -56,7 +56,7 @@ const BrandsPage = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.05 }}
-                  className="relative aspect-[4/5] rounded-[32px] overflow-hidden cursor-pointer group shadow-sm hover:shadow-xl transition-all duration-500"
+                  className="relative aspect-[4/5] rounded-[32px] overflow-hidden cursor-pointer group   hover:shadow-xl transition-all duration-500"
                >
                   <Image
                      src={brand.logo || "/placeholder.png"}
@@ -126,11 +126,11 @@ const BrandsPage = () => {
 
             {/* Brands Concierge section */}
             <section className="bg-[#1D3557] py-24 relative overflow-hidden">
-               <Image 
-                  src="/brandImage/brand_banner.png" 
-                  alt="Background" 
-                  fill 
-                  className="object-cover opacity-10 grayscale" 
+               <Image
+                  src="/brandImage/brand_banner.png"
+                  alt="Background"
+                  fill
+                  className="object-cover opacity-10 grayscale"
                />
                <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 flex flex-col items-center text-center gap-8 relative z-10">
                   <div className="flex flex-col gap-2">
@@ -147,10 +147,10 @@ const BrandsPage = () => {
             </section>
          </main>
 
-         <BrandDetailModal 
-            isOpen={isModalOpen} 
-            onClose={() => setIsModalOpen(false)} 
-            brand={selectedBrand} 
+         <BrandDetailModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            brand={selectedBrand}
          />
 
          <Footer />

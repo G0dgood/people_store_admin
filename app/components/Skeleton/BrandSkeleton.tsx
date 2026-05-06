@@ -4,7 +4,7 @@ import React from "react";
 
 export const BrandSkeleton = () => {
   return (
-    <div className="relative aspect-[4/5] rounded-[32px] overflow-hidden bg-gray-100 animate-pulse shadow-sm">
+    <div className="relative aspect-[4/5] rounded-[32px] overflow-hidden bg-gray-100 animate-pulse  ">
       <div className="absolute inset-0 p-4 flex flex-col justify-end">
         <div className="bg-white/20 backdrop-blur-md p-4 rounded-3xl border border-white/20 flex flex-col gap-3">
           <div className="flex items-center justify-end">

@@ -6,7 +6,7 @@ export function StaffProfileSkeleton() {
   return (
     <div className="flex flex-col gap-8 pb-12 animate-pulse">
       {/* Profile Header Skeleton */}
-      <div className="bg-white rounded-2xl border border-gray-100 p-6 flex flex-col items-center text-center gap-4 relative overflow-hidden shadow-sm">
+      <div className="bg-white rounded-2xl border border-gray-100 p-6 flex flex-col items-center text-center gap-4 relative overflow-hidden  ">
         <div className="w-24 h-24 rounded-full bg-gray-100" />
         <div className="flex flex-col items-center gap-2">
           <div className="h-6 w-32 bg-gray-100 rounded-md" />

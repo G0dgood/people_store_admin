@@ -112,7 +112,7 @@ const GiftCardPurchasePage = () => {
 
        <div className="mt-12 flex flex-col gap-6">
         <div className="flex items-center gap-4 p-6 bg-gray-50 rounded-2xl border border-gray-100">
-         <div className="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center text-brand-charcoal">
+         <div className="w-12 h-12 bg-white rounded-xl   flex items-center justify-center text-brand-charcoal">
           <HiSparkles size={24} />
          </div>
          <div>
@@ -121,7 +121,7 @@ const GiftCardPurchasePage = () => {
          </div>
         </div>
         <div className="flex items-center gap-4 p-6 bg-gray-50 rounded-2xl border border-gray-100">
-         <div className="w-12 h-12 bg-white rounded-xl shadow-sm flex items-center justify-center text-brand-charcoal">
+         <div className="w-12 h-12 bg-white rounded-xl   flex items-center justify-center text-brand-charcoal">
           <HiGift size={24} />
          </div>
          <div>

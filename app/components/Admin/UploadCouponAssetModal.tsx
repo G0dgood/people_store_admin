@@ -110,7 +110,7 @@ export function UploadCouponAssetModal({ isOpen, onClose, onUploadSuccess }: Upl
             accept=".jpg,.jpeg,.png,.webp"
             onChange={handleFileSelect}
           />
-          <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center text-gray-400 group-hover:text-brand-gold group-hover:scale-110 transition-all shadow-sm">
+          <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center text-gray-400 group-hover:text-brand-gold group-hover:scale-110 transition-all  ">
             <Icon name="cloud_upload" folder="icon" size="md" />
           </div>
           <div className="flex flex-col items-center gap-1 text-center">

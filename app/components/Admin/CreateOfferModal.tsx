@@ -219,7 +219,7 @@ export function CreateOfferModal({ isOpen, onClose, onSave, initialSelections }:
               </div>
             ) : (
               selectedProductList.map((p: any) => (
-                <div key={p._id} className="bg-white p-4 rounded-sm border border-gray-200 shadow-sm flex flex-col gap-4 group hover:border-brand-gold/30 transition-all">
+                <div key={p._id} className="bg-white p-4 rounded-sm border border-gray-200   flex flex-col gap-4 group hover:border-brand-gold/30 transition-all">
                   <div className="flex items-center gap-3">
                     <div className="w-12 h-12 bg-white rounded-sm border border-gray-50 p-1 shrink-0 overflow-hidden">
                       <img src={p.productImage} alt="" className="w-full h-full object-contain" />

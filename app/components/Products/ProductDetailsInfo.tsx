@@ -219,7 +219,7 @@ const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
             >
               {size.color && (
                 <div
-                  className="w-4 h-4 rounded-full border border-white/20 shadow-sm"
+                  className="w-4 h-4 rounded-full border border-white/20  "
                   style={{ backgroundColor: size.color }}
                 />
               )}

@@ -75,7 +75,7 @@ export const UpdateStockModal: React.FC<UpdateStockModalProps> = ({
 
         <div className="p-6 flex flex-col gap-6">
           <div className="flex items-center gap-4 p-3 bg-gray-50 rounded-[8px] border border-gray-200">
-            <div className="w-12 h-12 rounded-[4px] border border-gray-200 overflow-hidden bg-white shadow-sm">
+            <div className="w-12 h-12 rounded-[4px] border border-gray-200 overflow-hidden bg-white  ">
               <img src={product.productImage} alt={product.name} className="w-full h-full object-contain" />
             </div>
             <div className="flex flex-col min-w-0">

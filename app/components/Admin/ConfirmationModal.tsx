@@ -22,7 +22,7 @@ interface ConfirmationModalProps {
 // Internal icon renderer for the modal
 const ModalIcon = ({ icon, config }: { icon: React.ReactNode, config: any }) => {
   return (
-    <div className={`w-16 h-16 ${config.iconBg} rounded-[20px] flex items-center justify-center ${config.iconColor} shadow-sm border border-current flex-shrink-0 mb-2 relative overflow-hidden`}>
+    <div className={`w-16 h-16 ${config.iconBg} rounded-[20px] flex items-center justify-center ${config.iconColor}   border border-current flex-shrink-0 mb-2 relative overflow-hidden`}>
       <div className="absolute inset-0 bg-current opacity-10"></div>
       <div className="relative z-10 flex items-center justify-center">
         {icon || config.icon}

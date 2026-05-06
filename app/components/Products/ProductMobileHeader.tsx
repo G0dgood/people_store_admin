@@ -16,7 +16,7 @@ export const ProductMobileHeader: React.FC<ProductMobileHeaderProps> = ({ title 
   const searchParams = useSearchParams();
   const { cartItems } = useCart();
   const { isAuthenticated, customer } = useCustomerAuth();
-  
+
   const [searchValue, setSearchValue] = useState(searchParams.get("search") || "");
 
   const handleSearch = (e: React.FormEvent) => {
@@ -29,7 +29,7 @@ export const ProductMobileHeader: React.FC<ProductMobileHeaderProps> = ({ title 
   const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
-    <div className="flex flex-col gap-3 bg-white px-4 py-3 md:hidden sticky top-0 z-[80] shadow-sm">
+    <div className="flex flex-col gap-3 bg-white px-4 py-3 md:hidden sticky top-0 z-[80]  ">
       {/* Top row */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -44,7 +44,7 @@ export const ProductMobileHeader: React.FC<ProductMobileHeaderProps> = ({ title 
           </h1>
         </div>
         <div className="flex items-center gap-4">
-          <Link 
+          <Link
             href="/cart"
             className="p-1 hover:bg-gray-100 transition-colors relative"
           >
@@ -55,7 +55,7 @@ export const ProductMobileHeader: React.FC<ProductMobileHeaderProps> = ({ title 
               </span>
             )}
           </Link>
-          <Link 
+          <Link
             href={isAuthenticated ? "/profile" : "/login"}
             className="p-1 hover:bg-gray-100 transition-colors"
           >

@@ -58,7 +58,7 @@ export const ProductPricingSection: React.FC<ProductPricingSectionProps> = ({
             prefixElement={<span className="text-sm font-bold text-gray-400">{currencies.find(c => c.code === selectedCurrency)?.symbol}</span>}
             suffixElement={
               <div
-                className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-[6px] cursor-pointer shadow-sm hover:bg-gray-50 transition-colors"
+                className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-[6px] cursor-pointer   hover:bg-gray-50 transition-colors"
                 onClick={() => setIsCurrencyDropdownOpen(!isCurrencyDropdownOpen)}
               >
                 <img src={currencies.find(c => c.code === selectedCurrency)?.flag} alt={selectedCurrency} className="w-5 h-3 object-cover rounded-[1px]" />
@@ -106,7 +106,7 @@ export const ProductPricingSection: React.FC<ProductPricingSectionProps> = ({
               prefixElement={<span className="text-sm font-bold text-gray-400">{currencies.find(c => c.code === selectedCurrency)?.symbol}</span>}
               suffixElement={
                 <div
-                  className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-[6px] cursor-pointer shadow-sm hover:bg-gray-50 transition-colors"
+                  className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-[6px] cursor-pointer   hover:bg-gray-50 transition-colors"
                   onClick={() => setIsDiscountDropdownOpen(!isDiscountDropdownOpen)}
                 >
                   <img src={currencies.find(c => c.code === selectedCurrency)?.flag} alt={selectedCurrency} className="w-5 h-3 object-cover rounded-[1px]" />

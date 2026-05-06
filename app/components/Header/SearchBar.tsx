@@ -94,8 +94,8 @@ export const SearchBar = () => {
             {isCategoryOpen && (
               <div className="absolute top-full right-0 pt-3 w-64 z-[100]" onClick={() => setIsCategoryOpen(false)}>
                 <DropdownMenu width="100%" className="shadow-2xl border border-gray-200 rounded-xl">
-                  <DropdownItem 
-                    label="All categories" 
+                  <DropdownItem
+                    label="All categories"
                     isActive={selectedCategory === "All categories"}
                     onSelect={() => setSelectedCategory("All categories")}
                   />
@@ -103,9 +103,9 @@ export const SearchBar = () => {
                     <div className="p-4 text-center text-[10px] uppercase tracking-widest text-gray-400 italic">Syncing...</div>
                   ) : (
                     categories.map((cat) => (
-                      <DropdownItem 
-                        key={cat._id} 
-                        label={cat.name} 
+                      <DropdownItem
+                        key={cat._id}
+                        label={cat.name}
                         isActive={selectedCategory === cat.name}
                         onSelect={() => setSelectedCategory(cat.name)}
                       />
@@ -123,7 +123,7 @@ export const SearchBar = () => {
         <div className="flex items-center px-1">
           <button
             onClick={handleSearch}
-            className="h-9 w-9 flex items-center justify-center bg-brand-gold text-white rounded-tr-full rounded-br-full hover:bg-brand-gold/80 transition-all active:scale-95 shadow-sm"
+            className="h-9 w-9 flex items-center justify-center bg-brand-gold text-white rounded-tr-full rounded-br-full hover:bg-brand-gold/80 transition-all active:scale-95  "
           >
             <Icon name="search" size="sm" className="text-white" />
           </button>

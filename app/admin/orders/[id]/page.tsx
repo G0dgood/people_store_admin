@@ -193,7 +193,7 @@ export default function OrderDetails() {
               {order.history && order.history.length > 0 ? (
                 order.history.slice().reverse().map((log: any, i: number) => (
                   <div key={i} className="flex gap-6 relative z-10">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center border-4 border-white shadow-sm ${i === 0 ? (log.status === "Cancelled" ? "bg-rose-500" : "bg-brand-gold") + " text-white" : "bg-gray-100 text-gray-400"}`}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center border-4 border-white   ${i === 0 ? (log.status === "Cancelled" ? "bg-rose-500" : "bg-brand-gold") + " text-white" : "bg-gray-100 text-gray-400"}`}>
                       <span className="flex items-center justify-center">
                         <Icon name={statusStyles[log.status]?.icon || "verified"} folder="dashboardIcon" size="xs" />
                       </span>
@@ -209,7 +209,7 @@ export default function OrderDetails() {
                 ))
               ) : (
                 <div className="flex gap-6 relative z-10">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center border-4 border-white shadow-sm bg-brand-gold text-white`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center border-4 border-white   bg-brand-gold text-white`}>
                     <span className="flex items-center justify-center"><HiCheckCircle /></span>
                   </div>
                   <div className="flex flex-col gap-1">

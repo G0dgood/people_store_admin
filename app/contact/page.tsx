@@ -203,7 +203,7 @@ const ContactPage = () => {
                   className="grayscale hover:grayscale-0 transition-all duration-700 opacity-80 group-hover:opacity-100"
                 ></iframe>
                 <div className="absolute top-4 left-4 pointer-events-none">
-                  <div className="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-[10px] font-black uppercase tracking-tighter text-[#1D3557] shadow-sm border border-gray-200">
+                  <div className="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-[10px] font-black uppercase tracking-tighter text-[#1D3557]   border border-gray-200">
                     Bloom & Mist HQ
                   </div>
                 </div>

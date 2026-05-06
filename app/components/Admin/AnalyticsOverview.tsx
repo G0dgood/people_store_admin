@@ -52,7 +52,7 @@ export const AnalyticsOverview: React.FC = () => {
   ];
 
   return (
-    <div className="bg-white p-6 sm:p-8 rounded-[6px] border border-gray-200 shadow-sm flex flex-col gap-8">
+    <div className="bg-white p-6 sm:p-8 rounded-[6px] border border-gray-200   flex flex-col gap-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
         <h3 className="text-[20px] font-black text-brand-charcoal">Report for this week</h3>
         <div className="flex items-center justify-between w-full sm:w-auto gap-4">
@@ -62,7 +62,7 @@ export const AnalyticsOverview: React.FC = () => {
             onChange={setChartTab} id={""} />
           <div className="relative" ref={dropdownRef}>
             <button
-              className={`p-1 rounded-[6px] transition-all ${isDropdownOpen ? "bg-gray-100 text-brand-charcoal shadow-sm" : "text-gray-400 hover:bg-gray-50"}`}
+              className={`p-1 rounded-[6px] transition-all ${isDropdownOpen ? "bg-gray-100 text-brand-charcoal  " : "text-gray-400 hover:bg-gray-50"}`}
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             >
               <Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />

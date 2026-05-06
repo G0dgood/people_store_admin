@@ -202,7 +202,7 @@ const CategorySection: React.FC<CategorySectionProps> = ({
                   } as any}
                   variant="ghost"
                   size="md"
-                  className="bg-white/60 hover:bg-white backdrop-blur-sm shadow-sm"
+                  className="bg-white/60 hover:bg-white backdrop-blur-sm  "
                 />
               </div>
 

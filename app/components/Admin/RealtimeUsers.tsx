@@ -100,7 +100,7 @@ export const RealtimeUsers: React.FC<RealtimeUsersProps> = ({ onViewInsight }) =
             <span className="text-[10px] font-black text-brand-gold uppercase tracking-[0.1em]">Order Monitor</span>
           </div>
 
-          <h3 className="text-5xl font-black text-[#1D3557] tracking-[-0.04em] mt-3 tabular-nums drop-shadow-sm">
+          <h3 className="text-5xl font-black text-[#1D3557] tracking-[-0.04em] mt-3 tabular-nums drop- ">
             {isLoading ? "..." : totalOrders.toLocaleString()}
           </h3>
           <p className="text-[11px] font-bold text-gray-400 mt-2 flex items-center gap-2 uppercase tracking-widest opacity-80">
@@ -200,7 +200,7 @@ export const RealtimeUsers: React.FC<RealtimeUsersProps> = ({ onViewInsight }) =
       <div className="flex flex-col gap-6 pt-6 mt-4 relative z-10">
         <div className="flex justify-between items-center bg-gray-50/50 p-2 rounded-lg border border-gray-200/50">
           <h4 className="text-[12px] font-black text-[#1D3557] uppercase tracking-widest pl-1">Order Status Distribution</h4>
-          <span className="text-[10px] font-black text-brand-gold bg-white px-2 py-0.5 rounded border border-gray-200 shadow-sm">LIVE</span>
+          <span className="text-[10px] font-black text-brand-gold bg-white px-2 py-0.5 rounded border border-gray-200  ">LIVE</span>
         </div>
 
         {[
@@ -222,7 +222,7 @@ export const RealtimeUsers: React.FC<RealtimeUsersProps> = ({ onViewInsight }) =
                     <span className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.1em] opacity-70">{s.label}</span>
                   </div>
                 </div>
-                <div className={`flex items-center gap-1 text-[10px] font-black px-2.5 py-1 rounded-lg border shadow-sm transition-all duration-300 ${s.isUp ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-amber-50 text-amber-600 border-amber-100'}`}>
+                <div className={`flex items-center gap-1 text-[10px] font-black px-2.5 py-1 rounded-lg border   transition-all duration-300 ${s.isUp ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-amber-50 text-amber-600 border-amber-100'}`}>
                   <span>{s.trend}</span>
                 </div>
               </div>

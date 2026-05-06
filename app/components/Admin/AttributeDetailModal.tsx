@@ -36,7 +36,7 @@ export const AttributeDetailModal: React.FC<AttributeDetailModalProps> = ({
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-white rounded-lg transition-colors text-gray-400 hover:text-gray-900 shadow-sm border border-transparent hover:border-gray-100"
+            className="p-2 hover:bg-white rounded-lg transition-colors text-gray-400 hover:text-gray-900   border border-transparent hover:border-gray-100"
           >
             <Icon name="close" folder="icon" size="sm" />
           </button>
@@ -45,7 +45,7 @@ export const AttributeDetailModal: React.FC<AttributeDetailModalProps> = ({
       footer={
         <button
           onClick={onClose}
-          className="w-full py-2.5 bg-white border border-gray-200 text-[#1D3557] text-[11px] font-black uppercase tracking-widest rounded-lg hover:bg-gray-50 transition-colors shadow-sm"
+          className="w-full py-2.5 bg-white border border-gray-200 text-[#1D3557] text-[11px] font-black uppercase tracking-widest rounded-lg hover:bg-gray-50 transition-colors  "
         >
           Close Details
         </button>

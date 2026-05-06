@@ -37,9 +37,9 @@ export const OrderSummary: React.FC = () => {
     if (!item.originalPrice) return acc;
     const original = parseFloat(String(item.originalPrice).replace(/[₦$,]/g, ""));
     const current = parsePrice(item.price);
-    
+
     if (!isNaN(original) && !isNaN(current) && original > current) {
-       return acc + (original - current) * item.quantity;
+      return acc + (original - current) * item.quantity;
     }
     return acc;
   }, 0);
@@ -50,9 +50,9 @@ export const OrderSummary: React.FC = () => {
     if (isNaN(discountVal)) return 0;
 
     if (appliedCoupon.type === "Percentage") {
-       return (subtotal * discountVal) / 100;
+      return (subtotal * discountVal) / 100;
     } else if (appliedCoupon.type === "Fixed Rate") {
-       return discountVal;
+      return discountVal;
     }
     return 0;
   }, [appliedCoupon, subtotal]);
@@ -180,7 +180,7 @@ export const OrderSummary: React.FC = () => {
             {cartItems.length > 0 ? (
               cartItems.map((item) => (
                 <motion.div key={item.id} variants={itemVariants} className="flex gap-4 group">
-                  <div className="w-20 h-20 bg-white rounded-2xl border border-gray-200 flex-shrink-0 relative overflow-hidden shadow-sm group-hover:shadow-md transition-all duration-300">
+                  <div className="w-20 h-20 bg-white rounded-2xl border border-gray-200 flex-shrink-0 relative overflow-hidden   group-hover:shadow-md transition-all duration-300">
                     <Image src={item.image} alt={item.title} fill className="object-contain p-2 group-hover:scale-110 transition-transform duration-500" sizes="80px" />
                   </div>
                   <div className="flex-1 flex flex-col justify-between py-1">

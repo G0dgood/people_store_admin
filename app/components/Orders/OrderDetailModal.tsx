@@ -1,4 +1,4 @@
-"use client"; 
+"use client";
 
 import React from "react";
 import Image from "next/image";
@@ -82,7 +82,7 @@ export const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
                         setSelectedProduct(item.product);
                         setIsReviewModalOpen(true);
                       }}
-                      className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-[9px] font-black uppercase tracking-widest text-gray-900 hover:border-brand-gold hover:text-brand-gold transition-all shadow-sm active:scale-95"
+                      className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-[9px] font-black uppercase tracking-widest text-gray-900 hover:border-brand-gold hover:text-brand-gold transition-all   active:scale-95"
                     >
                       <Icon name="star" size="xs" />
                       Review

@@ -55,7 +55,7 @@ export default function PasswordPage() {
             className="flex-1 w-full flex flex-col gap-6 md:gap-8"
           >
             {/* Forms Section */}
-            <motion.div variants={itemVariants} className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <motion.div variants={itemVariants} className="bg-white rounded-2xl   border border-gray-200 overflow-hidden">
               <div className="p-6 md:p-8 border-b border-gray-50">
                 <h2 className="text-xl font-bold text-gray-900">Change Password</h2>
                 <p className="text-sm text-gray-400 mt-1">Update your account security by changing your password periodically.</p>
@@ -137,7 +137,7 @@ export default function PasswordPage() {
             </motion.div>
 
             {/* Security Notice */}
-            <motion.div variants={itemVariants} className="bg-white rounded-2xl p-8 border border-gray-200 flex items-start gap-6 shadow-sm">
+            <motion.div variants={itemVariants} className="bg-white rounded-2xl p-8 border border-gray-200 flex items-start gap-6  ">
               <div className="w-12 h-12 rounded-xl bg-orange-50 flex items-center justify-center shrink-0">
                 <Icon name="warning" className="text-orange-500" />
               </div>

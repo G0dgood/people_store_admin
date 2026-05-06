@@ -65,7 +65,7 @@ export function ViewProductModal({ isOpen, onClose, product }: ViewProductModalP
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 animate-in fade-in duration-500">
             {/* Visual Asset Section */}
             <div className="flex flex-col gap-6">
-              <div className="relative aspect-square rounded-2xl overflow-hidden border border-gray-100 bg-gray-50 group shadow-sm">
+              <div className="relative aspect-square rounded-2xl overflow-hidden border border-gray-100 bg-gray-50 group  ">
                 {activeMedia ? (
                   activeMedia.match(/\.(mp4|webm|ogg)$/i) ? (
                     <video
@@ -91,7 +91,7 @@ export function ViewProductModal({ isOpen, onClose, product }: ViewProductModalP
                 )}
 
                 <div className="absolute top-4 left-4">
-                  <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest shadow-sm
+                  <span className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest  
                   ${fullProduct.status === "Published" ? "bg-emerald-500 text-white" : "bg-gray-400 text-white"}
                 `}>
                     {fullProduct.status}
@@ -106,7 +106,7 @@ export function ViewProductModal({ isOpen, onClose, product }: ViewProductModalP
                     <button
                       key={idx}
                       onClick={() => setActiveMedia(m.url)}
-                      className={`relative w-16 h-16 rounded-xl overflow-hidden border-2 transition-all duration-300 shadow-sm
+                      className={`relative w-16 h-16 rounded-xl overflow-hidden border-2 transition-all duration-300  
                       ${activeMedia === m.url ? "border-brand-gold scale-105 shadow-md" : "border-transparent hover:border-gray-200"}
                     `}
                     >

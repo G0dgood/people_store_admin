@@ -53,7 +53,7 @@ const SuccessContent = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-12"
         >
-          <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm border-4 border-white">
+          <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6   border-4 border-white">
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}

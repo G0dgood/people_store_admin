@@ -29,9 +29,9 @@ export const EditProductSkeleton = () => {
         {/* Left Column (Main Details) */}
         <div className="xl:col-span-2 flex flex-col gap-6">
           {/* Basic Details Card */}
-          <div className="bg-white rounded-[6px] border border-gray-200 shadow-sm p-8 flex flex-col gap-8">
+          <div className="bg-white rounded-[6px] border border-gray-200   p-8 flex flex-col gap-8">
             <div className="h-5 w-32 bg-gray-200 rounded animate-pulse mb-2" />
-            
+
             <div className="flex flex-col gap-3">
               <div className="h-3 w-24 bg-gray-100 rounded animate-pulse" />
               <div className="h-12 w-full bg-gray-50 rounded-[4px] animate-pulse" />
@@ -53,9 +53,9 @@ export const EditProductSkeleton = () => {
           </div>
 
           {/* Pricing Card */}
-          <div className="bg-white rounded-[6px] border border-gray-200 shadow-sm p-8 flex flex-col gap-8">
+          <div className="bg-white rounded-[6px] border border-gray-200   p-8 flex flex-col gap-8">
             <div className="h-5 w-24 bg-gray-200 rounded animate-pulse mb-2" />
-            
+
             <div className="flex flex-col gap-3">
               <div className="h-3 w-24 bg-gray-100 rounded animate-pulse" />
               <div className="h-12 w-full bg-gray-50 rounded-[4px] animate-pulse" />
@@ -86,9 +86,9 @@ export const EditProductSkeleton = () => {
         {/* Right Column (Media & Meta) */}
         <div className="flex flex-col gap-6">
           {/* Images Card */}
-          <div className="bg-white rounded-[6px] border border-gray-200 shadow-sm p-8 flex flex-col gap-6">
+          <div className="bg-white rounded-[6px] border border-gray-200   p-8 flex flex-col gap-6">
             <div className="h-5 w-48 bg-gray-200 rounded animate-pulse" />
-            
+
             <div className="flex flex-col gap-3">
               <div className="flex justify-between">
                 <div className="h-3 w-24 bg-gray-100 rounded animate-pulse" />
@@ -105,7 +105,7 @@ export const EditProductSkeleton = () => {
           </div>
 
           {/* Categories Card */}
-          <div className="bg-white rounded-[6px] border border-gray-200 shadow-sm p-8 flex flex-col gap-6">
+          <div className="bg-white rounded-[6px] border border-gray-200   p-8 flex flex-col gap-6">
             <div className="flex flex-col gap-3">
               <div className="h-3 w-32 bg-gray-100 rounded animate-pulse" />
               <div className="h-12 w-full bg-gray-50 rounded-[4px] animate-pulse" />
@@ -117,7 +117,7 @@ export const EditProductSkeleton = () => {
           </div>
 
           {/* Colors Card */}
-          <div className="bg-white rounded-[6px] border border-gray-200 shadow-sm p-8 flex flex-col gap-6">
+          <div className="bg-white rounded-[6px] border border-gray-200   p-8 flex flex-col gap-6">
             <div className="h-3 w-32 bg-gray-100 rounded animate-pulse" />
             <div className="flex flex-wrap gap-3">
               {[1, 2, 3, 4].map((i) => (

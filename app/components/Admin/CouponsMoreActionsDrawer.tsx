@@ -18,7 +18,7 @@ export function CouponsMoreActionsDrawer({ isOpen, onClose, onDeleteExpired }: C
       description: "Download all coupon data as a CSV or Excel file.",
       icon: "cloud_download",
       folder: "icon",
-      onClick: () => {},
+      onClick: () => { },
     },
     {
       id: "delete-expired",
@@ -38,7 +38,7 @@ export function CouponsMoreActionsDrawer({ isOpen, onClose, onDeleteExpired }: C
       description: "Set all currently active coupons to 'Inactive' status.",
       icon: "menu-close",
       folder: "dashboardIcon",
-      onClick: () => {},
+      onClick: () => { },
     },
     {
       id: "generate-qr",
@@ -46,7 +46,7 @@ export function CouponsMoreActionsDrawer({ isOpen, onClose, onDeleteExpired }: C
       description: "Create printable QR codes for all active marketing coupons.",
       icon: "Frame",
       folder: "dashboardIcon",
-      onClick: () => {},
+      onClick: () => { },
     },
   ];
 
@@ -66,8 +66,8 @@ export function CouponsMoreActionsDrawer({ isOpen, onClose, onDeleteExpired }: C
               `}
             >
               <div className={`mt-1 w-10 h-10 rounded-lg flex items-center justify-center transition-all
-                ${action.variant === "danger" 
-                  ? "bg-rose-50 text-rose-500 group-hover:bg-rose-100" 
+                ${action.variant === "danger"
+                  ? "bg-rose-50 text-rose-500 group-hover:bg-rose-100"
                   : "bg-brand-gold-light text-brand-gold group-hover:bg-brand-gold group-hover:text-white"}
               `}>
                 <Icon name={action.icon} folder={action.folder} size="sm" />
@@ -91,15 +91,15 @@ export function CouponsMoreActionsDrawer({ isOpen, onClose, onDeleteExpired }: C
       </div>
 
       <div className="mt-auto p-4 bg-gray-50 rounded-xl border border-dashed border-gray-200">
-         <div className="flex items-center gap-3">
-            <div className="p-2 bg-white rounded-md text-emerald-500 shadow-sm">
-               <Icon name="star" folder="dashboardIcon" size="sm" />
-            </div>
-            <div className="flex flex-col">
-               <span className="text-[11px] font-black text-[#1D3557]">Pro Tip</span>
-               <span className="text-[9px] font-bold text-gray-400">You can also schedule coupons for future dates.</span>
-            </div>
-         </div>
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-white rounded-md text-emerald-500  ">
+            <Icon name="star" folder="dashboardIcon" size="sm" />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[11px] font-black text-[#1D3557]">Pro Tip</span>
+            <span className="text-[9px] font-bold text-gray-400">You can also schedule coupons for future dates.</span>
+          </div>
+        </div>
       </div>
     </Drawer>
   );

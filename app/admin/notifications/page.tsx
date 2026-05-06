@@ -213,7 +213,7 @@ export default function NotificationCenter() {
                   />
                 </div>
 
-                <div className={`w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-[10px] sm:rounded-2xl flex items-center justify-center shrink-0 shadow-sm ${typeStyles[item.type as keyof typeof typeStyles]?.bg || 'bg-gray-50'} ${typeStyles[item.type as keyof typeof typeStyles]?.color || 'text-gray-400'}`}>
+                <div className={`w-10 h-10 sm:w-12 sm:h-12 lg:w-14 lg:h-14 rounded-[10px] sm:rounded-2xl flex items-center justify-center shrink-0   ${typeStyles[item.type as keyof typeof typeStyles]?.bg || 'bg-gray-50'} ${typeStyles[item.type as keyof typeof typeStyles]?.color || 'text-gray-400'}`}>
                   <Icon
                     name={typeStyles[item.type as keyof typeof typeStyles]?.icon || 'notification'}
                     folder={item.type === 'Orders' ? 'dashboardIcon' : 'icon'}
@@ -253,7 +253,7 @@ export default function NotificationCenter() {
                   </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-2 opacity-100 group-hover:opacity-100 sm:opacity-0 transition-all translate-x-0 sm:translate-x-2 sm:group-hover:translate-x-0 absolute sm:static right-2 top-2 sm:right-auto sm:top-auto bg-white/80 sm:bg-transparent p-1 sm:p-0 rounded-lg backdrop-blur-sm sm:backdrop-blur-none border border-gray-200 sm:border-0 shadow-sm sm:shadow-none" onClick={(e) => e.stopPropagation()}>
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-2 opacity-100 group-hover:opacity-100 sm:opacity-0 transition-all translate-x-0 sm:translate-x-2 sm:group-hover:translate-x-0 absolute sm:static right-2 top-2 sm:right-auto sm:top-auto bg-white/80 sm:bg-transparent p-1 sm:p-0 rounded-lg backdrop-blur-sm sm:backdrop-blur-none border border-gray-200 sm:border-0   sm:shadow-none" onClick={(e) => e.stopPropagation()}>
                   {!item.isRead && (
                     <Tooltip text="Mark as Read">
                       <Button shape="rounded-sm" variant="outline"

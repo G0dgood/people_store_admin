@@ -69,7 +69,7 @@ export const ProductGridItem: React.FC<{ product: ProductProps, noBorderRight?: 
                         e.stopPropagation();
                         product.onQuickView?.(product);
                      }}
-                     className="w-10 h-10 bg-white border border-gray-100 shadow-sm flex items-center justify-center text-gray-400 hover:text-brand-gold hover:border-brand-gold transition-all"
+                     className="w-10 h-10 bg-white border border-gray-100   flex items-center justify-center text-gray-400 hover:text-brand-gold hover:border-brand-gold transition-all"
                   >
                      <HiEye size={20} />
                   </button>

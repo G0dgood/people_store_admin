@@ -157,7 +157,7 @@ export const AdminHeader: React.FC<HeaderProps> = ({ onOpenMenu, className, isOp
             onFocus={handleSearchFocus}
             containerClassName="w-full"
             className={`bg-white border-gray-200 placeholder:text-gray-400 text-xs font-medium transition-all
-              ${isSearchOpen ? "ring-4 ring-gray-100 border-brand-charcoal/30 shadow-sm" : ""}
+              ${isSearchOpen ? "ring-4 ring-gray-100 border-brand-charcoal/30  " : ""}
             `}
             suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
           />
@@ -195,44 +195,44 @@ export const AdminHeader: React.FC<HeaderProps> = ({ onOpenMenu, className, isOp
 
           {/* Theme Toggle Switch */}
           <div className="flex items-center">
-            <button 
+            <button
               onClick={toggleAdminTheme}
               className={`w-12 h-7 rounded-full p-1 flex items-center relative transition-colors cursor-pointer ${isAdminDark ? 'bg-brand-charcoal' : 'bg-brand-gold/20'}`}
             >
               <div className={`w-5 h-5 bg-white rounded-full border border-[#1C1C1C1A] flex items-center justify-center transition-all transform ${isAdminDark ? 'translate-x-5' : 'translate-x-0'}`}>
-                 {isAdminDark ? (
-                   <HiOutlineMoon className="text-gray-600 w-3 h-3" />
-                 ) : (
-                   <HiOutlineSun className="text-gray-400 w-3 h-3" />
-                 )}
+                {isAdminDark ? (
+                  <HiOutlineMoon className="text-gray-600 w-3 h-3" />
+                ) : (
+                  <HiOutlineSun className="text-gray-400 w-3 h-3" />
+                )}
               </div>
             </button>
           </div>
 
           {/* User Profile */}
-            <div
-              className={`w-11 h-11 rounded-full border border-[#1C1C1C1A] overflow-hidden cursor-pointer transition-all flex items-center justify-center bg-brand-gold/10
+          <div
+            className={`w-11 h-11 rounded-full border border-[#1C1C1C1A] overflow-hidden cursor-pointer transition-all flex items-center justify-center bg-brand-gold/10
                 ${isProfileOpen ? "border-brand-gold scale-105" : "hover:border-brand-gold/50"}
               `}
-              onClick={toggleProfile}
-            >
-              {user?.avatar ? (
-                <div className="relative w-full h-full">
-                  <Image
-                    src={user.avatar}
-                    alt="Admin"
-                    fill
-                    className="object-cover"
-                    priority
-                    sizes="44px"
-                  />
-                </div>
-              ) : (
-                  <HiUser className="text-brand-gold w-6 h-6" />
-              )}
-            </div>
-            {isProfileOpen && <AdminProfileDropdown />}
+            onClick={toggleProfile}
+          >
+            {user?.avatar ? (
+              <div className="relative w-full h-full">
+                <Image
+                  src={user.avatar}
+                  alt="Admin"
+                  fill
+                  className="object-cover"
+                  priority
+                  sizes="44px"
+                />
+              </div>
+            ) : (
+              <HiUser className="text-brand-gold w-6 h-6" />
+            )}
           </div>
+          {isProfileOpen && <AdminProfileDropdown />}
+        </div>
       </div>
     </header>
   );

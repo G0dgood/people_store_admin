@@ -7,7 +7,7 @@ export const QuickViewSkeleton = () => {
     <div className="flex flex-col md:flex-row h-full animate-pulse">
       {/* Left: Image Section Skeleton */}
       <div className="w-full md:w-1/2 bg-gray-50/50 p-6 md:p-10 flex flex-col gap-6 items-center justify-center border-b md:border-b-0 md:border-r border-gray-100">
-        <div className="relative w-full aspect-square bg-gray-200 border border-gray-100 shadow-sm overflow-hidden" />
+        <div className="relative w-full aspect-square bg-gray-200 border border-gray-100   overflow-hidden" />
         <div className="flex gap-3">
           {[0, 1, 2].map((i) => (
             <div key={i} className="w-16 h-16 bg-gray-200 border border-gray-100" />

@@ -87,17 +87,17 @@ const BlogPage = () => {
 
         <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 py-16 md:py-24">
           {/* Step 81: Build Featured Story immersive card */}
-          <motion.section 
+          <motion.section
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="w-full mb-24 cursor-pointer group"
           >
             <div className="w-full aspect-[16/9] md:aspect-[21/9] rounded-[40px] bg-gray-100 overflow-hidden relative shadow-2xl">
-              <Image 
-                src="/books/7.png" 
-                alt="Featured Story" 
-                fill 
+              <Image
+                src="/books/7.png"
+                alt="Featured Story"
+                fill
                 className="object-cover group-hover:scale-105 transition-transform duration-1000"
                 sizes="100vw"
               />
@@ -113,8 +113,8 @@ const BlogPage = () => {
                       Read Feature <HiArrowLongRight size={18} />
                     </button>
                     <div className="flex items-center gap-4 text-white/40 text-xs font-bold uppercase tracking-widest">
-                       <span className="flex items-center gap-1"><HiCalendar /> Oct 20, 2023</span>
-                       <span className="flex items-center gap-1"><HiClock /> 12 min read</span>
+                      <span className="flex items-center gap-1"><HiCalendar /> Oct 20, 2023</span>
+                      <span className="flex items-center gap-1"><HiClock /> 12 min read</span>
                     </div>
                   </div>
                 </div>
@@ -125,16 +125,16 @@ const BlogPage = () => {
           {/* Step 82: Implement Responsive Journal Feed (Article Grid) */}
           <section className="flex flex-col gap-12">
             <div className="flex items-center justify-between">
-               <h3 className="text-2xl font-black text-[#1D3557] tracking-tight">Recent Journal Entries</h3>
-               <div className="flex items-center gap-3 text-brand-gold font-bold text-sm cursor-pointer group">
-                  <span className="group-hover:mr-2 transition-all">View All Categories</span>
-                  <HiChevronRight />
-               </div>
+              <h3 className="text-2xl font-black text-[#1D3557] tracking-tight">Recent Journal Entries</h3>
+              <div className="flex items-center gap-3 text-brand-gold font-bold text-sm cursor-pointer group">
+                <span className="group-hover:mr-2 transition-all">View All Categories</span>
+                <HiChevronRight />
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
               {posts.map((post, i) => (
-                <motion.article 
+                <motion.article
                   key={i}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -142,35 +142,35 @@ const BlogPage = () => {
                   transition={{ delay: i * 0.1 }}
                   className="flex flex-col gap-6 cursor-pointer group"
                 >
-                  <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-sm">
-                    <Image 
-                      src={post.image} 
-                      alt={post.title} 
-                      fill 
-                      className="object-cover group-hover:scale-110 transition-transform duration-700" 
+                  <div className="relative aspect-[4/3] rounded-3xl overflow-hidden  ">
+                    <Image
+                      src={post.image}
+                      alt={post.title}
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-700"
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
                     <div className="absolute top-4 left-4">
-                      <span className="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-lg text-[10px] font-black uppercase tracking-widest text-brand-gold shadow-sm">
+                      <span className="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-lg text-[10px] font-black uppercase tracking-widest text-brand-gold  ">
                         {post.category}
                       </span>
                     </div>
                   </div>
                   <div className="flex flex-col gap-3">
                     <div className="flex items-center gap-4 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                       <span className="flex items-center gap-1"><HiCalendar className="text-brand-gold" /> {post.date}</span>
-                       <span className="flex items-center gap-1"><HiClock className="text-brand-gold" /> {post.readTime}</span>
+                      <span className="flex items-center gap-1"><HiCalendar className="text-brand-gold" /> {post.date}</span>
+                      <span className="flex items-center gap-1"><HiClock className="text-brand-gold" /> {post.readTime}</span>
                     </div>
                     <h4 className="text-xl font-black text-[#1D3557] leading-tight group-hover:text-brand-gold transition-colors duration-300 line-clamp-2">
-                       {post.title}
+                      {post.title}
                     </h4>
                     <p className="text-gray-500 text-sm leading-relaxed line-clamp-2">
-                       {post.excerpt}
+                      {post.excerpt}
                     </p>
                     <div className="pt-2">
-                       <div className="flex items-center gap-1 text-xs font-black uppercase tracking-widest text-[#1D3557] group-hover:text-brand-gold transition-colors">
-                          Read Story <HiChevronRight size={14} className="opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
-                       </div>
+                      <div className="flex items-center gap-1 text-xs font-black uppercase tracking-widest text-[#1D3557] group-hover:text-brand-gold transition-colors">
+                        Read Story <HiChevronRight size={14} className="opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                      </div>
                     </div>
                   </div>
                 </motion.article>
@@ -178,9 +178,9 @@ const BlogPage = () => {
             </div>
 
             <div className="mt-16 flex justify-center">
-               <button className="px-12 py-4 border-2 border-gray-200 rounded-2xl text-[#1D3557] font-black uppercase tracking-widest text-xs hover:border-brand-gold hover:text-brand-gold transition-all">
-                  Load Older Stories
-               </button>
+              <button className="px-12 py-4 border-2 border-gray-200 rounded-2xl text-[#1D3557] font-black uppercase tracking-widest text-xs hover:border-brand-gold hover:text-brand-gold transition-all">
+                Load Older Stories
+              </button>
             </div>
           </section>
         </div>

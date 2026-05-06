@@ -69,12 +69,12 @@ export function CustomerMessageDrawer({ isOpen, onClose, customer }: CustomerMes
         <div className="flex-1 overflow-y-auto pr-2 flex flex-col gap-4">
           {isLoadingChat ? (
             <div className="flex justify-center py-10">
-               <SVGLoaderFetch asTable={false} text="Loading history..." />
+              <SVGLoaderFetch asTable={false} text="Loading history..." />
             </div>
           ) : messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-40 text-gray-400 gap-2">
-               <Icon name="tabler_message" folder="dashboardIcon" size="md" />
-               <p className="text-xs font-bold uppercase tracking-widest">No conversation yet</p>
+              <Icon name="tabler_message" folder="dashboardIcon" size="md" />
+              <p className="text-xs font-bold uppercase tracking-widest">No conversation yet</p>
             </div>
           ) : (
             messages.map((msg: any) => (
@@ -83,7 +83,7 @@ export function CustomerMessageDrawer({ isOpen, onClose, customer }: CustomerMes
                 className={`flex flex-col ${msg.senderModel === "User" ? "items-end" : "items-start"} gap-1.5`}
               >
                 <div
-                  className={`max-w-[85%] px-4 py-3 rounded-2xl text-[13px] font-medium leading-relaxed shadow-sm transition-all
+                  className={`max-w-[85%] px-4 py-3 rounded-2xl text-[13px] font-medium leading-relaxed   transition-all
                     ${msg.senderModel === "User"
                       ? "bg-brand-charcoal text-white rounded-tr-none"
                       : "bg-white border border-gray-200 text-gray-700 rounded-tl-none"}

@@ -15,7 +15,7 @@ export const ProfileSkeleton: React.FC = () => {
 
         <div className="flex flex-col lg:flex-row gap-8 items-start">
           {/* Sidebar Skeleton */}
-          <div className="w-full lg:w-72 shrink-0 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden h-[500px] flex flex-col items-center p-8">
+          <div className="w-full lg:w-72 shrink-0 bg-white rounded-2xl   border border-gray-200 overflow-hidden h-[500px] flex flex-col items-center p-8">
             <div className="w-24 h-24 rounded-full bg-gray-100 animate-pulse mb-6" />
             <div className="h-6 w-32 bg-gray-100 rounded animate-pulse mb-3" />
             <div className="h-4 w-24 bg-gray-50 rounded animate-pulse mb-8" />
@@ -28,7 +28,7 @@ export const ProfileSkeleton: React.FC = () => {
 
           {/* Main Content Skeleton */}
           <div className="flex-1 w-full flex flex-col gap-6 md:gap-8">
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="bg-white rounded-2xl   border border-gray-200 overflow-hidden">
               <div className="p-6 md:p-8 border-b border-gray-50">
                 <div className="h-7 w-48 bg-gray-100 rounded animate-pulse mb-2" />
                 <div className="h-4 w-64 bg-gray-50 rounded animate-pulse" />

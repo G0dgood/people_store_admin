@@ -33,7 +33,7 @@ export const BackgroundOrchestration: React.FC<BackgroundOrchestrationProps> = (
  toggleBackgroundSelection,
 }) => {
  return (
-  <section className="bg-white p-8 rounded-[6px] border border-gray-200 shadow-sm flex flex-col gap-6">
+  <section className="bg-white p-8 rounded-[6px] border border-gray-200   flex flex-col gap-6">
    <div className="flex justify-between items-center">
     <h3 className="text-lg font-black text-[#1D3557] flex items-center gap-2">
      <span className="w-8 h-8 rounded-[4px] bg-brand-gold/10 text-brand-gold flex items-center justify-center text-xs">02</span>
@@ -57,14 +57,14 @@ export const BackgroundOrchestration: React.FC<BackgroundOrchestrationProps> = (
     >
      {config.backgroundImages.map((bg, i) => {
       const categories: string[] = categoriesData.map(c => c.name).filter(Boolean);
-      
+
       return (
        <Reorder.Item
         key={bg.url}
         value={bg}
         className="flex flex-col gap-3 min-w-[240px] cursor-grab active:cursor-grabbing"
        >
-        <div className="relative aspect-[16/10] rounded-[6px] overflow-hidden border border-gray-200 shadow-sm group">
+        <div className="relative aspect-[16/10] rounded-[6px] overflow-hidden border border-gray-200   group">
          <img
           src={bg.url}
           alt="Visual"
@@ -77,7 +77,7 @@ export const BackgroundOrchestration: React.FC<BackgroundOrchestrationProps> = (
           <div className="w-6 h-6 bg-brand-gold rounded-full flex items-center justify-center text-[10px] font-black text-white shadow-lg">
            {i + 1}
           </div>
-          <div className="w-6 h-6 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-400 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="w-6 h-6 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-400   opacity-0 group-hover:opacity-100 transition-opacity">
            <Icon name="drag_indicator" folder="icon" size="xs" />
           </div>
          </div>

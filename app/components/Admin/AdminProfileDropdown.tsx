@@ -40,7 +40,7 @@ export const AdminProfileDropdown: React.FC = () => {
    <DropdownMenu width={280} className="shadow-2xl border-gray-200 p-0 overflow-hidden">
     {/* User Summary */}
     <div className="px-6 py-5 bg-gray-50/50 border-b border-gray-50 flex items-center gap-3">
-     <div className="w-12 h-12 rounded-full border-2 border-white shadow-sm overflow-hidden shrink-0 bg-white flex items-center justify-center relative">
+     <div className="w-12 h-12 rounded-full border-2 border-white   overflow-hidden shrink-0 bg-white flex items-center justify-center relative">
       {user?.avatar ? (
        <Image src={user.avatar} alt="Admin" fill className="object-cover" sizes="48px" />
       ) : (
@@ -62,7 +62,7 @@ export const AdminProfileDropdown: React.FC = () => {
     {/* Action List */}
     <div className="p-2 flex flex-col">
      {canAccess("profile", "view") && (
-      <button 
+      <button
        onClick={() => router.push("/admin/profile")}
        className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-brand-gold-light hover:text-brand-gold transition-all group text-[#1D3557]"
       >
@@ -72,7 +72,7 @@ export const AdminProfileDropdown: React.FC = () => {
      )}
 
      {canAccess("profile", "view") && (
-      <button 
+      <button
        onClick={() => router.push("/admin/profile")}
        className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-brand-gold-light hover:text-brand-gold transition-all group text-[#1D3557]"
       >

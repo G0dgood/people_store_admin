@@ -98,7 +98,7 @@ const GiftBoxesPage = () => {
     </div>
    </div>
 
-   <div className="bg-white rounded-[6px] border border-gray-200 shadow-sm overflow-hidden flex flex-col">
+   <div className="bg-white rounded-[6px] border border-gray-200   overflow-hidden flex flex-col">
     {/* Filter & Control Bar */}
     <div className="p-4 sm:p-6 flex flex-col lg:flex-row gap-6 items-center justify-between border-b border-gray-50">
      <TabFilter
@@ -123,7 +123,7 @@ const GiftBoxesPage = () => {
        <Button
         shape="rounded-sm"
         variant="outline"
-        className={`!p-2.5 w-10 h-10 transition-all ${viewType === "grid" ? "border-brand-gold bg-brand-gold/10 text-brand-gold shadow-sm" : "text-gray-400 border-gray-100"}`}
+        className={`!p-2.5 w-10 h-10 transition-all ${viewType === "grid" ? "border-brand-gold bg-brand-gold/10 text-brand-gold  " : "text-gray-400 border-gray-100"}`}
         onClick={() => setViewType("grid")}
        >
         <HiSquares2X2 size={20} />
@@ -131,7 +131,7 @@ const GiftBoxesPage = () => {
        <Button
         shape="rounded-sm"
         variant="outline"
-        className={`!p-2.5 w-10 h-10 transition-all ${viewType === "list" ? "border-brand-gold bg-brand-gold/10 text-brand-gold shadow-sm" : "text-gray-400 border-gray-100"}`}
+        className={`!p-2.5 w-10 h-10 transition-all ${viewType === "list" ? "border-brand-gold bg-brand-gold/10 text-brand-gold  " : "text-gray-400 border-gray-100"}`}
         onClick={() => setViewType("list")}
        >
         <HiListBullet size={20} />
@@ -175,7 +175,7 @@ const GiftBoxesPage = () => {
            </Tooltip>
           </div>
           <div className="absolute top-3 left-3">
-           <span className={`px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest shadow-sm ${box.status === "Active" ? "bg-green-500 text-white" : "bg-gray-400 text-white"}`}>
+           <span className={`px-2.5 py-1 rounded-full text-[9px] font-black uppercase tracking-widest   ${box.status === "Active" ? "bg-green-500 text-white" : "bg-gray-400 text-white"}`}>
             {box.status}
            </span>
           </div>

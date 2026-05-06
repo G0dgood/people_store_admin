@@ -57,7 +57,7 @@ export function UpdateDealsTimerModal({ isOpen, onClose, initialValues, onUpdate
       <form onSubmit={handleSubmit} className="flex flex-col gap-8">
         {/* Help Text */}
         <div className="bg-brand-gold/5 border border-brand-gold/20 rounded-2xl p-4 flex gap-3">
-          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-brand-gold shadow-sm shrink-0">
+          <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-brand-gold   shrink-0">
             <HiOutlineInformationCircle size={20} />
           </div>
           <p className="text-[11px] font-bold text-brand-gold leading-relaxed">

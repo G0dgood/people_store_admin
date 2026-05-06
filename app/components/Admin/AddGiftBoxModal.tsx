@@ -226,7 +226,7 @@ export function AddGiftBoxModal({ isOpen, onClose, giftBox }: AddGiftBoxModalPro
 
               <div
                 onClick={() => setIsMediaModalOpen(true)}
-                className="group relative aspect-square w-full bg-white rounded-xl border border-dashed border-gray-200 overflow-hidden cursor-pointer hover:border-brand-gold transition-all flex items-center justify-center shadow-sm"
+                className="group relative aspect-square w-full bg-white rounded-xl border border-dashed border-gray-200 overflow-hidden cursor-pointer hover:border-brand-gold transition-all flex items-center justify-center  "
               >
                 {formData.image ? (
                   <>

@@ -84,7 +84,7 @@ export function UploadMediaModal({ isOpen, onClose, onUpload, onUploadSuccess, o
       onClose();
       return;
     }
-    
+
     const formData = new FormData();
     stagedFiles.forEach((file) => {
       formData.append("files", file);
@@ -125,7 +125,7 @@ export function UploadMediaModal({ isOpen, onClose, onUpload, onUploadSuccess, o
             accept=".jpg,.jpeg,.png,.mp4"
             onChange={handleFileSelect}
           />
-          <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center text-gray-400 group-hover:text-brand-gold group-hover:scale-110 transition-all shadow-sm">
+          <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center text-gray-400 group-hover:text-brand-gold group-hover:scale-110 transition-all  ">
             <Icon name="cloud_upload" folder="icon" size="md" />
           </div>
           <div className="flex flex-col items-center gap-1 text-center">
@@ -147,9 +147,9 @@ export function UploadMediaModal({ isOpen, onClose, onUpload, onUploadSuccess, o
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-8 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400 overflow-hidden border border-gray-100">
                       {file.type.startsWith("image") ? (
-                        <img 
-                          src={URL.createObjectURL(file)} 
-                          alt="" 
+                        <img
+                          src={URL.createObjectURL(file)}
+                          alt=""
                           className="w-full h-full object-cover"
                           onLoad={(e) => URL.revokeObjectURL((e.target as HTMLImageElement).src)}
                         />

@@ -52,7 +52,7 @@ export function TicketDetailDrawer({ isOpen, onClose, ticket, onReply }: TicketD
                      <span className="text-[10px] font-black text-white/60 uppercase tracking-[0.2em]">Reference ID</span>
                      <span className="text-sm font-black text-white">{ticket.ticketId}</span>
                   </div>
-                  <div className={`px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider border shadow-sm ${priorityStyles[ticket.priority as keyof typeof priorityStyles]}`}>
+                  <div className={`px-2.5 py-1 rounded-md text-[10px] font-black uppercase tracking-wider border   ${priorityStyles[ticket.priority as keyof typeof priorityStyles]}`}>
                      {ticket.priority} Priority
                   </div>
                </div>
@@ -65,8 +65,8 @@ export function TicketDetailDrawer({ isOpen, onClose, ticket, onReply }: TicketD
             {/* Customer Information */}
             <div className="flex flex-col gap-4">
                <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Customer Profile</h4>
-               <div className="bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-4 shadow-sm">
-                  <div className="w-12 h-12 rounded-full bg-brand-gold/10 border-2 border-white shadow-sm flex items-center justify-center overflow-hidden">
+               <div className="bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-4  ">
+                  <div className="w-12 h-12 rounded-full bg-brand-gold/10 border-2 border-white   flex items-center justify-center overflow-hidden">
                      <img src={"https://ui-avatars.com/api/?name=" + ticket.customerName} alt="" className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1 flex flex-col gap-0.5">
@@ -84,7 +84,7 @@ export function TicketDetailDrawer({ isOpen, onClose, ticket, onReply }: TicketD
                <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Ticket Conversation</h4>
                <div className="flex flex-col gap-6">
                   <div className="flex flex-col gap-2">
-                     <div className="bg-gray-50 border border-gray-200 rounded-2xl rounded-tl-none p-4 shadow-sm">
+                     <div className="bg-gray-50 border border-gray-200 rounded-2xl rounded-tl-none p-4  ">
                         <p className="text-xs font-bold text-[#1D3557] leading-relaxed">
                            {ticket.message}
                         </p>

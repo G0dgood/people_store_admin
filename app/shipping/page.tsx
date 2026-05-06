@@ -88,7 +88,7 @@ const ShippingPage = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="bg-white p-10 rounded-[40px] border border-gray-200 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all group flex flex-col h-full"
+                className="bg-white p-10 rounded-[40px] border border-gray-200   hover:shadow-2xl hover:-translate-y-2 transition-all group flex flex-col h-full"
               >
                 <div className="w-16 h-16 bg-brand-gold-light rounded-3xl flex items-center justify-center text-brand-gold mb-8 group-hover:bg-brand-gold group-hover:text-white transition-colors duration-500">
                   {method.icon}

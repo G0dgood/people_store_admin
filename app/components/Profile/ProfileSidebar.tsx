@@ -49,7 +49,7 @@ export const ProfileSidebar: React.FC = () => {
   };
 
   return (
-    <aside className="w-full lg:w-72 shrink-0 bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden sticky top-24">
+    <aside className="w-full lg:w-72 shrink-0 bg-white rounded-2xl   border border-gray-200 overflow-hidden sticky top-24">
       {/* User Header */}
       <div className="p-8 pb-6 border-b border-gray-50 flex flex-col items-center text-center">
         <div className="relative group cursor-pointer" onClick={() => !isUpdatingAvatar && fileInputRef.current?.click()}>

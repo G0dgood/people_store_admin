@@ -12,7 +12,7 @@ export const MediaSkeleton: React.FC<MediaSkeletonProps> = ({ viewType, count = 
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {Array.from({ length: count }).map((_, i) => (
-          <div key={i} className="bg-white border border-gray-100 rounded-[6px] overflow-hidden shadow-sm">
+          <div key={i} className="bg-white border border-gray-100 rounded-[6px] overflow-hidden  ">
             <div className="aspect-video bg-gray-50 animate-pulse relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full animate-[shimmer_2s_infinite]" />
             </div>

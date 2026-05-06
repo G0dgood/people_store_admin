@@ -61,7 +61,7 @@ export const QuickAddProduct: React.FC<QuickAddProductProps> = ({
               className={`flex items-center justify-between p-4 rounded-xl border border-gray-200 hover:border-transparent bg-blue-50/50 hover:shadow-lg hover:shadow-gray-100 transition-all duration-300 cursor-pointer group`}
             >
               <div className="flex items-center gap-4 flex-1">
-                <div className="w-10 h-10 rounded-xl bg-white border border-white shadow-sm flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <div className="w-10 h-10 rounded-xl bg-white border border-white   flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                   <img src={cat.image} className="w-6 h-6 object-contain" alt="" />
                 </div>
                 <div className="flex flex-col gap-0.5">

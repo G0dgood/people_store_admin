@@ -36,7 +36,7 @@ export function ImageUpload({
   const [isLibraryModalOpen, setIsLibraryModalOpen] = useState(false);
   const [stagedFile, setStagedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  
+
   // Tweak States
   const [zoom, setZoom] = useState(1);
   const [rotation, setRotation] = useState(0);
@@ -120,7 +120,7 @@ export function ImageUpload({
       ctx.save();
       ctx.translate(canvas.width / 2, canvas.height / 2);
       ctx.rotate((rotation * Math.PI) / 180);
-      
+
       // Calculate scaled dimensions while preserving aspect ratio
       const scale = zoom;
       const aspectRatio = img.height / img.width;
@@ -129,15 +129,15 @@ export function ImageUpload({
 
       // If height is dominant after scale, adjust to fit within canvas bounds nicely
       if (drawHeight > canvas.height * scale) {
-         drawHeight = canvas.height * scale;
-         drawWidth = drawHeight / aspectRatio;
+        drawHeight = canvas.height * scale;
+        drawWidth = drawHeight / aspectRatio;
       }
-      
+
       ctx.drawImage(img, -drawWidth / 2, -drawHeight / 2, drawWidth, drawHeight);
       ctx.restore();
 
       // Convert to blob
-      const blob = await new Promise<Blob | null>((resolve) => 
+      const blob = await new Promise<Blob | null>((resolve) =>
         canvas.toBlob((b) => resolve(b), "image/png", 1.0)
       );
 
@@ -238,10 +238,9 @@ export function ImageUpload({
           }}
           className={`
             w-full h-32 rounded-xl border-2 border-dashed flex flex-col items-center justify-center gap-2 transition-all cursor-pointer group relative overflow-hidden
-            ${
-              isDragging
-                ? "border-brand-gold bg-brand-gold/5"
-                : "border-gray-200 hover:border-brand-gold/30 hover:bg-gray-50/50"
+            ${isDragging
+              ? "border-brand-gold bg-brand-gold/5"
+              : "border-gray-200 hover:border-brand-gold/30 hover:bg-gray-50/50"
             }
           `}
         >
@@ -263,7 +262,7 @@ export function ImageUpload({
             </div>
           ) : (
             <>
-              <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-white transition-colors shadow-sm">
+              <div className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center group-hover:bg-white transition-colors  ">
                 <Icon
                   name="cloud_upload"
                   folder="icon"
@@ -299,32 +298,32 @@ export function ImageUpload({
       )}
 
       {/* Tweak Modal */}
-      <Modal 
-        isOpen={isTweakModalOpen} 
-        onClose={closeTweakModal} 
+      <Modal
+        isOpen={isTweakModalOpen}
+        onClose={closeTweakModal}
         title="Refine Asset Appearance"
         size="lg"
       >
         <ModalBody className="flex flex-col gap-8 py-6">
           {/* Main Preview */}
           <div className="flex flex-col items-center justify-center">
-             <div 
-               className="relative w-64 h-64 border border-gray-100 rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 flex items-center justify-center"
-               style={{ backgroundColor: bgColor }}
-             >
-               {previewUrl && (
-                 <img 
-                   src={previewUrl} 
-                   alt="Tweak Preview" 
-                   className="w-full h-full object-contain transition-transform duration-200"
-                   style={{ 
-                     transform: `scale(${zoom}) rotate(${rotation}deg)`,
-                     borderRadius: `${borderRadius}%`
-                   }}
-                 />
-               )}
-             </div>
-             <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-4">Live Transformation Preview</span>
+            <div
+              className="relative w-64 h-64 border border-gray-100 rounded-2xl overflow-hidden shadow-2xl transition-all duration-300 flex items-center justify-center"
+              style={{ backgroundColor: bgColor }}
+            >
+              {previewUrl && (
+                <img
+                  src={previewUrl}
+                  alt="Tweak Preview"
+                  className="w-full h-full object-contain transition-transform duration-200"
+                  style={{
+                    transform: `scale(${zoom}) rotate(${rotation}deg)`,
+                    borderRadius: `${borderRadius}%`
+                  }}
+                />
+              )}
+            </div>
+            <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-4">Live Transformation Preview</span>
           </div>
 
           {/* Controls */}
@@ -332,11 +331,11 @@ export function ImageUpload({
             <div className="flex flex-col gap-6">
               <div className="flex flex-col gap-3">
                 <div className="flex justify-between items-center">
-                   <label className="text-[10px] font-black text-[#1D3557] uppercase tracking-wider">Zoom Scale</label>
-                   <span className="text-[10px] font-bold text-brand-gold bg-brand-gold/5 px-2 py-0.5 rounded">{Math.round(zoom * 100)}%</span>
+                  <label className="text-[10px] font-black text-[#1D3557] uppercase tracking-wider">Zoom Scale</label>
+                  <span className="text-[10px] font-bold text-brand-gold bg-brand-gold/5 px-2 py-0.5 rounded">{Math.round(zoom * 100)}%</span>
                 </div>
-                <input 
-                  type="range" min="0.5" max="3" step="0.1" value={zoom} 
+                <input
+                  type="range" min="0.5" max="3" step="0.1" value={zoom}
                   onChange={(e) => setZoom(Number(e.target.value))}
                   className="w-full h-1.5 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-brand-gold"
                 />
@@ -344,11 +343,11 @@ export function ImageUpload({
 
               <div className="flex flex-col gap-3">
                 <div className="flex justify-between items-center">
-                   <label className="text-[10px] font-black text-[#1D3557] uppercase tracking-wider">Rotation</label>
-                   <span className="text-[10px] font-bold text-brand-gold bg-brand-gold/5 px-2 py-0.5 rounded">{rotation}°</span>
+                  <label className="text-[10px] font-black text-[#1D3557] uppercase tracking-wider">Rotation</label>
+                  <span className="text-[10px] font-bold text-brand-gold bg-brand-gold/5 px-2 py-0.5 rounded">{rotation}°</span>
                 </div>
-                <input 
-                  type="range" min="-180" max="180" step="1" value={rotation} 
+                <input
+                  type="range" min="-180" max="180" step="1" value={rotation}
                   onChange={(e) => setRotation(Number(e.target.value))}
                   className="w-full h-1.5 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-brand-gold"
                 />
@@ -364,7 +363,7 @@ export function ImageUpload({
                       key={color}
                       onClick={() => setBgColor(color)}
                       className={`w-8 h-8 rounded-full border-2 transition-all ${bgColor === color ? "border-brand-gold scale-110 shadow-lg" : "border-gray-100 hover:scale-105"}`}
-                      style={{ 
+                      style={{
                         backgroundColor: color === "transparent" ? "white" : color,
                         backgroundImage: color === "transparent" ? "linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc), linear-gradient(45deg, #ccc 25%, transparent 25%, transparent 75%, #ccc 75%, #ccc)" : "none",
                         backgroundSize: color === "transparent" ? "8px 8px" : "initial",
@@ -377,11 +376,11 @@ export function ImageUpload({
 
               <div className="flex flex-col gap-3">
                 <div className="flex justify-between items-center">
-                   <label className="text-[10px] font-black text-[#1D3557] uppercase tracking-wider">Corner Radius</label>
-                   <span className="text-[10px] font-bold text-brand-gold bg-brand-gold/5 px-2 py-0.5 rounded">{borderRadius}%</span>
+                  <label className="text-[10px] font-black text-[#1D3557] uppercase tracking-wider">Corner Radius</label>
+                  <span className="text-[10px] font-bold text-brand-gold bg-brand-gold/5 px-2 py-0.5 rounded">{borderRadius}%</span>
                 </div>
-                <input 
-                  type="range" min="0" max="50" step="1" value={borderRadius} 
+                <input
+                  type="range" min="0" max="50" step="1" value={borderRadius}
                   onChange={(e) => setBorderRadius(Number(e.target.value))}
                   className="w-full h-1.5 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-brand-gold"
                 />
@@ -391,9 +390,9 @@ export function ImageUpload({
         </ModalBody>
         <ModalFooter className="flex justify-end gap-3 pt-6 border-t border-gray-50">
           <Button shape="rounded-sm" variant="ghost" onClick={closeTweakModal}>Discard</Button>
-          <Button 
-            shape="rounded-sm" 
-            variant="primary" 
+          <Button
+            shape="rounded-sm"
+            variant="primary"
             onClick={handleUpload}
             isLoading={isUploading}
             iconLeft={<Icon name="verified" folder="icon" size="sm" />}

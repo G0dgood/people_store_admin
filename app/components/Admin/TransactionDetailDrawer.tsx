@@ -27,13 +27,13 @@ export function TransactionDetailDrawer({ isOpen, onClose, transaction }: Transa
       <Drawer isOpen={isOpen} onClose={onClose} title="Transaction Details" width="max-w-md">
          <div className="flex flex-col gap-8">
             {/* Core Summary */}
-            <div className={`p-6 rounded-2xl ${currentStatus.lightBg} border border-white/50 shadow-sm flex flex-col gap-4`}>
+            <div className={`p-6 rounded-2xl ${currentStatus.lightBg} border border-white/50   flex flex-col gap-4`}>
                <div className="flex justify-between items-start">
                   <div className="flex flex-col gap-1">
                      <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Transaction ID</span>
                      <span className="text-sm font-black text-brand-charcoal">{transaction.transactionId}</span>
                   </div>
-                  <div className={`px-3 py-1 rounded-full ${currentStatus.bg} text-white text-[10px] font-black uppercase tracking-wider shadow-sm`}>
+                  <div className={`px-3 py-1 rounded-full ${currentStatus.bg} text-white text-[10px] font-black uppercase tracking-wider  `}>
                      {transaction.status}
                   </div>
                </div>
@@ -66,7 +66,7 @@ export function TransactionDetailDrawer({ isOpen, onClose, transaction }: Transa
             <div className="flex flex-col gap-4">
                <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Customer Details</h4>
                <div className="bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gray-50 border-2 border-white shadow-sm flex items-center justify-center overflow-hidden">
+                  <div className="w-12 h-12 rounded-full bg-gray-50 border-2 border-white   flex items-center justify-center overflow-hidden">
                      <img src={"https://ui-avatars.com/api/?name=" + (transaction.customer?.fullName || "Guest")} alt="" className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1 flex flex-col gap-0.5">

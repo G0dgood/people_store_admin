@@ -61,10 +61,10 @@ export const RefundRequestModal: React.FC<RefundRequestModalProps> = ({ isOpen, 
             for (let i = 0; i < files.length; i++) {
                 formData.append('files', files[i]);
             }
-             
-            
+
+
             const result = await uploadMedia(formData).unwrap();
-             
+
 
             const data = result.data as any;
             if (data && Array.isArray(data)) {
@@ -101,7 +101,7 @@ export const RefundRequestModal: React.FC<RefundRequestModalProps> = ({ isOpen, 
                 description,
                 images: attachments
             }).unwrap();
-            
+
             toast.success("Refund request submitted successfully!");
             onClose();
             // Reset form
@@ -153,7 +153,7 @@ export const RefundRequestModal: React.FC<RefundRequestModalProps> = ({ isOpen, 
 
                 <div className="flex flex-col gap-1">
                     <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Reason for Refund</label>
-                    <Select 
+                    <Select
                         shape="rounded-sm"
                         options={REFUND_REASONS}
                         value={reason}
@@ -177,9 +177,9 @@ export const RefundRequestModal: React.FC<RefundRequestModalProps> = ({ isOpen, 
                     <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest px-1">Supporting Images</label>
                     <div className="flex flex-wrap gap-3">
                         {attachments.map((url, i) => (
-                            <div key={i} className="relative w-20 h-20 rounded-xl overflow-hidden border border-gray-100 group shadow-sm">
+                            <div key={i} className="relative w-20 h-20 rounded-xl overflow-hidden border border-gray-100 group  ">
                                 <img src={url} alt="preview" className="w-full h-full object-cover" />
-                                <button 
+                                <button
                                     type="button"
                                     onClick={() => setAttachments(prev => prev.filter((_, idx) => idx !== i))}
                                     className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all"
@@ -190,12 +190,11 @@ export const RefundRequestModal: React.FC<RefundRequestModalProps> = ({ isOpen, 
                                 </button>
                             </div>
                         ))}
-                        
-                        <label className={`w-20 h-20 rounded-xl border-2 border-dashed flex flex-col items-center justify-center gap-1 transition-all cursor-pointer ${
-                            isUploading 
-                            ? "border-brand-gold/30 bg-blue-50/30" 
-                            : "border-gray-200 text-gray-400 hover:border-brand-gold hover:text-brand-gold hover:bg-blue-50/50"
-                        }`}>
+
+                        <label className={`w-20 h-20 rounded-xl border-2 border-dashed flex flex-col items-center justify-center gap-1 transition-all cursor-pointer ${isUploading
+                                ? "border-brand-gold/30 bg-blue-50/30"
+                                : "border-gray-200 text-gray-400 hover:border-brand-gold hover:text-brand-gold hover:bg-blue-50/50"
+                            }`}>
                             <input type="file" multiple accept="image/*" onChange={handleFileChange} className="hidden" disabled={isUploading} />
                             {isUploading ? (
                                 <div className="flex flex-col items-center gap-1">

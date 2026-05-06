@@ -127,7 +127,7 @@ export const ActionIcons: React.FC = () => {
             className="text-gray-900 group-hover:text-brand-gold transition-colors"
           />
           {cartCount >= 0 && (
-            <span className="absolute -top-2.5 -right-2.5 bg-[#C30000] text-white text-[10px] font-bold min-w-[20px] h-[20px] flex items-center justify-center rounded-full border-2 border-white shadow-sm">
+            <span className="absolute -top-2.5 -right-2.5 bg-[#C30000] text-white text-[10px] font-bold min-w-[20px] h-[20px] flex items-center justify-center rounded-full border-2 border-white  ">
               {cartCount}
             </span>
           )}

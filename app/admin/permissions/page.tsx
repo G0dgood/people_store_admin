@@ -221,7 +221,7 @@ export default function PermissionsAccordion() {
                   className={`w-full flex items-center justify-between p-5 text-left transition-colors ${isExpanded ? 'bg-gray-50/50 border-b border-gray-200' : 'hover:bg-gray-50/30'}`}
                 >
                   <div className="flex items-center gap-4">
-                    <div className={`w-3 h-3 rounded-full ${roleColors[role.name] || 'bg-gray-300'} shadow-sm`} />
+                    <div className={`w-3 h-3 rounded-full ${roleColors[role.name] || 'bg-gray-300'}  `} />
                     <div className="flex flex-col gap-0.5">
                       <span className="text-base font-black text-[#1D3557]">{role.name}</span>
                       <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{role.users || 0} Active Users Assigned</span>
@@ -295,7 +295,7 @@ export default function PermissionsAccordion() {
                                 <td className="py-4 pr-8 text-right">
                                   <button
                                     onClick={() => toggleModuleRow(role._id, module.slug)}
-                                    className="w-7 h-7 rounded-lg bg-gray-50 flex items-center justify-center text-gray-300 hover:bg-brand-gold hover:text-white transition-all shadow-sm"
+                                    className="w-7 h-7 rounded-lg bg-gray-50 flex items-center justify-center text-gray-300 hover:bg-brand-gold hover:text-white transition-all  "
                                   >
                                     <Icon name="verified" folder="icon" size="md" />
                                   </button>

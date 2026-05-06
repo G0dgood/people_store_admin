@@ -45,7 +45,7 @@ export function SelectionSummary({
         {selectedItems.map((item, idx) => (
           <div
             key={item[idProp] || idx}
-            className="flex items-center gap-2 py-1.5 px-3 rounded-lg bg-white/60 border border-white shadow-sm"
+            className="flex items-center gap-2 py-1.5 px-3 rounded-lg bg-white/60 border border-white  "
           >
             <div className="w-1.5 h-1.5 rounded-full bg-brand-gold opacity-40"></div>
             <span className="text-[11px] font-bold text-gray-600 truncate">

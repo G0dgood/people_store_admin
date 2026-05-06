@@ -22,7 +22,7 @@ const RegionSuppliers = () => {
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-x-8 md:gap-x-12 gap-y-6">
         {regions.map((region, idx) => (
           <div key={idx} className="flex items-center gap-3 group cursor-pointer hover:bg-white p-2 -m-2 rounded-lg transition-colors">
-            <div className="w-7 h-5 relative border border-gray-200 rounded-sm overflow-hidden flex-shrink-0 shadow-sm">
+            <div className="w-7 h-5 relative border border-gray-200 rounded-sm overflow-hidden flex-shrink-0  ">
               <Image src={region.flag} alt={region.name} fill className="object-cover" sizes="28px" />
             </div>
             <div className="flex flex-col min-w-0">

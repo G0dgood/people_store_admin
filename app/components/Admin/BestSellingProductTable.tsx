@@ -12,13 +12,13 @@ export function BestSellingProductTable() {
   const bestSellers = response?.data || [];
 
   return (
-    <div className="bg-white p-8 rounded-[6px] border border-gray-200 shadow-sm flex flex-col gap-6">
+    <div className="bg-white p-8 rounded-[6px] border border-gray-200   flex flex-col gap-6">
       <div className="flex justify-between items-center">
         <h3 className="text-[18px] font-black text-[#1D3557]">Top Performers</h3>
         <Button
           shape="rounded-sm"
           iconRight={<Icon name="sort" folder="dashboardIcon" size="sm" />}
-          className="bg-[#66BB6A] hover:bg-[#4CAF50] text-white text-[11px] font-black px-6 h-9 rounded-[6px] shadow-sm"
+          className="bg-[#66BB6A] hover:bg-[#4CAF50] text-white text-[11px] font-black px-6 h-9 rounded-[6px]  "
         >
           Filter
         </Button>

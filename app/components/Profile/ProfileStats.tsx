@@ -9,8 +9,8 @@ interface StatProps {
 }
 
 const StatCard: React.FC<StatProps> = ({ label, value, icon, color }) => (
-  <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow cursor-default group">
-    <div className={`w-12 h-12 rounded-full ${color} flex items-center justify-center text-white shadow-sm group-hover:scale-110 transition-transform duration-300`}>
+  <div className="bg-white p-5 rounded-xl border border-gray-200   flex items-center gap-4 hover:shadow-md transition-shadow cursor-default group">
+    <div className={`w-12 h-12 rounded-full ${color} flex items-center justify-center text-white   group-hover:scale-110 transition-transform duration-300`}>
       <Icon name={icon} size="md" />
     </div>
     <div className="flex flex-col">

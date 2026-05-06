@@ -87,19 +87,19 @@ export const MessageFeed: React.FC = () => {
  };
 
  return (
-  <div className="w-full bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden flex flex-col">
+  <div className="w-full bg-white border border-gray-200 rounded-lg   overflow-hidden flex flex-col">
    {/* Feed Toolbar */}
    <div className="p-4 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-4">
     <div className="flex gap-2 p-1 bg-gray-100 rounded-lg">
      <button
       onClick={() => setActiveTab("all")}
-      className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${activeTab === 'all' ? 'bg-white shadow-sm text-brand-gold' : 'text-gray-600 hover:text-gray-900'}`}
+      className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${activeTab === 'all' ? 'bg-white   text-brand-gold' : 'text-gray-600 hover:text-gray-900'}`}
      >
       All Messages
      </button>
      <button
       onClick={() => setActiveTab("unread")}
-      className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${activeTab === 'unread' ? 'bg-white shadow-sm text-brand-gold' : 'text-gray-600 hover:text-gray-900'}`}
+      className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${activeTab === 'unread' ? 'bg-white   text-brand-gold' : 'text-gray-600 hover:text-gray-900'}`}
      >
       Unread
      </button>
@@ -168,7 +168,7 @@ export const MessageFeed: React.FC = () => {
         </div>
 
         <div className="hidden sm:flex flex-col justify-center items-end opacity-0 group-hover:opacity-100 transition-opacity">
-         <button className="w-8 h-8 rounded-full bg-white border border-gray-200 text-gray-500 hover:text-brand-gold hover:border-brand-gold flex items-center justify-center shadow-sm">
+         <button className="w-8 h-8 rounded-full bg-white border border-gray-200 text-gray-500 hover:text-brand-gold hover:border-brand-gold flex items-center justify-center  ">
           <Icon name="delete" size="sm" />
          </button>
         </div>

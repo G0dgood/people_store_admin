@@ -25,7 +25,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
 }) => {
   const [submitReview, { isLoading: isSubmitting, isError, error }] = useSubmitReviewMutation();
   useApiError(isError, error, "Failed to submit review");
-  
+
   const [rating, setRating] = useState(0);
   const [hoveredRating, setHoveredRating] = useState(0);
   const [title, setTitle] = useState("");
@@ -70,22 +70,22 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
       formData.append("rating", rating.toString());
       formData.append("title", title);
       formData.append("comment", comment);
-      
+
       images.forEach((image) => {
         formData.append("images", image);
       });
 
       await submitReview(formData).unwrap();
-      
+
       toast.success("Review submitted successfully!");
-      
+
       // Reset form
       setRating(0);
       setTitle("");
       setComment("");
       setImages([]);
       setPreviews([]);
-      
+
       onClose();
     } catch (err: any) {
       // Error handled by useApiError
@@ -193,7 +193,7 @@ export const ReviewModal: React.FC<ReviewModalProps> = ({
                   <button
                     type="button"
                     onClick={() => removeImage(index)}
-                    className="absolute top-1 right-1 w-6 h-6 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-900 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity hover:bg-brand-gold hover:text-white"
+                    className="absolute top-1 right-1 w-6 h-6 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-900   opacity-0 group-hover:opacity-100 transition-opacity hover:bg-brand-gold hover:text-white"
                   >
                     <Icon name="close" size="xs" />
                   </button>

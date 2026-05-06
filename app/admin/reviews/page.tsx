@@ -52,26 +52,26 @@ export default function ReviewListing() {
   const [updateReviewStatus] = useUpdateReviewStatusMutation();
   const [deleteReview] = useDeleteReviewMutation();
   const [bulkAction] = useBulkReviewActionMutation();
- 
+
   useEffect(() => {
     const socket = io(process.env.NEXT_PUBLIC_API_URL, {
-        withCredentials: true,
-        transports: ['websocket']
+      withCredentials: true,
+      transports: ['websocket']
     });
 
     socket.on("new-review", (newReview) => {
-        toast.info(`New review from ${newReview.customer?.fullName || 'a customer'}!`, {
-            description: `Product: ${newReview.product?.name}`,
-            action: {
-                label: "Refresh",
-                onClick: () => refetch()
-            }
-        });
-        refetch();
+      toast.info(`New review from ${newReview.customer?.fullName || 'a customer'}!`, {
+        description: `Product: ${newReview.product?.name}`,
+        action: {
+          label: "Refresh",
+          onClick: () => refetch()
+        }
+      });
+      refetch();
     });
 
     return () => {
-        socket.disconnect();
+      socket.disconnect();
     };
   }, [refetch]);
 
@@ -248,7 +248,7 @@ export default function ReviewListing() {
                   </td>
                   <td>
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-[6px] border border-gray-200 overflow-hidden bg-white p-1 shadow-sm">
+                      <div className="w-10 h-10 rounded-[6px] border border-gray-200 overflow-hidden bg-white p-1  ">
                         <img src={review.product?.productImage} alt={review.product?.name} className="w-full h-full object-contain" />
                       </div>
                       <span className="text-xs font-bold text-gray-500 max-w-[120px] truncate">{review.product?.name}</span>
