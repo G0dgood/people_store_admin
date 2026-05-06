@@ -390,7 +390,6 @@ export default function CategoriesPage() {
     isOpen={isBulkDeleteConfirmOpen}
     onClose={() => setIsBulkDeleteConfirmOpen(false)}
     onConfirm={() => {
-     console.log("Cleaning empty categories...");
      setIsBulkDeleteConfirmOpen(false);
     }}
     title="Clean Empty Categories"

@@ -343,7 +343,6 @@ export default function BrandsListing() {
     isOpen={isBulkDeactivateConfirmOpen}
     onClose={() => setIsBulkDeactivateConfirmOpen(false)}
     onConfirm={() => {
-     console.log("Bulk deactivating inactive brands...");
      setIsBulkDeactivateConfirmOpen(false);
     }}
     title="Bulk Deactivate Brands"

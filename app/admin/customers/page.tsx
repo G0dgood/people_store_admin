@@ -356,7 +356,6 @@ export default function CustomersListing() {
             icon: "tabler_message",
             folder: "dashboardIcon",
             onClick: () => {
-              console.log("Messaging selected customers...");
               setIsMessageDrawerOpen(true);
             },
           },
@@ -367,7 +366,6 @@ export default function CustomersListing() {
             folder: "dashboardIcon",
             variant: "danger",
             onClick: () => {
-              console.log("Bulk deleting customers:", selectedIds);
               toast.info("Bulk delete coming soon", {
                 description: "We are currently orchestrating this high-fidelity feature."
               });
