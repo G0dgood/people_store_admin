@@ -155,6 +155,7 @@ const GiftBoxesPage = () => {
            alt={box.name}
            fill
            className="object-cover transition-transform duration-700 group-hover:scale-110"
+           sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
           />
           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
            <Tooltip text="Edit Collection">
@@ -214,7 +215,7 @@ const GiftBoxesPage = () => {
           <tr key={box._id} >
            <td className="py-4">
             <div className="w-16 h-12 relative rounded border border-gray-100 overflow-hidden bg-white">
-             <Image src={box.image || "/placeholder.png"} alt={box.name} fill className="object-cover" />
+             <Image src={box.image || "/placeholder.png"} alt={box.name} fill className="object-cover" sizes="64px" />
             </div>
            </td>
            <td className="py-4">

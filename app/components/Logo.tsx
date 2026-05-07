@@ -65,6 +65,7 @@ const Logo: React.FC<LogoProps> = ({
             width={style.img.w}
             height={style.img.h}
             className="object-contain"
+            style={{ height: "auto" }}
             priority
           />
         </div>

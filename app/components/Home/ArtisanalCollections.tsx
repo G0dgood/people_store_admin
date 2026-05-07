@@ -88,6 +88,7 @@ const ArtisanalCollections = () => {
                 alt={service.title}
                 fill
                 className="object-cover transition-transform group-hover:scale-110 duration-700"
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
               />
               <div className="absolute inset-0 bg-black/5 group-hover:bg-black/10 transition-colors"></div>
             </div>

@@ -63,6 +63,7 @@ const BrandsPage = () => {
                      alt={brand.name}
                      fill
                      className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
+                     sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
                   />
 
                   {/* Glassmorphism Overlay */}
@@ -131,6 +132,7 @@ const BrandsPage = () => {
                   alt="Background"
                   fill
                   className="object-cover opacity-10 grayscale"
+                  sizes="100vw"
                />
                <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 flex flex-col items-center text-center gap-8 relative z-10">
                   <div className="flex flex-col gap-2">

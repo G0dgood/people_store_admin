@@ -66,6 +66,7 @@ export const OrderDetailModal: React.FC<OrderDetailModalProps> = ({
                       alt={item.product?.name || "Product"}
                       fill
                       className="object-contain"
+                      sizes="64px"
                     />
                   </div>
                   <div className="flex-1 flex flex-col gap-0.5">

@@ -109,7 +109,7 @@ const CategorySection: React.FC<CategorySectionProps> = ({
                 {category}
               </span>
             )}
-            <h3 className="text-xl md:text-2xl font-outfit font-light text-white uppercase tracking-[0.2em] drop-shadow-lg">
+            <h3 className="text-xl md:text-2xl font-outfit font-light text-white tracking-[0.2em] drop-shadow-lg">
               {title}
             </h3>
           </div>
@@ -173,7 +173,7 @@ const CategorySection: React.FC<CategorySectionProps> = ({
                     )}
                   </div>
                   <div className="flex flex-col gap-1">
-                    <h4 className="text-[10px] md:text-[12px] font-bold uppercase tracking-wider text-gray-900 group-hover:text-brand-gold transition-colors leading-tight">
+                    <h4 className="text-[10px] md:text-[12px] font-bold tracking-wider text-gray-900 group-hover:text-brand-gold transition-colors leading-tight">
                       {item.name}
                     </h4>
                     <div>
