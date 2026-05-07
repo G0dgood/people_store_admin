@@ -135,7 +135,7 @@ export const PrivilegeProvider: React.FC<{ children: React.ReactNode }> = ({ chi
           description: data.reason || "Your administrative access has been revoked or locked by a superior administrator."
         });
 
-        router.push("/admin/login");
+        window.location.href = "/login";
       }
     };
 

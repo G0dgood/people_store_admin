@@ -25,7 +25,7 @@ function AdminLayoutContent({
   const { canAccess, isLoading, userPrivileges } = usePrivilege();
 
    const { data: userData, isLoading: isUserLoading, isError: isUserError } = useGetCurrentUserQuery();
-   const { on, off } = useSocket();
+   const { on, off, socket } = useSocket();
 
    // Real-time Order Notification
    useEffect(() => {
@@ -38,7 +38,7 @@ function AdminLayoutContent({
 
      on("newOrder", handleNewOrder);
      return () => off("newOrder", handleNewOrder);
-   }, [on, off]);
+   }, [on, off, socket]);
 
   useEffect(() => {
     if (mobileMenuOpen) {

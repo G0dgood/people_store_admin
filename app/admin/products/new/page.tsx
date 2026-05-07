@@ -16,7 +16,7 @@ import { ProductMediaMetaSidebar } from "../../../components/Admin/ProductMediaM
 import { ProductPricingSection } from "../../../components/Admin/ProductPricingSection";
 import { PRODUCT_SIZE_OPTIONS } from "@/lib/constants/product-options";
 import Checkbox from "@/app/components/Checkbox";
-import { HiPhoto, HiArrowPath, HiXCircle, HiXMark, HiPencil, HiCheckCircle, HiTicket } from "react-icons/hi2";
+import { HiPhoto, HiArrowPath, HiXCircle, HiXMark, HiPencil, HiCheckCircle, HiTicket, HiArrowLeft } from "react-icons/hi2";
 import { Tooltip } from "../../../components/Tooltip";
 import { AISettingsModal } from "../../../components/Admin/AISettingsModal";
 import { useAddProductMutation } from "@/lib/redux/services/productApi";
@@ -230,7 +230,24 @@ export default function CreateProduct() {
   return (
     <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
       {/* Top Header / Action Bar */}
-      <div className="flex flex-col xl:flex-row justify-end items-start xl:items-center gap-4">
+      <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4">
+        <div className="flex items-center gap-4">
+          <Button shape="rounded-sm" variant="ghost" className="!p-2 hover:bg-gray-100" onClick={() => router.back()}>
+            <HiArrowLeft size={20} className="text-gray-400" />
+          </Button>
+          <div className="flex flex-col">
+            <h2 className="text-xl font-black text-[#1D3557]">Add New Product</h2>
+            <div className="flex items-center gap-2">
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Product Catalog</p>
+              {formData.sku && (
+                <>
+                  <span className="w-1.5 h-1.5 bg-gray-200 rounded-full" />
+                  <p className="text-[10px] font-black text-brand-gold uppercase tracking-wider">SKU: {formData.sku}</p>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
 
         <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
 

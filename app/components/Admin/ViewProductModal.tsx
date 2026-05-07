@@ -56,12 +56,12 @@ export function ViewProductModal({ isOpen, onClose, product }: ViewProductModalP
       size="xl"
     >
       <ModalBody className="flex flex-col gap-8 py-8 min-h-[400px]">
-        {isLoading ? (
+        {isLoading ? 
           <div className="flex-1 flex flex-col items-center justify-center gap-4 py-20">
             <div className="w-10 h-10 border-4 border-brand-gold/20 border-t-brand-gold rounded-full animate-spin" />
             <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Sycing assets...</p>
           </div>
-        ) : (
+        : 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 animate-in fade-in duration-500">
             {/* Visual Asset Section */}
             <div className="flex flex-col gap-6">
@@ -155,10 +155,14 @@ export function ViewProductModal({ isOpen, onClose, product }: ViewProductModalP
                 </p>
               </div>
 
-              <div className="mt-auto grid grid-cols-2 gap-4 pt-6">
+              <div className="mt-auto grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6">
                 <div className="p-4 rounded-xl border border-gray-100 flex flex-col gap-1">
                   <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Brand Affinity</span>
-                  <span className="text-xs font-bold text-[#1D3557]">{(fullProduct.brand as any)?.name || fullProduct.brand || "Independent"}</span>
+                  <span className="text-xs font-bold text-[#1D3557]">{fullProduct.brand?.name || (typeof fullProduct.brand === 'string' ? fullProduct.brand : "Independent")}</span>
+                </div>
+                <div className="p-4 rounded-xl border border-gray-100 flex flex-col gap-1">
+                  <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Product SKU</span>
+                  <span className="text-xs font-bold text-brand-gold uppercase">{fullProduct.sku || "N/A"}</span>
                 </div>
                 <div className="p-4 rounded-xl border border-gray-100 flex flex-col gap-1">
                   <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Last Updated</span>
@@ -169,11 +173,7 @@ export function ViewProductModal({ isOpen, onClose, product }: ViewProductModalP
               </div>
 
               <div className="flex gap-3 justify-end pt-6">
-                <Button
-                  shape="rounded-sm"
-                  variant="outline"
-                  onClick={onClose}
-                >
+                <Button shape="rounded-sm" variant="outline" onClick={onClose}>
                   Close
                 </Button>
                 <Button
@@ -190,8 +190,9 @@ export function ViewProductModal({ isOpen, onClose, product }: ViewProductModalP
               </div>
             </div>
           </div>
-        )}
+        }
       </ModalBody>
     </Modal>
   );
 }
+

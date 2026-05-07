@@ -283,6 +283,7 @@ export default function ProductListing() {
          />
         </th>
         <th>Product</th>
+        <th>SKU</th>
         <th>Category</th>
         <th>Brand</th>
         <th>Price</th>
@@ -314,6 +315,9 @@ export default function ProductListing() {
             <span className="text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-wider">ID: {product?._id?.slice(-6) || "N/A"}</span>
            </div>
           </div>
+         </td>
+         <td>
+          <span className="text-xs font-bold text-gray-500 uppercase">{product?.sku || "N/A"}</span>
          </td>
          <td>
           <span className="text-sm font-bold text-gray-500 whitespace-nowrap">{product?.category?.name || "Uncategorized"}</span>

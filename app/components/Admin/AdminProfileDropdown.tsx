@@ -20,19 +20,31 @@ export const AdminProfileDropdown: React.FC = () => {
 
  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
 
- const handleLogout = async () => {
-  try {
-   await logout({}).unwrap();
-   dispatch(logOut());
-   toast.success("Session Terminated", {
-    description: "You have been successfully logged out."
-   });
-   router.push("/login");
-  } catch (err) {
-   dispatch(logOut());
-   router.push("/login");
-  }
- };
+  const handleLogout = async () => {
+    try {
+      await logout({}).unwrap();
+      dispatch(logOut());
+      
+      // Clear all local storage and cookies manually
+      localStorage.clear();
+      document.cookie.split(";").forEach((c) => {
+        document.cookie = c
+          .replace(/^ +/, "")
+          .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+      });
+
+      toast.success("Session Terminated", {
+        description: "You have been successfully logged out."
+      });
+      
+      // Full refresh to clear all in-memory states and stop active hooks
+      window.location.href = "/login";
+    } catch (err) {
+      dispatch(logOut());
+      localStorage.clear();
+      window.location.href = "/login";
+    }
+  };
 
  const displayRole = user?.role?.replace(/_/g, " ").replace(/\b\w/g, (l: string) => l.toUpperCase()) || "Super Administrator";
  return (

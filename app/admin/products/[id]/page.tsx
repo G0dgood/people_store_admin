@@ -310,7 +310,15 @@ export default function EditProduct() {
           </Button>
           <div className="flex flex-col">
             <h2 className="text-xl font-black text-[#1D3557]">Edit {product?.status === 'Draft' ? 'Draft' : 'Product'}</h2>
-            <p className="text-xs font-bold text-gray-400">ID: {productId.slice(-8)}</p>
+            <div className="flex items-center gap-2">
+              <p className="text-xs font-bold text-gray-400">ID: {productId.slice(-8)}</p>
+              {formData.sku && (
+                <>
+                  <span className="w-1.5 h-1.5 bg-gray-200 rounded-full" />
+                  <p className="text-[10px] font-black text-brand-gold uppercase tracking-wider">SKU: {formData.sku}</p>
+                </>
+              )}
+            </div>
           </div>
         </div>
 

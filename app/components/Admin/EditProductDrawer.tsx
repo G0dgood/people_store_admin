@@ -30,12 +30,16 @@ export function EditProductDrawer({ isOpen, onClose, product }: EditProductDrawe
     stock: number;
     status: "Published" | "Draft";
     productImage: string;
+    sku: string;
   }>({
     price: 0,
     stock: 0,
     status: "Published",
     productImage: "",
+    sku: "",
   });
+
+  console.log("Product--->", product);
 
   useEffect(() => {
     if (product) {
@@ -44,6 +48,7 @@ export function EditProductDrawer({ isOpen, onClose, product }: EditProductDrawe
         stock: product.stock,
         status: (product.status as any) || "Published",
         productImage: product.productImage || "",
+        sku: product.sku || "",
       });
     }
   }, [product]);
@@ -67,12 +72,12 @@ export function EditProductDrawer({ isOpen, onClose, product }: EditProductDrawe
   if (!product) return null;
 
   return (
-    <Drawer isOpen={isOpen} onClose={onClose} title="Quick Edit Product">
-      <form onSubmit={handleSubmit} className="flex flex-col h-full gap-8">
-        <div className="flex flex-col gap-6">
+    <Drawer isOpen={isOpen} onClose={onClose} title={`Quick Edit: ${product.name} ${product.sku ? `(${product.sku})` : ''}`}>
+      <form onSubmit={handleSubmit} className="flex flex-col h-full overflow-hidden">
+        <div className="flex-1 overflow-y-auto pr-2 -mr-2 flex flex-col gap-6">
           <div className="flex flex-col gap-2">
             <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Product Image</label>
-            <ImageUpload 
+            <ImageUpload
               value={formData.productImage}
               onChange={(url) => setFormData({ ...formData, productImage: url })}
             />
@@ -88,6 +93,17 @@ export function EditProductDrawer({ isOpen, onClose, product }: EditProductDrawe
               onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
               className="h-12 border-gray-200 font-bold"
               required
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Product SKU</label>
+            <Input
+              shape="rounded-sm"
+              placeholder="e.g. PRD-001"
+              value={formData.sku}
+              onChange={(e) => setFormData({ ...formData, sku: e.target.value.toUpperCase() })}
+              className="h-12 border-gray-200 font-bold uppercase"
             />
           </div>
 
@@ -113,6 +129,7 @@ export function EditProductDrawer({ isOpen, onClose, product }: EditProductDrawe
               onChange={(val) => setFormData({ ...formData, status: val as "Published" | "Draft" })}
             />
           </div>
+
         </div>
 
         <div className="mt-auto pt-8 border-t border-gray-50 flex flex-col gap-3">

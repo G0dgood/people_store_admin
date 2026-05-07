@@ -294,13 +294,41 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children, config
 		emit(message.type, message.payload);
 	}, [emit]);
 
-	const on = useCallback((event: string, handler: SocketEventHandler) => {
-		socketRef.current?.on(event, handler);
+	const handlersRef = useRef<Map<string, Set<SocketEventHandler>>>(new Map());
+  
+  const on = useCallback((event: string, handler: SocketEventHandler) => {
+		if (!handlersRef.current.has(event)) {
+      handlersRef.current.set(event, new Set());
+    }
+    
+    const handlers = handlersRef.current.get(event)!;
+    if (!handlers.has(handler)) {
+      handlers.add(handler);
+      socketRef.current?.on(event, handler);
+    }
 	}, []);
 
 	const off = useCallback((event: string, handler: SocketEventHandler) => {
-		socketRef.current?.off(event, handler);
+		const handlers = handlersRef.current.get(event);
+    if (handlers) {
+      handlers.delete(handler);
+    }
+    
+    socketRef.current?.off(event, handler);
 	}, []);
+
+  // Apply pending handlers when socket changes
+  useEffect(() => {
+    if (socket) {
+      // Remove all current listeners first to avoid duplicates during reconnection
+      handlersRef.current.forEach((handlers, event) => {
+        socket.removeAllListeners(event);
+        handlers.forEach(handler => {
+          socket.on(event, handler);
+        });
+      });
+    }
+  }, [socket]);
 
 	// Auto-connect
 	useEffect(() => {
