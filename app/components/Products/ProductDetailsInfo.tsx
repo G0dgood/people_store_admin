@@ -123,7 +123,9 @@ const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
       price: `₦${currentPrice.toLocaleString()}`,
       image: product.productImage,
       sku: currentSKU,
-      variant: currentSelection?.label
+      variant: currentSelection?.label,
+      stock: currentStock,
+      isUnlimited: product.isUnlimited
     });
     toast.success("Added to Boutique Bag");
   };
@@ -135,7 +137,9 @@ const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
       price: `₦${currentPrice.toLocaleString()}`,
       image: product.productImage,
       sku: currentSKU,
-      variant: currentSelection?.label
+      variant: currentSelection?.label,
+      stock: currentStock,
+      isUnlimited: product.isUnlimited
     });
     router.push("/checkout");
   };

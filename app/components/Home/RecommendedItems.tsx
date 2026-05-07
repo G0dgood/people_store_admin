@@ -47,6 +47,8 @@ const RecommendedItems = () => {
       title: item.title,
       price: item.price,
       image: item.image,
+      stock: item.stock,
+      isUnlimited: item.isUnlimited,
     });
     toast.success(`${item.title} added to cart`);
     setIsModalOpen(false);

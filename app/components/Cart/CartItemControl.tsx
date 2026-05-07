@@ -23,7 +23,7 @@ const CartItemControl: React.FC<CartItemControlProps> = ({ id, price, quantity, 
       <span className="font-outfit font-bold text-lg md:text-xl text-gray-900">{formatPrice(price)}</span>
       <QuantitySelector
         quantity={quantity}
-        stock={stock || 99}
+        stock={stock ?? 0}
         onIncrease={() => updateQuantity(id, quantity + 1)}
         onDecrease={() => updateQuantity(id, quantity - 1)}
       />

@@ -83,7 +83,7 @@ const CartItem: React.FC<CartItemProps> = ({ id, title, price, image, quantity, 
          </div>
 
          {/* Item Control & Price */}
-         <CartItemControl id={id} price={price} quantity={quantity} stock={stock || 99} />
+         <CartItemControl id={id} price={price} quantity={quantity} stock={stock} />
       </div>
    );
 };

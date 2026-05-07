@@ -129,6 +129,8 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ isOpen, onClose,
       image: product.image,
       variant: selected.label,
       sku: selected.originalSku,
+      stock: selected.originalStock,
+      isUnlimited: product.isUnlimited,
       meta: {
         color: selected.color,
         size: !selected.isVariant ? selected.label : undefined

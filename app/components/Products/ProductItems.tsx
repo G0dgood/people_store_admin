@@ -39,6 +39,8 @@ export const ProductGridItem: React.FC<{ product: ProductProps, noBorderRight?: 
          title: product.title,
          price: product.price,
          image: product.image,
+         stock: product.stock,
+         isUnlimited: product.isUnlimited,
       });
       toast.success("Added to cart");
    };
@@ -140,6 +142,8 @@ export const ProductListItem: React.FC<{
             title: product.title,
             price: product.price,
             image: product.image,
+            stock: product.stock,
+            isUnlimited: product.isUnlimited,
          });
          toast.success("Added to cart");
       };

@@ -20,7 +20,9 @@ const YouMayLike = () => {
     id: p._id,
     name: p.name,
     price: `₦${p.price.toLocaleString()}`,
-    image: p.productImage || "/placeholder.png"
+    image: p.productImage || "/placeholder.png",
+    stock: p.stock,
+    isUnlimited: p.isUnlimited
   }));
 
   if (isLoading) {
@@ -50,6 +52,8 @@ const YouMayLike = () => {
       title: item.name,
       price: item.price,
       image: item.image,
+      stock: item.stock,
+      isUnlimited: item.isUnlimited,
     });
     toast.success("Added to cart");
   };
