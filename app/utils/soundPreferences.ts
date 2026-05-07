@@ -28,6 +28,7 @@ export interface SoundPreferences {
 	components: {
 		notifications: ComponentSoundSettings;
 		toasts: ComponentSoundSettings; 
+		orders: ComponentSoundSettings; 
 		offlineBanner: ComponentSoundSettings; 
 	};
 }
@@ -42,6 +43,10 @@ const defaultPreferences: SoundPreferences = {
 			soundType: 'notification',
 		},
 		toasts: {
+			enabled: true,
+			soundType: 'success',
+		}, 
+		orders: {
 			enabled: true,
 			soundType: 'success',
 		}, 

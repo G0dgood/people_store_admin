@@ -5,36 +5,37 @@
 
 import { toast } from 'sonner';
 import { playNotificationSound } from '@/app/utils/soundEffects'; 
+import { SoundPreferences } from './soundPreferences';
 
 /**
  * Show success toast with sound
  */
-export const toastSuccess = (message: string, options?: any) => {
-	playNotificationSound('success', 'toasts');
+export const toastSuccess = (message: string, options?: any, component: keyof SoundPreferences['components'] = 'toasts') => {
+	playNotificationSound('success', component);
 	return toast.success(message, options);
 };
 
 /**
  * Show error toast with sound
  */
-export const toastError = (message: string, options?: any) => {
-	playNotificationSound('error', 'toasts');
+export const toastError = (message: string, options?: any, component: keyof SoundPreferences['components'] = 'toasts') => {
+	playNotificationSound('error', component);
 	return toast.error(message, options);
 };
 
 /**
  * Show warning toast with sound
  */
-export const toastWarning = (message: string, options?: any) => {
-	playNotificationSound('warning', 'toasts');
+export const toastWarning = (message: string, options?: any, component: keyof SoundPreferences['components'] = 'toasts') => {
+	playNotificationSound('warning', component);
 	return toast.warning(message, options);
 };
 
 /**
  * Show info toast with sound
  */
-export const toastInfo = (message: string, options?: any) => {
-	playNotificationSound('info', 'toasts');
+export const toastInfo = (message: string, options?: any, component: keyof SoundPreferences['components'] = 'toasts') => {
+	playNotificationSound('info', component);
 	return toast.info(message, options);
 };
 

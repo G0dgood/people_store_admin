@@ -33,7 +33,7 @@ function AdminLayoutContent({
        toastSuccess(`New Order Received!`, {
          description: `Order #${order.orderId || order._id.slice(-6).toUpperCase()} from ${order.customer?.fullName || 'Guest'}`,
          duration: 8000,
-       });
+       }, 'orders');
      };
 
      on("newOrder", handleNewOrder);
