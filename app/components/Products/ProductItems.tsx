@@ -34,6 +34,13 @@ export const ProductGridItem: React.FC<{ product: ProductProps, noBorderRight?: 
    const handleAddToCart = (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
+
+      const isOutOfStock = !product.isUnlimited && product.stock <= 0;
+      if (isOutOfStock) {
+         toast.error("This magnificent piece is currently out of stock");
+         return;
+      }
+
       addToCart({
          id: product.id,
          title: product.title,
@@ -86,7 +93,7 @@ export const ProductGridItem: React.FC<{ product: ProductProps, noBorderRight?: 
                      <Rating value={product.rating} />
                      <span className="text-brand-gold text-sm font-medium">{product.rating}</span>
                   </div>
-                  <span className="text-gray-600 text-[13px] uppercase tracking-wider leading-relaxed line-clamp-2 group-hover:text-brand-gold transition-colors font-bold">
+                  <span className="text-gray-600 text-[13px]  tracking-wider leading-relaxed line-clamp-2 group-hover:text-brand-gold transition-colors font-bold">
                      {product.title}
                   </span>
                   <p className="text-gray-400 text-[11px] line-clamp-1 leading-relaxed font-medium">
@@ -113,9 +120,10 @@ export const ProductGridItem: React.FC<{ product: ProductProps, noBorderRight?: 
             <Button
                onClick={handleAddToCart}
                size="sm"
-               className="flex-1 bg-brand-charcoal text-white hover:bg-brand-gold text-[10px] uppercase tracking-widest font-bold py-2 shadow-none rounded-none"
+               disabled={!product.isUnlimited && product.stock <= 0}
+               className={`flex-1 ${!product.isUnlimited && product.stock <= 0 ? 'bg-gray-300' : 'bg-brand-charcoal hover:bg-brand-gold'} text-white text-[10px] tracking-widest font-bold py-2 shadow-none rounded-none`}
             >
-               Add to cart
+               {!product.isUnlimited && product.stock <= 0 ? 'Out of stock' : 'Add to cart'}
             </Button>
          </div>
       </div>
@@ -137,6 +145,13 @@ export const ProductListItem: React.FC<{
       const handleAddToCart = (e: React.MouseEvent) => {
          e.preventDefault();
          e.stopPropagation();
+
+         const isOutOfStock = !product.isUnlimited && product.stock <= 0;
+         if (isOutOfStock) {
+            toast.error("This magnificent piece is currently out of stock");
+            return;
+         }
+
          addToCart({
             id: product.id,
             title: product.title,
@@ -173,7 +188,7 @@ export const ProductListItem: React.FC<{
                <div className="flex items-start justify-between">
                   <Link
                      href={`/products/detail?id=${product.id}`}
-                     className="text-[13px] md:text-base font-bold uppercase tracking-wider text-gray-900 leading-snug hover:text-brand-gold cursor-pointer transition-colors line-clamp-2 md:line-clamp-none"
+                     className="text-[13px] md:text-base font-bold  tracking-wider text-gray-900 leading-snug hover:text-brand-gold cursor-pointer transition-colors line-clamp-2 md:line-clamp-none"
                      onClick={() => addToRecentlyViewed({
                         id: product.id,
                         title: product.title,
@@ -203,7 +218,7 @@ export const ProductListItem: React.FC<{
                      </div>
                      <div className="flex items-center gap-1.5 text-gray-400">
                         <div className="w-1 h-1 md:w-1.5 md:h-1.5 bg-gray-300" />
-                        <span className="uppercase tracking-widest text-[10px]">{product.orders} orders</span>
+                        <span className=" tracking-widest text-[10px]">{product.orders} orders</span>
                      </div>
                      <StockWarning
                         stock={product.stock}
@@ -213,7 +228,7 @@ export const ProductListItem: React.FC<{
                      {/* Shipping Info */}
                      <div className="flex items-center gap-1.5 text-brand-gold">
                         <div className="w-1 h-1 md:w-1.5 md:h-1.5 bg-brand-gold" />
-                        <span className="font-bold uppercase tracking-widest text-[10px]">{product.shipping}</span>
+                        <span className="font-bold  tracking-widest text-[10px]">{product.shipping}</span>
                      </div>
                   </div>
                </div>
@@ -224,7 +239,7 @@ export const ProductListItem: React.FC<{
                </p>
 
                <div className="flex items-center gap-4 mt-auto pt-2">
-                  <Link href={`/products/detail?id=${product.id}`} className="text-black hover:text-brand-gold font-bold text-[10px] uppercase tracking-widest cursor-pointer flex items-center gap-1 transition-colors">
+                  <Link href={`/products/detail?id=${product.id}`} className="text-black hover:text-brand-gold font-bold text-[10px]  tracking-widest cursor-pointer flex items-center gap-1 transition-colors">
                      View details
                   </Link>
                   <button
@@ -233,16 +248,17 @@ export const ProductListItem: React.FC<{
                         e.stopPropagation();
                         product.onQuickView?.(product);
                      }}
-                     className="text-gray-400 hover:text-brand-gold font-bold text-[10px] uppercase tracking-widest cursor-pointer flex items-center gap-1 transition-colors"
+                     className="text-gray-400 hover:text-brand-gold font-bold text-[10px]  tracking-widest cursor-pointer flex items-center gap-1 transition-colors"
                   >
                      <HiEye size={16} />
                      Quick View
                   </button>
                   <button
                      onClick={handleAddToCart}
-                     className="md:hidden text-brand-gold font-bold text-[10px] uppercase tracking-widest cursor-pointer"
+                     disabled={!product.isUnlimited && product.stock <= 0}
+                     className={`md:hidden ${!product.isUnlimited && product.stock <= 0 ? 'text-gray-300' : 'text-brand-gold'} font-bold text-[10px]  tracking-widest cursor-pointer`}
                   >
-                     Add to cart
+                     {!product.isUnlimited && product.stock <= 0 ? 'Out of stock' : 'Add to cart'}
                   </button>
                </div>
             </div>
@@ -258,9 +274,10 @@ export const ProductListItem: React.FC<{
                   <Button
                      onClick={handleAddToCart}
                      size="sm"
-                     className="w-full bg-brand-charcoal text-white hover:bg-brand-gold font-bold mt-2 shadow-none rounded-none text-[10px] uppercase tracking-widest h-10"
+                     disabled={!product.isUnlimited && product.stock <= 0}
+                     className={`w-full ${!product.isUnlimited && product.stock <= 0 ? 'bg-gray-300 cursor-not-allowed' : 'bg-brand-charcoal hover:bg-brand-gold'} text-white font-bold mt-2 shadow-none rounded-none text-[10px] tracking-widest h-10`}
                   >
-                     Add to cart
+                     {!product.isUnlimited && product.stock <= 0 ? 'Out of stock' : 'Add to cart'}
                   </Button>
                </div>
 
@@ -270,7 +287,7 @@ export const ProductListItem: React.FC<{
                         e.stopPropagation();
                         onRemove();
                      }}
-                     className="text-red-500 font-bold text-[10px] uppercase tracking-widest hover:underline cursor-pointer transition-all mt-auto"
+                     className="text-red-500 font-bold text-[10px]  tracking-widest hover:underline cursor-pointer transition-all mt-auto"
                   >
                      Remove Item
                   </button>

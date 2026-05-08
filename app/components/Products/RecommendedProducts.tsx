@@ -11,6 +11,7 @@ import { EmptyState } from "../Admin/EmptyState";
 import { HiOutlineSparkles } from "react-icons/hi2";
 import { Icon } from "../Icon";
 import { StockWarning } from "../StockWarning";
+import { SectionHeaderSimple } from "../ui/SectionHeaderSimple";
 
 interface RecommendedProduct {
   isUnlimited: boolean | undefined;
@@ -46,10 +47,7 @@ export const RecommendedProducts: React.FC<RecommendedProductsProps> = ({ produc
 
   return (
     <div className="flex flex-col mt-8 border border-gray-200 overflow-hidden bg-white">
-      <div className="p-6 border-b border-gray-200">
-        <h3 className="text-xl font-bold text-gray-900">You may also like</h3>
-      </div>
-
+      <SectionHeaderSimple title="You may also like" />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
         {products.map((product) => (
           <div
@@ -68,7 +66,7 @@ export const RecommendedProducts: React.FC<RecommendedProductsProps> = ({ produc
 
                 {/* Quick View Button Overlay */}
                 <div className="absolute bottom-0 left-0 right-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-10">
-                  <div className="w-full py-2 bg-black/80 backdrop-blur-md text-white text-[9px] font-bold uppercase tracking-[0.2em] hover:bg-brand-gold transition-all text-center">
+                  <div className="w-full py-2 bg-black/80 backdrop-blur-md text-white text-[9px] font-bold tracking-[0.2em] hover:bg-brand-gold transition-all text-center">
                     Quick View
                   </div>
                 </div>
@@ -76,7 +74,7 @@ export const RecommendedProducts: React.FC<RecommendedProductsProps> = ({ produc
 
               <div className="flex flex-col gap-1">
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-gray-900">{product.price}</span>
+                  <span className="font-outfit font-bold text-gray-900">{product.price}</span>
 
 
                   <StockWarning
@@ -85,7 +83,7 @@ export const RecommendedProducts: React.FC<RecommendedProductsProps> = ({ produc
                     isUnlimited={product.isUnlimited}
                   />
                 </div>
-                <p className="text-gray-500 text-sm leading-tight line-clamp-2 group-hover:text-brand-gold transition-colors font-medium">
+                <p className="text-gray-500 text-sm leading-tight line-clamp-2 group-hover:text-brand-gold transition-colors font-outfit font-medium">
                   {product.title}
                 </p>
               </div>
@@ -96,7 +94,7 @@ export const RecommendedProducts: React.FC<RecommendedProductsProps> = ({ produc
                 onClick={(e) => handleAddToCart(e, product)}
                 variant="secondary"
                 size="sm"
-                className="flex-1 font-bold hover:bg-brand-gold hover:text-white shadow-none justify-center text-[10px] h-10"
+                className="flex-1 font-outfit font-bold hover:bg-brand-gold hover:text-white shadow-none justify-center text-[10px] h-10"
                 iconLeft={<Icon name="shopping_cart" size="xs" />}
               >
                 Add to Cart

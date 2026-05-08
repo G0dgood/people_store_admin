@@ -9,6 +9,8 @@ import { formatPrice } from "@/app/utils/formatPrice";
 import { useCustomerAuth } from "@/app/context/CustomerAuthContext";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { SectionHeaderSimple } from "../ui/SectionHeaderSimple";
+import { SummarySection } from "../Cart/SummarySection";
 
 declare global {
   interface Window {
@@ -163,10 +165,7 @@ export const OrderSummary: React.FC = () => {
     <div className="w-full lg:w-[400px] xl:w-[450px] shrink-0 sticky top-28">
       <section className="bg-white border border-[#1C1C1C1A] rounded-[6px] overflow-hidden transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)]">
         <div className="p-6 md:p-8 bg-gray-50/50 border-b border-gray-200 flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-bold text-gray-900 tracking-tight">Order Summary</h2>
-            <p className="text-xs text-gray-400 font-bold uppercase tracking-widest mt-0.5">Review items</p>
-          </div>
+          <SectionHeaderSimple title="Order Summary" className="!p-0 !border-0" />
           <Icon name="shopping_cart" size="md" className="text-brand-gold opacity-10" />
         </div>
 
@@ -204,34 +203,15 @@ export const OrderSummary: React.FC = () => {
             )}
           </motion.div>
 
-          <div className="space-y-4 mb-8 bg-gray-50/50 p-6 rounded-2xl border border-gray-200/50">
-            <div className="flex justify-between text-[13px]">
-              <span className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">Subtotal</span>
-              <span className="text-gray-900 font-bold">{formatPrice(subtotal)}</span>
-            </div>
-            <div className="flex justify-between text-[13px]">
-              <span className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">Discount</span>
-              <span className="text-brand-gold font-bold">- {formatPrice(discount)}</span>
-            </div>
-            <div className="flex justify-between text-[13px]">
-              <span className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">Shipping</span>
-              <span className="text-blue-600 font-bold uppercase tracking-widest text-[11px]">{subtotal > 0 ? "Free" : formatPrice(0)}</span>
-            </div>
-            <div className="flex justify-between text-[13px]">
-              <span className="text-gray-500 font-bold uppercase tracking-widest text-[10px]">Estimated Tax</span>
-              <span className="text-gray-900 font-bold">{formatPrice(estimatedTax)}</span>
-            </div>
-
-            <div className="h-px bg-gray-200/50 my-2"></div>
-
-            <div className="flex justify-between items-center pt-2">
-              <div className="flex flex-col">
-                <span className="text-xs font-black text-gray-400 uppercase tracking-[0.2em]">Total</span>
-                <span className="text-[9px] text-gray-400 font-bold uppercase tracking-widest">Incl. VAT</span>
-              </div>
-              <span className="text-3xl font-black text-brand-gold leading-none tracking-tighter">{formatPrice(total)}</span>
-            </div>
-          </div>
+          <SummarySection
+            variant="checkout"
+            subtotal={subtotal}
+            discount={discount}
+            tax={estimatedTax}
+            total={total}
+            className="!p-0 !border-0"
+            title="Summary Details"
+          />
 
           <Button
             shape="rounded-sm"

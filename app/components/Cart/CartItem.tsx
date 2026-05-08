@@ -48,7 +48,7 @@ const CartItem: React.FC<CartItemProps> = ({ id, title, price, image, quantity, 
                {image ? (
                   <Image src={image} alt={title} fill className="object-contain" sizes="96px" />
                ) : (
-                  <div className="w-full h-full bg-gray-50 flex items-center justify-center text-gray-300 text-[10px] font-bold uppercase tracking-widest text-center">
+                  <div className="w-full h-full bg-gray-50 flex items-center justify-center text-gray-300 text-[10px] font-bold tracking-widest text-center">
                      No<br />Image
                   </div>
                )}
@@ -57,10 +57,10 @@ const CartItem: React.FC<CartItemProps> = ({ id, title, price, image, quantity, 
 
          {/* Item Details */}
          <div className="flex-1 flex flex-col gap-2">
-            <h3 className="text-gray-900 font-bold text-[13px] md:text-base uppercase tracking-wider leading-tight hover:text-brand-gold cursor-pointer transition-colors max-w-md">
+            <h3 className="text-gray-900 font-bold text-[13px] md:text-base tracking-wider leading-tight hover:text-brand-gold cursor-pointer transition-colors max-w-md">
                {title}
             </h3>
-            <div className="flex flex-wrap gap-x-4 gap-y-1 text-[10px] uppercase tracking-widest text-gray-400 font-bold">
+            <div className="flex flex-wrap gap-x-4 gap-y-1 text-[10px] tracking-widest text-gray-400 font-bold">
                {meta.size && <span>Size: {meta.size}</span>}
                {meta.color && <span>Color: {meta.color}</span>}
                {meta.material && <span>Material: {meta.material}</span>}
@@ -69,13 +69,13 @@ const CartItem: React.FC<CartItemProps> = ({ id, title, price, image, quantity, 
             <div className="flex items-center gap-4 mt-2">
                <button
                   onClick={() => removeFromCart(id)}
-                  className="text-red-500 text-[10px] uppercase tracking-widest font-bold hover:underline transition-all"
+                  className="text-red-500 text-[10px] tracking-widest font-bold hover:underline transition-all"
                >
                   Remove
                </button>
                <button
                   onClick={handleSaveForLater}
-                  className="text-brand-gold text-[10px] uppercase tracking-widest font-bold hover:underline transition-all"
+                  className="text-brand-gold text-[10px]  tracking-widest font-bold hover:underline transition-all"
                >
                   Save for later
                </button>

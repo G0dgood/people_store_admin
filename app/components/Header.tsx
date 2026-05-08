@@ -54,14 +54,6 @@ const Header = () => {
       {/* Mobile Search Input (Visible only on mobile header row 2) */}
       <div className="md:hidden px-4 pb-4">
         <SearchBar />
-        {/* <div className="w-full h-10 bg-white flex items-center px-3 gap-2 border border-gray-200">
-          <Icon name="search" size="sm" className="text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search"
-            className="bg-transparent text-sm w-full outline-none"
-          />
-        </div> */}
       </div>
 
       {/* Secondary Navbar (Desktop only) */}
@@ -73,8 +65,8 @@ const Header = () => {
           All categories
         </Link>
         {categories.map((item) => (
-          <Link 
-            key={item._id} 
+          <Link
+            key={item._id}
             href={`/products?category=${encodeURIComponent(item.name)}`}
             className="bg-white text-neutral-900 border border-gray-200 text-sm px-3 py-1.5 flex-shrink-0 font-bold uppercase text-[10px] tracking-wider"
           >

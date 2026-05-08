@@ -10,13 +10,14 @@ interface BreadcrumbItem {
 interface BreadcrumbsProps {
   items: BreadcrumbItem[];
   className?: string;
+  showIcon?: boolean;
 }
 
-export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className = "" }) => {
+export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className = "", showIcon = false }) => {
   return (
-    <nav className={`flex items-center gap-2 text-sm ${className}`}>
+    <nav className={`flex items-center gap-2 text-[10px] uppercase tracking-widest ${className}`}>
       <Link href="/" className="text-gray-400 hover:text-brand-gold transition-colors flex items-center">
-        <Icon name="home" size="md" />
+        {showIcon ? <Icon name="home" size="md" /> : "Home"}
       </Link>
       {items.map((item, idx) => (
         <React.Fragment key={idx}>
@@ -26,7 +27,7 @@ export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className = "" 
               {item.label}
             </Link>
           ) : (
-            <span className="text-gray-900 font-bold">{item.label}</span>
+            <span className="text-gray-600 font-bold">{item.label}</span>
           )}
         </React.Fragment>
       ))}

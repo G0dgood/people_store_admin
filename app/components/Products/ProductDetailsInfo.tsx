@@ -117,6 +117,12 @@ const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
   ];
 
   const handleAddToCart = () => {
+    const isOutOfStock = !product.isUnlimited && currentStock <= 0;
+    if (isOutOfStock) {
+      toast.error("This magnificent piece is currently out of stock");
+      return;
+    }
+
     addToCart({
       id: product._id,
       title: product.name,
@@ -131,6 +137,12 @@ const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
   };
 
   const handleBuyNow = () => {
+    const isOutOfStock = !product.isUnlimited && currentStock <= 0;
+    if (isOutOfStock) {
+      toast.error("This magnificent piece is currently out of stock");
+      return;
+    }
+
     addToCart({
       id: product._id,
       title: product.name,
@@ -158,7 +170,7 @@ const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
             {product.stockStatus || "In Stock"} & Ready to Ship
           </span>
         </div>
-        <h1 className="text-3xl md:text-5xl font-outfit font-light text-gray-900 leading-tight uppercase tracking-tight">
+        <h1 className="text-2xl md:text-3xl font-outfit font-light text-gray-900 leading-tight tracking-tight">
           {product.name}
         </h1>
         <div className="flex items-center gap-8 text-[11px] font-bold uppercase tracking-widest text-gray-400">
@@ -212,27 +224,36 @@ const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
           Select Variant / Size
         </h3>
         <div className="flex flex-wrap gap-4">
-          {sizes.map((size: any, idx: number) => (
-            <button
-              key={idx}
-              onClick={() => setSelectedIdx(idx)}
-              className={`px-6 py-3 border transition-all duration-300 flex items-center gap-4 rounded-none
-                ${selectedIdx === idx
-                  ? "border-brand-gold bg-black text-white shadow-xl scale-105"
-                  : "border-gray-200 hover:border-brand-gold text-gray-500 hover:text-gray-900"}`}
-            >
-              {size.color && (
-                <div
-                  className="w-4 h-4 rounded-full border border-white/20  "
-                  style={{ backgroundColor: size.color }}
-                />
-              )}
-              <div className="flex flex-col items-start gap-0.5">
-                <span className="text-[11px] font-bold uppercase tracking-widest leading-none">{size.label}</span>
-                <span className={`text-[9px] font-medium leading-none mt-1 ${selectedIdx === idx ? "text-brand-gold" : "text-gray-400"}`}>{size.price}</span>
-              </div>
-            </button>
-          ))}
+          {sizes.map((size: any, idx: number) => {
+            const isOutOfStock = !product.isUnlimited && size.originalStock <= 0;
+            return (
+              <button
+                key={idx}
+                onClick={() => !isOutOfStock && setSelectedIdx(idx)}
+                disabled={isOutOfStock}
+                className={`px-6 py-3 border transition-all duration-300 flex items-center gap-4 rounded-none
+                  ${selectedIdx === idx
+                    ? "border-brand-gold bg-black text-white shadow-xl scale-105"
+                    : isOutOfStock
+                      ? "border-gray-100 bg-gray-50 text-gray-300 cursor-not-allowed opacity-60"
+                      : "border-gray-200 hover:border-brand-gold text-gray-500 hover:text-gray-900"}`}
+              >
+                {size.color && (
+                  <div
+                    className={`w-4 h-4 rounded-full border ${isOutOfStock ? "border-gray-200" : "border-white/20"}  `}
+                    style={{ backgroundColor: size.color }}
+                  />
+                )}
+                <div className="flex flex-col items-start gap-0.5">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] font-bold uppercase tracking-widest leading-none">{size.label}</span>
+                    {isOutOfStock && <span className="text-[8px] text-rose-500 font-black">OUT</span>}
+                  </div>
+                  <span className={`text-[9px] font-medium leading-none mt-1 ${selectedIdx === idx ? "text-brand-gold" : "text-gray-400"}`}>{size.price}</span>
+                </div>
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -242,9 +263,13 @@ const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
         <div className="flex gap-4">
           <button
             onClick={handleAddToCart}
-            className="flex-1 bg-black text-white h-14 font-bold uppercase tracking-[0.2em] text-[11px] hover:bg-brand-gold transition-all shadow-xl active:scale-95"
+            disabled={!product.isUnlimited && currentStock <= 0}
+            className={`cursor-pointer flex-1 h-14 font-bold uppercase tracking-[0.2em] text-[11px] transition-all active:scale-95
+              ${!product.isUnlimited && currentStock <= 0
+                ? "bg-gray-100 text-gray-400 cursor-not-allowed shadow-none"
+                : "bg-black text-white hover:bg-brand-gold"}`}
           >
-            Add to Cart
+            {!product.isUnlimited && currentStock <= 0 ? "Out of Stock" : "Add to Cart"}
           </button>
           <FavoriteButton
             item={{
@@ -258,14 +283,18 @@ const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
             variant="outline"
             className="!w-auto px-6 h-14 border-gray-200 flex items-center gap-3 transition-all hover:border-brand-gold hover:text-brand-gold"
           >
-            <span className="text-[10px] font-bold uppercase tracking-widest hidden md:inline">Save for later</span>
+            <span className="cursor-pointer text-[10px] font-bold uppercase tracking-widest hidden md:inline">Save for later</span>
           </FavoriteButton>
         </div>
         <button
           onClick={handleBuyNow}
-          className="w-full border-2 border-brand-gold text-brand-gold h-14 font-bold uppercase tracking-[0.2em] text-[11px] hover:bg-brand-gold hover:text-white transition-all active:scale-95"
+          disabled={!product.isUnlimited && currentStock <= 0}
+          className={`cursor-pointer w-full border-2 h-14 font-bold uppercase tracking-[0.2em] text-[11px] transition-all active:scale-95
+            ${!product.isUnlimited && currentStock <= 0
+              ? "border-gray-200 text-gray-300 cursor-not-allowed"
+              : "border-brand-gold text-brand-gold hover:bg-brand-gold hover:text-white"}`}
         >
-          Buy Now
+          {!product.isUnlimited && currentStock <= 0 ? "Currently Unavailable" : "Buy Now"}
         </button>
       </div>
 

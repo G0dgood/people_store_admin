@@ -144,7 +144,7 @@ const DropdownMenu: React.FC<DropdownMenuProps> = ({
       animate="visible"
       exit="exit"
       variants={dropdownVariants}
-      className={`bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden py-1 ${className}`}
+      className={`bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden ${className}`}
       style={{ width }}
     >
       {children}

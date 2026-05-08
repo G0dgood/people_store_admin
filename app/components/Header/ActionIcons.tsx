@@ -75,18 +75,18 @@ export const ActionIcons: React.FC = () => {
               >
                 {isAuthenticated && (
                   <>
-                    <Link href="/profile" className="px-5 py-2.5 text-[11px] font-bold uppercase tracking-wider text-gray-600 hover:text-brand-gold hover:bg-gray-50/50 transition-all">
+                    <Link href="/profile" className="px-5 py-2.5 text-[11px] font-bold tracking-wider text-gray-600 hover:text-brand-gold hover:bg-gray-50/50 transition-all">
                       My Profile
                     </Link>
-                    <Link href="/wishlist" className="px-5 py-2.5 text-[11px] font-bold uppercase tracking-wider text-gray-600 hover:text-brand-gold hover:bg-gray-50/50 transition-all border-t border-gray-50">
+                    <Link href="/wishlist" className="px-5 py-2.5 text-[11px] font-bold tracking-wider text-gray-600 hover:text-brand-gold hover:bg-gray-50/50 transition-all border-t border-gray-50">
                       My Wishlist
                     </Link>
-                    <Link href="/orders" className="px-5 py-2.5 text-[11px] font-bold uppercase tracking-wider text-gray-600 hover:text-brand-gold hover:bg-gray-50/50 transition-all border-t border-gray-50">
+                    <Link href="/orders" className="px-5 py-2.5 text-[11px] font-bold tracking-wider text-gray-600 hover:text-brand-gold hover:bg-gray-50/50 transition-all border-t border-gray-50">
                       Order History
                     </Link>
                   </>
                 )}
-                <Link href="/login" className="px-5 py-2.5 text-[11px] font-bold uppercase tracking-wider text-gray-600 hover:text-brand-gold hover:bg-gray-50/50 transition-all border-t border-gray-50">
+                <Link href="/login" className="px-5 py-2.5 text-[11px] font-bold tracking-wider text-gray-600 hover:text-brand-gold hover:bg-gray-50/50 transition-all border-t border-gray-50">
                   Admin Dashboard
                 </Link>
                 {isAuthenticated && (
@@ -97,7 +97,7 @@ export const ActionIcons: React.FC = () => {
                         setIsAccountOpen(false);
                         setIsLogoutModalOpen(true);
                       }}
-                      className="px-5 py-2.5 text-[11px] font-bold uppercase tracking-wider text-red-600 hover:bg-red-50/30 transition-all text-left"
+                      className="px-5 py-2.5 text-[11px] font-bold tracking-wider text-red-600 hover:bg-red-50/30 transition-all text-left"
                     >
                       Sign Out
                     </button>

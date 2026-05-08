@@ -13,9 +13,11 @@ interface QuickViewModalProps {
   isOpen: boolean;
   onClose: () => void;
   product: any;
+  subtitle?: string;
+  description?: string;
 }
 
-export const QuickViewModal: React.FC<QuickViewModalProps> = ({ isOpen, onClose, product }) => {
+export const QuickViewModal: React.FC<QuickViewModalProps> = ({ isOpen, onClose, product, subtitle, description }) => {
   const { addToCart } = useCart();
   const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
   const [selectedIdx, setSelectedIdx] = React.useState<number>(0);
@@ -122,6 +124,12 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ isOpen, onClose,
     if (!product || !sizes[selectedIdx]) return;
     const selected = sizes[selectedIdx];
 
+    const isOutOfStock = !product.isUnlimited && selected.originalStock <= 0;
+    if (isOutOfStock) {
+      toast.error("This magnificent piece is currently out of stock");
+      return;
+    }
+
     addToCart({
       id: product._id || product.id,
       title: product.name,
@@ -188,14 +196,14 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ isOpen, onClose,
         {/* Info Section */}
         <div className="w-full md:w-1/2 flex flex-col gap-6">
           <div className="flex flex-col gap-2">
-            <span className="text-[10px] uppercase tracking-[0.3em] font-bold text-brand-gold">Featured Collection</span>
-            <h2 className="text-2xl font-outfit font-light uppercase tracking-widest text-gray-900 leading-tight">
-              {(product.name || "").split(' ').map((word: string, i: number) => 
-                i === (product.name || "").split(' ').length - 1 ? <span key={i} className="font-bold">{word}</span> : word + ' '
+            <span className="text-[10px] font-outfit tracking-[0.3em] font-bold text-brand-gold">{subtitle || "Featured Collection"}</span>
+            <h2 className="text-2xl font-outfit font-light tracking-widest text-gray-900 leading-tight">
+              {(product.name || product.title || "").split(' ').map((word: string, i: number) => 
+                i === (product.name || product.title || "").split(' ').length - 1 ? <span key={i} className="font-bold">{word}</span> : word + ' '
               )}
             </h2>
             <div className="flex items-center justify-between mt-2">
-              <span className="text-2xl font-black text-gray-900">
+              <span className="text-2xl font-outfit font-black text-gray-900">
                 {sizes[selectedIdx]?.price || product.price}
               </span>
               <FavoriteButton 
@@ -208,7 +216,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ isOpen, onClose,
                 variant="outline"
                 className="border-gray-200 !w-auto px-4 h-10 flex items-center gap-2"
               >
-                <span className="text-[10px] font-bold uppercase tracking-widest">Save for later</span>
+                <span className="text-[10px] font-outfit font-bold tracking-widest">Save for later</span>
               </FavoriteButton>
             </div>
           </div>
@@ -216,49 +224,62 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ isOpen, onClose,
           <div className="h-px w-full bg-gray-100" />
 
           {/* Variant Selection */}
-          {sizes.length > 0 && (
+          {sizes.length > 1 && (
             <div className="flex flex-col gap-4">
-              <h4 className="text-[10px] uppercase tracking-widest font-bold text-gray-400">Select Option</h4>
+              <h4 className="text-[10px] font-outfit tracking-widest font-bold text-gray-400">Select Option</h4>
               <div className="flex flex-wrap gap-2">
-                {sizes.map((size: any, idx: number) => (
-                  <button
-                    key={idx}
-                    onClick={() => setSelectedIdx(idx)}
-                    className={`px-4 py-2 border transition-all duration-300 flex items-center gap-3 rounded-none
-                      ${selectedIdx === idx 
-                        ? "border-brand-gold bg-black text-white" 
-                        : "border-gray-100 text-gray-400 hover:border-brand-gold"}`}
-                  >
-                    {size.color && (
-                      <div 
-                        className="w-3 h-3 rounded-full border border-white/20"
-                        style={{ backgroundColor: size.color }}
-                      />
-                    )}
-                    <span className="text-[10px] font-bold uppercase tracking-widest">{size.label}</span>
-                  </button>
-                ))}
+                {sizes.map((size: any, idx: number) => {
+                  const isOutOfStock = !product.isUnlimited && size.originalStock <= 0;
+                  return (
+                    <button
+                      key={idx}
+                      onClick={() => !isOutOfStock && setSelectedIdx(idx)}
+                      disabled={isOutOfStock}
+                      className={`px-4 py-2 border transition-all duration-300 flex items-center gap-3 rounded-none
+                        ${selectedIdx === idx 
+                          ? "border-brand-gold bg-black text-white" 
+                          : isOutOfStock
+                            ? "border-gray-100 bg-gray-50 text-gray-300 cursor-not-allowed opacity-60"
+                            : "border-gray-200 hover:border-brand-gold text-gray-400 hover:text-gray-900"}`}
+                    >
+                      {size.color && (
+                        <div 
+                          className={`w-3 h-3 rounded-full border ${isOutOfStock ? "border-gray-200" : "border-white/20"}`}
+                          style={{ backgroundColor: size.color }}
+                        />
+                      )}
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-outfit font-bold tracking-widest">{size.label}</span>
+                        {isOutOfStock && <span className="text-[8px] text-rose-500 font-black">OUT</span>}
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}
 
           <div className="flex flex-col gap-3">
-            <h4 className="text-[10px] uppercase tracking-widest font-bold text-gray-400">About the scent</h4>
-            <p className="text-sm text-gray-500 leading-relaxed">
-              A harmonious blend of notes that perfectly complements your selected fragrance. Part of our curated artisanal collection for the discerning connoisseur.
+            <h4 className="text-[10px] font-outfit tracking-widest font-bold text-gray-400">About the scent</h4>
+            <p className="text-sm font-outfit text-gray-500 leading-relaxed">
+              {description || "A harmonious blend of notes that perfectly complements your selected fragrance. Part of our curated artisanal collection for the discerning connoisseur."}
             </p>
           </div>
 
           <div className="mt-auto flex flex-col gap-4">
             <Button 
               onClick={handleAddToCart}
-              className="w-full bg-black text-white h-12 font-bold uppercase tracking-[0.2em] text-[11px] hover:bg-brand-gold transition-all"
+              disabled={!product.isUnlimited && (sizes[selectedIdx]?.originalStock <= 0)}
+              className={`w-full h-12 font-outfit font-bold tracking-[0.2em] text-[11px] transition-all
+                ${!product.isUnlimited && (sizes[selectedIdx]?.originalStock <= 0)
+                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                  : "bg-black text-white hover:bg-brand-gold"}`}
             >
-              Add to Cart
+              {!product.isUnlimited && (sizes[selectedIdx]?.originalStock <= 0) ? "Out of Stock" : "Add to Cart"}
             </Button>
             <Link 
               href={`/products/detail?id=${product.id}`}
-              className="text-center text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-brand-gold transition-colors"
+              className="text-center text-[10px] font-outfit font-bold tracking-[0.2em] text-gray-400 hover:text-brand-gold transition-colors"
               onClick={onClose}
             >
               View Full Details

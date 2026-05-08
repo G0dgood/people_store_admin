@@ -5,6 +5,7 @@ import { QuickViewModal } from "./QuickViewModal";
 import { formatPrice } from "@/app/utils/formatPrice";
 import { Button } from "../Button";
 import { Icon } from "../Icon";
+import { SectionHeaderSimple } from "../ui/SectionHeaderSimple";
 import { useCart } from "@/app/context/CartContext";
 import { toast } from "sonner";
 
@@ -48,9 +49,7 @@ export const RelatedProducts: React.FC<RelatedProductsProps> = ({ products }) =>
 
   return (
     <section className="bg-white border border-gray-200 overflow-hidden mt-16">
-      <div className="p-6 border-b border-gray-200">
-        <h3 className="text-xl font-bold text-gray-900">Related products</h3>
-      </div>
+      <SectionHeaderSimple title="Related products" />
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
         {products.map((item, idx) => (
           <div key={idx} className="p-6 flex flex-col gap-4 hover:bg-gray-50 transition-colors group cursor-pointer border-r border-b last:border-r-0 border-gray-100">

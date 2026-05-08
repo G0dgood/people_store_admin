@@ -20,7 +20,7 @@ export const StockWarning: React.FC<StockWarningProps & { isUnlimited?: boolean 
     return (
       <div className={`flex items-center gap-1.5 ${className}`}>
         <div className="w-1 h-1 rounded-full bg-brand-gold" />
-        <span className="text-[9px] font-bold uppercase tracking-widest text-gray-400 whitespace-nowrap">
+        <span className="text-[9px] font-bold tracking-widest text-gray-400 whitespace-nowrap">
           Always Available
         </span>
       </div>
