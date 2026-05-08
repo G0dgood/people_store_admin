@@ -39,6 +39,7 @@ export const SecondaryNavbar: React.FC = () => {
   { label: "Hot deals", href: "/products" },
   { label: "Gift boxes", href: "/gift-boxes" },
   { label: "Brands", href: "/brands" },
+  { label: "Blog", href: "/blog" },
  ];
 
  const helpLinks = [

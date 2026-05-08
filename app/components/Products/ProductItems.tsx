@@ -218,7 +218,7 @@ export const ProductListItem: React.FC<{
                      </div>
                      <div className="flex items-center gap-1.5 text-gray-400">
                         <div className="w-1 h-1 md:w-1.5 md:h-1.5 bg-gray-300" />
-                        <span className=" tracking-widest text-[10px]">{product.orders} orders</span>
+                        <span className="tracking-widest text-[10px]">{product.orders} orders</span>
                      </div>
                      <StockWarning
                         stock={product.stock}
