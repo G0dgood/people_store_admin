@@ -34,7 +34,7 @@ export function CustomerMetrics({ activeMetric, onMetricClick, stats }: Customer
           className="flex flex-col gap-1 items-start text-left transition-all group relative pr-4 md:border-r md:border-gray-200 last:border-r-0"
         >
           <span className={`text-2xl font-bold transition-colors ${
-            activeMetric === metric.id ? "text-brand-gold" : "text-[#1D3557] group-hover:text-brand-gold/80"
+            activeMetric === metric.id ? "text-brand-gold" : "text-[#121212] group-hover:text-brand-gold/80"
           }`}>
             {metric.value}
           </span>

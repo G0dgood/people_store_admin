@@ -55,7 +55,9 @@ export const AdminSearchDropdown: React.FC<AdminSearchDropdownProps> = ({ query 
 
   const products = (productsRes?.data as any)?.products || [];
   const orders = (ordersRes?.data as any)?.orders || [];
-  const customers = customersRes?.data || [];
+  const customers = customersRes?.data && 'customers' in customersRes.data 
+    ? customersRes.data.customers 
+    : (Array.isArray(customersRes?.data) ? customersRes.data : []);
 
   const dynamicResults: SearchResult[] = [
     ...products.map((p: any) => ({
@@ -100,7 +102,7 @@ export const AdminSearchDropdown: React.FC<AdminSearchDropdownProps> = ({ query 
       <DropdownMenu width={480} className="shadow-2xl border-gray-200 p-0 overflow-hidden max-h-[600px] flex flex-col">
         <div className="px-5 py-4 border-b border-gray-50 flex justify-between items-center bg-gray-50/50">
           <div className="flex flex-col gap-0.5">
-            <span className="font-black text-[#1D3557] text-sm tracking-tight">
+            <span className="font-black text-[#121212] text-sm tracking-tight">
               {query ? `Search results for "${query}"` : "Recent Searches"}
             </span>
             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none">
@@ -133,7 +135,7 @@ export const AdminSearchDropdown: React.FC<AdminSearchDropdownProps> = ({ query 
                         )}
                       </div>
                       <div className="flex flex-col flex-1 min-w-0">
-                        <span className="text-[13px] font-black text-[#1D3557] group-hover:text-brand-gold truncate">{item.title}</span>
+                        <span className="text-[13px] font-black text-[#121212] group-hover:text-brand-gold truncate">{item.title}</span>
                         <span className="text-[11px] font-bold text-gray-400 truncate">{item.subtitle}</span>
                       </div>
                       {item.meta && (
@@ -155,7 +157,7 @@ export const AdminSearchDropdown: React.FC<AdminSearchDropdownProps> = ({ query 
                 <HiOutlineMagnifyingGlass className="w-8 h-8" />
               </div>
               <div className="flex flex-col gap-1">
-                <span className="text-sm font-black text-[#1D3557]">No matches found</span>
+                <span className="text-sm font-black text-[#121212]">No matches found</span>
                 <span className="text-xs font-bold text-gray-400 max-w-[200px]">Try adjusting your search query or exploring our modules.</span>
               </div>
             </div>
@@ -163,7 +165,7 @@ export const AdminSearchDropdown: React.FC<AdminSearchDropdownProps> = ({ query 
         </div>
 
         <button className="h-14 border-t border-gray-50 flex items-center justify-center gap-2 group hover:bg-gray-50 transition-all">
-          <span className="text-[11px] font-black text-[#1D3557] group-hover:text-brand-gold uppercase tracking-widest">View All Search Results</span>
+          <span className="text-[11px] font-black text-[#121212] group-hover:text-brand-gold uppercase tracking-widest">View All Search Results</span>
           <HiOutlineArrowRight className="text-gray-300 group-hover:text-brand-gold transition-all translate-x-0 group-hover:translate-x-1 w-4 h-4" />
         </button>
       </DropdownMenu>

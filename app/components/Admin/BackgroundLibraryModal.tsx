@@ -114,7 +114,7 @@ export const BackgroundLibraryModal: React.FC<BackgroundLibraryModalProps> = ({
                       )}
                     </div>
                     <div className="flex flex-col text-left px-1">
-                      <span className="text-[10px] font-bold text-[#1D3557] truncate">{product.name}</span>
+                      <span className="text-[10px] font-bold text-[#121212] truncate">{product.name}</span>
                       <span className="text-[8px] font-black text-brand-gold uppercase">
                         {typeof product.category === 'string' ? product.category : product.category?.name}
                       </span>
@@ -131,7 +131,7 @@ export const BackgroundLibraryModal: React.FC<BackgroundLibraryModalProps> = ({
                 <Icon name="link-external" folder="dashboardIcon" size="lg" />
               </div>
               <div className="flex flex-col gap-2 text-center max-w-sm">
-                <h4 className="text-base font-black text-[#1D3557]">Import Remote Visual</h4>
+                <h4 className="text-base font-black text-[#121212]">Import Remote Visual</h4>
                 <p className="text-xs text-gray-400 font-medium">Paste a direct link to a high-resolution image to inject it into your login sequence.</p>
               </div>
               <div className="w-full flex gap-3">
@@ -204,7 +204,7 @@ export const BackgroundLibraryModal: React.FC<BackgroundLibraryModalProps> = ({
                   <Icon name="cloud_upload" folder="icon" size="lg" />
                 </div>
                 <div className="flex flex-col items-center gap-1 text-center">
-                  <span className="text-sm font-black text-[#1D3557]">Click or drag to upload from device</span>
+                  <span className="text-sm font-black text-[#121212]">Click or drag to upload from device</span>
                   <span className="text-[10px] font-bold text-gray-400 italic">Max 5MB per image recommended</span>
                 </div>
               </div>

@@ -38,6 +38,9 @@ import { useState, useEffect, useMemo } from "react";
 import { useGetPublicDealsQuery, useGetPublicTimerQuery } from "@/lib/redux/services/boutiqueApi";
 import { useSocket } from "@/app/context/SocketContext";
 import { StockWarning } from "../StockWarning";
+import { QuickViewModal } from "../Products/QuickViewModal";
+import { ProductActionOverlay } from "../Products/ProductActionOverlay";
+import { Icon } from "../Icon";
 
 const DealsSection = () => {
   const { addToCart } = useCart();
@@ -45,8 +48,12 @@ const DealsSection = () => {
   const { data: dealsResponse, isLoading: isLoadingDeals, refetch: refetchDeals } = useGetPublicDealsQuery();
   const { on, off } = useSocket();
 
+  const [selectedQuickView, setSelectedQuickView] = useState<any>(null);
+
   const timerData = timerResponse?.data?.timer;
-  const dealProducts = dealsResponse?.data || [];
+  const dealProducts = dealsResponse?.data && 'deals' in dealsResponse.data 
+    ? dealsResponse.data.deals 
+    : (Array.isArray(dealsResponse?.data) ? dealsResponse.data : []);
 
   // Local timer state
   const initialSeconds = useMemo(() => {
@@ -195,32 +202,39 @@ const DealsSection = () => {
             </Link>
 
             {/* Hover Actions */}
-            <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 pointer-events-none z-10">
-              <div className="flex gap-2 pointer-events-auto">
-                <FavoriteButton
-                  item={{
+            <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none z-10">
+              <div className="flex items-center gap-2 pointer-events-auto transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                <ProductActionOverlay
+                  useAbsolute={false}
+                  onQuickView={() => setSelectedQuickView({
+                    ...prod.product,
                     id: prod.product?._id || prod.id,
-                    title: prod.product?.name || prod.name,
-                    price: `₦${(prod.product?.price * (1 - prod.discount / 100)).toLocaleString()}`,
-                    image: prod.product?.productImage || prod.image,
-                    stock: prod.product?.stock,
-                    isUnlimited: prod.product?.isUnlimited
-                  } as any}
-                  variant="outline"
-                  size="sm"
-                  className="!w-10 !h-10 bg-white border-transparent hover:border-brand-gold shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-all duration-300"
+                    image: prod.product?.productImage,
+                    price: (prod.product?.price * (1 - prod.discount / 100))
+                  })}
+                  className="!opacity-100 !translate-x-0 !top-0 !right-0 shadow-lg"
                 />
                 <Button
                   onClick={(e) => handleAddToCart(e, prod)}
-                  className="bg-black text-white hover:bg-brand-gold text-[10px] font-bold uppercase tracking-widest px-6 py-2 rounded-none transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 shadow-lg"
+                  className="bg-black text-white hover:bg-brand-gold text-[10px] font-bold uppercase tracking-widest px-6 py-2 rounded-none shadow-lg"
                 >
                   Quick Add
                 </Button>
+
+
               </div>
             </div>
           </div>
         ))}
       </motion.div>
+
+      <QuickViewModal
+        isOpen={!!selectedQuickView}
+        onClose={() => setSelectedQuickView(null)}
+        product={selectedQuickView}
+        subtitle="Limited Offer"
+        description={selectedQuickView?.description}
+      />
     </section>
   );
 };

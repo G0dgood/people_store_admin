@@ -38,13 +38,17 @@ const ProductsPage = () => {
  };
  const [rowsPerPage, setRowsPerPage] = useState(12);
 
- const { data: categoriesResponse, isLoading: isLoadingCategories, isError: isErrorCategories, error: errorCategories } = useGetPublicCategoriesQuery();
- const categories = categoriesResponse?.data || [];
- useApiError(isErrorCategories, errorCategories, "Failed to load categories");
+  const { data: categoriesResponse, isLoading: isLoadingCategories, isError: isErrorCategories, error: errorCategories } = useGetPublicCategoriesQuery();
+  const categories = categoriesResponse?.data && 'categories' in categoriesResponse.data 
+    ? categoriesResponse.data.categories 
+    : (Array.isArray(categoriesResponse?.data) ? categoriesResponse.data : []);
+  useApiError(isErrorCategories, errorCategories, "Failed to load categories");
 
- const { data: brandsResponse, isLoading: isLoadingBrands, isError: isErrorBrands, error: errorBrands } = useGetPublicBrandsQuery();
- const brands = brandsResponse?.data || [];
- useApiError(isErrorBrands, errorBrands, "Failed to load brands");
+  const { data: brandsResponse, isLoading: isLoadingBrands, isError: isErrorBrands, error: errorBrands } = useGetPublicBrandsQuery();
+  const brands = brandsResponse?.data && 'brands' in brandsResponse.data 
+    ? brandsResponse.data.brands 
+    : (Array.isArray(brandsResponse?.data) ? brandsResponse.data : []);
+  useApiError(isErrorBrands, errorBrands, "Failed to load brands");
 
  // Lock body scroll when mobile filter drawer is open
  React.useEffect(() => {
@@ -161,7 +165,7 @@ const ProductsPage = () => {
       { label: "Fragrances", href: "/products" },
       { label: "All Collections" }
      ]}
-     className="hidden md:flex text-[10px] uppercase tracking-widest text-gray-400 overflow-x-auto whitespace-nowrap scrollbar-none pb-2 px-4 md:px-0 border-b border-gray-200"
+     className="hidden md:flex text-[10px] tracking-widest text-gray-400 overflow-x-auto whitespace-nowrap scrollbar-none pb-2 px-4 md:px-0 border-b border-gray-200"
     />
 
     <div className="flex flex-col lg:flex-row gap-6 items-start px-0 md:px-0 mt-3 md:mt-0">
@@ -218,7 +222,7 @@ const ProductsPage = () => {
          <Icon name="search" size="xl" />
         </div>
         <div className="max-w-md">
-         <h3 className="text-2xl font-bold text-[#1D3557] tracking-tight">No products found</h3>
+         <h3 className="text-2xl font-bold text-[#121212] tracking-tight">No products found</h3>
          <p className="text-gray-400 text-sm mt-2 leading-relaxed">
           We couldn't find any artisanal pieces matching your current filters.
           Try adjusting your search or clearing some filters to explore our full collection.
@@ -230,7 +234,7 @@ const ProductsPage = () => {
             window.history.replaceState({}, "", window.location.pathname);
            }
           }}
-          className="mt-8 px-8 py-3 bg-[#1D3557] text-white text-[11px] font-bold uppercase tracking-widest hover:bg-brand-gold transition-all shadow-lg active:scale-95"
+          className="mt-8 px-8 py-3 bg-black text-white text-[11px] font-bold tracking-widest hover:bg-brand-gold transition-all shadow-lg active:scale-95"
          >
           Clear All Filters
          </button>

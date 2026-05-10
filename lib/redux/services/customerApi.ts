@@ -59,10 +59,11 @@ export const customerApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Customers'],
     }),
-    getAllCustomers: builder.query<any, void>({
-      query: () => ({
+    getAllCustomers: builder.query<ApiResponse<{ customers: any[], pagination: any }>, { page?: number; limit?: number; search?: string } | void>({
+      query: (params) => ({
         url: '/customers',
         method: 'GET',
+        params: params || {},
       }),
       providesTags: ['Customers'],
     }),

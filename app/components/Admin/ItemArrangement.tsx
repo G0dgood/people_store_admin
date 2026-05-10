@@ -18,7 +18,7 @@ export const ItemArrangement: React.FC<ItemArrangementProps> = ({
 }) => {
  return (
   <section className="bg-white p-8 rounded-[6px] border border-gray-200   flex flex-col gap-6 xl:col-span-1">
-   <h3 className="text-lg font-black text-[#1D3557] flex items-center gap-2">
+   <h3 className="text-lg font-black text-[#121212] flex items-center gap-2">
     <span className="w-8 h-8 rounded-[4px] bg-brand-gold/10 text-brand-gold flex items-center justify-center text-xs">04</span>
     Marketing Arrangement
    </h3>
@@ -75,7 +75,7 @@ export const ItemArrangement: React.FC<ItemArrangementProps> = ({
           <img src={item.productImage || item.image} alt={item.name} className="w-full h-full object-contain" />
          </div>
          <div className="flex flex-col">
-          <span className="text-sm font-bold text-[#1D3557]">{item.name}</span>
+          <span className="text-sm font-bold text-[#121212]">{item.name}</span>
          </div>
         </div>
         <Icon name="Frame" folder="dashboardIcon" size="sm" className="text-gray-300 group-hover:text-brand-gold transition-colors" />

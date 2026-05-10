@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useMemo } from "react";
 import Modal from "../Modal/Modal";
 import ModalBody from "../Modal/ModalBody";
 import ModalFooter from "../Modal/ModalFooter";
@@ -7,6 +7,9 @@ import { Icon } from "../Icon";
 import { toast } from "sonner";
 import { HiXMark } from "react-icons/hi2";
 import { useApiError } from "@/app/hooks/useApiError";
+import { useGetBrandsQuery } from "@/lib/redux/services/brandApi";
+import { useGetCategoriesQuery } from "@/lib/redux/services/categoryApi";
+import { Select } from "../Form/Select";
 
 interface UploadMediaModalProps {
   isOpen: boolean;
@@ -25,9 +28,30 @@ import { useUploadMediaMutation } from "@/lib/redux/services/mediaApi";
 export function UploadMediaModal({ isOpen, onClose, onUpload, onUploadSuccess, onlyStaging, maxFiles }: UploadMediaModalProps) {
   const [uploadMedia, { isLoading: isUploading, isError, error }] = useUploadMediaMutation();
   useApiError(isError, error, "Failed to upload assets");
+
+  const { data: brandsResponse } = useGetBrandsQuery({ limit: 100 });
+  const { data: categoriesResponse } = useGetCategoriesQuery();
+  const [selectedBrandId, setSelectedBrandId] = useState<string>("");
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>("");
   const [stagedFiles, setStagedFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const brandOptions = useMemo(() => {
+    const brands = brandsResponse?.data && 'brands' in brandsResponse.data 
+      ? brandsResponse.data.brands 
+      : (Array.isArray(brandsResponse?.data) ? brandsResponse.data : []);
+
+    return brands.map(b => ({ value: b._id, label: b.name }));
+  }, [brandsResponse]);
+
+  const categoryOptions = useMemo(() => {
+    const categories = categoriesResponse?.data && 'categories' in categoriesResponse.data 
+      ? categoriesResponse.data.categories 
+      : (Array.isArray(categoriesResponse?.data) ? categoriesResponse.data : []);
+      
+    return categories.map(c => ({ value: c._id, label: c.name }));
+  }, [categoriesResponse]);
 
   const validateAndAddFiles = (newFiles: FileList | File[]) => {
     const validFiles: File[] = [];
@@ -81,6 +105,8 @@ export function UploadMediaModal({ isOpen, onClose, onUpload, onUploadSuccess, o
       onUpload?.(stagedFiles);
       onUploadSuccess?.(stagedFiles);
       setStagedFiles([]);
+      setSelectedBrandId("");
+      setSelectedCategoryId("");
       onClose();
       return;
     }
@@ -90,12 +116,21 @@ export function UploadMediaModal({ isOpen, onClose, onUpload, onUploadSuccess, o
       formData.append("files", file);
     });
 
+    if (selectedBrandId) {
+      formData.append("brand", selectedBrandId);
+    }
+    if (selectedCategoryId) {
+      formData.append("category", selectedCategoryId);
+    }
+
     try {
       await uploadMedia(formData).unwrap();
       toast.success("Assets uploaded successfully!");
       onUpload?.(stagedFiles);
       onUploadSuccess?.(stagedFiles);
       setStagedFiles([]);
+      setSelectedBrandId("");
+      setSelectedCategoryId("");
       onClose();
     } catch (err: any) {
       console.error("UPLOAD ERROR:", err);
@@ -105,7 +140,34 @@ export function UploadMediaModal({ isOpen, onClose, onUpload, onUploadSuccess, o
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Upload Product Assets" size="lg">
-      <ModalBody className="flex flex-col gap-8 py-4">
+      <ModalBody className="flex flex-col gap-6 py-4">
+        {/* Classification Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Brand Selection */}
+          <div className="flex flex-col gap-2">
+            <label className="text-[8px] font-black text-gray-400 uppercase tracking-[0.2em]">Associate with Brand (Optional)</label>
+            <Select
+              options={brandOptions}
+              value={selectedBrandId}
+              onChange={(val) => setSelectedBrandId(val as string)}
+              placeholder="Select a brand..."
+              shape="rounded-sm"
+            />
+          </div>
+
+          {/* Category Selection */}
+          <div className="flex flex-col gap-2">
+            <label className="text-[8px] font-black text-gray-400 uppercase tracking-[0.2em]">Associate with Category (Optional)</label>
+            <Select
+              options={categoryOptions}
+              value={selectedCategoryId}
+              onChange={(val) => setSelectedCategoryId(val as string)}
+              placeholder="Select a category..."
+              shape="rounded-sm"
+            />
+          </div>
+        </div>
+
         {/* Dropzone Area */}
         <div
           onClick={() => fileInputRef.current?.click()}
@@ -114,7 +176,7 @@ export function UploadMediaModal({ isOpen, onClose, onUpload, onUploadSuccess, o
           onDrop={handleDrop}
           className={`
             border-2 border-dashed rounded-2xl p-12 flex flex-col items-center justify-center gap-4 transition-all cursor-pointer group
-            ${isDragging ? "border-brand-gold bg-blue-50/30" : "border-gray-200 bg-gray-50/50 hover:bg-white hover:border-brand-gold/30 hover:shadow-xl hover:shadow-blue-50/50"}
+            ${isDragging ? "border-brand-gold bg-gray-50/30" : "border-gray-200 bg-gray-50/50 hover:bg-white hover:border-brand-gold/30 hover:shadow-xl hover:shadow-blue-50/50"}
           `}
         >
           <input
@@ -129,7 +191,7 @@ export function UploadMediaModal({ isOpen, onClose, onUpload, onUploadSuccess, o
             <Icon name="cloud_upload" folder="icon" size="md" />
           </div>
           <div className="flex flex-col items-center gap-1 text-center">
-            <span className="text-sm font-black text-[#1D3557]">Click or drag to upload media</span>
+            <span className="text-sm font-black text-[#121212]">Click or drag to upload media</span>
             <span className="text-[11px] font-bold text-gray-400">Support for JPG, PNG, and MP4 up to 50MB</span>
           </div>
         </div>
@@ -138,7 +200,7 @@ export function UploadMediaModal({ isOpen, onClose, onUpload, onUploadSuccess, o
         {stagedFiles.length > 0 && (
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-black text-[#1D3557] uppercase tracking-wider">Staged Files ({stagedFiles.length})</span>
+              <span className="text-xs font-black text-[#121212] uppercase tracking-wider">Staged Files ({stagedFiles.length})</span>
               <button onClick={() => setStagedFiles([])} className="text-[10px] font-bold text-red-500 hover:underline">Clear all</button>
             </div>
             <div className="grid grid-cols-1 gap-2 max-h-[160px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-200">
@@ -183,7 +245,7 @@ export function UploadMediaModal({ isOpen, onClose, onUpload, onUploadSuccess, o
             <div key={i} className="flex items-start gap-3 p-4 bg-white border border-gray-50 rounded-xl">
               <Icon name={req.icon} folder="icon" size="xs" className="text-brand-gold mt-0.5" />
               <div className="flex flex-col gap-0.5">
-                <span className="text-[11px] font-black text-[#1D3557]">{req.label}</span>
+                <span className="text-[11px] font-black text-[#121212]">{req.label}</span>
                 <span className="text-[10px] font-bold text-gray-400 leading-tight">{req.text}</span>
               </div>
             </div>

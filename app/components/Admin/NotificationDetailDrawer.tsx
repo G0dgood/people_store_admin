@@ -39,7 +39,7 @@ export function NotificationDetailDrawer({ isOpen, onClose, notification }: Noti
                      />
                   </div>
                   <div className="flex flex-col gap-1">
-                     <h2 className="text-xl font-black text-[#1D3557] tracking-tight">{notification.title}</h2>
+                     <h2 className="text-xl font-black text-[#121212] tracking-tight">{notification.title}</h2>
                      <span className={`text-[10px] font-black uppercase tracking-[0.2em] ${style.color}`}>
                         {notification.type} Event
                      </span>
@@ -51,7 +51,7 @@ export function NotificationDetailDrawer({ isOpen, onClose, notification }: Noti
                   <div className="flex flex-col gap-2">
                      <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">Detailed Log Message</h4>
                      <div className="bg-gray-50/50 rounded-xl border border-gray-200 p-5">
-                        <p className="text-sm font-bold text-[#1D3557] leading-relaxed">
+                        <p className="text-sm font-bold text-[#121212] leading-relaxed">
                            {notification.description}
                         </p>
                      </div>
@@ -64,7 +64,7 @@ export function NotificationDetailDrawer({ isOpen, onClose, notification }: Noti
                            <div className="w-8 h-8 rounded-full bg-brand-gold/10 flex items-center justify-center">
                               <Icon name="user-profile-circle" folder="dashboardIcon" size="xs" className="text-brand-gold" />
                            </div>
-                           <span className="text-[11px] font-black text-[#1D3557] truncate">{notification.actor}</span>
+                           <span className="text-[11px] font-black text-[#121212] truncate">{notification.actor}</span>
                         </div>
                      </div>
                      <div className="flex flex-col gap-2">

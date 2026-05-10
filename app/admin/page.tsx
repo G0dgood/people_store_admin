@@ -54,7 +54,7 @@ export default function AdminDashboard() {
       {/* Dashboard Header */}
       <div className="flex justify-between items-center mb-2">
         <div className="flex flex-col">
-          <h1 className="text-2xl font-black text-[#1D3557]">Command Center</h1>
+          <h1 className="text-2xl font-black text-[#121212]">Command Center</h1>
           <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none mt-1">Live Administrative Overview</p>
         </div>
         <Tooltip text="Refresh Dashboard Metrics">

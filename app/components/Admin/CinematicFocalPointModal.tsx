@@ -35,7 +35,7 @@ export default function CinematicFocalPointModal({
     >
       <div className="flex flex-col gap-8">
         <div className="flex flex-col gap-1">
-          <h4 className="text-sm font-black text-[#1D3557] uppercase tracking-widest">Master Your Framing</h4>
+          <h4 className="text-sm font-black text-[#121212] uppercase tracking-widest">Master Your Framing</h4>
           <p className="text-xs text-gray-400 font-medium">Drag the visual within the viewfinder below to define its center of attention.</p>
         </div>
 

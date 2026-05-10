@@ -16,7 +16,7 @@ const GiftCardPurchasePage = () => {
  const [isGift, setIsGift] = useState(false);
  const [formData, setFormData] = useState({
   amount: 5000,
-  color: "#1D3557",
+  color: "#121212",
   recipientName: "",
   recipientEmail: "",
   message: ""
@@ -24,7 +24,7 @@ const GiftCardPurchasePage = () => {
 
  const amounts = [5000, 10000, 25000, 50000, 100000];
  const colors = [
-  { name: "Midnight Navy", value: "#1D3557" },
+  { name: "Midnight Navy", value: "#121212" },
   { name: "Royal Purple", value: "#2D1B4D" },
   { name: "Forest Green", value: "#0A2F1F" },
   { name: "Deep Crimson", value: "#3D0C11" },

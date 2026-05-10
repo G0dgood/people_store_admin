@@ -8,7 +8,7 @@
   --background: #ffffff;
   --foreground: #171717;
   --primary: oklch(0.205 0 0);
-  /* Grayscale (Neutral) */
+  /*  (Neutral) */
   --neutral-900: #1A1A1A;
   --neutral-700: #404040;
   --neutral-500: #8D99AE;
@@ -91,7 +91,7 @@ body:has(.admin-dark) {
   --font-sans: var(--font-inter);
   --font-mono: var(--font-geist-mono);
 
-  /* Grayscale */
+  /*  */
   --color-neutral-900: var(--neutral-900);
   --color-neutral-700: var(--neutral-700);
   --color-neutral-500: var(--neutral-500);
@@ -218,7 +218,7 @@ body:has(.admin-dark) {
     font-size: var(--font-size-body);
     color: var(--neutral-700);
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    -moz-osx-font-smoothing: ;
   }
 }
 

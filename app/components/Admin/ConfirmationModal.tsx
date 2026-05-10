@@ -68,7 +68,7 @@ export const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
     },
     info: {
       icon: <HiOutlineInformationCircle size={28} />,
-      iconBg: "bg-blue-50",
+      iconBg: "bg-gray-50",
       iconColor: "text-blue-600",
       buttonBg: "bg-blue-600 hover:bg-blue-700",
       shadow: "shadow-blue-100",

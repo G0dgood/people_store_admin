@@ -64,9 +64,13 @@ export const QuickAddProductModal: React.FC<QuickAddProductModalProps> = ({
     };
   });
 
+  const categoriesList = categoriesData?.data && 'categories' in categoriesData.data 
+    ? categoriesData.data.categories 
+    : (Array.isArray(categoriesData?.data) ? categoriesData.data : []);
+
   const categoryOptions = [
     { value: "", label: "All Categories" },
-    ...(categoriesData?.data || []).map((cat: any) => ({
+    ...categoriesList.map((cat: any) => ({
       value: cat._id,
       label: cat.name,
       image: cat.image

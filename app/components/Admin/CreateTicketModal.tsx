@@ -24,7 +24,7 @@ const priorityOptions = [
 
 const priorityMap: Record<string, { percent: number; color: string; label: string }> = {
    Low: { percent: 25, color: "bg-emerald-500", label: "Minor Issue" },
-   Medium: { percent: 50, color: "bg-blue-500", label: "Standard Support" },
+   Medium: { percent: 50, color: "bg-brand-gold", label: "Standard Support" },
    High: { percent: 75, color: "bg-orange-500", label: "Critical Attention" },
    Urgent: { percent: 100, color: "bg-rose-500", label: "Immediate Action Required" },
 };

@@ -14,12 +14,15 @@ export interface FAQItem {
 
 export const faqApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getFaqs: builder.query<ApiResponse<FAQItem[]>, void>({
-      query: () => '/faqs',
+    getFaqs: builder.query<ApiResponse<{ faqs: FAQItem[], pagination: any }>, { page?: number; limit?: number; search?: string; category?: string } | void>({
+      query: (params) => ({
+        url: '/faqs',
+        params: params || {},
+      }),
       providesTags: (result) =>
-        result
+        result?.data?.faqs
           ? [
-              ...result.data.map(({ _id }) => ({ type: 'FAQ' as const, id: _id })),
+              ...result.data.faqs.map(({ _id }) => ({ type: 'FAQ' as const, id: _id })),
               { type: 'FAQ', id: 'LIST' },
             ]
           : [{ type: 'FAQ', id: 'LIST' }],

@@ -35,7 +35,7 @@ export const StockWarning: React.FC<StockWarningProps & { isUnlimited?: boolean 
     return (
       <div className={`whitespace-nowrap flex items-center gap-1.5 ${className}`}>
         <div className={`w-1 h-1 rounded-full ${dotClass}`} />
-        <span className={`text-[9px] font-bold uppercase tracking-widest ${colorClass}`}>
+        <span className={`text-[9px] font-bold tracking-widest ${colorClass}`}>
           {isLimitReached ? "Limit reached" : `${stock} units left`}
         </span>
       </div>
@@ -45,7 +45,7 @@ export const StockWarning: React.FC<StockWarningProps & { isUnlimited?: boolean 
   return (
     <div className={`flex items-center gap-1.5 ${className}`}>
       <div className="w-1 h-1 rounded-full bg-rose-500" />
-      <span className="text-[9px] font-bold uppercase tracking-widest text-rose-500 whitespace-nowrap">
+      <span className="text-[9px] font-bold tracking-widest text-rose-500 whitespace-nowrap">
         Out of Stock
       </span>
     </div>

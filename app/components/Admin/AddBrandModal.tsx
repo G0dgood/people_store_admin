@@ -37,6 +37,10 @@ export function AddBrandModal({ isOpen, onClose }: AddBrandModalProps) {
   const [createBrand, { isLoading: isCreating, isError, error }] = useCreateBrandMutation();
   useApiError(isError, error, "Failed to Create Brand");
   const { data: categoriesData } = useGetCategoriesQuery();
+  const categories = categoriesData?.data && 'categories' in categoriesData.data 
+    ? categoriesData.data.categories 
+    : (Array.isArray(categoriesData?.data) ? categoriesData.data : []);
+
   const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
@@ -96,7 +100,7 @@ export function AddBrandModal({ isOpen, onClose }: AddBrandModalProps) {
             <div className="flex flex-col gap-2">
               <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Category</label>
               <Select
-                options={categoriesData?.data?.map(cat => ({ value: cat.name, label: cat.name })) || []}
+                options={categories.map(cat => ({ value: cat.name, label: cat.name }))}
                 value={formData.category}
                 onChange={(val) => setFormData({ ...formData, category: val })}
                 shape="rounded-sm"

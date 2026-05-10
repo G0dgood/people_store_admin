@@ -42,7 +42,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ isOpen, onClose,
   const sizes = React.useMemo(() => {
     const allOptions: any[] = [];
     if (!product) return allOptions;
-    
+
     // 1. Base sizes (Normal sizes)
     const rawBaseSizes = product.size || product.volume || [];
     const baseSizeArray = Array.isArray(rawBaseSizes)
@@ -50,7 +50,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ isOpen, onClose,
       : typeof rawBaseSizes === "string"
         ? rawBaseSizes.split(",").map(s => s.trim())
         : [];
- 
+
     baseSizeArray.forEach((s: any, bIdx: number) => {
       if (s) {
         allOptions.push({
@@ -64,7 +64,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ isOpen, onClose,
         });
       }
     });
- 
+
     // 2. Variants
     if (product.variants?.length > 0) {
       product.variants.forEach((v: any, vIdx: number) => {
@@ -88,9 +88,9 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ isOpen, onClose,
             return cleaned;
           })
           .filter(Boolean);
- 
+
         const uniqueAttrs = Array.from(new Set(otherAttrs));
- 
+
         allOptions.push({
           id: `variant-${vIdx}`,
           label: uniqueAttrs.join(" / ") || `Variant ${vIdx + 1}`,
@@ -104,7 +104,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ isOpen, onClose,
         });
       });
     }
- 
+
     if (allOptions.length === 0) {
       allOptions.push({
         id: "default",
@@ -116,7 +116,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ isOpen, onClose,
         originalSku: product.sku
       });
     }
- 
+
     return allOptions;
   }, [product]);
 
@@ -151,8 +151,8 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ isOpen, onClose,
   if (!product) return null;
 
   return (
-    <Modal 
-      isOpen={isOpen} 
+    <Modal
+      isOpen={isOpen}
       onClose={onClose}
       size="lg"
     >
@@ -168,7 +168,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ isOpen, onClose,
               sizes="(max-width: 768px) 100vw, 400px"
             />
           </div>
-          
+
           {/* Sub Images Gallery */}
           {images.length > 1 && (
             <div className="flex gap-2 overflow-x-auto scrollbar-none pb-2">
@@ -176,9 +176,8 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ isOpen, onClose,
                 <button
                   key={idx}
                   onClick={() => setSelectedImage(img)}
-                  className={`relative w-16 h-16 flex-shrink-0 border rounded-lg overflow-hidden transition-all ${
-                    selectedImage === img ? "border-brand-gold ring-1 ring-brand-gold" : "border-gray-200 hover:border-brand-gold"
-                  }`}
+                  className={`relative w-16 h-16 flex-shrink-0 border rounded-lg overflow-hidden transition-all ${selectedImage === img ? "border-brand-gold ring-1 ring-brand-gold" : "border-gray-200 hover:border-brand-gold"
+                    }`}
                 >
                   <Image
                     src={img}
@@ -197,8 +196,8 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ isOpen, onClose,
         <div className="w-full md:w-1/2 flex flex-col gap-6">
           <div className="flex flex-col gap-2">
             <span className="text-[10px] font-outfit tracking-[0.3em] font-bold text-brand-gold">{subtitle || "Featured Collection"}</span>
-            <h2 className="text-2xl font-outfit font-light tracking-widest text-gray-900 leading-tight">
-              {(product.name || product.title || "").split(' ').map((word: string, i: number) => 
+            <h2 className="text-xl font-outfit font-light tracking-widest text-gray-900 leading-tight">
+              {(product.name || product.title || "").split(' ').map((word: string, i: number) =>
                 i === (product.name || product.title || "").split(' ').length - 1 ? <span key={i} className="font-bold">{word}</span> : word + ' '
               )}
             </h2>
@@ -206,7 +205,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ isOpen, onClose,
               <span className="text-2xl font-outfit font-black text-gray-900">
                 {sizes[selectedIdx]?.price || product.price}
               </span>
-              <FavoriteButton 
+              <FavoriteButton
                 item={{
                   id: product.id,
                   title: product.name,
@@ -236,14 +235,14 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ isOpen, onClose,
                       onClick={() => !isOutOfStock && setSelectedIdx(idx)}
                       disabled={isOutOfStock}
                       className={`px-4 py-2 border transition-all duration-300 flex items-center gap-3 rounded-none
-                        ${selectedIdx === idx 
-                          ? "border-brand-gold bg-black text-white" 
+                        ${selectedIdx === idx
+                          ? "border-brand-gold bg-black text-white"
                           : isOutOfStock
                             ? "border-gray-100 bg-gray-50 text-gray-300 cursor-not-allowed opacity-60"
                             : "border-gray-200 hover:border-brand-gold text-gray-400 hover:text-gray-900"}`}
                     >
                       {size.color && (
-                        <div 
+                        <div
                           className={`w-3 h-3 rounded-full border ${isOutOfStock ? "border-gray-200" : "border-white/20"}`}
                           style={{ backgroundColor: size.color }}
                         />
@@ -267,7 +266,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ isOpen, onClose,
           </div>
 
           <div className="mt-auto flex flex-col gap-4">
-            <Button 
+            <Button
               onClick={handleAddToCart}
               disabled={!product.isUnlimited && (sizes[selectedIdx]?.originalStock <= 0)}
               className={`w-full h-12 font-outfit font-bold tracking-[0.2em] text-[11px] transition-all
@@ -277,7 +276,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ isOpen, onClose,
             >
               {!product.isUnlimited && (sizes[selectedIdx]?.originalStock <= 0) ? "Out of Stock" : "Add to Cart"}
             </Button>
-            <Link 
+            <Link
               href={`/products/detail?id=${product.id}`}
               className="text-center text-[10px] font-outfit font-bold tracking-[0.2em] text-gray-400 hover:text-brand-gold transition-colors"
               onClick={onClose}

@@ -331,7 +331,7 @@ export function ImageUpload({
             <div className="flex flex-col gap-6">
               <div className="flex flex-col gap-3">
                 <div className="flex justify-between items-center">
-                  <label className="text-[10px] font-black text-[#1D3557] uppercase tracking-wider">Zoom Scale</label>
+                  <label className="text-[10px] font-black text-[#121212] uppercase tracking-wider">Zoom Scale</label>
                   <span className="text-[10px] font-bold text-brand-gold bg-brand-gold/5 px-2 py-0.5 rounded">{Math.round(zoom * 100)}%</span>
                 </div>
                 <input
@@ -343,7 +343,7 @@ export function ImageUpload({
 
               <div className="flex flex-col gap-3">
                 <div className="flex justify-between items-center">
-                  <label className="text-[10px] font-black text-[#1D3557] uppercase tracking-wider">Rotation</label>
+                  <label className="text-[10px] font-black text-[#121212] uppercase tracking-wider">Rotation</label>
                   <span className="text-[10px] font-bold text-brand-gold bg-brand-gold/5 px-2 py-0.5 rounded">{rotation}°</span>
                 </div>
                 <input
@@ -356,9 +356,9 @@ export function ImageUpload({
 
             <div className="flex flex-col gap-6">
               <div className="flex flex-col gap-3">
-                <label className="text-[10px] font-black text-[#1D3557] uppercase tracking-wider">Background Tweak</label>
+                <label className="text-[10px] font-black text-[#121212] uppercase tracking-wider">Background Tweak</label>
                 <div className="flex gap-2.5">
-                  {["transparent", "#FFFFFF", "#F9FAFB", "#1D3557", "#D4AF37"].map(color => (
+                  {["transparent", "#FFFFFF", "#F9FAFB", "#121212", "#D4AF37"].map(color => (
                     <button
                       key={color}
                       onClick={() => setBgColor(color)}
@@ -376,7 +376,7 @@ export function ImageUpload({
 
               <div className="flex flex-col gap-3">
                 <div className="flex justify-between items-center">
-                  <label className="text-[10px] font-black text-[#1D3557] uppercase tracking-wider">Corner Radius</label>
+                  <label className="text-[10px] font-black text-[#121212] uppercase tracking-wider">Corner Radius</label>
                   <span className="text-[10px] font-bold text-brand-gold bg-brand-gold/5 px-2 py-0.5 rounded">{borderRadius}%</span>
                 </div>
                 <input

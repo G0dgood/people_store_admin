@@ -49,7 +49,7 @@ const RecentlyViewed = () => {
     <section className="w-full border border-gray-200 overflow-hidden bg-white mt-8 mb-12">
       <div className="p-6 border-b border-gray-200 flex items-center justify-between">
         <SectionHeaderSimple title="Recently Viewed" className="!p-0 !border-0" />
-        <Link href="/products" className="text-[10px] font-outfit font-bold uppercase tracking-[0.2em] text-brand-gold hover:tracking-[0.3em] transition-all">
+        <Link href="/products" className="text-[10px] font-outfit font-bold tracking-[0.2em] text-brand-gold hover:tracking-[0.3em] transition-all">
           Explore Boutique
         </Link>
       </div>
@@ -76,7 +76,7 @@ const RecentlyViewed = () => {
                 <div className="absolute bottom-0 left-0 right-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-10">
                   <button
                     onClick={(e) => handleQuickView(e, item)}
-                    className="w-full py-2 bg-black/80 backdrop-blur-md text-white text-[9px] font-outfit font-bold uppercase tracking-[0.2em] hover:bg-brand-gold transition-all"
+                    className="w-full py-2 bg-black/80 backdrop-blur-md text-white text-[9px] font-outfit font-bold tracking-[0.2em] hover:bg-brand-gold transition-all"
                   >
                     Quick View
                   </button>

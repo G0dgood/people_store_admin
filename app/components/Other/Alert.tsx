@@ -24,7 +24,7 @@ const Alert: React.FC<AlertProps> = ({
       border: "border-blue-100",
       icon: "task_alt",
       iconColor: "text-[#2196F3]",
-      titleColor: "text-[#1D3557]",
+      titleColor: "text-[#121212]",
     },
     error: {
       bg: "bg-[#FEE2E2]",

@@ -100,7 +100,7 @@ export function EditRoleDrawer({ isOpen, onClose, role }: EditRoleDrawerProps) {
       <form onSubmit={handleSubmit} className="flex flex-col h-full gap-8">
         <div className="flex flex-col gap-8">
           {/* Header Card */}
-          <div className="bg-[#1D3557] rounded-2xl p-6 text-white relative overflow-hidden shadow-xl">
+          <div className="bg-[#121212] rounded-2xl p-6 text-white relative overflow-hidden shadow-xl">
              <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-[0.05] rounded-full -translate-y-12 translate-x-12" />
              <div className="flex flex-col gap-1 relative z-10">
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] opacity-60">Policy Governance</span>
@@ -131,7 +131,7 @@ export function EditRoleDrawer({ isOpen, onClose, role }: EditRoleDrawerProps) {
                     className="grid grid-cols-12 gap-2 items-center p-3 sm:p-4 bg-white border border-gray-200 rounded-2xl hover:border-brand-gold/20 hover:shadow-md transition-all group"
                   >
                     <div className="col-span-5 flex flex-col gap-0.5">
-                      <span className="text-[13px] font-black text-[#1D3557] group-hover:text-brand-gold transition-colors">{module.label}</span>
+                      <span className="text-[13px] font-black text-[#121212] group-hover:text-brand-gold transition-colors">{module.label}</span>
                       <span className="text-[9px] font-bold text-gray-300 uppercase tracking-widest">{module.category} Sector</span>
                     </div>
                     

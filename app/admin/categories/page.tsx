@@ -30,14 +30,17 @@ export default function CategoriesPage() {
  const [currentPage, setCurrentPage] = useState(1);
  const [rowsPerPage, setRowsPerPage] = useState(10);
 
- const { data: categoriesData, isLoading, refetch, isFetching } = useGetCategoriesQuery({
+ const { data: response, isLoading, refetch, isFetching } = useGetCategoriesQuery({
+  page: currentPage,
+  limit: rowsPerPage,
   search: searchQuery,
   status: activeTab === "All Categories" ? undefined : activeTab
  });
  const [deleteCategory] = useDeleteCategoryMutation();
  const { canAccess } = usePrivilege();
 
- const categories = categoriesData?.data || [];
+ const categories = response?.data && 'categories' in response.data ? response.data.categories : (Array.isArray(response?.data) ? response.data : []);
+ const pagination = response?.data && 'pagination' in response.data ? response.data.pagination : undefined;
 
  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
  const [isMoreActionsOpen, setIsMoreActionsOpen] = useState(false);
@@ -55,11 +58,10 @@ export default function CategoriesPage() {
  const [selectedIds, setSelectedIds] = useState<string[]>([]);
  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
- // Pagination Metadata (categories are already filtered by backend if search/status is used)
- const totalItems = categories.length;
- const totalPages = Math.ceil(totalItems / rowsPerPage) || 1;
- const startIndex = (currentPage - 1) * rowsPerPage;
- const paginatedCategories = categories.slice(startIndex, startIndex + rowsPerPage);
+ // The API now handles filtering and pagination
+ const paginatedCategories = categories;
+ const totalItems = pagination?.total || categories.length;
+ const totalPages = pagination?.pages || Math.ceil(totalItems / rowsPerPage) || 1;
 
  // Sync pagination reset
  React.useEffect(() => {
@@ -154,7 +156,7 @@ export default function CategoriesPage() {
        <div className="w-12 h-12 rounded-[6px] overflow-hidden bg-gray-50 flex items-center justify-center p-1 group-hover/item:bg-brand-gold/10 transition-colors">
         <img src={cat.image} alt={cat.name} className="w-full h-full object-contain" />
        </div>
-       <span className="text-sm font-bold text-[#1D3557] group-hover/item:text-brand-gold transition-colors">{cat.name}</span>
+       <span className="text-sm font-bold text-[#121212] group-hover/item:text-brand-gold transition-colors">{cat.name}</span>
       </div>
      ))}
     </div>
@@ -260,7 +262,7 @@ export default function CategoriesPage() {
              setIsAttributeModalOpen(true);
             }}
            >
-            {c.hasSize && <span className="px-2 py-0.5 bg-blue-50 text-blue-500 text-[9px] font-black rounded uppercase">Size</span>}
+            {c.hasSize && <span className="px-2 py-0.5 bg-gray-50 text-brand-gold text-[9px] font-black rounded uppercase">Size</span>}
             {c.hasML && <span className="px-2 py-0.5 bg-emerald-50 text-emerald-500 text-[9px] font-black rounded uppercase">Volume</span>}
             {c.hasSex && <span className="px-2 py-0.5 bg-purple-50 text-purple-500 text-[9px] font-black rounded uppercase">Gender</span>}
             {!c.hasSize && !c.hasML && !c.hasSex && <span className="text-[10px] text-gray-300 font-bold italic">No attributes</span>}
@@ -278,7 +280,7 @@ export default function CategoriesPage() {
            <div className="flex justify-end gap-2">
             <Tooltip text="View Products" position="top">
              <Button shape="rounded-sm" variant="outline"
-              className="!p-1.5 text-gray-400 hover:text-white hover:bg-[#1D3557] hover:border-[#1D3557] transition-all"
+              className="!p-1.5 text-gray-400 hover:text-white hover:bg-[#121212] hover:border-[#121212] transition-all"
               onClick={() => {
                setSelectedCategoryForView(c);
                setIsViewModalOpen(true);

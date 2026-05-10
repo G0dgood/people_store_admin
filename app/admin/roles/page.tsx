@@ -36,9 +36,17 @@ export default function RolesManagement() {
  const [roleToEdit, setRoleToEdit] = useState<Role | null>(null);
  const [isMoreActionsOpen, setIsMoreActionsOpen] = useState(false);
  const [isSyncConfirmOpen, setIsSyncConfirmOpen] = useState(false);
+ const [searchQuery, setSearchQuery] = useState("");
 
  // RTK Query hooks
- const { data: roles = [], isLoading, refetch, isFetching } = useGetRolesQuery();
+ const { data: rolesData, isLoading, refetch, isFetching } = useGetRolesQuery({
+  page: currentPage,
+  limit: rowsPerPage,
+  search: searchQuery,
+ });
+ 
+ const roles = rolesData?.roles || [];
+ const pagination = rolesData?.pagination;
  const [deleteRole, { isLoading: isDeleting }] = useDeleteRoleMutation();
  const { canAccess } = usePrivilege();
 
@@ -105,7 +113,7 @@ export default function RolesManagement() {
     {/* Filter Controls Bar */}
     <div className="p-4 sm:p-6 flex flex-col lg:flex-row gap-6 items-center justify-between border-b border-gray-50">
      <div className="flex items-center gap-3 w-full lg:w-auto">
-      <h2 className="text-sm font-black text-[#1D3557] uppercase tracking-widest">Administrative Roles</h2>
+      <h2 className="text-sm font-black text-[#121212] uppercase tracking-widest">Administrative Roles</h2>
      </div>
 
      <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
@@ -113,6 +121,8 @@ export default function RolesManagement() {
        <Input shape="rounded-sm"
         type="text"
         placeholder="Filter roles by keyword..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
        />
        <Icon name="search-01" folder="dashboardIcon" size="xs" className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-brand-gold transition-colors" />
       </div>
@@ -167,7 +177,7 @@ export default function RolesManagement() {
           </td>
           <td className="py-6">
            <div className="flex flex-col gap-0.5">
-            <span className="text-[14px] font-black text-[#1D3557] group-hover:text-brand-gold transition-colors">
+            <span className="text-[14px] font-black text-[#121212] group-hover:text-brand-gold transition-colors">
              {role.name}
             </span>
             <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest">Policy Ruleset</span>
@@ -181,7 +191,7 @@ export default function RolesManagement() {
           <td className="py-6">
            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-50 rounded-full border border-gray-200 group-hover:bg-brand-gold/10 group-hover:border-brand-gold/20 transition-all cursor-default">
             <HiUsers className="text-gray-400 group-hover:text-brand-gold w-3.5 h-3.5" />
-            <span className="text-[11px] font-black text-[#1D3557]">{role.users || 0} Active</span>
+            <span className="text-[11px] font-black text-[#121212]">{role.users || 0} Active</span>
            </div>
           </td>
           <td className="py-6">
@@ -210,7 +220,7 @@ export default function RolesManagement() {
             {canAccess("roles", "edit") && (
              <Tooltip text="Manage Permissions Matrix">
               <Button shape="rounded-sm" variant="outline"
-               className="!p-1.5 text-gray-400 hover:text-white hover:bg-[#1D3557] hover:border-[#1D3557] border-gray-200 transition-all font-bold"
+               className="!p-1.5 text-gray-400 hover:text-white hover:bg-[#121212] hover:border-[#121212] border-gray-200 transition-all font-bold"
                onClick={() => {
                 setRoleToEdit(role);
                 setIsEditDrawerOpen(true);
@@ -243,7 +253,7 @@ export default function RolesManagement() {
     <div className="mt-auto border-t border-gray-50 bg-white">
      <Pagination
       currentPage={currentPage}
-      totalPages={1}
+      totalPages={pagination?.pages || 1}
       onPageChange={setCurrentPage}
      />
     </div>

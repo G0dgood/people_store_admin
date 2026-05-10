@@ -72,7 +72,7 @@ export const Select = <T extends boolean = false>({
     }
   };
 
-  const filteredOptions = searchable 
+  const filteredOptions = searchable
     ? options.filter(o => o.label.toLowerCase().includes(searchQuery.toLowerCase()))
     : options;
 
@@ -114,15 +114,15 @@ export const Select = <T extends boolean = false>({
             )
           ) : (
             <div className="flex items-center gap-2 truncate">
-               {(selectedOptions as Option)?.image && (
-                 <img src={(selectedOptions as Option).image} alt="" className="w-5 h-5 rounded-sm object-cover flex-shrink-0" />
-               )}
-               <span className={`${selectedOptions ? "text-gray-900 font-bold" : "text-gray-400"} truncate`}>
-                 {(selectedOptions as Option)?.label || placeholder}
-               </span>
-               {(selectedOptions as Option)?.status === "Draft" && (
-                 <span className="text-[8px] font-black bg-gray-100 text-gray-400 px-1 py-0.5 rounded uppercase ml-1">Draft</span>
-               )}
+              {(selectedOptions as Option)?.image && (
+                <img src={(selectedOptions as Option).image} alt="" className="w-5 h-5 rounded-sm object-cover flex-shrink-0" />
+              )}
+              <span className={`${selectedOptions ? "text-gray-900 font-bold" : "text-gray-400"} truncate`}>
+                {(selectedOptions as Option)?.label || placeholder}
+              </span>
+              {(selectedOptions as Option)?.status === "Draft" && (
+                <span className="text-[8px] font-black bg-gray-100 text-gray-400 px-1 py-0.5 rounded uppercase ml-1">Draft</span>
+              )}
             </div>
           )}
         </div>
@@ -171,21 +171,21 @@ export const Select = <T extends boolean = false>({
                       className={`
                         w-full text-left px-4 py-3 text-sm transition-colors flex items-center gap-3
                         ${isSelected ? "bg-brand-gold/5 text-brand-gold font-black" : "text-gray-700 hover:bg-gray-50"}
-                        ${option.isCurrent ? "opacity-50 cursor-not-allowed pointer-events-none grayscale-[0.5]" : ""}
+                        ${option.isCurrent ? "opacity-50 cursor-not-allowed pointer-events-none -[0.5]" : ""}
                       `}
                     >
                       {option.image && (
-                         <img src={option.image} alt="" className="w-8 h-8 rounded-[4px] object-cover flex-shrink-0 border border-gray-100" />
+                        <img src={option.image} alt="" className="w-8 h-8 rounded-[4px] object-cover flex-shrink-0 border border-gray-100" />
                       )}
                       <div className="flex flex-col min-w-0 flex-1">
                         <div className="flex items-center gap-2">
-                           <span className="truncate">{option.label}</span>
-                           {option.status === "Draft" && (
-                             <span className="text-[8px] font-black bg-gray-100 text-gray-400 px-1 py-0.5 rounded uppercase">Draft</span>
-                           )}
-                           {option.isCurrent && (
-                             <span className="text-[8px] font-black bg-emerald-100 text-emerald-600 px-1 py-0.5 rounded uppercase">Already Added</span>
-                           )}
+                          <span className="truncate">{option.label}</span>
+                          {option.status === "Draft" && (
+                            <span className="text-[8px] font-black bg-gray-100 text-gray-400 px-1 py-0.5 rounded uppercase">Draft</span>
+                          )}
+                          {option.isCurrent && (
+                            <span className="text-[8px] font-black bg-emerald-100 text-emerald-600 px-1 py-0.5 rounded uppercase">Already Added</span>
+                          )}
                         </div>
                         {option.subLabel && (
                           <span className="text-[10px] font-bold text-gray-400 mt-0.5 truncate">{option.subLabel}</span>

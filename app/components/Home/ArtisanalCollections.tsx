@@ -32,7 +32,9 @@ const itemVariants: Variants = {
 
 const ArtisanalCollections = () => {
   const { data: response, isLoading } = useGetCategoriesQuery();
-  const categories = response?.data || [];
+  const categories = response?.data && 'categories' in response.data 
+    ? response.data.categories 
+    : (Array.isArray(response?.data) ? response.data : []);
 
   const displayItems = categories.slice(0, 4).map(cat => ({
     title: cat.name,

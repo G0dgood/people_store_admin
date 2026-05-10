@@ -67,7 +67,7 @@ const SortSelector = ({ currentSort, onSortChange, className = "" }: { currentSo
         className={`flex items-center border px-4 h-10 cursor-pointer transition-colors group min-w-[180px] justify-between ${isOpen || currentSort !== "featured" ? "border-brand-gold bg-white" : "border-gray-200 bg-white hover:bg-gray-50"
           }`}
       >
-        <span className={`text-[10px] font-bold uppercase tracking-[0.15em] ${isOpen || currentSort !== "featured" ? "text-brand-gold" : "text-gray-500 group-hover:text-gray-900"
+        <span className={`text-[10px] font-bold tracking-[0.15em] ${isOpen || currentSort !== "featured" ? "text-brand-gold" : "text-gray-500 group-hover:text-gray-900"
           }`}>
           Sort: {currentOption.label}
         </span>
@@ -164,7 +164,7 @@ const ListingControlBar: React.FC<ListingControlBarProps> = ({
       <div className="hidden md:flex w-full bg-white border border-gray-200 h-20 items-center justify-between px-8">
         <div className="flex items-center gap-12">
           <div className="flex flex-col">
-            <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-400 mb-1">Curation</span>
+            <span className="text-[10px] tracking-[0.2em] font-bold text-gray-400 mb-1">Curation</span>
             <span className="text-md font-outfit text-gray-900">
               <span className="font-bold text-brand-gold">{count.toLocaleString()}</span> masterpieces found
               {filters.category && <span> in <span className="font-bold">{filters.category}</span></span>}
@@ -182,7 +182,7 @@ const ListingControlBar: React.FC<ListingControlBarProps> = ({
             onClick={onFilterClick}
             className="flex lg:hidden items-center gap-3 px-6 h-10 border border-gray-200 bg-white hover:bg-gray-50 transition-colors group"
           >
-            <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 group-hover:text-gray-900">Filter</span>
+            <span className="text-[10px] font-bold tracking-widest text-gray-500 group-hover:text-gray-900">Filter</span>
             <Icon name="filter_alt" size="xs" className="text-gray-300 group-hover:text-brand-gold" />
           </button>
           <SortSelector currentSort={sortBy} onSortChange={onSortChange} />
@@ -195,7 +195,7 @@ const ListingControlBar: React.FC<ListingControlBarProps> = ({
 
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
-            <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-400">Discovering</span>
+            <span className="text-[10px] tracking-[0.2em] font-bold text-gray-400">Discovering</span>
             <span className="text-[11px] font-outfit font-bold">{count} PRODUCTS</span>
           </div>
           <ViewSwitcher mode={viewMode} onChange={onViewModeChange} />
@@ -216,7 +216,7 @@ const ListingControlBar: React.FC<ListingControlBarProps> = ({
             className="flex-1 flex items-center justify-between px-4 py-3 bg-white border border-gray-200 group hover:border-brand-gold transition-colors"
           >
             <div className="flex items-center gap-3">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-gray-600">Filter</span>
+              <span className="text-[10px] font-bold tracking-widest text-gray-600">Filter</span>
               {activeTags.length > 0 && (
                 <span className="bg-brand-gold text-white text-[9px] w-4 h-4 flex items-center justify-center font-bold">
                   {activeTags.length}
@@ -231,13 +231,13 @@ const ListingControlBar: React.FC<ListingControlBarProps> = ({
       {/* Active Filter Tags */}
       {activeTags.length > 0 && (
         <div className="flex flex-wrap items-center gap-3 pt-2">
-          <span className="text-[10px] uppercase tracking-[0.2em] font-bold text-gray-400 mr-2">Refining by:</span>
+          <span className="text-[10px] tracking-[0.2em] font-bold text-gray-400 mr-2">Refining by:</span>
           {activeTags.map((tag) => (
             <FilterTag key={tag.id} label={tag.label} onRemove={tag.onRemove} />
           ))}
           <button
             onClick={handleClearAll}
-            className="text-brand-gold text-[10px] font-bold uppercase tracking-[0.15em] ml-2 hover:tracking-[0.2em] transition-all duration-300 border-b border-brand-gold/0 hover:border-brand-gold"
+            className="text-brand-gold text-[10px] font-bold tracking-[0.15em] ml-2 hover:tracking-[0.2em] transition-all duration-300 border-b border-brand-gold/0 hover:border-brand-gold"
           >
             Clear selection
           </button>

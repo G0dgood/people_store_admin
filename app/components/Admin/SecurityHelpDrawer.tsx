@@ -37,12 +37,12 @@ export function SecurityHelpDrawer({ isOpen, onClose }: SecurityHelpDrawerProps)
   return (
     <Drawer isOpen={isOpen} onClose={onClose} title="Security & Access Help">
       <div className="flex flex-col h-full gap-8">
-        <div className="flex items-center gap-4 p-5 bg-blue-50/50 border border-blue-100 rounded-2xl">
+        <div className="flex items-center gap-4 p-5 bg-gray-50/50 border border-blue-100 rounded-2xl">
           <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center text-brand-gold   shrink-0">
             <Icon name="live_help" folder="icon" size="sm" />
           </div>
           <div className="flex flex-col gap-0.5">
-            <span className="text-[13px] font-black text-[#1D3557]">Need immediate assistance?</span>
+            <span className="text-[13px] font-black text-[#121212]">Need immediate assistance?</span>
             <span className="text-[11px] font-medium text-blue-600 leading-tight">Our security team is available 24/7 for account emergencies.</span>
           </div>
         </div>
@@ -58,7 +58,7 @@ export function SecurityHelpDrawer({ isOpen, onClose }: SecurityHelpDrawerProps)
                   <Icon name={item.icon} folder="icon" size="xs" />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <span className="text-[12px] font-black text-[#1D3557] group-hover:text-brand-gold transition-colors">{item.title}</span>
+                  <span className="text-[12px] font-black text-[#121212] group-hover:text-brand-gold transition-colors">{item.title}</span>
                   <span className="text-[11px] font-medium text-gray-400 leading-relaxed">{item.description}</span>
                 </div>
               </div>

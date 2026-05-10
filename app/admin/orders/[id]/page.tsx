@@ -32,7 +32,7 @@ import { InvoicePrint } from "@/app/components/Admin/InvoicePrint";
 import { formatPrice } from "@/app/utils/formatPrice";
 
 const statusStyles: any = {
-  Delivered: { bg: "bg-blue-50", text: "text-blue-500", border: "border-blue-100", icon: "Delivered" },
+  Delivered: { bg: "bg-gray-50", text: "text-brand-gold", border: "border-blue-100", icon: "Delivered" },
   Shipped: { bg: "bg-gray-50", text: "text-gray-500", border: "border-gray-200", icon: "Shipped" },
   Pending: { bg: "bg-orange-50", text: "text-orange-400", border: "border-orange-100", icon: "Pending" },
   Cancelled: { bg: "bg-rose-50", text: "text-rose-500", border: "border-rose-100", icon: "Cancelled" },

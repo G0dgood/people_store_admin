@@ -19,7 +19,9 @@ export const SearchBar = () => {
   const [selectedCategory, setSelectedCategory] = useState(filters.category || "All categories");
 
   const { data: categoriesResponse, isLoading: isCategoriesLoading } = useGetPublicCategoriesQuery();
-  const categories = categoriesResponse?.data || [];
+  const categories = categoriesResponse?.data && 'categories' in categoriesResponse.data 
+    ? categoriesResponse.data.categories 
+    : (Array.isArray(categoriesResponse?.data) ? categoriesResponse.data : []);
 
   const categoryRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);

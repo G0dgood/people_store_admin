@@ -46,14 +46,14 @@ export function QuickActionsDrawer({
               <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
                 action.variant === "danger" 
                   ? "bg-rose-50 text-rose-500 group-hover:bg-rose-500 group-hover:text-white" 
-                  : "bg-blue-50 text-brand-gold group-hover:bg-brand-gold group-hover:text-white"
+                  : "bg-gray-50 text-brand-gold group-hover:bg-brand-gold group-hover:text-white"
               }`}>
                 <Icon name={action.icon as any} size="sm" />
               </div>
               
               <div className="flex flex-col gap-0.5">
                 <span className={`text-[13px] font-black tracking-tight ${
-                  action.variant === "danger" ? "text-rose-600" : "text-[#1D3557]"
+                  action.variant === "danger" ? "text-rose-600" : "text-[#121212]"
                 }`}>
                   {action.label}
                 </span>

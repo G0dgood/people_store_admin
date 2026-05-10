@@ -118,7 +118,7 @@ export function DashboardInsightsDrawer({ isOpen, onClose, activeSection: initia
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${activeTab === tab.id ? 'bg-white text-[#1D3557]  ' : 'text-gray-400 hover:text-gray-600'}`}
+              className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all duration-300 ${activeTab === tab.id ? 'bg-white text-[#121212]  ' : 'text-gray-400 hover:text-gray-600'}`}
             >
               <Icon name={tab.icon} size="xs" />
               {tab.label}
@@ -133,7 +133,7 @@ export function DashboardInsightsDrawer({ isOpen, onClose, activeSection: initia
               <div className="flex justify-between items-end px-1">
                 <div className="flex flex-col gap-1">
                   <h4 className="text-[11px] font-black text-gray-400 uppercase tracking-[0.2em]">Growth Analytics</h4>
-                  <p className="text-[13px] font-bold text-[#1D3557]">Current Volume: ₦{totalRevenue.toLocaleString()}</p>
+                  <p className="text-[13px] font-bold text-[#121212]">Current Volume: ₦{totalRevenue.toLocaleString()}</p>
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-1.5">
@@ -208,9 +208,9 @@ export function DashboardInsightsDrawer({ isOpen, onClose, activeSection: initia
                     <div key={i} className="group flex items-center gap-4">
                       <div className="flex-1 h-12 bg-gray-50 rounded-xl border border-transparent group-hover:border-gray-200 transition-all flex items-center px-4 gap-4 relative overflow-hidden">
                         <div className={`absolute left-0 top-0 bottom-0 ${step.color} transition-all duration-1000 origin-left`} style={{ width: `${step.perc}%`, opacity: 0.1 }}></div>
-                        <span className="text-[13px] font-black text-[#1D3557] z-10">{step.label}</span>
+                        <span className="text-[13px] font-black text-[#121212] z-10">{step.label}</span>
                         <div className="ml-auto flex items-center gap-2 z-10">
-                          <span className="text-sm font-black text-[#1D3557]">{step.value.toLocaleString()}</span>
+                          <span className="text-sm font-black text-[#121212]">{step.value.toLocaleString()}</span>
                           <span className="text-[10px] font-bold text-gray-400">({step.perc}%)</span>
                         </div>
                       </div>
@@ -257,7 +257,7 @@ export function DashboardInsightsDrawer({ isOpen, onClose, activeSection: initia
                           }}
                         />
                         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                          <span className="text-lg font-black text-[#1D3557]">{marketData?.trafficSources?.[0]?.value || 0}%</span>
+                          <span className="text-lg font-black text-[#121212]">{marketData?.trafficSources?.[0]?.value || 0}%</span>
                           <span className="text-[8px] font-bold text-gray-400 uppercase">Top Source</span>
                         </div>
                       </div>
@@ -268,7 +268,7 @@ export function DashboardInsightsDrawer({ isOpen, onClose, activeSection: initia
                               <div className={`w-2 h-2 rounded-full`} style={{ backgroundColor: source.color }}></div>
                               <span className="text-[10px] font-bold text-gray-500">{source.label}</span>
                             </div>
-                            <span className="text-[10px] font-black text-[#1D3557]">{source.value}%</span>
+                            <span className="text-[10px] font-black text-[#121212]">{source.value}%</span>
                           </div>
                         ))}
                       </div>
@@ -303,7 +303,7 @@ export function DashboardInsightsDrawer({ isOpen, onClose, activeSection: initia
                           y: {
                             grid: { display: false },
                             ticks: {
-                              color: '#1D3557',
+                              color: '#121212',
                               font: { size: 11, weight: 'bold' }
                             }
                           }
@@ -318,7 +318,7 @@ export function DashboardInsightsDrawer({ isOpen, onClose, activeSection: initia
         </div>
 
         {/* Global Action */}
-        <div className="mt-4 p-6 rounded-2xl bg-[#1D3557] relative overflow-hidden group mx-2">
+        <div className="mt-4 p-6 rounded-2xl bg-[#121212] relative overflow-hidden group mx-2">
           <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -translate-y-16 translate-x-16 group-hover:scale-125 transition-transform duration-500"></div>
           <div className="flex flex-col gap-1 relative z-10">
             <h5 className="text-white text-sm font-black tracking-tight">Generate Advanced Audit Report</h5>

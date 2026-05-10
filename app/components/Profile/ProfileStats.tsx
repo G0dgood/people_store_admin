@@ -22,9 +22,9 @@ const StatCard: React.FC<StatProps> = ({ label, value, icon, color }) => (
 
 export const ProfileStats: React.FC = () => {
   const stats = [
-    { label: "Total Orders", value: 12, icon: "favorite", color: "bg-blue-500" },
+    { label: "Total Orders", value: 12, icon: "favorite", color: "bg-brand-gold" },
     { label: "Pending Shipments", value: 3, icon: "send", color: "bg-orange-500" },
-    { label: "Reward Points", value: "2.4k", icon: "security", color: "bg-blue-500" },
+    { label: "Reward Points", value: "2.4k", icon: "security", color: "bg-brand-gold" },
     { label: "Messages", value: 2, icon: "message_header", color: "bg-brand-gold" },
   ];
 

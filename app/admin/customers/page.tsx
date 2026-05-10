@@ -25,13 +25,6 @@ import { StatCardSkeleton } from "../../components/Skeleton/StatCardSkeleton";
 
 export default function CustomersListing() {
   const [chartTab, setChartTab] = useState("This week");
-  const { data: customersResponse, isLoading: isFetching, refetch: refetchCustomers } = useGetAllCustomersQuery(undefined);
-  const { data: statsResponse, isLoading: isLoadingStats, refetch: refetchStats } = useGetCustomerStatsQuery(chartTab);
-  const [toggleStatus, { isLoading: isToggling }] = useToggleCustomerStatusMutation();
-
-  const customersData = customersResponse?.data || [];
-  const stats = statsResponse?.data;
-
   const [activeMetric, setActiveMetric] = useState<MetricType>("active");
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -41,6 +34,19 @@ export default function CustomersListing() {
   const [customerToToggle, setCustomerToToggle] = useState<any>(null);
   const [isMessageDrawerOpen, setIsMessageDrawerOpen] = useState(false);
   const [customerToMessage, setCustomerToMessage] = useState<any>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const { data: customersResponse, isLoading: isFetching, refetch: refetchCustomers } = useGetAllCustomersQuery({
+    page: currentPage,
+    limit: rowsPerPage,
+    search: searchQuery
+  });
+  const { data: statsResponse, isLoading: isLoadingStats, refetch: refetchStats } = useGetCustomerStatsQuery(chartTab);
+  const [toggleStatus, { isLoading: isToggling }] = useToggleCustomerStatusMutation();
+
+  const customersData = customersResponse?.data?.customers || [];
+  const pagination = customersResponse?.data?.pagination;
+  const stats = statsResponse?.data;
 
   const handleToggleStatus = async () => {
     if (!customerToToggle) return;
@@ -185,6 +191,8 @@ export default function CustomersListing() {
             <Input shape="rounded-sm"
               type="text"
               placeholder="Search customer..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               containerClassName="flex-1 lg:w-72"
               className="bg-white border-gray-200 placeholder:text-gray-400 text-xs font-medium"
               suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
@@ -312,7 +320,7 @@ export default function CustomersListing() {
 
         <Pagination
           currentPage={currentPage}
-          totalPages={1}
+          totalPages={pagination?.pages || 1}
           onPageChange={setCurrentPage}
         />
 

@@ -18,7 +18,7 @@ export const FAQItem = ({ question, answer, isOpen, onToggle }: FAQItemProps) =>
         onClick={onToggle}
         className="w-full flex items-center justify-between p-5 text-left transition-colors"
       >
-        <span className="text-sm md:text-base font-bold text-[#1D3557]">{question}</span>
+        <span className="text-sm md:text-base font-bold text-[#121212]">{question}</span>
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.3, ease: "easeInOut" }}

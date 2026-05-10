@@ -70,7 +70,7 @@ const GiftCardsPage = () => {
       {/* Header Area */}
       <div className="flex justify-between items-end">
         <div className="flex flex-col">
-          <h1 className="text-2xl font-black text-[#1D3557]">Prepaid Cards</h1>
+          <h1 className="text-2xl font-black text-[#121212]">Prepaid Cards</h1>
           <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none mt-1">Issue & Manage Gift Cards</p>
         </div>
         <div className="flex gap-3">
@@ -149,7 +149,7 @@ const GiftCardsPage = () => {
                 <div
                   key={card._id}
                   className="group relative rounded-[16px] overflow-hidden p-6 border border-white/5 hover:border-white/20 transition-all duration-500 shadow-xl shadow-black/20"
-                  style={{ backgroundColor: card.color || "#1D3557" }}
+                  style={{ backgroundColor: card.color || "#121212" }}
                 >
                   <div className="flex flex-col h-full gap-8">
                     <div className="flex justify-between items-start">
@@ -187,7 +187,7 @@ const GiftCardsPage = () => {
 
                   <div className="absolute top-0 right-0">
                     <span className={`px-3 py-1 rounded-bl-[12px] text-[8px] font-black uppercase tracking-widest ${card.status === 'Active' ? 'bg-green-500 text-white' :
-                      card.status === 'Used' ? 'bg-blue-500 text-white' :
+                      card.status === 'Used' ? 'bg-brand-gold text-white' :
                         'bg-red-500 text-white'
                       }`}>
                       {card.status}
@@ -223,7 +223,7 @@ const GiftCardsPage = () => {
                       <td className="py-4 text-xs font-bold text-gray-600">{card.expiryDate ? new Date(card.expiryDate).toLocaleDateString() : "No Expiry"}</td>
                       <td className="py-4">
                         <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest ${card.status === 'Active' ? 'bg-green-50 text-green-600' :
-                          card.status === 'Used' ? 'bg-blue-50 text-blue-600' :
+                          card.status === 'Used' ? 'bg-gray-50 text-blue-600' :
                             'bg-red-50 text-red-600'
                           }`}>
                           {card.status}

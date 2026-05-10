@@ -19,8 +19,11 @@ export interface MediaItem {
 
 export const mediaApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getMediaItems: builder.query<ApiResponse<MediaItem[]>, void>({
-      query: () => '/media',
+    getMediaItems: builder.query<ApiResponse<{ media: MediaItem[], pagination: any }>, { page?: number, limit?: number, search?: string, type?: string, category?: string, brand?: string } | void>({
+      query: (params) => ({
+        url: '/media',
+        params: params || {}
+      }),
       providesTags: ['Media'],
     }),
     uploadMedia: builder.mutation<ApiResponse<MediaItem[]>, FormData>({

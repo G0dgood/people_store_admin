@@ -53,7 +53,7 @@ export function StockAdjustmentDrawer({ isOpen, onClose, product }: StockAdjustm
             <img src={product?.productImage} alt="" className="w-full h-full object-contain" />
           </div>
           <div className="flex flex-col">
-            <span className="text-sm font-black text-[#1D3557]">{product?.name}</span>
+            <span className="text-sm font-black text-[#121212]">{product?.name}</span>
             <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">SKU: {product?.sku || "N/A"}</span>
           </div>
         </div>

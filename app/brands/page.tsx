@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Header } from "@/app/components/Header";
 import { Footer } from "@/app/components/Footer";
-import { HiChevronRight, HiStar, HiSparkles, HiBeaker, HiShoppingBag, HiShieldCheck } from "react-icons/hi2";
+import { HiChevronRight, HiStar, HiShoppingBag } from "react-icons/hi2";
 import { motion } from "framer-motion";
 
 import { useGetPublicBrandsQuery } from "@/lib/redux/services/boutiqueApi";
@@ -15,7 +15,9 @@ import { useState } from "react";
 
 const BrandsPage = () => {
    const { data: brandsResponse, isLoading } = useGetPublicBrandsQuery();
-   const brands = brandsResponse?.data || [];
+   const brands = brandsResponse?.data && 'brands' in brandsResponse.data 
+      ? brandsResponse.data.brands 
+      : (Array.isArray(brandsResponse?.data) ? brandsResponse.data : []);
    const [selectedBrand, setSelectedBrand] = useState<any>(null);
    const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -41,7 +43,7 @@ const BrandsPage = () => {
                <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center text-gray-200 border border-gray-100">
                   <HiShoppingBag size={40} />
                </div>
-               <h3 className="text-2xl font-bold text-[#1D3557]">No Brands Found</h3>
+               <h3 className="text-2xl font-black text-black">No Brands Found</h3>
                <p className="text-gray-400 max-w-sm">We are currently curating new collections. Please check back soon for our latest arrivals.</p>
             </div>
          );
@@ -56,13 +58,13 @@ const BrandsPage = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: i * 0.05 }}
-                  className="relative aspect-[4/5] rounded-[32px] overflow-hidden cursor-pointer group   hover:shadow-xl transition-all duration-500"
+                  className="relative aspect-[4/5] rounded-[32px] overflow-hidden cursor-pointer group hover:shadow-xl transition-all duration-500 border border-gray-100"
                >
                   <Image
                      src={brand.logo || "/placeholder.png"}
                      alt={brand.name}
                      fill
-                     className="object-cover grayscale group-hover:grayscale-0 group-hover:scale-110 transition-all duration-700"
+                     className="object-cover  group-hover:-0 group-hover:scale-110 transition-all duration-700"
                      sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
                   />
 
@@ -83,7 +85,7 @@ const BrandsPage = () => {
                               Luxury heritage & artisanal mastery.
                            </p>
                         </div>
-                        <div className="flex items-center justify-between text-[9px] font-black uppercase tracking-widest text-brand-gold pt-1">
+                        <div className="flex items-center justify-between text-[9px] font-black tracking-[0.2em] text-brand-gold pt-1">
                            Discover <HiChevronRight size={14} />
                         </div>
                      </div>
@@ -95,58 +97,72 @@ const BrandsPage = () => {
    };
 
    return (
-      <div className="min-h-screen bg-[#F7FAFC] flex flex-col font-sans text-black">
+      <div className="min-h-screen !bg-white flex flex-col font-sans text-black">
          <Header />
 
-         <main className="flex-1 w-full bg-white">
-            {/* Brands Hero section */}
-            <section className="bg-gray-50 py-20 md:py-32 relative overflow-hidden">
-               <div className="absolute top-0 right-0 w-96 h-96 bg-brand-gold rounded-full filter blur-[120px] opacity-5 translate-x-1/2 -translate-y-1/2" />
-               <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 text-center relative z-10">
-                  <motion.div
-                     initial={{ opacity: 0, y: 20 }}
-                     animate={{ opacity: 1, y: 0 }}
-                     transition={{ duration: 0.6 }}
-                     className="flex flex-col gap-4"
-                  >
-                     <span className="text-brand-gold font-bold tracking-[0.3em] uppercase text-[10px] md:text-xs">Artisanal Houses</span>
-                     <h1 className="text-4xl md:text-7xl font-black text-[#1D3557] tracking-tighter leading-none font-inter">
-                        The <span className="text-brand-gold">Brands.</span>
-                     </h1>
-                     <p className="text-gray-500 max-w-xl mx-auto text-sm md:text-lg mt-6 leading-relaxed font-medium">
-                        Explore our curated selection of luxury perfume houses and skincare curators, each bringing a unique signature to the Bloom & Mist ecosystem.
-                     </p>
-                  </motion.div>
-               </div>
-            </section>
+         <main className="flex-1 w-full bg-white py-8 md:py-12">
+            <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 flex flex-col gap-12 md:gap-24">
+               {/* Brands Hero Section */}
+               <section className="relative pt-16 pb-12 md:pt-24 md:pb-20 bg-black overflow-hidden">
+                  <Image
+                     src="/brandImage/brand_banner.png"
+                     alt="Brands Background"
+                     fill
+                     className="object-cover opacity-100  brightness-50"
+                     priority
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
+                  <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-gold rounded-full filter blur-[140px] opacity-10 translate-x-1/2 -translate-y-1/2" />
 
-            <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 py-16 md:py-32">
-               {/* Dynamic Content */}
-               {renderContent()}
-            </div>
-
-            {/* Brands Concierge section */}
-            <section className="bg-[#1D3557] py-24 relative overflow-hidden">
-               <Image
-                  src="/brandImage/brand_banner.png"
-                  alt="Background"
-                  fill
-                  className="object-cover opacity-10 grayscale"
-                  sizes="100vw"
-               />
-               <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 flex flex-col items-center text-center gap-8 relative z-10">
-                  <div className="flex flex-col gap-2">
-                     <span className="text-brand-gold font-bold tracking-[0.4em] uppercase text-xs">Custom Procurement</span>
-                     <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter leading-none font-inter">Looking for a specific <span className="text-[#8CB7F5]">Creator?</span></h2>
+                  <div className="px-6 md:px-10 lg:px-16 relative z-10">
+                     <motion.div
+                        initial={{ opacity: 0, x: -30 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.7 }}
+                        className="flex flex-col gap-6"
+                     >
+                        <span className="text-brand-gold font-black tracking-[0.4em] text-xs">Artisanal Houses</span>
+                        <h1 className="text-4xl md:text-7xl font-black text-white tracking-tighter leading-none font-inter">
+                           The <br /><span className="text-brand-gold">Brands.</span>
+                        </h1>
+                        <p className="text-gray-400 max-w-xl text-lg font-medium leading-relaxed">
+                           Explore our curated selection of luxury perfume houses and skincare curators, each bringing a unique signature to the Bloom & Mist ecosystem.
+                        </p>
+                     </motion.div>
                   </div>
-                  <p className="text-blue-100/40 text-sm md:text-lg max-w-2xl font-medium">
-                     Our artisans maintain connections with luxury houses globally. If you need a specific brand or collector's edition not shown here, our concierge sourcing team is at your disposal.
-                  </p>
-                  <Link href="/contact" className="mt-4 px-16 py-6 bg-brand-gold text-white rounded-3xl font-black uppercase tracking-widest text-sm shadow-2xl shadow-blue-500/30 hover:scale-105 active:scale-95 transition-all">
-                     Consult a Brand Curator
-                  </Link>
+               </section>
+
+               <div className="py-8 md:py-12">
+                  {/* Dynamic Content */}
+                  {renderContent()}
                </div>
-            </section>
+
+               {/* Brands Concierge section */}
+               <section className="bg-black py-24 md:py-32 relative overflow-hidden rounded-[48px]">
+
+                  <Image
+                     src="/brandImage/cat_body.png"
+                     alt="Concierge Background"
+                     fill
+                     className="object-cover opacity-20 "
+                     sizes="100vw"
+                  />
+                  <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 flex flex-col items-center text-center gap-8 relative z-20">
+                     <div className="flex flex-col gap-4">
+                        <span className="text-brand-gold font-bold tracking-[0.4em] text-xs">Custom Procurement</span>
+                        <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter leading-none font-inter">
+                           Looking for a specific <br /><span className="text-brand-gold">Creator?</span>
+                        </h2>
+                     </div>
+                     <p className="text-gray-400 text-sm md:text-lg max-w-2xl font-medium leading-relaxed">
+                        Our artisans maintain connections with luxury houses globally. If you need a specific brand or collector's edition not shown here, our concierge sourcing team is at your disposal.
+                     </p>
+                     <Link href="/contact" className="mt-4 px-16 py-6 bg-brand-gold text-white rounded-3xl font-black tracking-widest text-sm shadow-2xl shadow-black/40 hover:scale-105 active:scale-95 transition-all">
+                        Consult a Brand Curator
+                     </Link>
+                  </div>
+               </section>
+            </div>
          </main>
 
          <BrandDetailModal

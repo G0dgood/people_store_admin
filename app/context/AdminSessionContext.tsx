@@ -91,7 +91,7 @@ export function AdminSessionProvider({ children }: { children: ReactNode }) {
             <HiExclamationTriangle className="w-8 h-8" />
           </div>
           <div className="flex flex-col gap-2">
-            <h3 className="text-lg font-black text-[#1D3557]">Administrative Access Expired</h3>
+            <h3 className="text-lg font-black text-[#121212]">Administrative Access Expired</h3>
             <p className="text-sm text-gray-500 font-medium px-4">
               Your secure administrative session has timed out. For security, you must log in again to manage the store.
             </p>

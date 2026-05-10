@@ -36,7 +36,9 @@ export function CreateOfferModal({ isOpen, onClose, onSave, initialSelections }:
   const [createOrUpdateOffer, { isLoading: isSaving }] = useCreateOrUpdateOfferMutation();
 
   const products = productsRes?.data?.products || [];
-  const categories = categoriesRes?.data || [];
+  const categories = categoriesRes?.data && 'categories' in categoriesRes.data 
+    ? categoriesRes.data.categories 
+    : (Array.isArray(categoriesRes?.data) ? categoriesRes.data : []);
 
   const hasInitialized = React.useRef(false);
 
@@ -130,7 +132,7 @@ export function CreateOfferModal({ isOpen, onClose, onSave, initialSelections }:
         <div className="flex-1 flex flex-col bg-white">
           <div className="p-6 border-b border-gray-50 flex items-center justify-between gap-4">
             <div className="flex flex-col shrink-0">
-              <h3 className="text-sm font-black text-[#1D3557]">Selection Area</h3>
+              <h3 className="text-sm font-black text-[#121212]">Selection Area</h3>
               <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Picking products from {selectedCategory}</span>
             </div>
 
@@ -181,7 +183,7 @@ export function CreateOfferModal({ isOpen, onClose, onSave, initialSelections }:
                   />
                 </div>
                 <div className="flex flex-col gap-1.5 flex-1">
-                  <h4 className="text-[11px] font-black text-[#1D3557] line-clamp-2 leading-tight min-h-[2.4em]">{product.name}</h4>
+                  <h4 className="text-[11px] font-black text-[#121212] line-clamp-2 leading-tight min-h-[2.4em]">{product.name}</h4>
                   <div className="mt-auto pt-2 flex items-center justify-between">
                     <span className="text-[10px] font-black text-brand-gold">₦{product.price.toLocaleString()}</span>
                     <span className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter">ID: {product._id.slice(-6)}</span>
@@ -205,7 +207,7 @@ export function CreateOfferModal({ isOpen, onClose, onSave, initialSelections }:
         {/* Right: Summary & Discounts */}
         <div className="w-80 border-l border-gray-200 flex flex-col bg-gray-50/30">
           <div className="p-6 border-b border-gray-50">
-            <h3 className="text-sm font-black text-[#1D3557] uppercase tracking-wider">Summary List</h3>
+            <h3 className="text-sm font-black text-[#121212] uppercase tracking-wider">Summary List</h3>
             <p className="text-[10px] text-gray-400 font-bold mt-1 uppercase leading-tight">Apply specific discounts for selected items</p>
           </div>
 
@@ -225,7 +227,7 @@ export function CreateOfferModal({ isOpen, onClose, onSave, initialSelections }:
                       <img src={p.productImage} alt="" className="w-full h-full object-contain" />
                     </div>
                     <div className="flex flex-col min-w-0 flex-1">
-                      <span className="text-[10px] font-black text-[#1D3557] truncate leading-tight mb-1">{p.name}</span>
+                      <span className="text-[10px] font-black text-[#121212] truncate leading-tight mb-1">{p.name}</span>
                       <div className="flex items-center gap-2">
                         <span className="text-[9px] font-bold text-gray-400">Orig.</span>
                         <span className="text-[9px] font-black text-gray-400 line-through">₦{p.price.toLocaleString()}</span>
@@ -247,11 +249,11 @@ export function CreateOfferModal({ isOpen, onClose, onSave, initialSelections }:
                       type="number"
                       value={selections[p._id]}
                       onChange={(e) => updateDiscount(p._id, parseInt(e.target.value) || 0)}
-                      className="flex-1 bg-transparent border-none text-[13px] font-black text-[#1D3557] focus:ring-0 p-0 text-right"
+                      className="flex-1 bg-transparent border-none text-[13px] font-black text-[#121212] focus:ring-0 p-0 text-right"
                       min="1"
                       max="99"
                     />
-                    <span className="text-[11px] font-black text-[#1D3557]">%</span>
+                    <span className="text-[11px] font-black text-[#121212]">%</span>
                   </div>
                 </div>
               ))

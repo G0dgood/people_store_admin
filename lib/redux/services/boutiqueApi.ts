@@ -30,11 +30,11 @@ export const boutiqueApi = baseApi.injectEndpoints({
       query: () => '/products/recommended',
       providesTags: ['Product'],
     }),
-    getPublicBrands: builder.query<PaginatedResponse<Brand[]>, void>({
+    getPublicBrands: builder.query<ApiResponse<{ brands: Brand[], pagination: any }>, void>({
       query: () => '/brands',
       providesTags: ['Brand'],
     }),
-    getPublicCategories: builder.query<ApiResponse<CategoryItem[]>, void>({
+    getPublicCategories: builder.query<ApiResponse<{ categories: CategoryItem[], pagination: any }>, void>({
       query: () => '/categories',
       providesTags: ['Category'],
     }),
@@ -52,7 +52,7 @@ export const boutiqueApi = baseApi.injectEndpoints({
       transformResponse: (response: ApiResponse<AdvertConfig>) => response.data,
       providesTags: ['Advert'],
     }),
-    getPublicDeals: builder.query<ApiResponse<DealRecord[]>, void>({
+    getPublicDeals: builder.query<ApiResponse<{ deals: DealRecord[], pagination: any }>, void>({
       query: () => '/deals/all',
       providesTags: ['Deal'],
     }),

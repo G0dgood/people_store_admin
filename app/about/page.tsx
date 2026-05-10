@@ -197,7 +197,7 @@ const AboutPage = () => {
                   transition={{ delay: i * 0.1 }}
                   className="flex flex-col gap-4 group"
                 >
-                  <div className="relative aspect-[3/4] overflow-hidden grayscale group-hover:grayscale-0 transition-all duration-500 border border-gray-200">
+                  <div className="relative aspect-[3/4] overflow-hidden  group-hover:-0 transition-all duration-500 border border-gray-200">
                     <Image src={member.image} alt={member.name} fill className="object-cover group-hover:scale-110 transition-transform duration-700" sizes="(max-width: 768px) 50vw, 20vw" />
                     <div className="absolute inset-0 bg-neutral-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
                       <div className="flex gap-3 text-white">

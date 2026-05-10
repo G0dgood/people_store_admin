@@ -21,15 +21,15 @@ export interface CategoryItem {
 
 export const categoryApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getCategories: builder.query<ApiResponse<CategoryItem[]>, { search?: string; status?: string } | void>({
+    getCategories: builder.query<ApiResponse<{ categories: CategoryItem[], pagination: any }>, { page?: number; limit?: number; search?: string; status?: string } | void>({
       query: (params) => ({
         url: '/categories',
         params: params || {},
       }),
       providesTags: (result) =>
-        result
+        result?.data?.categories
           ? [
-              ...result.data.map(({ _id }) => ({ type: 'Category' as const, id: _id })),
+              ...result.data.categories.map(({ _id }) => ({ type: 'Category' as const, id: _id })),
               { type: 'Category', id: 'LIST' },
             ]
           : [{ type: 'Category', id: 'LIST' }],

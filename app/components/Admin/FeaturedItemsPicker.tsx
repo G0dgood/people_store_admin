@@ -25,7 +25,7 @@ export const FeaturedItemsPicker: React.FC<FeaturedItemsPickerProps> = ({
 }) => {
   return (
     <section className="bg-white p-8 rounded-[6px] border border-gray-200   flex flex-col gap-6 xl:col-span-2">
-      <h3 className="text-lg font-black text-[#1D3557] flex flex-col gap-6">
+      <h3 className="text-lg font-black text-[#121212] flex flex-col gap-6">
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-2 text-brand-gold">
             <span className="w-8 h-8 rounded-[4px] bg-brand-gold/10 flex items-center justify-center text-xs">03</span>
@@ -102,7 +102,7 @@ export const FeaturedItemsPicker: React.FC<FeaturedItemsPickerProps> = ({
                 </div>
               </div>
               <div className="flex flex-col text-left">
-                <span className="text-[11px] font-bold text-[#1D3557] truncate">{product.name}</span>
+                <span className="text-[11px] font-bold text-[#121212] truncate">{product.name}</span>
                 <span className="text-[9px] font-black text-brand-gold uppercase">
                   {typeof product.category === 'string' ? product.category : product.category?.name}
                 </span>

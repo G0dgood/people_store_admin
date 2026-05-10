@@ -402,7 +402,7 @@ export function EditCouponDrawer({ isOpen, onClose, coupon }: EditCouponDrawerPr
               {[
                 { name: "Gold", color: "#C5A028" },
                 { name: "Onyx", color: "#000000" },
-                { name: "Deep Blue", color: "#1D3557" },
+                { name: "Deep Blue", color: "#121212" },
                 { name: "Rose", color: "#E63946" },
                 { name: "Teal", color: "#2A9D8F" },
                 { name: "Sand", color: "#F4A261" },

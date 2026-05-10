@@ -53,7 +53,7 @@ export const AISettingsModal: React.FC<AISettingsModalProps> = ({
         {/* Detail and Audience */}
         <div className="grid grid-cols-2 gap-6">
           <div className="flex flex-col gap-2.5">
-            <label className="text-[11px] font-black text-[#1D3557] uppercase tracking-widest">
+            <label className="text-[11px] font-black text-[#121212] uppercase tracking-widest">
               Detail Level
             </label>
             <Select
@@ -68,7 +68,7 @@ export const AISettingsModal: React.FC<AISettingsModalProps> = ({
             />
           </div>
           <div className="flex flex-col gap-2.5">
-            <label className="text-[11px] font-black text-[#1D3557] uppercase tracking-widest">
+            <label className="text-[11px] font-black text-[#121212] uppercase tracking-widest">
               Target Audience
             </label>
             <Select
@@ -88,7 +88,7 @@ export const AISettingsModal: React.FC<AISettingsModalProps> = ({
         <div className="flex flex-col gap-4 p-4 bg-gray-50 rounded-[6px] border border-gray-200">
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-1">
-              <span className="text-xs font-bold text-[#1D3557]">
+              <span className="text-xs font-bold text-[#121212]">
                 Auto-format listicles
               </span>
               <span className="text-[10px] text-gray-400">
@@ -101,7 +101,7 @@ export const AISettingsModal: React.FC<AISettingsModalProps> = ({
           <div className="h-px bg-gray-200/50" />
           <div className="flex items-center justify-between">
             <div className="flex flex-col gap-1">
-              <span className="text-xs font-bold text-[#1D3557]">
+              <span className="text-xs font-bold text-[#121212]">
                 Inclusive Language
               </span>
               <span className="text-[10px] text-gray-400">

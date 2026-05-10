@@ -16,12 +16,18 @@ export interface Brand {
 
 export const brandApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getBrands: builder.query<PaginatedResponse<Brand[]>, { page?: number; limit?: number; search?: string; status?: string } | void>({
+    getBrands: builder.query<ApiResponse<{ brands: Brand[], pagination: any }>, { page?: number; limit?: number; search?: string; status?: string } | void>({
       query: (params) => ({
         url: '/brands',
         params: params || {},
       }),
-      providesTags: ['Brand'],
+      providesTags: (result) => 
+        result?.data?.brands 
+          ? [
+              ...result.data.brands.map(({ _id }) => ({ type: 'Brand' as const, id: _id })),
+              { type: 'Brand', id: 'LIST' }
+            ]
+          : [{ type: 'Brand', id: 'LIST' }],
     }),
     getBrandById: builder.query<ApiResponse<Brand>, string>({
       query: (id) => `/brands/${id}`,

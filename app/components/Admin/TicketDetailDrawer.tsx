@@ -43,7 +43,7 @@ export function TicketDetailDrawer({ isOpen, onClose, ticket, onReply }: TicketD
       <Drawer isOpen={isOpen} onClose={onClose} title="Ticket Details" width="max-w-md">
          <div className="flex flex-col gap-8 pb-8">
             {/* Header Summary */}
-            <div className="p-6 rounded-2xl bg-[#1D3557] text-white flex flex-col gap-4 shadow-lg shadow-brand-gold/10 relative overflow-hidden">
+            <div className="p-6 rounded-2xl bg-[#121212] text-white flex flex-col gap-4 shadow-lg shadow-brand-gold/10 relative overflow-hidden">
                <div className="absolute top-0 right-0 p-8 opacity-10 rotate-12">
                   <Icon name="tabler_message" folder="dashboardIcon" size="lg" className="w-24 h-24" />
                </div>
@@ -70,7 +70,7 @@ export function TicketDetailDrawer({ isOpen, onClose, ticket, onReply }: TicketD
                      <img src={"https://ui-avatars.com/api/?name=" + ticket.customerName} alt="" className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1 flex flex-col gap-0.5">
-                     <span className="text-[13px] font-black text-[#1D3557]">{ticket.customerName}</span>
+                     <span className="text-[13px] font-black text-[#121212]">{ticket.customerName}</span>
                      <span className="text-[11px] font-bold text-gray-400">#USR_023456789</span>
                   </div>
                   <button className="p-2 text-gray-400 hover:text-brand-gold transition-colors">
@@ -85,7 +85,7 @@ export function TicketDetailDrawer({ isOpen, onClose, ticket, onReply }: TicketD
                <div className="flex flex-col gap-6">
                   <div className="flex flex-col gap-2">
                      <div className="bg-gray-50 border border-gray-200 rounded-2xl rounded-tl-none p-4  ">
-                        <p className="text-xs font-bold text-[#1D3557] leading-relaxed">
+                        <p className="text-xs font-bold text-[#121212] leading-relaxed">
                            {ticket.message}
                         </p>
                      </div>
@@ -112,17 +112,17 @@ export function TicketDetailDrawer({ isOpen, onClose, ticket, onReply }: TicketD
                <div className="flex flex-col gap-8 relative pl-6 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-gray-100">
                   <div className="relative flex flex-col gap-1">
                      <div className="absolute -left-[22px] top-1 w-3 h-3 rounded-full bg-brand-gold border-2 border-white ring-4 ring-brand-gold/10"></div>
-                     <span className="text-[12px] font-black text-[#1D3557]">Last Activity Tracked</span>
+                     <span className="text-[12px] font-black text-[#121212]">Last Activity Tracked</span>
                      <span className="text-[10px] font-bold text-gray-400">{ticket.activity}</span>
                   </div>
                   <div className="relative flex flex-col gap-1 opacity-60">
                      <div className="absolute -left-[22px] top-1 w-3 h-3 rounded-full bg-gray-200 border-2 border-white"></div>
-                     <span className="text-[12px] font-black text-[#1D3557]">Ticket Assigned to Agent</span>
+                     <span className="text-[12px] font-black text-[#121212]">Ticket Assigned to Agent</span>
                      <span className="text-[10px] font-bold text-gray-400">1 hour ago</span>
                   </div>
                   <div className="relative flex flex-col gap-1 opacity-60">
                      <div className="absolute -left-[22px] top-1 w-3 h-3 rounded-full bg-gray-200 border-2 border-white"></div>
-                     <span className="text-[12px] font-black text-[#1D3557]">Ticket Created</span>
+                     <span className="text-[12px] font-black text-[#121212]">Ticket Created</span>
                      <span className="text-[10px] font-bold text-gray-400">3 hours ago</span>
                   </div>
                </div>

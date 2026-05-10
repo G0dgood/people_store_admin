@@ -33,7 +33,7 @@ export default function GovernancePage() {
       <div className="flex flex-col gap-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="flex flex-col gap-1">
-            <h1 className="text-2xl font-black text-[#1D3557] tracking-tight">Governance & Roles</h1>
+            <h1 className="text-2xl font-black text-[#121212] tracking-tight">Governance & Roles</h1>
             <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">System Access & Security Policy Management</p>
           </div>
           <div className="flex gap-3">
@@ -64,7 +64,7 @@ export default function GovernancePage() {
                   {stat.icon}
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-2xl font-black text-[#1D3557]">{stat.value}</span>
+                  <span className="text-2xl font-black text-[#121212]">{stat.value}</span>
                   <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{stat.label}</span>
                 </div>
               </div>
@@ -93,7 +93,7 @@ export default function GovernancePage() {
             <HiKey size={40} />
           </div>
           <div className="flex flex-col gap-2 max-w-md">
-            <h3 className="text-lg font-black text-[#1D3557]">Administrative Security Console</h3>
+            <h3 className="text-lg font-black text-[#121212]">Administrative Security Console</h3>
             <p className="text-sm font-medium text-gray-400 leading-relaxed">
               This hub provides high-level oversight of your administrative structure. Use the links above to manage individual staff accounts or fine-tune global role permissions.
             </p>

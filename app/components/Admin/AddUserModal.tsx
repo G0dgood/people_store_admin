@@ -37,16 +37,17 @@ const genderOptions = [
 ];
 
 export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
-  const { data: roles = [], isLoading: isLoadingRoles } = useGetRolesQuery();
+  const { data: rolesResponse, isLoading: isLoadingRoles } = useGetRolesQuery();
+  const roles = rolesResponse?.roles || [];
   const [onboardUser, { isLoading: isOnboarding, isError, error }] = useOnboardUserMutation();
 
   useApiError(isError, error, "Onboarding Failed");
 
   const roleOptions = useMemo(() => {
-    return roles.map(role => ({
-      value: role.name,
-      label: role.name
-    }));
+    return roles?.map(role => ({
+      value: role?.name,
+      label: role?.name
+    })) || [];
   }, [roles]);
 
   const [formData, setFormData] = useState({
@@ -67,7 +68,7 @@ export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       const response = await onboardUser({
         fullName: formData.name,
@@ -81,7 +82,7 @@ export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
       toast.success("Staff Member Onboarded", {
         description: `Successfully created an account for ${formData.name}. Temporary password: ${response.data.tempPassword}`
       });
-      
+
       onClose();
       setFormData({
         name: "",
@@ -108,7 +109,7 @@ export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col gap-2">
-              <label className="text-[10px] font-black text-[#1D3557] uppercase tracking-widest">Full Name</label>
+              <label className="text-[10px] font-black text-[#121212] uppercase tracking-widest">Full Name</label>
               <Input
                 shape="rounded-sm"
                 placeholder="e.g. Eleanor Pena"
@@ -120,7 +121,7 @@ export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-[10px] font-black text-[#1D3557] uppercase tracking-widest">Email Address</label>
+              <label className="text-[10px] font-black text-[#121212] uppercase tracking-widest">Email Address</label>
               <Input
                 shape="rounded-sm"
                 type="email"
@@ -135,7 +136,7 @@ export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
             <div className="flex flex-col gap-2">
-              <label className="text-[10px] font-black text-[#1D3557] uppercase tracking-widest">Gender</label>
+              <label className="text-[10px] font-black text-[#121212] uppercase tracking-widest">Gender</label>
               <Select
                 shape="rounded-sm"
                 options={genderOptions}
@@ -146,7 +147,7 @@ export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-[10px] font-black text-[#1D3557] uppercase tracking-widest">Date of Birth</label>
+              <label className="text-[10px] font-black text-[#121212] uppercase tracking-widest">Date of Birth</label>
               <Input
                 shape="rounded-sm"
                 type="date"
@@ -160,7 +161,7 @@ export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
             <div className="flex flex-col gap-2">
-              <label className="text-[10px] font-black text-[#1D3557] uppercase tracking-widest">System Role</label>
+              <label className="text-[10px] font-black text-[#121212] uppercase tracking-widest">System Role</label>
               <Select
                 shape="rounded-sm"
                 options={roleOptions}
@@ -171,7 +172,7 @@ export function AddUserModal({ isOpen, onClose }: AddUserModalProps) {
             </div>
 
             <div className="flex flex-col gap-2">
-              <label className="text-[10px] font-black text-[#1D3557] uppercase tracking-widest">Department</label>
+              <label className="text-[10px] font-black text-[#121212] uppercase tracking-widest">Department</label>
               <Select
                 shape="rounded-sm"
                 options={departmentOptions}

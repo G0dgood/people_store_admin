@@ -35,7 +35,7 @@ export const BackgroundOrchestration: React.FC<BackgroundOrchestrationProps> = (
  return (
   <section className="bg-white p-8 rounded-[6px] border border-gray-200   flex flex-col gap-6">
    <div className="flex justify-between items-center">
-    <h3 className="text-lg font-black text-[#1D3557] flex items-center gap-2">
+    <h3 className="text-lg font-black text-[#121212] flex items-center gap-2">
      <span className="w-8 h-8 rounded-[4px] bg-brand-gold/10 text-brand-gold flex items-center justify-center text-xs">02</span>
      Atmospheric Visuals
     </h3>
@@ -94,7 +94,7 @@ export const BackgroundOrchestration: React.FC<BackgroundOrchestrationProps> = (
              setRefiningAssetIndex(i);
              setIsRefineModalOpen(true);
             }}
-            className="w-9 h-9 bg-white rounded-full flex items-center justify-center text-[#1D3557] hover:bg-brand-gold hover:text-white transition-all shadow-lg text-lg"
+            className="w-9 h-9 bg-white rounded-full flex items-center justify-center text-[#121212] hover:bg-brand-gold hover:text-white transition-all shadow-lg text-lg"
             title="Edit Focal Point"
            >
             <LuPencilLine />
@@ -104,7 +104,7 @@ export const BackgroundOrchestration: React.FC<BackgroundOrchestrationProps> = (
              setReplacingAssetIndex(i);
              setIsBackgroundModalOpen(true);
             }}
-            className="w-9 h-9 bg-white rounded-full flex items-center justify-center text-[#1D3557] hover:bg-brand-gold hover:text-white transition-all shadow-lg text-lg"
+            className="w-9 h-9 bg-white rounded-full flex items-center justify-center text-[#121212] hover:bg-brand-gold hover:text-white transition-all shadow-lg text-lg"
             title="Replace Image"
            >
             <LuArrowLeftRight />
@@ -114,7 +114,7 @@ export const BackgroundOrchestration: React.FC<BackgroundOrchestrationProps> = (
              setRefiningAssetIndex(i);
              setIsRefineModalOpen(true);
             }}
-            className="px-4 py-1.5 bg-white rounded-[4px] text-[10px] font-black uppercase tracking-widest text-[#1D3557] hover:bg-brand-gold hover:text-white transition-all shadow-lg"
+            className="px-4 py-1.5 bg-white rounded-[4px] text-[10px] font-black uppercase tracking-widest text-[#121212] hover:bg-brand-gold hover:text-white transition-all shadow-lg"
            >
             Edit Visual
            </button>

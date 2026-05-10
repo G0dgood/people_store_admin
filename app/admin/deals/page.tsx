@@ -5,6 +5,7 @@ import { Button } from "../../components/Button";
 import { EmptyState } from "../../components/Admin/EmptyState";
 import { UpdateDealsTimerModal } from "../../components/Admin/UpdateDealsTimerModal";
 import { CreateOfferModal } from "../../components/Admin/CreateOfferModal";
+import { Pagination } from "../../components/Admin/Pagination";
 import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import {
   HiOutlinePlusCircle,
@@ -31,18 +32,24 @@ import { Tooltip } from "@/app/components/Tooltip";
 import { HiArrowPath } from "react-icons/hi2";
 
 export default function DealsPage() {
-  const { data: timerResponse, isLoading: isLoadingTimer, refetch: refetchTimer, isFetching: isFetchingTimer } = useGetTimerQuery();
-  const { data: dealsResponse, isLoading: isLoadingDeals, refetch: refetchDeals, isFetching: isFetchingDeals } = useGetDealsQuery();
-  const { data: statsResponse, isLoading: isLoadingStats, refetch: refetchStats, isFetching: isFetchingStats } = useGetDealStatsQuery();
-  const [updateTimer, { isLoading: isUpdatingTimer }] = useUpdateTimerMutation();
-  const [deleteOffer, { isLoading: isDeletingOffer }] = useDeleteOfferMutation();
-  const { on, off } = useSocket();
-
   const [isTimerModalOpen, setIsTimerModalOpen] = useState(false);
   const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [offerToDelete, setOfferToDelete] = useState<any>(null);
   const [offerToEdit, setOfferToEdit] = useState<any>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const { data: timerResponse, isLoading: isLoadingTimer, refetch: refetchTimer, isFetching: isFetchingTimer } = useGetTimerQuery();
+  const { data: dealsResponse, isLoading: isLoadingDeals, refetch: refetchDeals, isFetching: isFetchingDeals } = useGetDealsQuery({
+    page: currentPage,
+    limit: rowsPerPage
+  });
+  const { data: statsResponse, isLoading: isLoadingStats, refetch: refetchStats, isFetching: isFetchingStats } = useGetDealStatsQuery();
+  const [updateTimer, { isLoading: isUpdatingTimer }] = useUpdateTimerMutation();
+  const [deleteOffer, { isLoading: isDeletingOffer }] = useDeleteOfferMutation();
+  const { on, off } = useSocket();
+
 
   const timerValues = timerResponse?.data?.timer || {
     days: "00",
@@ -53,7 +60,8 @@ export default function DealsPage() {
   };
 
   const isRunning = timerValues.isRunning;
-  const offers = dealsResponse?.data || [];
+  const offers = dealsResponse?.data?.deals || [];
+  const pagination = dealsResponse?.data?.pagination;
   const dealStats = statsResponse?.data;
 
   // Real-time timer sync
@@ -170,7 +178,7 @@ export default function DealsPage() {
       {/* Header Area */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-6 border border-[#1C1C1C1A] rounded-[6px]">
         <div className="flex flex-col gap-1">
-          <h2 className="text-xl font-black text-[#1D3557]">Offer Countdown Management</h2>
+          <h2 className="text-xl font-black text-[#121212]">Offer Countdown Management</h2>
           <p className="text-xs text-gray-400 font-bold">Configure the global countdown timer for your active deals.</p>
         </div>
         <div className="flex flex-col md:flex-row justify-end items-center gap-3">
@@ -208,7 +216,7 @@ export default function DealsPage() {
               <RiTimerLine size={24} />
             </div>
             <div className="flex flex-col">
-              <span className="text-sm font-black text-[#1D3557]">Current Global Timer</span>
+              <span className="text-sm font-black text-[#121212]">Current Global Timer</span>
               <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Live on active storefront</span>
             </div>
           </div>
@@ -242,10 +250,10 @@ export default function DealsPage() {
             <div
               key={idx}
               className={`flex flex-col items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-[#F7F7F7] rounded-2xl border transition-all duration-300
-                ${!isRunning ? "border-rose-100 grayscale-[0.5]" : "border-gray-200"}
+                ${!isRunning ? "border-rose-100 -[0.5]" : "border-gray-200"}
                `}
             >
-              <span className={`text-xl md:text-2xl font-black transition-colors ${!isRunning ? "text-rose-400" : "text-[#1D3557]"}`}>{t.value}</span>
+              <span className={`text-xl md:text-2xl font-black transition-colors ${!isRunning ? "text-rose-400" : "text-[#121212]"}`}>{t.value}</span>
               <span className="text-[10px] md:text-[11px] text-gray-400 font-black uppercase tracking-tighter opacity-60">{t.label}</span>
             </div>
           ))}
@@ -265,7 +273,7 @@ export default function DealsPage() {
               {stat.icon}
             </div>
             <div className="flex flex-col">
-              <span className="text-2xl font-black text-[#1D3557]">{stat.value}</span>
+              <span className="text-2xl font-black text-[#121212]">{stat.value}</span>
               <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{stat.title}</span>
             </div>
           </div>
@@ -276,7 +284,7 @@ export default function DealsPage() {
       <div className="bg-white border border-[#1C1C1C1A] rounded-[6px] overflow-hidden mb-8">
         <div className="px-8 py-6 border-b border-gray-50 flex items-center justify-between">
           <div className="flex flex-col">
-            <h3 className="text-sm font-black text-[#1D3557] uppercase tracking-wider">Active Deals Feed</h3>
+            <h3 className="text-sm font-black text-[#121212] uppercase tracking-wider">Active Deals Feed</h3>
             <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Real-time status of current promotions</span>
           </div>
           <Button shape="rounded-sm" variant="primary"
@@ -323,7 +331,7 @@ export default function DealsPage() {
                             <img src={p.productImage} alt="" className="w-full h-full object-contain" />
                           </div>
                           <div className="flex flex-col">
-                            <span className="text-sm font-black text-[#1D3557] group-hover:text-brand-gold transition-colors">{p.name}</span>
+                            <span className="text-sm font-black text-[#121212] group-hover:text-brand-gold transition-colors">{p.name}</span>
                             <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider">{p.category}</span>
                           </div>
                         </div>
@@ -368,6 +376,13 @@ export default function DealsPage() {
             </table>
           </div>
         )}
+        <div className="border-t border-gray-50 bg-white">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={pagination?.pages || 1}
+            onPageChange={setCurrentPage}
+          />
+        </div>
       </div>
 
       <UpdateDealsTimerModal

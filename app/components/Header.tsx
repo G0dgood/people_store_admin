@@ -18,7 +18,9 @@ import { useGetPublicCategoriesQuery } from "@/lib/redux/services/boutiqueApi";
 const Header = () => {
   const { toggleMenu } = useMobileMenu();
   const { data: categoriesResponse } = useGetPublicCategoriesQuery();
-  const categories = categoriesResponse?.data || [];
+  const categories = categoriesResponse?.data && 'categories' in categoriesResponse.data 
+    ? categoriesResponse.data.categories 
+    : (Array.isArray(categoriesResponse?.data) ? categoriesResponse.data : []);
 
   return (
     <header className="w-full bg-white border-b border-gray-200 sticky top-0 z-[80]">

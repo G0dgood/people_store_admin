@@ -89,10 +89,10 @@ export const BrandProductsModal: React.FC<BrandProductsModalProps> = ({
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
                 />
               )}
-              <div className="absolute inset-0 bg-gradient-to-r from-[#1D3557] via-[#1D3557]/80 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-[#121212] via-[#121212]/80 to-transparent" />
             </div>
           ) : (
-            <div className="absolute inset-0 bg-[#1D3557] z-0">
+            <div className="absolute inset-0 bg-[#121212] z-0">
               <div className="absolute top-0 right-0 w-32 h-32 bg-brand-gold/5 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110" />
             </div>
           )}
@@ -122,7 +122,7 @@ export const BrandProductsModal: React.FC<BrandProductsModalProps> = ({
               shape="rounded-sm"
               variant="outline"
               size="sm"
-              className="ml-auto bg-white/5 border-white/10 text-white hover:bg-white hover:text-[#1D3557] transition-all h-9 flex-shrink-0"
+              className="ml-auto bg-white/5 border-white/10 text-white hover:bg-white hover:text-[#121212] transition-all h-9 flex-shrink-0"
               onClick={() => {
                 onClose();
                 router.push(`/admin/products/new?brand=${encodeURIComponent(brand.name)}`);
@@ -166,7 +166,7 @@ export const BrandProductsModal: React.FC<BrandProductsModalProps> = ({
                 </div>
                 <div className="flex flex-col min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-2">
-                    <span className="text-xs font-black text-[#1D3557] truncate group-hover:text-brand-gold transition-colors">{product.name}</span>
+                    <span className="text-xs font-black text-[#121212] truncate group-hover:text-brand-gold transition-colors">{product.name}</span>
                     <button
                       disabled={isUpdating}
                       onClick={(e) => handleRemoveInitiate(e, product)}

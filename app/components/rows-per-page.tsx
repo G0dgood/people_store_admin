@@ -14,7 +14,7 @@ interface RowsPerPageProps {
 export function RowsPerPage({
   value,
   onChange,
-  options = [5, 10, 20, 50, 100, 200, 500],
+  options = [5, 10, 12, 15, 20, 24, 25, 48, 50, 96, 100, 200, 500],
   label = "Rows per page:"
 }: RowsPerPageProps) {
   return (

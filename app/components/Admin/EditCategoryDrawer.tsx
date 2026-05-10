@@ -28,7 +28,9 @@ const SEX_OPTIONS = ["Male", "Female", "Kids", "Unisex"];
 export function EditCategoryDrawer({ isOpen, onClose, category }: EditCategoryDrawerProps) {
  const [updateCategory, { isLoading, isError, error }] = useUpdateCategoryMutation();
  const { data: categoriesData } = useGetCategoriesQuery();
- const categories = categoriesData?.data || [];
+  const categories = categoriesData?.data && 'categories' in categoriesData.data 
+    ? categoriesData.data.categories 
+    : (Array.isArray(categoriesData?.data) ? categoriesData.data : []);
 
  useApiError(isError, error, "Failed to update category");
  const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);

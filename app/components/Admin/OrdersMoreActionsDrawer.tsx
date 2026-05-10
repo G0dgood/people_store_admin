@@ -22,8 +22,8 @@ export function OrdersMoreActionsDrawer({ isOpen, onClose, onBulkPrint }: Orders
       description: "Download current orders as CSV or PDF",
       icon: "cloud_download",
       folder: "icon",
-      color: "text-blue-500",
-      bg: "bg-blue-50",
+      color: "text-brand-gold",
+      bg: "bg-gray-50",
     },
     {
       title: "Bulk Status Update",
@@ -87,7 +87,7 @@ export function OrdersMoreActionsDrawer({ isOpen, onClose, onBulkPrint }: Orders
                 <Icon name={action.icon} folder={action.folder as any} size="sm" />
               </div>
               <div className="flex flex-col">
-                <span className="text-[13px] font-black text-[#1D3557] group-hover:text-brand-gold transition-colors">
+                <span className="text-[13px] font-black text-[#121212] group-hover:text-brand-gold transition-colors">
                   {action.title}
                 </span>
                 <span className="text-[11px] font-bold text-gray-500 mt-1 leading-relaxed">

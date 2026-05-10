@@ -24,7 +24,7 @@ export const TabFilter: React.FC<TabFilterProps> = ({
         <button
           key={tab}
           onClick={() => onChange(tab)}
-          className={`relative px-4 py-1.5 rounded-[6px] text-xs font-bold transition-all duration-300 z-10 cursor-pointer ${fullWidth ? "flex-1" : ""} ${activeTab === tab
+          className={`whitespace-nowrap relative px-4 py-1.5 rounded-[6px] text-xs font-bold transition-all duration-300 z-10 cursor-pointer ${fullWidth ? "flex-1" : ""} ${activeTab === tab
             ? "text-white"
             : "text-gray-400 hover:text-brand-gold"
             }`}
@@ -32,7 +32,7 @@ export const TabFilter: React.FC<TabFilterProps> = ({
           {activeTab === tab && (
             <motion.div
               layoutId={`${id}-bg`}
-              className="absolute inset-0 bg-brand-gold rounded-[6px] shadow-md -z-10"
+              className="absolute inset-0 bg-brand-gold rounded-[6px] shadow-md -z-10 whitespace-nowrap"
               transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
             />
           )}

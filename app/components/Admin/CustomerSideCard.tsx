@@ -29,7 +29,7 @@ export function CustomerSideCard({ customer, onClose }: CustomerSideCardProps) {
                 />
               </div>
               <div>
-                <h4 className="text-xl font-bold text-[#1D3557]">{customer.fullName || customer.name}</h4>
+                <h4 className="text-xl font-bold text-[#121212]">{customer.fullName || customer.name}</h4>
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-medium text-gray-400">{customer.email}</span>
                   <button className="text-gray-300 hover:text-brand-gold transition-colors">
@@ -63,7 +63,7 @@ export function CustomerSideCard({ customer, onClose }: CustomerSideCardProps) {
             {["facebook", "whatsapp", "x", "linkedin", "instagram"].map((social) => (
               <button
                 key={social}
-                className="w-9 h-9 rounded-[6px] flex items-center justify-center border border-gray-50 hover:bg-gray-50 hover:border-brand-gold/20 transition-all text-[#1D3557]"
+                className="w-9 h-9 rounded-[6px] flex items-center justify-center border border-gray-50 hover:bg-gray-50 hover:border-brand-gold/20 transition-all text-[#121212]"
               >
                 <Icon name={social} folder="dashboardIcon" size="sm" />
               </button>
@@ -93,7 +93,7 @@ export function CustomerSideCard({ customer, onClose }: CustomerSideCardProps) {
           </span>
           <div className="grid grid-cols-3 gap-3">
             <div className="p-3 bg-white border border-gray-50 rounded-[6px] flex flex-col items-center gap-1  ">
-              <span className="text-lg font-bold text-[#1D3557]">150</span>
+              <span className="text-lg font-bold text-[#121212]">150</span>
               <span className="text-[9px] font-bold text-gray-400 uppercase">Total order</span>
             </div>
             <div className="p-3 bg-white border border-gray-50 rounded-[6px] flex flex-col items-center gap-1   border-brand-gold/10">

@@ -68,7 +68,7 @@ export default function Drawer({
           >
             {/* Header */}
             <div className="flex items-center justify-between px-8 py-6 border-b border-gray-200 flex-shrink-0">
-              <h3 className="text-[18px] font-black text-[#1D3557]">{title}</h3>
+              <h3 className="text-[18px] font-black text-[#121212]">{title}</h3>
               <div className="flex items-center gap-3">
                 {rightElement && rightElement}
                 <button

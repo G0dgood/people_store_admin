@@ -49,13 +49,16 @@ export const advertApi = baseApi.injectEndpoints({
       transformResponse: (response: ApiResponse<AdvertConfig>) => response.data,
       providesTags: ["Advert"],
     }),
-    getAdverts: builder.query<AdvertConfig[], void>({
-      query: () => "/adverts",
-      transformResponse: (response: ApiResponse<AdvertConfig[]>) => response.data,
+    getAdverts: builder.query<{ adverts: AdvertConfig[], pagination: any }, { page?: number; limit?: number } | void>({
+      query: (params) => ({
+        url: "/adverts",
+        params: params || {},
+      }),
+      transformResponse: (response: ApiResponse<{ adverts: AdvertConfig[], pagination: any }>) => response.data,
       providesTags: (result) =>
-        result
+        result?.adverts
           ? [
-              ...result.map(({ _id }) => ({ type: "Advert" as const, id: _id })),
+              ...result.adverts.map(({ _id }) => ({ type: "Advert" as const, id: _id })),
               { type: "Advert", id: "LIST" },
             ]
           : [{ type: "Advert", id: "LIST" }],

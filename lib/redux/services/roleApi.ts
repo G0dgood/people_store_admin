@@ -40,13 +40,16 @@ interface ApiResponse<T> {
 
 export const roleApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getRoles: builder.query<Role[], void>({
-      query: () => "/roles",
-      transformResponse: (response: ApiResponse<Role[]>) => response.data,
+    getRoles: builder.query<{ roles: Role[], pagination: any }, { page?: number; limit?: number; search?: string } | void>({
+      query: (params) => ({
+        url: "/roles",
+        params: params || {},
+      }),
+      transformResponse: (response: ApiResponse<{ roles: Role[], pagination: any }>) => response.data,
       providesTags: (result) =>
-        result
+        result?.roles
           ? [
-              ...result.map(({ _id }) => ({ type: "Role" as const, id: _id })),
+              ...result.roles.map(({ _id }) => ({ type: "Role" as const, id: _id })),
               { type: "Role", id: "LIST" },
             ]
           : [{ type: "Role", id: "LIST" }],

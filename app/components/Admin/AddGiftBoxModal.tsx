@@ -208,7 +208,7 @@ export function AddGiftBoxModal({ isOpen, onClose, giftBox }: AddGiftBoxModalPro
                             <Image src={product.productImage || "/placeholder.png"} alt={product.name} fill className="object-contain" sizes="40px" />
                           </div>
                           <div className="flex flex-col">
-                            <span className="text-[11px] font-black text-[#1D3557]">{product.name}</span>
+                            <span className="text-[11px] font-black text-[#121212]">{product.name}</span>
                             <span className="text-[9px] font-bold text-gray-400 uppercase">₦{product.price.toLocaleString()}</span>
                           </div>
                         </div>

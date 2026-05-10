@@ -226,7 +226,7 @@ export default function SupportPage() {
                     </td>
                     <td>
                       <div className="flex flex-col">
-                        <span className="text-xs font-bold text-[#1D3557]">{ticket.customerName}</span>
+                        <span className="text-xs font-bold text-[#121212]">{ticket.customerName}</span>
                         <span className="text-[10px] font-bold text-gray-400 italic">{ticket.customerEmail}</span>
                       </div>
                     </td>

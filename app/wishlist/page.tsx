@@ -98,7 +98,7 @@ const WishlistPage = () => {
                     });
                     toast.success("All items moved to cart");
                   }}
-                  className="text-[10px] font-bold uppercase tracking-widest text-brand-gold hover:text-blue-700 transition-colors flex items-center gap-2 cursor-pointer"
+                  className="text-[10px] font-bold uppercase tracking-widest text-brand-gold hover:text-brand-gold-light transition-colors flex items-center gap-2 cursor-pointer"
                 >
                   <Icon name="shopping_cart" size="sm" />
                   Move all to cart

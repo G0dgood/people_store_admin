@@ -1,175 +1,254 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { AnimatePresence } from "framer-motion";
-import { Icon } from "../Icon";
-import { Button } from "../Button/Button";
-import { DropdownMenu, DropdownItem } from "../Dropdown/DropdownMenu";
-
-import { useGetPublicCategoriesQuery } from "@/lib/redux/services/boutiqueApi";
+import { AnimatePresence, motion } from "framer-motion";
+import { HiChevronDown } from "react-icons/hi2";
+import { useGetPublicBrandsQuery, useGetPublicCategoriesQuery } from "@/lib/redux/services/boutiqueApi";
 
 export const SecondaryNavbar: React.FC = () => {
- const [isSecondaryCategoryOpen, setIsSecondaryCategoryOpen] = useState(false);
- const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [activeMenu, setActiveMenu] = useState<string | null>(null);
+  const [triangleLeft, setTriangleLeft] = useState<number>(0);
+  const pathname = usePathname();
+  const navRef = useRef<HTMLDivElement>(null);
+  const buttonRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
 
- const secondaryCategoryRef = useRef<HTMLDivElement>(null);
- const helpRef = useRef<HTMLDivElement>(null);
+  const { data: brandsResponse } = useGetPublicBrandsQuery();
+  const { data: categoriesResponse } = useGetPublicCategoriesQuery();
 
- const pathname = usePathname();
- const { data: categoriesResponse, isLoading: isCategoriesLoading } = useGetPublicCategoriesQuery();
+  const allBrands = brandsResponse?.data && 'brands' in brandsResponse.data 
+    ? brandsResponse.data.brands 
+    : (Array.isArray(brandsResponse?.data) ? brandsResponse.data : []);
 
- const isActive = (path: string) => pathname === path;
+  const allCategories = categoriesResponse?.data && 'categories' in categoriesResponse.data 
+    ? categoriesResponse.data.categories 
+    : (Array.isArray(categoriesResponse?.data) ? categoriesResponse.data : []);
 
- useEffect(() => {
-  const handleClickOutside = (event: MouseEvent) => {
-   const target = event.target as Node;
-   if (secondaryCategoryRef.current && !secondaryCategoryRef.current.contains(target)) {
-    setIsSecondaryCategoryOpen(false);
-   }
-   if (helpRef.current && !helpRef.current.contains(target)) {
-    setIsHelpOpen(false);
-   }
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(event.target as Node)) {
+        setActiveMenu(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleMouseEnter = (label: string) => {
+    const button = buttonRefs.current[label];
+    if (button) {
+      const rect = button.getBoundingClientRect();
+      const navRect = navRef.current?.getBoundingClientRect();
+      if (navRect) {
+        setTriangleLeft(rect.left - navRect.left + rect.width / 2);
+      }
+    }
+    setActiveMenu(label);
   };
-  document.addEventListener("mousedown", handleClickOutside);
-  return () => document.removeEventListener("mousedown", handleClickOutside);
- }, []);
 
- const navLinks = [
-  { label: "Hot deals", href: "/products" },
-  { label: "Gift boxes", href: "/gift-boxes" },
-  { label: "Brands", href: "/brands" },
-  { label: "Blog", href: "/blog" },
- ];
+  const dynamicBrandsGroups = useMemo(() => {
+    if (!allBrands.length) return [];
+    const groups: { title: string; items: string[] }[] = [];
+    const featured = [...allBrands].sort((a, b) => (b.rating || 0) - (a.rating || 0)).slice(0, 6).map(b => b.name);
+    groups.push({ title: "Featured Brands", items: featured });
 
- const helpLinks = [
-  { label: "Help Center", href: "/help" },
-  { label: "Place an order", href: "/help/order" },
-  { label: "Payment options", href: "/help/payment" },
-  { label: "Track an order", href: "/help/tracking" },
-  { label: "Cancel an order", href: "/help/cancel" },
-  { label: "Returns & Refunds", href: "/refund" },
-  { label: "Cookie Preferences", href: "/help/cookies" },
- ];
+    const alphabetGroups = [
+      { title: "A-B", range: /[A-B]/i },
+      { title: "C-E", range: /[C-E]/i },
+      { title: "E-H", range: /[E-H]/i },
+      { title: "I-L", range: /[I-L]/i },
+      { title: "L-M", range: /[L-M]/i },
+      { title: "M-R", range: /[M-R]/i },
+      { title: "R-Z", range: /[R-Z]/i },
+    ];
 
- return (
-  <div className="w-full bg-white border-t border-gray-200 hidden lg:block">
-   <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 h-10 flex items-center justify-between">
-    <div className="flex items-center gap-6 h-full">
-     <div className="relative h-full z-40" ref={secondaryCategoryRef}>
-      <button
-       onClick={(e) => {
-        e.stopPropagation();
-        setIsSecondaryCategoryOpen(prev => !prev);
-       }}
-       className="flex items-center gap-2 h-full font-bold text-sm text-gray-900 border-r border-gray-200 pr-6 hover:text-brand-gold transition-colors outline-none focus:outline-none"
-       aria-expanded={isSecondaryCategoryOpen}
-      >
-       All categories
-       {/* <Icon name="menu" size="sm" /> */}
-      </button>
+    alphabetGroups.forEach(group => {
+      const brandsInGroup = allBrands.filter(b => group.range.test(b.name[0])).map(b => b.name).sort();
+      if (brandsInGroup.length > 0) groups.push({ title: group.title, items: brandsInGroup });
+    });
+    return groups;
+  }, [allBrands]);
+
+  const dynamicSkincareGroups = useMemo(() => {
+    return [
+      {
+        title: "ALL SKINCARE",
+        items: [
+          "All Skincare",
+          "Clarins",
+          "Clinique",
+          "Elizabeth Arden",
+          "Estee Lauder",
+          "Fenty Skin",
+          "Lancome",
+          "Loccitane",
+          "M·A·C"
+        ]
+      },
+      {
+        title: "Face",
+        items: [
+          "Cleansers & Toners",
+          "Moisturizers",
+          "Treatments & Masks",
+          "Sun Care",
+          "Make-Up Remover",
+          "Exfoliators"
+        ]
+      },
+      {
+        title: "Body",
+        items: [
+          "Body Wash",
+          "Body Moisturizer",
+          "Body Exfoliator",
+          "Body Oil",
+          "Specific Care"
+        ]
+      },
+      {
+        title: "Men",
+        items: [
+          "Cleansers & Exfoliators",
+          "Moisturizer",
+          "Shaving Accessories"
+        ]
+      },
+      {
+        title: "Shop by Concern",
+        items: [
+          "Acne/Blemish",
+          "Anti-Aging",
+          "Dark Spots/Pigmentation",
+          "Dryness",
+          "Fine Lines/Wrinkles",
+          "Pores",
+          "Redness",
+          "Dullness/Uneven Texture"
+        ]
+      }
+    ];
+  }, []);
+
+  const perfumeGroups = [
+    {
+      title: "SHOP BY GENDER",
+      items: ["Women's Perfume", "Men's Perfume", "Unisex"]
+    },
+    {
+      title: "SHOP BY SCENT FAMILY",
+      items: ["Floral", "Woody", "Oriental", "Fresh", "Citrus", "Spicy"]
+    },
+    {
+      title: "COLLECTIONS",
+      items: ["Best Sellers", "New Arrivals", "Niche Perfumes", "Designer Classics"]
+    },
+    {
+      title: "GIFTING",
+      items: ["Perfume Gift Sets", "Travel Size", "Discovery Sets"]
+    }
+  ];
+
+  const giftGroups = [
+    {
+      title: "SHOP BY RECIPIENT",
+      items: ["For Her", "For Him", "For Them", "For Kids"]
+    },
+    {
+      title: "SHOP BY OCCASION",
+      items: ["Birthday", "Anniversary", "Wedding", "Corporate", "Thank You"]
+    },
+    {
+      title: "GIFT TYPE",
+      items: ["Gift Boxes", "Gift Cards", "Luxury Sets", "Personalized Gifts"]
+    },
+    {
+      title: "PRICE RANGE",
+      items: ["Under ₦20,000", "₦20,000 - ₦50,000", "₦50,000 - ₦100,000", "Above ₦100,000"]
+    }
+  ];
+
+  const navItems = [
+    { label: "ALL BRANDS", hasDropdown: true, type: "brands" },
+    { label: "PERFUME", hasDropdown: true, type: "category" },
+    { label: "SKINCARE", hasDropdown: true, type: "category" },
+    { label: "GIFT", hasDropdown: true, type: "category" },
+  ];
+
+  const currentItem = navItems.find(item => item.label === activeMenu);
+
+  return (
+    <div className="w-full bg-white border-b border-gray-100 hidden lg:block relative" ref={navRef}>
+      <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16">
+        <nav className="flex items-center gap-10 h-14">
+          {navItems.map((item) => (
+            <div
+              key={item.label}
+              className="h-full relative flex items-center"
+              onMouseEnter={() => handleMouseEnter(item.label)}
+            >
+              <button
+                ref={(el) => { buttonRefs.current[item.label] = el; }}
+                onClick={() => handleMouseEnter(item.label)}
+                className={`relative flex items-center gap-2 text-[11px] font-black tracking-[0.15em] transition-colors outline-none ${activeMenu === item.label ? "text-black" : "text-gray-500 hover:text-black"
+                  }`}
+              >
+                {item.label}
+                {item.hasDropdown && (
+                  <HiChevronDown className={`transition-transform duration-200 text-gray-400 ${activeMenu === item.label ? "rotate-180" : ""}`} size={12} />
+                )}
+              </button>
+            </div>
+          ))}
+        </nav>
+      </div>
 
       <AnimatePresence>
-       {isSecondaryCategoryOpen && (
-        <div className="absolute top-full left-0 pt-2 w-56 z-[100]" onClick={() => setIsSecondaryCategoryOpen(false)}>
-         <DropdownMenu width="100%" className="border border-gray-200">
-          {isCategoriesLoading ? (
-            <div className="p-4 text-center text-[10px] uppercase tracking-widest text-gray-400">Loading...</div>
-          ) : categoriesResponse?.data && categoriesResponse.data.length > 0 ? (
-            categoriesResponse.data.map((cat) => (
-              <DropdownItem 
-                key={cat._id} 
-                label={cat.name} 
-                href={`/products?category=${encodeURIComponent(cat.name)}`} 
+        {activeMenu && currentItem?.hasDropdown && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.2 }}
+            className="absolute top-full left-0 w-full bg-white border-b border-gray-100 shadow-[0_20px_50px_rgba(0,0,0,0.05)] z-[100] pb-16 pt-10"
+            onMouseLeave={() => setActiveMenu(null)}
+          >
+            <div className="absolute -top-2 left-0 w-full overflow-hidden h-2">
+              <div
+                className="absolute top-1 w-4 h-4 bg-white border-l border-t border-gray-100 rotate-45"
+                style={{ left: `${triangleLeft}px`, marginLeft: '-8px' }}
               />
-            ))
-          ) : (
-            <div className="p-4 text-center text-[10px] uppercase tracking-widest text-gray-400">No categories</div>
-          )}
-          <DropdownItem label="Boutique Gift Sets" href="/gift-boxes" />
-         </DropdownMenu>
-        </div>
-       )}
-      </AnimatePresence>
-     </div>
-
-     <div className="flex items-center gap-8 text-[11px] font-bold uppercase tracking-[0.2em]">
-      {navLinks.map((link) => (
-       <Link
-        key={link.label}
-        href={link.href}
-        className={`transition-all duration-300 hover:tracking-[0.3em] ${isActive(link.href) ? "text-brand-gold font-bold" : "text-neutral-900 hover:text-brand-gold"
-         }`}
-       >
-        {link.label}
-       </Link>
-      ))}
-
-
-      <div className="relative h-full" ref={helpRef}>
-       <div
-        className={`flex items-center gap-1 cursor-pointer transition-all duration-300 hover:tracking-[0.3em] h-full ${isHelpOpen ? "text-brand-gold font-bold" : "text-neutral-900 hover:text-brand-gold"}`}
-        onClick={() => setIsHelpOpen(prev => !prev)}
-       >
-        Help
-        <Icon name="expand_more" size="xs" className={`transition-transform duration-200 ${isHelpOpen ? "rotate-180" : ""}`} />
-       </div>
-
-       <AnimatePresence>
-        {isHelpOpen && (
-         <div className="absolute top-full right-0 pt-2 w-64 z-[100]">
-          <DropdownMenu width="100%" className="border border-gray-200 overflow-hidden">
-           <div className="flex flex-col py-2">
-            {helpLinks.map((link) => (
-             <DropdownItem
-              key={link.label}
-              label={link.label}
-              href={link.href}
-              onSelect={() => setIsHelpOpen(false)}
-              className="text-gray-700 hover:text-brand-gold font-semibold text-[11px] uppercase tracking-wide"
-             />
-            ))}
-           </div>
-
-           {/* Contact Section */}
-           <div className="p-4 border-t border-gray-200 bg-gray-50/30 flex flex-col gap-3">
-            <Button
-             className="w-full text-white h-11 active:scale-95 transition-all hover:opacity-90 font-bold uppercase text-[11px] tracking-widest bg-brand-charcoal"
-             iconLeft={<Icon name="chat" size="sm" />}
-            >
-             Live Chat
-            </Button>
-            <Button
-             variant="secondary"
-             className="w-full h-11 border-2 font-bold active:scale-95 transition-all uppercase text-[11px] tracking-widest"
-             style={{ borderColor: "#C5A028", color: "#C5A028" }}
-             iconLeft={<Icon name="social/whatsapp" size="sm" />}
-            >
-             WhatsApp
-            </Button>
-           </div>
-          </DropdownMenu>
-         </div>
+            </div>
+            <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16">
+              <div className={`grid ${activeMenu === "ALL BRANDS" ? "grid-cols-8" : activeMenu === "SKINCARE" ? "grid-cols-5" : "grid-cols-4"} gap-12`}>
+                {(
+                  activeMenu === "ALL BRANDS" ? dynamicBrandsGroups :
+                    activeMenu === "SKINCARE" ? dynamicSkincareGroups :
+                      activeMenu === "PERFUME" ? perfumeGroups :
+                        giftGroups
+                ).map((group) => (
+                  <div key={group.title} className="flex flex-col gap-8">
+                    <h3 className="text-[14px] font-black text-black uppercase tracking-widest">
+                      {group.title}
+                    </h3>
+                    <ul className="flex flex-col gap-4">
+                      {group.items.map((link: string) => (
+                        <li key={link}>
+                          <Link
+                            href={`/products?${activeMenu === "ALL BRANDS" ? "brand" : "category"}=${encodeURIComponent(link)}`}
+                            className="text-[15px] text-gray-500 hover:text-brand-gold transition-colors block font-medium tracking-tight"
+                          >
+                            {link}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
         )}
-       </AnimatePresence>
-      </div>
-     </div>
+      </AnimatePresence>
     </div>
-
-    {/* <div className="flex items-center gap-6 text-sm font-bold text-gray-900">
-     <div className="flex items-center gap-2 cursor-pointer">
-      <span>English, USD</span>
-      <Icon name="expand_more" size="xs" />
-     </div>
-     <div className="flex items-center gap-2 cursor-pointer">
-      <span>Ship to</span>
-      <div className="w-5 h-4 bg-gray-200 rounded-sm overflow-hidden border border-gray-300">
-       <Image src="/country/Property 1=AE.png" alt="Country" width={20} height={16} className="w-full h-full object-cover" />
-      </div>
-      <Icon name="expand_more" size="xs" />
-     </div>
-    </div> */}
-   </div>
-  </div>
- );
+  );
 };

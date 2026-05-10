@@ -32,7 +32,8 @@ const roleColors: Record<string, string> = {
 };
 
 export default function PermissionsAccordion() {
-  const { data: roles = [], isLoading: isLoadingRoles } = useGetRolesQuery();
+  const { data: rolesResponse, isLoading: isLoadingRoles } = useGetRolesQuery();
+  const roles = rolesResponse?.roles || [];
   const { data: modules = [], isLoading: isLoadingModules, refetch: refetchModules, isFetching: isFetchingModules } = useGetModulesQuery();
   const [updateRole, { isLoading: isUpdating }] = useUpdateRoleMutation();
 
@@ -148,7 +149,7 @@ export default function PermissionsAccordion() {
       {/* Action Bar */}
       <div className="flex justify-between items-end gap-6 mb-2">
         <div className="flex flex-col gap-1">
-          <h2 className="text-xl font-black text-[#1D3557]">Administrative Permissions</h2>
+          <h2 className="text-xl font-black text-[#121212]">Administrative Permissions</h2>
           <p className="text-[11px] font-bold text-gray-400 uppercase tracking-widest leading-none">Role Based Governance</p>
         </div>
         <div className="flex gap-3">
@@ -223,7 +224,7 @@ export default function PermissionsAccordion() {
                   <div className="flex items-center gap-4">
                     <div className={`w-3 h-3 rounded-full ${roleColors[role.name] || 'bg-gray-300'}  `} />
                     <div className="flex flex-col gap-0.5">
-                      <span className="text-base font-black text-[#1D3557]">{role.name}</span>
+                      <span className="text-base font-black text-[#121212]">{role.name}</span>
                       <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{role.users || 0} Active Users Assigned</span>
                     </div>
                     {roleHasChanges && (
@@ -276,7 +277,7 @@ export default function PermissionsAccordion() {
                               >
                                 <td className="py-4 pl-8">
                                   <div className="flex flex-col">
-                                    <span className="text-[13px] font-black text-[#1D3557]">{module.label}</span>
+                                    <span className="text-[13px] font-black text-[#121212]">{module.label}</span>
                                     <span className="text-[9px] font-bold text-gray-300 uppercase tracking-widest">{module.category} Sector</span>
                                   </div>
                                 </td>

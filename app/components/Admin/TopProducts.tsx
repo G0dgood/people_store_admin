@@ -37,10 +37,10 @@ export const TopProducts: React.FC<TopProductsProps> = ({
     >
       {/* Instrumentation Backdrop Grid */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
-        style={{ backgroundImage: `radial-gradient(#1D3557 1px, transparent 1px)`, backgroundSize: '20px 20px' }} />
+        style={{ backgroundImage: `radial-gradient(#121212 1px, transparent 1px)`, backgroundSize: '20px 20px' }} />
 
       <div className="flex justify-between items-center relative z-10">
-        <h3 className="text-[14px] font-black text-[#1D3557] uppercase tracking-[0.2em] opacity-80">Top Performers</h3>
+        <h3 className="text-[14px] font-black text-[#121212] uppercase tracking-[0.2em] opacity-80">Top Performers</h3>
         <button
           onClick={() => {
             if (onViewAll) onViewAll();
@@ -83,14 +83,14 @@ export const TopProducts: React.FC<TopProductsProps> = ({
                     <img src={p.productImage} className="w-full h-full object-contain" alt="" />
                   </div>
                   {/* Rank Badge */}
-                  <div className={`absolute -top-2 -left-2 w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-black border   z-10 ${i === 0 ? "bg-[#1D3557] text-white border-[#1D3557]" : "bg-white text-gray-400 border-gray-200"
+                  <div className={`absolute -top-2 -left-2 w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-black border   z-10 ${i === 0 ? "bg-[#121212] text-white border-[#121212]" : "bg-white text-gray-400 border-gray-200"
                     }`}>
                     {i + 1}
                   </div>
                 </div>
 
                 <div className="flex flex-col min-w-0">
-                  <span className="text-[12px] font-black text-[#1D3557] truncate max-w-[150px] transition-colors leading-tight">{p.name}</span>
+                  <span className="text-[12px] font-black text-[#121212] truncate max-w-[150px] transition-colors leading-tight">{p.name}</span>
                   <div className="flex items-center gap-2 mt-1">
                     <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter tabular-nums">ORDERS: {item.totalOrders}</span>
                     <span className={`text-[9px] font-black px-1.5 py-0.5 rounded ${p.stock > 0 ? "text-emerald-500 bg-emerald-50" : "text-rose-500 bg-rose-50"
@@ -102,7 +102,7 @@ export const TopProducts: React.FC<TopProductsProps> = ({
               </div>
 
               <div className="flex flex-col items-end gap-0.5">
-                <span className="text-[13px] font-black text-[#1D3557] tabular-nums">₦{p.price.toLocaleString()}</span>
+                <span className="text-[13px] font-black text-[#121212] tabular-nums">₦{p.price.toLocaleString()}</span>
                 <span className="text-[9px] font-bold text-gray-400 uppercase tracking-widest opacity-60">Price</span>
               </div>
             </motion.div>

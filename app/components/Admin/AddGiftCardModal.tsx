@@ -29,7 +29,7 @@ export function AddGiftCardModal({ isOpen, onClose, giftCard }: AddGiftCardModal
     balance: 0,
     expiryDate: "",
     status: "Active" as GiftCard['status'],
-    color: "#1D3557",
+    color: "#121212",
     recipientName: "",
     recipientEmail: "",
     message: ""
@@ -44,7 +44,7 @@ export function AddGiftCardModal({ isOpen, onClose, giftCard }: AddGiftCardModal
         balance: giftCard.balance,
         expiryDate: giftCard.expiryDate ? new Date(giftCard.expiryDate).toISOString().split('T')[0] : "",
         status: giftCard.status,
-        color: giftCard.color || "#1D3557",
+        color: giftCard.color || "#121212",
         recipientName: giftCard.recipientName || "",
         recipientEmail: giftCard.recipientEmail || "",
         message: giftCard.message || ""
@@ -61,7 +61,7 @@ export function AddGiftCardModal({ isOpen, onClose, giftCard }: AddGiftCardModal
         balance: 0,
         expiryDate: "",
         status: "Active",
-        color: "#1D3557",
+        color: "#121212",
         recipientName: "",
         recipientEmail: "",
         message: ""
@@ -70,7 +70,7 @@ export function AddGiftCardModal({ isOpen, onClose, giftCard }: AddGiftCardModal
   }, [giftCard, isOpen]);
 
   const cardColors = [
-    { name: "Brand Charcoal", value: "#1D3557" },
+    { name: "Brand Charcoal", value: "#121212" },
     { name: "Midnight Purple", value: "#2D1B4D" },
     { name: "Deep Emerald", value: "#0A2F1F" },
     { name: "Ruby Noir", value: "#3D0C11" },

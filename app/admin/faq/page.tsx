@@ -30,11 +30,6 @@ import { Tooltip } from "@/app/components/Tooltip";
 import { HiArrowPath } from "react-icons/hi2";
 
 export default function FAQManagementPage() {
-  const { data: faqsData, isLoading, refetch, isFetching } = useGetFaqsQuery();
-  const [deleteFaq] = useDeleteFaqMutation();
-
-  const faqs = faqsData?.data || [];
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedFAQ, setSelectedFAQ] = useState<any>(null);
@@ -44,14 +39,21 @@ export default function FAQManagementPage() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
 
+  const { data: faqsData, isLoading, refetch, isFetching } = useGetFaqsQuery({
+    page: currentPage,
+    limit: rowsPerPage,
+    search: searchQuery,
+    category: activeTab
+  });
+  const [deleteFaq] = useDeleteFaqMutation();
+
+  const faqs = faqsData?.data?.faqs || [];
+  const pagination = faqsData?.data?.pagination;
+
+
   const categories = ["All Categories", "Orders & Tracking", "Shipping & Delivery", "Payments & Refunds", "Returns & Exchanges"];
 
-  const filteredFAQs = faqs.filter(faq => {
-    const matchesTab = activeTab === "All Categories" || faq.category === activeTab;
-    const matchesSearch = faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      faq.answer.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesTab && matchesSearch;
-  });
+  const filteredFAQs = faqs;
 
   const handleDelete = async () => {
     if (selectedFAQ) {
@@ -168,7 +170,7 @@ export default function FAQManagementPage() {
                       <div className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-brand-gold group-hover:bg-brand-gold/10 transition-colors">
                         <HiOutlineQuestionMarkCircle size={20} />
                       </div>
-                      <span className="text-xs font-bold text-[#1D3557] line-clamp-1 max-w-[300px]">{faq.question}</span>
+                      <span className="text-xs font-bold text-[#121212] line-clamp-1 max-w-[300px]">{faq.question}</span>
                     </div>
                   </td>
                   <td>
@@ -216,7 +218,7 @@ export default function FAQManagementPage() {
         <div  >
           <Pagination
             currentPage={currentPage}
-            totalPages={Math.ceil(filteredFAQs.length / rowsPerPage) || 1}
+            totalPages={pagination?.pages || 1}
             onPageChange={setCurrentPage}
           />
         </div>

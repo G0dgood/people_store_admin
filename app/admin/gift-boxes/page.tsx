@@ -73,7 +73,7 @@ const GiftBoxesPage = () => {
    {/* Header Area */}
    <div className="flex justify-between items-end">
     <div className="flex flex-col">
-     <h1 className="text-2xl font-black text-[#1D3557]">Gift Boxes</h1>
+     <h1 className="text-2xl font-black text-[#121212]">Gift Boxes</h1>
      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-none mt-1">Manage Artisanal Bundles</p>
     </div>
     <div className="flex gap-3">
@@ -182,7 +182,7 @@ const GiftBoxesPage = () => {
           </div>
          </div>
          <div className="p-5">
-          <h3 className="text-sm font-black text-[#1D3557] truncate mb-1 uppercase tracking-tight">{box.name}</h3>
+          <h3 className="text-sm font-black text-[#121212] truncate mb-1 uppercase tracking-tight">{box.name}</h3>
           <div className="flex items-center justify-between mt-3 pt-3 border-t border-gray-50">
            <div className="flex flex-col">
             <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Set Price</span>
@@ -220,7 +220,7 @@ const GiftBoxesPage = () => {
            </td>
            <td className="py-4">
             <div className="flex flex-col">
-             <span className="text-xs font-black text-[#1D3557] group-hover:text-brand-gold transition-colors">{box.name}</span>
+             <span className="text-xs font-black text-[#121212] group-hover:text-brand-gold transition-colors">{box.name}</span>
              <span className="text-[10px] text-gray-400 truncate max-w-[200px]">{box.description}</span>
             </div>
            </td>

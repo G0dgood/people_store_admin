@@ -20,7 +20,9 @@ interface MediaSelectionModalProps {
 
 export function MediaSelectionModal({ isOpen, onClose, onSelect, title = "Select Image", onUploadClick }: MediaSelectionModalProps) {
   const { data: response, isLoading } = useGetMediaItemsQuery();
-  const mediaData = response?.data || [];
+  const mediaData = response?.data && 'media' in response.data 
+    ? response.data.media 
+    : (Array.isArray(response?.data) ? response.data : []);
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredMedia = mediaData.filter(item => {

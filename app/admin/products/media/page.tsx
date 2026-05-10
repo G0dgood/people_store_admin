@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Icon } from "../../../components/Icon";
 import { Button } from "../../../components/Button";
 import { Input } from "../../../components/Form/Inputs";
@@ -9,11 +9,15 @@ import { Pagination } from "../../../components/Admin/Pagination";
 import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import { UploadMediaModal } from "../../../components/Admin/UploadMediaModal";
 import { MediaMoreActionsDrawer } from "../../../components/Admin/MediaMoreActionsDrawer";
+import { RowsPerPage } from "@/app/components/rows-per-page";
 import { EditMediaDrawer } from "../../../components/Admin/EditMediaDrawer";
 import { MediaPreviewModal } from "../../../components/Admin/MediaPreviewModal";
 import { useGetMediaItemsQuery, useDeleteMediaMutation, MediaItem } from "@/lib/redux/services/mediaApi";
+import { useGetCategoriesQuery } from "@/lib/redux/services/categoryApi";
+import { useGetBrandsQuery } from "@/lib/redux/services/brandApi";
+import { Select } from "../../../components/Form/Select";
 import { toast } from "sonner";
-import { SVGLoaderFetch, NoRecordFound } from "@/app/components/Options";
+import { NoRecordFound } from "@/app/components/Options";
 import { useEffect } from "react";
 import { Tooltip } from "@/app/components/Tooltip";
 import { useApiError } from "@/app/hooks/useApiError";
@@ -23,49 +27,74 @@ import { MediaSkeleton } from "@/app/components/Admin/MediaSkeleton";
 // Media items are now fetched via useGetMediaItemsQuery
 
 export default function ProductMediaListing() {
-  const { data: response, isLoading, refetch, isFetching } = useGetMediaItemsQuery();
-  const mediaData = response?.data || [];
-
-  const [deleteMedia, { isLoading: isDeleting, isError, error }] = useDeleteMediaMutation();
-  useApiError(isError, error, "Failed to delete media");
-
   const [activeTab, setActiveTab] = useState("All media");
+  const [selectedCategory, setSelectedCategory] = useState("All Categories");
+  const [selectedBrand, setSelectedBrand] = useState("All Brands");
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage] = useState(12);
+  const [rowsPerPage, setRowsPerPage] = useState(12);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [viewType, setViewType] = useState<"grid" | "list">("grid");
+  
   const [isMoreActionsOpen, setIsMoreActionsOpen] = useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [mediaToDelete, setMediaToDelete] = useState<MediaItem | null>(null);
   const [isPurgeConfirmOpen, setIsPurgeConfirmOpen] = useState(false);
-  const [viewType, setViewType] = useState<"grid" | "list">("grid");
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
   const [mediaToEdit, setMediaToEdit] = useState<MediaItem | null>(null);
   const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
   const [mediaToPreview, setMediaToPreview] = useState<MediaItem | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredMedia = mediaData.filter(item => {
-    // Tab Filter
-    const matchesTab = activeTab === "All media" ||
-      (activeTab === "Images" && item.type === "image") ||
-      (activeTab === "Videos" && item.type === "video");
+  const { data: categoriesResponse } = useGetCategoriesQuery();
+  const { data: brandsResponse } = useGetBrandsQuery({ limit: 100 });
 
-    // Search Filter
-    const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
-
-    return matchesTab && matchesSearch;
+  const { data: response, isLoading, refetch, isFetching } = useGetMediaItemsQuery({
+    page: currentPage,
+    limit: rowsPerPage,
+    search: searchQuery || undefined,
+    type: activeTab === "All media" ? undefined : (activeTab === "Images" ? "image" : "video"),
+    category: selectedCategory === "All Categories" ? undefined : selectedCategory,
+    brand: selectedBrand === "All Brands" ? undefined : selectedBrand
   });
 
-  // Pagination Logic
-  const totalItems = filteredMedia.length;
-  const totalPages = Math.ceil(totalItems / rowsPerPage) || 1;
-  const startIndex = (currentPage - 1) * rowsPerPage;
-  const paginatedMedia = filteredMedia.slice(startIndex, startIndex + rowsPerPage);
+  const [deleteMedia, { isLoading: isDeleting, isError, error }] = useDeleteMediaMutation();
+  useApiError(isError, error, "Failed to delete media");
+
+  const mediaData = response?.data && 'media' in response.data ? response.data.media : (Array.isArray(response?.data) ? response.data : []);
+  const pagination = response?.data && 'pagination' in response.data ? response.data.pagination : undefined;
+
+  const categoryOptions = useMemo(() => {
+    const categories = categoriesResponse?.data && 'categories' in categoriesResponse.data 
+      ? categoriesResponse.data.categories 
+      : (Array.isArray(categoriesResponse?.data) ? categoriesResponse.data : []);
+
+    return [
+      { value: "All Categories", label: "All Categories" },
+      ...categories.map(c => ({ value: c._id, label: c.name }))
+    ];
+  }, [categoriesResponse]);
+
+  const brandOptions = useMemo(() => {
+    const brands = brandsResponse?.data && 'brands' in brandsResponse.data 
+      ? brandsResponse.data.brands 
+      : (Array.isArray(brandsResponse?.data) ? brandsResponse.data : []);
+
+    return [
+      { value: "All Brands", label: "All Brands" },
+      ...brands.map(b => ({ value: b._id, label: b.name }))
+    ];
+  }, [brandsResponse]);
+
+  // The API now handles filtering and pagination from the backend
+  const filteredMedia = mediaData;
+  const paginatedMedia = mediaData;
+  const totalItems = pagination?.total || mediaData.length;
+  const totalPages = pagination?.pages || Math.ceil(totalItems / rowsPerPage) || 1;
 
   // Sync pagination reset on filter change
   useEffect(() => {
     setCurrentPage(1);
-  }, [activeTab, searchQuery]);
+  }, [activeTab, searchQuery, rowsPerPage, selectedCategory, selectedBrand]);
 
   const handleDelete = async () => {
     if (!mediaToDelete) return;
@@ -113,11 +142,33 @@ export default function ProductMediaListing() {
       <div className="bg-white rounded-[6px] border border-gray-200   overflow-hidden flex flex-col">
         {/* Filter & Control Bar */}
         <div className="p-4 sm:p-6 flex flex-col lg:flex-row gap-6 items-center justify-between border-b border-gray-50">
-          <TabFilter
-            tabs={["All media", "Images", "Videos"]}
-            activeTab={activeTab}
-            onChange={setActiveTab}
-          />
+          <div className="flex flex-col md:flex-row items-center gap-4 flex-1">
+            <TabFilter
+              tabs={["All media", "Images", "Videos"]}
+              activeTab={activeTab}
+              onChange={setActiveTab}
+            />
+
+            <div className="w-full md:w-48">
+              <Select
+                options={categoryOptions}
+                value={selectedCategory}
+                onChange={(val) => setSelectedCategory(val as string)}
+                placeholder="Category"
+                shape="rounded-sm"
+              />
+            </div>
+
+            <div className="w-full md:w-48">
+              <Select
+                options={brandOptions}
+                value={selectedBrand}
+                onChange={(val) => setSelectedBrand(val as string)}
+                placeholder="Brand"
+                shape="rounded-sm"
+              />
+            </div>
+          </div>
 
           <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
             <Input shape="rounded-sm"
@@ -129,6 +180,8 @@ export default function ProductMediaListing() {
               className="bg-white border-gray-200 placeholder:text-gray-400 text-xs font-medium"
               suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
             />
+
+            <RowsPerPage value={rowsPerPage} onChange={setRowsPerPage} />
 
             <div className="flex gap-2">
               <Button shape="rounded-sm" variant="outline"
@@ -159,7 +212,7 @@ export default function ProductMediaListing() {
 
         <div className="p-6 min-h-[400px] flex flex-col">
           {(isLoading || isFetching) ? (
-            <MediaSkeleton viewType={viewType} count={12} />
+            <MediaSkeleton viewType={viewType} count={rowsPerPage} />
           ) : filteredMedia.length === 0 ? (
             <NoRecordFound asTable={false} />
           ) : viewType === "grid" ? (
@@ -178,7 +231,7 @@ export default function ProductMediaListing() {
                     {item.type === "video" && (
                       <div className="absolute inset-0 flex items-center justify-center bg-black/5 group-hover:bg-black/10 transition-colors">
                         <div className="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center  ">
-                          <Icon name="play_circle_filled" folder="icon" size="sm" className="text-[#1D3557] ml-0.5" />
+                          <Icon name="play_circle_filled" folder="icon" size="sm" className="text-[#121212] ml-0.5" />
                         </div>
                       </div>
                     )}
@@ -210,7 +263,7 @@ export default function ProductMediaListing() {
                     </div>
                   </div>
                   <div className="p-4 border-t border-gray-50 bg-white">
-                    <h3 className="text-sm font-bold text-[#1D3557] truncate mb-1" title={item.name}>
+                    <h3 className="text-sm font-bold text-[#121212] truncate mb-1" title={item.name}>
                       {item.name}
                     </h3>
                     <div className="flex items-center justify-between">
@@ -248,13 +301,13 @@ export default function ProductMediaListing() {
                           <img src={item.thumbnailUrl || item.url} alt={item.name} className="w-full h-full object-contain" />
                           {item.type === "video" && (
                             <div className="absolute inset-0 flex items-center justify-center bg-black/5">
-                              <Icon name="play_circle" folder="icon" size="xs" className="text-[#1D3557]" />
+                              <Icon name="play_circle" folder="icon" size="xs" className="text-[#121212]" />
                             </div>
                           )}
                         </div>
                       </td>
                       <td>
-                        <span className="text-sm font-bold text-[#1D3557] truncate max-w-[200px] block group-hover:text-brand-gold transition-colors">
+                        <span className="text-sm font-bold text-[#121212] truncate max-w-[200px] block group-hover:text-brand-gold transition-colors">
                           {item.name}
                         </span>
                       </td>

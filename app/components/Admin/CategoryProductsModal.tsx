@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import Modal from "../Modal/Modal";
 import ModalBody from "../Modal/ModalBody";
 import { useGetProductsQuery, useUpdateProductMutation } from "@/lib/redux/services/productApi";
@@ -11,7 +11,9 @@ import { useApiError } from "../../hooks/useApiError";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { ConfirmationModal } from "../Admin/ConfirmationModal";
-import { HiOutlineEye } from "react-icons/hi2";
+import { ViewProductModal } from "./ViewProductModal";
+import { Select } from "../Form/Select";
+import { ProductGridSkeleton } from "./ProductGridSkeleton";
 
 interface CategoryProductsModalProps {
   isOpen: boolean;
@@ -27,6 +29,8 @@ export const CategoryProductsModal: React.FC<CategoryProductsModalProps> = ({
   const router = useRouter();
   const [isRemoveConfirmOpen, setIsRemoveConfirmOpen] = useState(false);
   const [productToRemove, setProductToRemove] = useState<any>(null);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<any>(null);
 
   // Fetch products filtered by this category
   const { data: productsData, isLoading } = useGetProductsQuery({
@@ -38,6 +42,33 @@ export const CategoryProductsModal: React.FC<CategoryProductsModalProps> = ({
   useApiError(isError, error, "Failed to update product category");
 
   const products = productsData?.data?.products || [];
+
+  const [activeBrandTab, setActiveBrandTab] = useState("All Brands");
+
+  useEffect(() => {
+    if (!isOpen) {
+      setActiveBrandTab("All Brands");
+    }
+  }, [isOpen]);
+
+  const brands = useMemo(() => {
+    const uniqueBrands = new Set(products.map((p: any) => p.brand?.name || p.brand).filter(Boolean));
+    return ["All Brands", ...Array.from(uniqueBrands).sort() as string[]];
+  }, [products]);
+
+  const filteredProducts = useMemo(() => {
+    if (activeBrandTab === "All Brands") return products;
+    return products.filter((p: any) => (p.brand?.name || p.brand) === activeBrandTab);
+  }, [products, activeBrandTab]);
+
+  const brandOptions = useMemo(() => {
+    return brands.map(b => ({ value: b, label: b }));
+  }, [brands]);
+
+  const handleViewProduct = (product: any) => {
+    setSelectedProduct(product);
+    setIsViewModalOpen(true);
+  };
 
   const handleRemoveInitiate = (e: React.MouseEvent, product: any) => {
     e.stopPropagation();
@@ -59,34 +90,34 @@ export const CategoryProductsModal: React.FC<CategoryProductsModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       title={`Products in ${category?.name || "Category"}`}
-      size="xl"
+      size="2xl"
     >
-      <ModalBody className="flex flex-col gap-6 py-6 max-h-[70vh] overflow-y-auto custom-scrollbar">
+      <div className="flex flex-col gap-8 min-h-[600px]">
         {/* Category Header Summary */}
         <div className="relative p-5 rounded-2xl border border-gray-100 shadow-lg overflow-hidden group min-h-[120px] flex items-center">
           {/* Cover Image/Video Background */}
           {category?.coverImage ? (
             <div className="absolute inset-0 z-0">
               {category.coverImage.match(/\.(mp4|webm|ogg)$/i) ? (
-                <video 
-                  src={category.coverImage} 
-                  autoPlay 
-                  loop 
-                  muted 
+                <video
+                  src={category.coverImage}
+                  autoPlay
+                  loop
+                  muted
                   playsInline
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               ) : (
-                <img 
-                  src={category.coverImage} 
-                  alt="" 
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                <img
+                  src={category.coverImage}
+                  alt=""
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               )}
-              <div className="absolute inset-0 bg-gradient-to-r from-[#1D3557] via-[#1D3557]/80 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-[#121212] via-[#121212]/80 to-transparent" />
             </div>
           ) : (
-            <div className="absolute inset-0 bg-[#1D3557] z-0">
+            <div className="absolute inset-0 bg-[#121212] z-0">
               <div className="absolute top-0 right-0 w-32 h-32 bg-brand-gold/5 rounded-full -mr-16 -mt-16 transition-transform group-hover:scale-110" />
             </div>
           )}
@@ -116,7 +147,7 @@ export const CategoryProductsModal: React.FC<CategoryProductsModalProps> = ({
               shape="rounded-sm"
               variant="outline"
               size="sm"
-              className="ml-auto bg-white/5 border-white/10 text-white hover:bg-white hover:text-[#1D3557] transition-all h-9 flex-shrink-0"
+              className="ml-auto bg-white/5 border-white/10 text-white hover:bg-white hover:text-[#121212] transition-all h-9 flex-shrink-0"
               onClick={() => {
                 onClose();
                 router.push(`/admin/products/new?category=${encodeURIComponent(category.name)}`);
@@ -127,27 +158,40 @@ export const CategoryProductsModal: React.FC<CategoryProductsModalProps> = ({
           </div>
         </div>
 
+        {/* Brand Filter */}
+        {!isLoading && products.length > 0 && brands.length > 2 && (
+          <div className="flex items-center gap-3 w-full max-w-xs">
+            <span className="text-[10px] font-black uppercase tracking-widest text-gray-400 whitespace-nowrap">Filter by Brand:</span>
+            <Select
+              options={brandOptions}
+              value={activeBrandTab}
+              onChange={(val) => setActiveBrandTab(val as string)}
+              placeholder="Select Brand"
+              className="flex-1"
+              shape="rounded-sm"
+            />
+          </div>
+        )}
+
         {/* Product Grid */}
         {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[1, 2, 3, 4, 5, 6].map(i => (
-              <div key={i} className="h-24 bg-gray-50 animate-pulse rounded-xl border border-gray-100" />
-            ))}
-          </div>
-        ) : products.length === 0 ? (
+          <ProductGridSkeleton />
+        ) : filteredProducts.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 gap-4 opacity-40">
             <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center">
               <Icon name="fluent-mdl2_product-list" folder="dashboardIcon" size="xl" className="text-gray-300" />
             </div>
-            <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">No products in this category</p>
+            <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">
+              {activeBrandTab === "All Brands" ? "No products in this category" : `No products for ${activeBrandTab} in this category`}
+            </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {products.map((product: any) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {filteredProducts.map((product: any) => (
               <div
                 key={product._id}
                 className="flex items-center gap-4 p-3 bg-white border border-gray-100 rounded-xl hover:border-brand-gold/30 hover:shadow-md transition-all cursor-pointer group"
-                onClick={() => router.push(`/admin/products/edit/${product._id}`)}
+                onClick={() => handleViewProduct(product)}
               >
                 <div className="w-16 h-16 bg-gray-50 rounded-lg overflow-hidden flex-shrink-0 border border-gray-50">
                   <Image
@@ -160,7 +204,7 @@ export const CategoryProductsModal: React.FC<CategoryProductsModalProps> = ({
                 </div>
                 <div className="flex flex-col min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-2">
-                    <span className="text-xs font-black text-[#1D3557] truncate group-hover:text-brand-gold transition-colors">{product.name}</span>
+                    <span className="text-xs font-black text-[#121212] truncate group-hover:text-brand-gold transition-colors">{product.name}</span>
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -184,7 +228,7 @@ export const CategoryProductsModal: React.FC<CategoryProductsModalProps> = ({
             ))}
           </div>
         )}
-      </ModalBody>
+      </div>
 
       <ConfirmationModal
         isOpen={isRemoveConfirmOpen}
@@ -194,6 +238,11 @@ export const CategoryProductsModal: React.FC<CategoryProductsModalProps> = ({
         message={`Products must belong to at least one category. Would you like to edit "${productToRemove?.name}" to change its category?`}
         confirmText="Edit Product"
         type="info"
+      />
+      <ViewProductModal
+        isOpen={isViewModalOpen}
+        onClose={() => setIsViewModalOpen(false)}
+        product={selectedProduct}
       />
     </Modal>
   );

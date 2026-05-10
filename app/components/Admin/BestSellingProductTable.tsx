@@ -14,7 +14,7 @@ export function BestSellingProductTable() {
   return (
     <div className="bg-white p-8 rounded-[6px] border border-gray-200   flex flex-col gap-6">
       <div className="flex justify-between items-center">
-        <h3 className="text-[18px] font-black text-[#1D3557]">Top Performers</h3>
+        <h3 className="text-[18px] font-black text-[#121212]">Top Performers</h3>
         <Button
           shape="rounded-sm"
           iconRight={<Icon name="sort" folder="dashboardIcon" size="sm" />}
@@ -47,19 +47,19 @@ export function BestSellingProductTable() {
                       src={item.productDetails.productImage || "/dashboardImage/Frame 4259.png"}
                       className="w-10 h-10 rounded-[6px] object-contain bg-gray-50 border border-gray-200 p-1"
                     />
-                    <span className="text-[12px] font-black text-[#1D3557]">{item.productDetails.name}</span>
+                    <span className="text-[12px] font-black text-[#121212]">{item.productDetails.name}</span>
                   </div>
                 </td>
                 <td className="text-[12px] font-bold text-gray-500">{item.totalOrders}</td>
                 <td>
                   <div className="flex items-center gap-2">
                     <span className={`w-2 h-2 rounded-full ${item.productDetails.stock > 0 ? "bg-[#4CAF50]" : "bg-red-500"}`}></span>
-                    <span className="text-[12px] font-bold text-[#1D3557]">
+                    <span className="text-[12px] font-bold text-[#121212]">
                       {item.productDetails.stock > 0 ? "Stock" : "Stock out"}
                     </span>
                   </div>
                 </td>
-                <td className="text-[12px] font-black text-[#1D3557] text-right">₦{item.productDetails.price.toLocaleString()}</td>
+                <td className="text-[12px] font-black text-[#121212] text-right">₦{item.productDetails.price.toLocaleString()}</td>
               </tr>
             ))}
           </tbody>

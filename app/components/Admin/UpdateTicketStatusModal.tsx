@@ -46,7 +46,7 @@ export const UpdateTicketStatusModal: React.FC<UpdateTicketStatusModalProps> = (
                </div>
                <div className="flex flex-col">
                   <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Updating Ticket</span>
-                  <span className="text-sm font-black text-[#1D3557]">{ticket.ticketId}</span>
+                  <span className="text-sm font-black text-[#121212]">{ticket.ticketId}</span>
                </div>
             </div>
 

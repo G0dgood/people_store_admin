@@ -56,7 +56,7 @@ export function CustomerMessageDrawer({ isOpen, onClose, customer }: CustomerMes
             />
           </div>
           <div className="flex flex-col">
-            <span className="text-sm font-black text-[#1D3557]">{customer.fullName}</span>
+            <span className="text-sm font-black text-[#121212]">{customer.fullName}</span>
             <span className="text-[11px] font-bold text-gray-400">{customer.email}</span>
           </div>
           <div className="ml-auto flex items-center gap-2">

@@ -62,7 +62,7 @@ export const AdminProfileDropdown: React.FC = () => {
       )}
      </div>
      <div className="flex flex-col min-w-0">
-      <span className="text-sm font-black text-[#1D3557] truncate leading-tight">
+      <span className="text-sm font-black text-[#121212] truncate leading-tight">
        {user?.fullName || "Bloom & Mist Admin"}
       </span>
       <span className="text-[10px] font-bold text-gray-400 truncate uppercase tracking-widest mt-0.5">
@@ -76,7 +76,7 @@ export const AdminProfileDropdown: React.FC = () => {
      {canAccess("profile", "view") && (
       <button
        onClick={() => router.push("/admin/profile")}
-       className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-brand-gold-light hover:text-brand-gold transition-all group text-[#1D3557]"
+       className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-brand-gold-light hover:text-brand-gold transition-all group text-[#121212]"
       >
        <Icon name="user-profile-circle" folder="dashboardIcon" size="sm" className="text-gray-400 group-hover:text-brand-gold" />
        <span className="text-[13px] font-bold">View Profile</span>
@@ -86,7 +86,7 @@ export const AdminProfileDropdown: React.FC = () => {
      {canAccess("profile", "view") && (
       <button
        onClick={() => router.push("/admin/profile")}
-       className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-brand-gold-light hover:text-brand-gold transition-all group text-[#1D3557]"
+       className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-brand-gold-light hover:text-brand-gold transition-all group text-[#121212]"
       >
        <Icon name="settings" folder="dashboardIcon" size="sm" className="text-gray-400 group-hover:text-brand-gold" />
        <span className="text-[13px] font-bold">Account Settings</span>

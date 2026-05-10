@@ -44,7 +44,7 @@ export function ReviewReplyDrawer({ isOpen, onClose, review }: ReviewReplyDrawer
                      <img src={review.customer.avatar} alt="" className="w-full h-full object-cover" />
                   </div>
                   <div className="flex flex-col">
-                     <span className="text-sm font-black text-[#1D3557]">{review.customer.name}</span>
+                     <span className="text-sm font-black text-[#121212]">{review.customer.name}</span>
                      <div className="flex items-center gap-0.5">
                         {[1, 2, 3, 4, 5].map((star) => (
                            <Icon key={star} name="star" folder="dashboardIcon" size="xs" className={star <= review.rating ? "text-amber-400" : "text-gray-200"} />

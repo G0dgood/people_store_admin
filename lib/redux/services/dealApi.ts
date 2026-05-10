@@ -23,11 +23,14 @@ export interface DealRecord {
 
 export const dealApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-        getDeals: builder.query<ApiResponse<DealRecord[]>, void>({
-            query: () => '/deals/all',
+        getDeals: builder.query<ApiResponse<{ deals: DealRecord[], pagination: any }>, { page?: number; limit?: number } | void>({
+            query: (params) => ({
+                url: '/deals/all',
+                params: params || {},
+            }),
             providesTags: (result) => 
-                result ? [
-                    ...result.data.map(({ _id }) => ({ type: 'Deal' as const, id: _id })),
+                result?.data?.deals ? [
+                    ...result.data.deals.map(({ _id }) => ({ type: 'Deal' as const, id: _id })),
                     { type: 'Deal', id: 'LIST' }
                 ] : [{ type: 'Deal', id: 'LIST' }],
         }),

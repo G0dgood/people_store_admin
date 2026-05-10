@@ -216,7 +216,7 @@ export function SupportChatDrawer({ isOpen, onClose, ticketId }: SupportChatDraw
         <div className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full"></div>
        </div>
        <div className="flex flex-col">
-        <span className="text-sm font-black text-[#1D3557]">{ticket?.customerName}</span>
+        <span className="text-sm font-black text-[#121212]">{ticket?.customerName}</span>
         <div className="flex items-center gap-1.5">
          <div className="flex items-center gap-1 text-emerald-500">
           <HiCheckBadge size={14} />
@@ -236,7 +236,7 @@ export function SupportChatDrawer({ isOpen, onClose, ticketId }: SupportChatDraw
           <div className={`p-4 rounded-2xl text-xs font-bold leading-relaxed   flex flex-col gap-3
                                  ${msg.sender === "Admin"
             ? "bg-brand-gold text-white rounded-tr-none"
-            : "bg-gray-100 text-[#1D3557] rounded-tl-none"}
+            : "bg-gray-100 text-[#121212] rounded-tl-none"}
                               `}>
            {msg.message}
            {msg.attachments && msg.attachments.length > 0 && (
@@ -297,7 +297,7 @@ export function SupportChatDrawer({ isOpen, onClose, ticketId }: SupportChatDraw
          onChange={(e) => setMessage(e.target.value)}
          onKeyDown={handleKeyPress}
          placeholder="Type your message..."
-         className="flex-1 bg-transparent border-none outline-none text-xs font-bold text-[#1D3557] placeholder:text-gray-400 py-2"
+         className="flex-1 bg-transparent border-none outline-none text-xs font-bold text-[#121212] placeholder:text-gray-400 py-2"
         />
         <button
          onClick={handleSendMessage}

@@ -24,12 +24,12 @@ import { usePrivilege } from "@/lib/contexts/PrivilegeContext";
 import { Tooltip } from "@/app/components/Tooltip";
 
 const roleColors: Record<string, string> = {
- "Super Admin": "text-[#1D3557] bg-gray-100 border-gray-200",
- "SUPER_ADMIN": "text-[#1D3557] bg-gray-100 border-gray-200",
+ "Super Admin": "text-[#121212] bg-gray-100 border-gray-200",
+ "SUPER_ADMIN": "text-[#121212] bg-gray-100 border-gray-200",
  "Editor": "text-brand-gold bg-brand-gold/10 border-brand-gold/10",
  "Order Manager": "text-emerald-600 bg-emerald-50 border-emerald-100",
  "Support": "text-amber-600 bg-amber-50 border-amber-100",
- "ADMIN": "text-[#1D3557] bg-gray-100 border-gray-200",
+ "ADMIN": "text-[#121212] bg-gray-100 border-gray-200",
 };
 
 const statusStyles: Record<string, string> = {
@@ -235,7 +235,7 @@ export default function UsersManagement() {
              <img src={user.avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.fullName)}&background=1D3557&color=fff`} alt={user.fullName} className="w-full h-full object-cover" />
             </div>
             <div className="flex flex-col min-w-0">
-             <span className="text-sm font-black text-[#1D3557] group-hover:text-brand-gold transition-colors truncate">{user.fullName}</span>
+             <span className="text-sm font-black text-[#121212] group-hover:text-brand-gold transition-colors truncate">{user.fullName}</span>
              <span className="text-[10px] font-medium text-gray-400 truncate tracking-tight">{user.email}</span>
             </div>
            </div>
@@ -250,7 +250,7 @@ export default function UsersManagement() {
           </td>
           <td>
            <div className="flex flex-col gap-0.5">
-            <span className="text-xs font-black text-[#1D3557]">
+            <span className="text-xs font-black text-[#121212]">
              {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "N/A"}
             </span>
             <span className="text-[9px] font-bold text-gray-400 uppercase tracking-tighter opacity-70">Joined System</span>
@@ -268,7 +268,7 @@ export default function UsersManagement() {
            <div className="flex justify-end gap-3 transition-all duration-300">
             <Tooltip text="Staff Profile & Settings">
              <Button shape="rounded-sm" variant="outline"
-              className="!p-1.5 text-gray-400 hover:text-white hover:bg-[#1D3557] hover:border-[#1D3557] border-gray-200 transition-all font-bold"
+              className="!p-1.5 text-gray-400 hover:text-white hover:bg-[#121212] hover:border-[#121212] border-gray-200 transition-all font-bold"
               onClick={() => {
                setSelectedStaff(user);
                setIsStaffDetailOpen(true);

@@ -42,7 +42,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       secondary: "bg-white text-brand-gold border border-brand-gold hover:bg-brand-gold hover:text-white active:scale-[0.98] focus:ring-brand-gold/50 transition-all",
       emerald: "bg-emerald-500 text-white hover:bg-emerald-600 active:scale-[0.98] focus:ring-emerald-500/50 border border-transparent",
       rose: "bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white active:scale-[0.98] focus:ring-rose-500/50 border border-transparent transition-all",
-      outline: "bg-white text-[#1D3557] border border-gray-200 hover:bg-brand-gold hover:text-white hover:border-brand-gold active:scale-[0.98] focus:ring-brand-gold/50 transition-all duration-300",
+      outline: "bg-white text-black border border-gray-200 hover:bg-brand-gold hover:text-white hover:border-brand-gold active:scale-[0.98] focus:ring-brand-gold/50 transition-all duration-300",
       ghost: "bg-transparent text-brand-gold hover:bg-brand-gold/10 active:scale-[0.98] focus:ring-brand-gold/50",
     };
 

@@ -223,7 +223,7 @@ export default function ReviewListing() {
                         <img src={review.customer?.avatar || "/dashboardImage/Fashion.png"} alt={review.customer?.name} className="w-full h-full object-cover" />
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-sm font-bold text-[#1D3557] leading-tight">{review.customer?.fullName}</span>
+                        <span className="text-sm font-bold text-[#121212] leading-tight">{review.customer?.fullName}</span>
                         <span className="text-[10px] font-medium text-gray-400 mt-0.5">{review.customer?.email}</span>
                       </div>
                     </div>
@@ -241,7 +241,7 @@ export default function ReviewListing() {
                           />
                         ))}
                       </div>
-                      <p className="text-xs font-medium text-[#1D3557] leading-relaxed line-clamp-2 italic tracking-tight opacity-80">
+                      <p className="text-xs font-medium text-[#121212] leading-relaxed line-clamp-2 italic tracking-tight opacity-80">
                         "{review.comment}"
                       </p>
                     </div>
@@ -378,7 +378,7 @@ export default function ReviewListing() {
             <Icon name="task_alt" folder="icon" size="lg" className="w-10 h-10" />
           </div>
           <div className="flex flex-col gap-2">
-            <h2 className="text-xl font-black text-[#1D3557]">Export Started!</h2>
+            <h2 className="text-xl font-black text-[#121212]">Export Started!</h2>
             <p className="text-sm font-medium text-gray-400 max-w-[280px] mx-auto leading-relaxed">
               Your feedback report is being generated and will be downloaded automatically in a few moments.
             </p>

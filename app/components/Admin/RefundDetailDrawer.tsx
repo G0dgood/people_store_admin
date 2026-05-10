@@ -36,12 +36,12 @@ export function RefundDetailDrawer({ isOpen, onClose, refund, onUpdateStatus }: 
        <head>
           <title>Refund Receipt - ${refund.refundId}</title>
           <style>
-             body { font-family: 'Inter', sans-serif; padding: 40px; color: #1D3557; line-height: 1.6; }
+             body { font-family: 'Inter', sans-serif; padding: 40px; color: #121212; line-height: 1.6; }
              .header { display: flex; justify-content: space-between; border-bottom: 2px solid #f3f4f6; padding-bottom: 20px; margin-bottom: 40px; }
              .logo { font-size: 24px; font-weight: 900; color: #C5A028; }
              .receipt-title { font-size: 28px; font-weight: 900; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; }
              .amount-card { background: #f8fafc; padding: 30px; border-radius: 12px; text-align: center; margin-bottom: 40px; }
-             .amount { font-size: 36px; font-weight: 900; color: #1D3557; }
+             .amount { font-size: 36px; font-weight: 900; color: #121212; }
              .section-title { font-size: 10px; font-weight: 900; color: #9ca3af; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
              .value { font-size: 14px; font-weight: 700; }
              .footer { margin-top: 60px; text-align: center; font-size: 12px; color: #9ca3af; border-top: 1px solid #f3f4f6; padding-top: 20px; }
@@ -129,7 +129,7 @@ export function RefundDetailDrawer({ isOpen, onClose, refund, onUpdateStatus }: 
                <div className="flex justify-between items-start">
                   <div className="flex flex-col gap-1">
                      <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Refund ID</span>
-                     <span className="text-sm font-black text-[#1D3557]">{refund.refundId}</span>
+                     <span className="text-sm font-black text-[#121212]">{refund.refundId}</span>
                   </div>
                   <div className={`px-3 py-1 rounded-full ${currentStatus.bg} text-white text-[10px] font-black uppercase tracking-wider  `}>
                      {refund.status}
@@ -137,7 +137,7 @@ export function RefundDetailDrawer({ isOpen, onClose, refund, onUpdateStatus }: 
                </div>
                <div className="flex flex-col">
                   <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Refund Amount</span>
-                  <span className="text-3xl font-black text-[#1D3557] tracking-tight">₦{refund.amount?.toLocaleString()}</span>
+                  <span className="text-3xl font-black text-[#121212] tracking-tight">₦{refund.amount?.toLocaleString()}</span>
                </div>
             </div>
 
@@ -149,7 +149,7 @@ export function RefundDetailDrawer({ isOpen, onClose, refund, onUpdateStatus }: 
                      <Icon name="Payment Card" folder="dashboardIcon" size="md" />
                   </div>
                   <div className="flex-1 flex flex-col gap-0.5">
-                     <span className="text-[13px] font-black text-[#1D3557]">Order {refund.order?.orderId || "N/A"}</span>
+                     <span className="text-[13px] font-black text-[#121212]">Order {refund.order?.orderId || "N/A"}</span>
                      <span className="text-[11px] font-bold text-gray-400">Total: ₦{refund.order?.totalAmount?.toLocaleString() || "N/A"}</span>
                   </div>
                </div>
@@ -163,7 +163,7 @@ export function RefundDetailDrawer({ isOpen, onClose, refund, onUpdateStatus }: 
                      <img src={"https://ui-avatars.com/api/?name=" + (refund.customer?.fullName || "Guest")} alt="" className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1 flex flex-col gap-0.5">
-                     <span className="text-[13px] font-black text-[#1D3557]">{refund.customer?.fullName || "Guest"}</span>
+                     <span className="text-[13px] font-black text-[#121212]">{refund.customer?.fullName || "Guest"}</span>
                      <span className="text-[11px] font-bold text-gray-400 text-brand-gold">{refund.customer?.email}</span>
                   </div>
                   <button className="p-2 text-gray-400 hover:text-brand-gold transition-colors">
@@ -178,12 +178,12 @@ export function RefundDetailDrawer({ isOpen, onClose, refund, onUpdateStatus }: 
                <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 flex flex-col gap-3">
                   <div className="flex flex-col gap-1">
                      <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{refund.reason}</span>
-                     <p className="text-xs font-bold text-[#1D3557] leading-relaxed">{refund.description}</p>
+                     <p className="text-xs font-bold text-[#121212] leading-relaxed">{refund.description}</p>
                   </div>
                   {refund.adminNote && (
                      <div className="pt-3 border-t border-gray-200">
                         <span className="text-[10px] font-black text-brand-gold uppercase tracking-widest block mb-1">Admin Resolution Note</span>
-                        <p className="text-xs font-bold text-[#1D3557] italic">"{refund.adminNote}"</p>
+                        <p className="text-xs font-bold text-[#121212] italic">"{refund.adminNote}"</p>
                      </div>
                   )}
                </div>
@@ -221,7 +221,7 @@ export function RefundDetailDrawer({ isOpen, onClose, refund, onUpdateStatus }: 
                               </div>
 
                               <div className="flex justify-between items-center">
-                                 <span className="text-[12px] font-black text-[#1D3557]">
+                                 <span className="text-[12px] font-black text-[#121212]">
                                     {item.status === "Pending" && index === refund.history.length - 1 ? "Request Submitted" : `Refund ${item.status}`}
                                  </span>
                                  <span className="text-[10px] font-bold text-gray-400">
@@ -238,7 +238,7 @@ export function RefundDetailDrawer({ isOpen, onClose, refund, onUpdateStatus }: 
                               {item.adminNote && (
                                  <div className="mt-1 p-2 rounded-lg bg-gray-50 border border-gray-100">
                                     <span className="text-[9px] font-black text-gray-400 uppercase tracking-wider block mb-1">Admin Note</span>
-                                    <p className="text-[10px] font-bold text-[#1D3557] italic">"{item.adminNote}"</p>
+                                    <p className="text-[10px] font-bold text-[#121212] italic">"{item.adminNote}"</p>
                                  </div>
                               )}
                            </div>
@@ -249,7 +249,7 @@ export function RefundDetailDrawer({ isOpen, onClose, refund, onUpdateStatus }: 
                         {refund.status !== "Pending" && (
                            <div className="relative flex flex-col gap-1">
                               <div className="absolute -left-[22px] top-1 w-3 h-3 rounded-full bg-brand-gold border-2 border-white ring-4 ring-brand-gold/10"></div>
-                              <span className="text-[12px] font-black text-[#1D3557]">Refund {refund.status}</span>
+                              <span className="text-[12px] font-black text-[#121212]">Refund {refund.status}</span>
                               <span className="text-[10px] font-bold text-gray-400">
                                  {refund.processedAt ? new Date(refund.processedAt).toLocaleString() : "Updated just now"}
                               </span>
@@ -257,7 +257,7 @@ export function RefundDetailDrawer({ isOpen, onClose, refund, onUpdateStatus }: 
                         )}
                         <div className="relative flex flex-col gap-1 opacity-60">
                            <div className="absolute -left-[22px] top-1 w-3 h-3 rounded-full bg-gray-200 border-2 border-white"></div>
-                           <span className="text-[12px] font-black text-[#1D3557]">Request Submitted</span>
+                           <span className="text-[12px] font-black text-[#121212]">Request Submitted</span>
                            <span className="text-[10px] font-bold text-gray-400">{new Date(refund.createdAt).toLocaleString()}</span>
                         </div>
                      </>

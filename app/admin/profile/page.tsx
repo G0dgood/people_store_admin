@@ -193,7 +193,7 @@ export default function ProfilePage() {
               )}
             </div>
 
-            <h2 className="text-base font-bold text-[#1D3557]">{user?.fullName || "Administrative Account"}</h2>
+            <h2 className="text-base font-bold text-[#121212]">{user?.fullName || "Administrative Account"}</h2>
             <div className="flex items-center gap-2 text-xs font-medium text-gray-400 mb-6">
               <span>{user?.email || "No email provided"}</span>
               <button className="text-brand-gold hover:scale-110 transition-transform">
@@ -217,7 +217,7 @@ export default function ProfilePage() {
                   <span className="text-[10px] text-gray-400 font-bold decoration-gray-200 underline underline-offset-2">Linked</span>
                 </div>
               </div>
-              <button className="mt-2 w-fit mx-auto flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-[6px] text-[10px] font-bold text-[#1D3557] hover:bg-gray-50 transition-all  ">
+              <button className="mt-2 w-fit mx-auto flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-[6px] text-[10px] font-bold text-[#121212] hover:bg-gray-50 transition-all  ">
                 <Icon name="circle-plus" folder="dashboardIcon" size="xs" />
                 Social media
               </button>
@@ -231,7 +231,7 @@ export default function ProfilePage() {
                 <div className="w-8 h-8 rounded-[6px] bg-brand-gold/10 flex items-center justify-center">
                   <HiLockClosed className="text-brand-gold w-3 h-3" />
                 </div>
-                <h3 className="text-sm font-bold text-[#1D3557]">Change Password</h3>
+                <h3 className="text-sm font-bold text-[#121212]">Change Password</h3>
               </div>
               <button
                 className="text-[10px] font-bold text-brand-gold underline underline-offset-2 hover:text-brand-gold/80 transition-colors"
@@ -324,7 +324,7 @@ export default function ProfilePage() {
         <div className="xl:col-span-8">
           <div className="bg-white rounded-[6px] border border-gray-200   p-8 flex flex-col gap-8 relative">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-sm font-bold text-[#1D3557]">Profile Update</h3>
+              <h3 className="text-sm font-bold text-[#121212]">Profile Update</h3>
               <button
                 className={`flex items-center gap-2 px-4 py-2 border rounded-[6px] text-xs font-bold transition-all  
                             ${isEditMode
@@ -383,7 +383,7 @@ export default function ProfilePage() {
             {/* Update Form */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
               <div className="md:col-span-2 flex flex-col gap-2">
-                <label className="text-xs font-bold text-[#1D3557]">Full Name</label>
+                <label className="text-xs font-bold text-[#121212]">Full Name</label>
                 <Input shape="rounded-sm"
                   type="text"
                   name="fullName"
@@ -395,7 +395,7 @@ export default function ProfilePage() {
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="text-xs font-bold text-[#1D3557]">Phone Number</label>
+                <label className="text-xs font-bold text-[#121212]">Phone Number</label>
                 <Input shape="rounded-sm"
                   type="text"
                   name="phoneNumber"
@@ -408,7 +408,7 @@ export default function ProfilePage() {
               </div>
 
               <div className="flex flex-col gap-2">
-                <label className="text-xs font-bold text-[#1D3557]">E-mail</label>
+                <label className="text-xs font-bold text-[#121212]">E-mail</label>
                 <Input shape="rounded-sm"
                   type="email"
                   name="email"
@@ -419,7 +419,7 @@ export default function ProfilePage() {
                 />
               </div>
               <div className="flex flex-col gap-2">
-                <label className="text-xs font-bold text-[#1D3557]">Date of Birth</label>
+                <label className="text-xs font-bold text-[#121212]">Date of Birth</label>
                 <Input shape="rounded-sm"
                   type="date"
                   name="dob"
@@ -431,7 +431,7 @@ export default function ProfilePage() {
               </div>
 
               <div className="md:col-span-1 flex flex-col gap-2">
-                <label className="text-xs font-bold text-[#1D3557]">Location</label>
+                <label className="text-xs font-bold text-[#121212]">Location</label>
                 <Input shape="rounded-sm"
                   type="text"
                   name="location"
@@ -444,7 +444,7 @@ export default function ProfilePage() {
               </div>
 
               <div className="md:col-span-2 flex flex-col gap-2">
-                <label className="text-xs font-bold text-[#1D3557]">Biography</label>
+                <label className="text-xs font-bold text-[#121212]">Biography</label>
                 <div className="relative group">
                   <Textarea shape="rounded-sm"
                     rows={4}
@@ -484,7 +484,7 @@ export default function ProfilePage() {
             <Icon name="verified" folder="icon" size="lg" className="w-10 h-10" />
           </div>
           <div className="flex flex-col gap-2">
-            <h2 className="text-xl font-black text-[#1D3557]">Update Successful!</h2>
+            <h2 className="text-xl font-black text-[#121212]">Update Successful!</h2>
             <p className="text-sm font-medium text-gray-400 max-w-[280px] mx-auto leading-relaxed">
               Your profile information has been securely updated and synchronized across the administrative system.
             </p>

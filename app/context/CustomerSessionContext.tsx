@@ -91,7 +91,7 @@ export function CustomerSessionProvider({ children }: { children: ReactNode }) {
             <HiExclamationTriangle className="w-8 h-8" />
           </div>
           <div className="flex flex-col gap-2">
-            <h3 className="text-lg font-black text-[#1D3557]">Your session has expired</h3>
+            <h3 className="text-lg font-black text-[#121212]">Your session has expired</h3>
             <p className="text-sm text-gray-500 font-medium px-4">
               For your security, you have been logged out due to inactivity or your token has expired.
             </p>

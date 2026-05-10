@@ -18,7 +18,7 @@ const typeIcons = {
 };
 
 const typeStyles = {
-  Orders: { bg: "bg-blue-50 text-brand-gold", dot: "bg-brand-gold" },
+  Orders: { bg: "bg-gray-50 text-brand-gold", dot: "bg-brand-gold" },
   Stock: { bg: "bg-amber-50 text-amber-500", dot: "bg-amber-500" },
   Security: { bg: "bg-rose-50 text-rose-500", dot: "bg-rose-500" },
   General: { bg: "bg-emerald-50 text-emerald-500", dot: "bg-emerald-500" },
@@ -35,7 +35,7 @@ export const NotificationList: React.FC<{ onAction?: () => void }> = ({ onAction
   <div className="flex flex-col">
    <div className="px-5 py-4 border-b border-gray-200 flex justify-between items-center bg-gray-50/30">
     <div className="flex flex-col gap-0.5">
-     <span className="font-black text-[#1D3557] text-sm tracking-tight">System Notifications</span>
+     <span className="font-black text-[#121212] text-sm tracking-tight">System Notifications</span>
      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Platform Events</span>
     </div>
     <button
@@ -65,7 +65,7 @@ export const NotificationList: React.FC<{ onAction?: () => void }> = ({ onAction
        key={item._id}
        className={`
                 px-5 py-4 hover:bg-gray-50/50 flex gap-4 cursor-pointer transition-all border-b border-gray-50/50 last:border-0 relative group
-                ${!item.isRead ? "bg-blue-50/10" : ""}
+                ${!item.isRead ? "bg-gray-50/10" : ""}
               `}
        onClick={() => {
         if (item.link) {
@@ -80,7 +80,7 @@ export const NotificationList: React.FC<{ onAction?: () => void }> = ({ onAction
 
        <div className="flex-1 flex flex-col min-w-0 pr-6">
         <div className="flex justify-between items-start gap-2">
-         <span className={`text-[13px] tracking-tight truncate ${!item.isRead ? "font-black text-[#1D3557]" : "font-bold text-gray-600"}`}>
+         <span className={`text-[13px] tracking-tight truncate ${!item.isRead ? "font-black text-[#121212]" : "font-bold text-gray-600"}`}>
           {item.title}
          </span>
          <span className="text-[10px] font-bold text-gray-400 whitespace-nowrap pt-0.5 uppercase tracking-tighter">

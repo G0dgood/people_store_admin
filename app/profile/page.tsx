@@ -70,7 +70,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F7FAFC] flex flex-col font-inter">
+    <div className="min-h-screen !bg-white flex flex-col font-inter">
       <Header />
 
       <div className="flex-1 max-w-[1440px] w-full mx-auto px-6 md:px-10 lg:px-16 py-6 md:py-8">
@@ -166,9 +166,9 @@ export default function ProfilePage() {
               </div>
             </motion.div>
 
-            <motion.div variants={itemVariants} className="bg-gradient-to-r from-brand-gold to-blue-700 p-8 rounded-2xl shadow-lg flex flex-col md:flex-row items-center justify-between gap-6 text-white overflow-hidden relative">
+            <motion.div variants={itemVariants} className="bg-gradient-to-r from-brand-gold to-brand-charcoal p-8 rounded-2xl shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between gap-6 text-white overflow-hidden relative">
               <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
-              <div className="z-10 text-center md:text-left">
+              <div className="z-10">
                 <h3 className="text-xl font-bold mb-1">Stay updated on new deals!</h3>
                 <p className="opacity-80 text-sm">Subscribe to get the latest news on products and discounts.</p>
               </div>

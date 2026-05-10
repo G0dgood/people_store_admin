@@ -20,7 +20,7 @@ export const EmptyState = ({
         {icon}
       </div>
       <div className="flex flex-col gap-1">
-        <span className="text-base font-black text-[#1D3557]">{title}</span>
+        <span className="text-base font-black text-[#121212]">{title}</span>
         <span className="text-xs text-gray-400 font-bold max-w-xs">{description}</span>
       </div>
     </div>

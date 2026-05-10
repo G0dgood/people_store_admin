@@ -55,7 +55,7 @@ export const AdminChart: React.FC<AdminChartProps> = ({
         display: false,
       },
       tooltip: {
-        backgroundColor: '#1D3557',
+        backgroundColor: '#121212',
         titleFont: { size: 12, weight: 'bold', family: 'Inter' },
         bodyFont: { size: 11, family: 'Inter' },
         padding: 12,

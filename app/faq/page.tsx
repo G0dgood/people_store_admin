@@ -9,6 +9,7 @@ import { HiOutlineChatBubbleLeftRight, HiOutlineEnvelope } from "react-icons/hi2
 import { motion } from "framer-motion";
 import { HiOutlineSearch } from "react-icons/hi";
 import { PageSearch } from "../components/Form/PageSearch";
+import Image from "next/image";
 
 import { useGetPublicFaqsQuery } from "@/lib/redux/services/boutiqueApi";
 import { FAQSkeleton } from "../components/Skeleton/FAQSkeleton";
@@ -63,120 +64,131 @@ export default function FAQPage() {
   }, [activeTab, searchQuery]);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen !bg-white flex flex-col font-sans text-black">
       <Header />
 
-      {/* Hero Section */}
-      <section className="relative pt-20 pb-16 md:pt-32 md:pb-24 bg-gray-50 overflow-hidden">
-        <div className="absolute inset-0 opacity-40 pointer-events-none">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-blue-100 rounded-full -translate-x-1/2 -translate-y-1/2 blur-3xl"></div>
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-emerald-100 rounded-full translate-x-1/2 translate-y-1/2 blur-3xl"></div>
-        </div>
+      <main className="flex-1 w-full !bg-white py-8 md:py-12">
+        <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 flex flex-col gap-12 md:gap-24">
+          {/* FAQ Hero Section */}
+          <section className="relative pt-10 pb-12  md:pb-20 bg-white overflow-hidden">
 
-        <div className="max-w-[800px] mx-auto px-6 text-center relative z-10">
-          <motion.span
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="inline-block text-brand-gold font-black text-[10px] uppercase tracking-[0.2em] mb-4 bg-blue-50 px-4 py-1.5 rounded-full"
-          >
-            Help Center
-          </motion.span>
-          <motion.h1
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-3xl md:text-5xl font-black text-[#1D3557] mb-6 leading-tight"
-          >
-            How can we help you?
-          </motion.h1>
+            <div className="relative z-10">
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.7 }}
+                className="flex flex-col gap-6"
+              >
+                <span className="text-brand-gold font-black tracking-[0.4em] text-xs">Knowledge Base</span>
+                <h1 className="text-4xl md:text-7xl font-black text-black tracking-tighter leading-none font-inter">
+                  How can we <br /><span className="text-brand-gold">help you?</span>
+                </h1>
 
-          <PageSearch
-            value={searchQuery}
-            onChange={setSearchQuery}
-          />
-        </div>
-      </section>
-
-      {/* Main Content */}
-      <section className="max-w-[1000px] mx-auto px-6 py-16 md:py-24">
-        {isLoading ? (
-          <FAQSkeleton />
-        ) : (
-          <>
-            {!searchQuery && (
-              <div className="flex justify-center mb-12">
-                <TabFilter
-                  tabs={categories}
-                  activeTab={activeTab}
-                  onChange={setActiveTab} id={""} />
-              </div>
-            )}
-
-            <div className="flex flex-col gap-8">
-              {searchQuery && (
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-black text-[#1D3557]">Search Results</h2>
-                  <button
-                    onClick={() => setSearchQuery("")}
-                    className="text-xs font-bold text-brand-gold hover:underline"
-                  >
-                    Clear search
-                  </button>
+                <div className="max-w-2xl mt-4 justify-start">
+                  <PageSearch
+                    value={searchQuery}
+                    onChange={setSearchQuery}
+                  />
                 </div>
-              )}
+              </motion.div>
+            </div>
+          </section>
 
-              {filteredFAQs.length > 0 ? (
-                <FAQAccordion items={filteredFAQs} />
+          {/* Main Content */}
+          <section className="py-8 md:py-12">
+            <div className="max-w-[1000px] mx-auto">
+              {isLoading ? (
+                <FAQSkeleton />
               ) : (
-                <div className="py-20 text-center flex flex-col items-center gap-4">
-                  <div className="w-16 h-16 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-300">
-                    <HiOutlineSearch size={32} />
+                <>
+                  {!searchQuery && (
+                    <div className="flex justify-center mb-16">
+                      <TabFilter
+                        tabs={categories}
+                        activeTab={activeTab}
+                        onChange={setActiveTab} id={""} />
+                    </div>
+                  )}
+
+                  <div className="flex flex-col gap-8">
+                    {searchQuery && (
+                      <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-2xl font-black text-black tracking-tight">Search Results</h2>
+                        <button
+                          onClick={() => setSearchQuery("")}
+                          className="text-xs font-black text-brand-gold hover:underline tracking-widest"
+                        >
+                          Clear search
+                        </button>
+                      </div>
+                    )}
+
+                    {filteredFAQs.length > 0 ? (
+                      <FAQAccordion items={filteredFAQs} />
+                    ) : (
+                      <div className="py-20 text-center flex flex-col items-center gap-6">
+                        <div className="w-20 h-20 rounded-full bg-gray-50 flex items-center justify-center text-gray-200 border border-gray-100">
+                          <HiOutlineSearch size={40} />
+                        </div>
+                        <p className="text-gray-500 font-bold text-lg">No results found for "{searchQuery}"</p>
+                        <button
+                          onClick={() => setSearchQuery("")}
+                          className="text-sm font-black text-brand-gold hover:underline tracking-widest"
+                        >
+                          Try searching something else
+                        </button>
+                      </div>
+                    )}
                   </div>
-                  <p className="text-gray-500 font-bold">No results found for "{searchQuery}"</p>
-                  <button
-                    onClick={() => setSearchQuery("")}
-                    className="text-sm font-black text-brand-gold hover:underline"
-                  >
-                    Try searching something else
-                  </button>
-                </div>
+                </>
               )}
             </div>
-          </>
-        )}
-      </section>
+          </section>
 
-      {/* Contact CTA */}
-      <section className="bg-[#1D3557] py-20 relative overflow-hidden">
-        <div className="max-w-[1440px] mx-auto px-6 relative z-10 flex flex-col items-center text-center">
-          <h2 className="text-3xl font-black text-white mb-4">Still have questions?</h2>
-          <p className="text-blue-200/70 text-base md:text-lg mb-10 max-w-xl font-medium">
-            Contact our dedicated support team. We're here to help you solve any issues as quickly as possible.
-          </p>
+          {/* Contact CTA */}
+          <section className="bg-gray-50 border border-gray-100 rounded-[48px] py-24 relative overflow-hidden">
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-2xl">
-            <div className="bg-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/10 flex flex-col items-center gap-4 hover:bg-white/10 transition-all cursor-pointer group">
-              <div className="w-12 h-12 rounded-xl bg-brand-gold flex items-center justify-center text-white shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
-                <HiOutlineChatBubbleLeftRight size={24} />
+            <Image
+              src="/brandImage/cat_body.png"
+              alt="Contact Background"
+              fill
+              className="object-cover opacity-20 "
+              sizes="100vw"
+            />
+            <div className="max-w-[1440px] mx-auto px-6 relative z-20 flex flex-col items-center text-center">
+              <div className="flex flex-col gap-4 mb-10">
+                <span className="text-brand-gold font-bold tracking-[0.4em] text-xs">Human Connection</span>
+                <h2 className="text-4xl md:text-6xl font-black text-black tracking-tighter leading-none font-inter">Still have questions?</h2>
+                <p className="text-gray-500 text-base md:text-lg max-w-2xl mx-auto font-medium leading-relaxed">
+                  Our artisanal support curators are available to orchestrate a personalized resolution for your inquiries.
+                </p>
               </div>
-              <div className="flex flex-col">
-                <span className="text-white font-black text-lg">Live Chat</span>
-                <span className="text-blue-200/50 text-xs font-bold uppercase tracking-widest mt-1">Average wait: 2 mins</span>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-3xl">
+                <div className="bg-gray-50 backdrop-blur-md rounded-[32px] p-10 border border-gray-200 flex flex-col items-center gap-6 hover:bg-white/10 transition-all cursor-pointer group">
+                  <div className="w-16 h-16 rounded-2xl bg-brand-gold flex items-center justify-center text-white shadow-lg shadow-brand-gold/20 group-hover:scale-110 transition-transform">
+                    <HiOutlineChatBubbleLeftRight size={32} />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <span className="text-black font-black text-2xl tracking-tight">Live Chat</span>
+                    <span className="text-gray-500 text-[10px] font-black tracking-[0.2em]">Response within 2 mins</span>
+                  </div>
+                </div>
+
+                <div className="bg-gray-50 backdrop-blur-md rounded-[32px] p-10 border border-gray-200 flex flex-col items-center gap-6 hover:bg-white/10 transition-all cursor-pointer group">
+                  <div className="w-16 h-16 rounded-2xl bg-brand-gold flex items-center justify-center text-white shadow-lg shadow-brand-gold/20 group-hover:scale-110 transition-transform">
+                    <HiOutlineEnvelope size={32} />
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <span className="text-black font-black text-2xl tracking-tight">Email Concierge</span>
+                    <span className="text-gray-500 text-[10px] font-black tracking-[0.2em]">Materializing in 24h</span>
+                  </div>
+                </div>
               </div>
             </div>
-
-            <div className="bg-white/5 backdrop-blur-md rounded-2xl p-8 border border-white/10 flex flex-col items-center gap-4 hover:bg-white/10 transition-all cursor-pointer group">
-              <div className="w-12 h-12 rounded-xl bg-emerald-500 flex items-center justify-center text-white shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition-transform">
-                <HiOutlineEnvelope size={24} />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-white font-black text-lg">Email Support</span>
-                <span className="text-blue-200/50 text-xs font-bold uppercase tracking-widest mt-1">Response within 24h</span>
-              </div>
-            </div>
-          </div>
+          </section>
         </div>
-      </section>
+      </main>
 
       <Footer />
     </div>

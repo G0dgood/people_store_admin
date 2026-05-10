@@ -74,7 +74,7 @@ export function UploadAvatarModal({ isOpen, onClose, onUploadSuccess }: UploadAv
                   <Icon name="photo_camera" folder="icon" size="sm" />
                 </div>
                 <div className="flex flex-col items-center gap-0.5 text-center px-4">
-                  <span className="text-[11px] font-black text-[#1D3557]">Pick a photo</span>
+                  <span className="text-[11px] font-black text-[#121212]">Pick a photo</span>
                   <span className="text-[10px] font-medium text-gray-400">PNG, JPG up to 5MB</span>
                 </div>
               </>
@@ -91,7 +91,7 @@ export function UploadAvatarModal({ isOpen, onClose, onUploadSuccess }: UploadAv
         </div>
 
         <div className="flex flex-col gap-4 w-full">
-          <div className="flex items-center gap-3 p-4 bg-blue-50/50 border border-blue-100 rounded-xl">
+          <div className="flex items-center gap-3 p-4 bg-gray-50/50 border border-blue-100 rounded-xl">
             <Icon name="verified" folder="icon" size="xs" className="text-brand-gold" />
             <p className="text-[10px] font-medium text-blue-700 leading-relaxed">
               A clear, professional photo helps team members identify you easily. Recommended size: 512x512px.

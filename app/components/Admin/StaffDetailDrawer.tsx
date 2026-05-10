@@ -24,8 +24,9 @@ interface StaffDetailDrawerProps {
 
 export function StaffDetailDrawer({ isOpen, onClose, staff }: StaffDetailDrawerProps) {
   // 1. Fetch all roles to find the ID for the staff member's role name
-  const { data: allRoles = [] } = useGetRolesQuery();
-  const staffRole = allRoles.find(r => r.name === staff?.role);
+  const { data: rolesResponse } = useGetRolesQuery();
+  const allRoles = rolesResponse?.roles || [];
+  const staffRole = allRoles.find((r: any) => r.name === staff?.role);
   const roleId = staffRole?._id;
 
   // 2. Fetch structured privileges for this role
@@ -128,7 +129,7 @@ export function StaffDetailDrawer({ isOpen, onClose, staff }: StaffDetailDrawerP
         <div className="flex flex-col gap-8 pb-12">
           {/* Profile Header Card */}
           <div className="bg-white rounded-2xl border border-gray-200 p-6 flex flex-col items-center text-center gap-4 relative overflow-hidden group  ">
-            <div className="absolute top-0 inset-x-0 h-20 bg-[#1D3557] opacity-[0.03] group-hover:opacity-[0.05] transition-opacity duration-500" />
+            <div className="absolute top-0 inset-x-0 h-20 bg-[#121212] opacity-[0.03] group-hover:opacity-[0.05] transition-opacity duration-500" />
 
             <Avatar
               src={staff.avatar}
@@ -138,7 +139,7 @@ export function StaffDetailDrawer({ isOpen, onClose, staff }: StaffDetailDrawerP
             />
 
             <div className="flex flex-col gap-1 relative z-10">
-              <h3 className="text-xl font-black text-[#1D3557] tracking-tight">{staff.fullName}</h3>
+              <h3 className="text-xl font-black text-[#121212] tracking-tight">{staff.fullName}</h3>
               <p className="text-xs font-bold text-gray-400 truncate max-w-[200px]">{staff.email}</p>
             </div>
 
@@ -167,11 +168,11 @@ export function StaffDetailDrawer({ isOpen, onClose, staff }: StaffDetailDrawerP
           <div className="grid grid-cols-2 gap-4">
             <div className="p-4 rounded-2xl bg-gray-50/50 border border-gray-200 flex flex-col gap-1">
               <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Department</span>
-              <span className="text-sm font-black text-[#1D3557]">{staff.department || "General"}</span>
+              <span className="text-sm font-black text-[#121212]">{staff.department || "General"}</span>
             </div>
             <div className="p-4 rounded-2xl bg-gray-50/50 border border-gray-200 flex flex-col gap-1">
               <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Employee ID</span>
-              <span className="text-sm font-black text-[#1D3557]">STF-{staff.id?.toString().substr(-4).toUpperCase() || staff._id?.toString().substr(-4).toUpperCase()}</span>
+              <span className="text-sm font-black text-[#121212]">STF-{staff.id?.toString().substr(-4).toUpperCase() || staff._id?.toString().substr(-4).toUpperCase()}</span>
             </div>
           </div>
 
@@ -179,11 +180,11 @@ export function StaffDetailDrawer({ isOpen, onClose, staff }: StaffDetailDrawerP
           <div className="grid grid-cols-2 gap-4">
             <div className="p-4 rounded-2xl bg-gray-50/50 border border-gray-200 flex flex-col gap-1">
               <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Gender</span>
-              <span className="text-sm font-black text-[#1D3557]">{staff.gender || "Other"}</span>
+              <span className="text-sm font-black text-[#121212]">{staff.gender || "Other"}</span>
             </div>
             <div className="p-4 rounded-2xl bg-gray-50/50 border border-gray-200 flex flex-col gap-1">
               <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Date of Birth</span>
-              <span className="text-sm font-black text-[#1D3557]">
+              <span className="text-sm font-black text-[#121212]">
                 {staff.dob ? moment(staff.dob).format('MMM DD, YYYY') : "Not Specified"}
               </span>
             </div>
@@ -202,13 +203,13 @@ export function StaffDetailDrawer({ isOpen, onClose, staff }: StaffDetailDrawerP
                     <div className="w-9 h-9 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-brand-gold/10 group-hover:text-brand-gold transition-colors">
                       {perm.icon}
                     </div>
-                    <span className="text-[13px] font-bold text-[#1D3557]">{perm.label}</span>
+                    <span className="text-[13px] font-bold text-[#121212]">{perm.label}</span>
                   </div>
                   {(() => {
                     const statusColors: Record<string, string> = {
                       "Full Access": "bg-emerald-50 text-emerald-500",
                       "Edit Only": "bg-amber-50 text-amber-600",
-                      "View Only": "bg-blue-50 text-blue-500",
+                      "View Only": "bg-gray-50 text-brand-gold",
                       "Restricted": "bg-rose-50 text-rose-500",
                     };
                     const colorClass = statusColors[perm.status] || "bg-gray-50 text-gray-400";
@@ -235,7 +236,7 @@ export function StaffDetailDrawer({ isOpen, onClose, staff }: StaffDetailDrawerP
                     )}
                     <div className="w-[16px] h-[16px] rounded-full bg-white border-2 border-brand-gold   mt-1 z-10 shrink-0" />
                     <div className="flex flex-col gap-0.5" >
-                      <span className="text-[11px] font-black text-[#1D3557] leading-tight">
+                      <span className="text-[11px] font-black text-[#121212] leading-tight">
                         {act.action} <span className="text-gray-400 font-bold ml-1">{act.target}</span>
                       </span>
                       <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">{act.time}</span>

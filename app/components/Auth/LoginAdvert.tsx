@@ -130,7 +130,7 @@ export const LoginAdvert = () => {
           <span className="text-xs font-black uppercase tracking-[0.2em] text-white/50 group-hover:text-brand-gold transition-colors">
            {typeof item.category === 'object' ? item.category.name : item.category}
           </span>
-          <span className="text-lg font-bold text-white group-hover:text-blue-200 transition-colors">
+          <span className="text-lg font-bold text-white group-hover:text-brand-gold-light transition-colors">
            {item.name}
           </span>
           <span className="text-[10px] font-black text-white/40 group-hover:text-white/80 transition-opacity">

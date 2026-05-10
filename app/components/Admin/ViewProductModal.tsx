@@ -128,7 +128,7 @@ export function ViewProductModal({ isOpen, onClose, product }: ViewProductModalP
             <div className="flex flex-col gap-6">
               <div className="flex flex-col gap-1">
                 <span className="text-[10px] font-black text-brand-gold uppercase tracking-[0.2em]">{fullProduct.category?.name || "Uncategorized"}</span>
-                <h2 className="text-3xl font-black text-[#1D3557] tracking-tight leading-tight">{fullProduct.name}</h2>
+                <h2 className="text-3xl font-black text-[#121212] tracking-tight leading-tight">{fullProduct.name}</h2>
               </div>
 
               <div className="flex items-center gap-6 py-4 border-y border-gray-50">
@@ -158,7 +158,7 @@ export function ViewProductModal({ isOpen, onClose, product }: ViewProductModalP
               <div className="mt-auto grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6">
                 <div className="p-4 rounded-xl border border-gray-100 flex flex-col gap-1">
                   <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Brand Affinity</span>
-                  <span className="text-xs font-bold text-[#1D3557]">{fullProduct.brand?.name || (typeof fullProduct.brand === 'string' ? fullProduct.brand : "Independent")}</span>
+                  <span className="text-xs font-bold text-[#121212]">{fullProduct.brand?.name || (typeof fullProduct.brand === 'string' ? fullProduct.brand : "Independent")}</span>
                 </div>
                 <div className="p-4 rounded-xl border border-gray-100 flex flex-col gap-1">
                   <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Product SKU</span>
@@ -166,7 +166,7 @@ export function ViewProductModal({ isOpen, onClose, product }: ViewProductModalP
                 </div>
                 <div className="p-4 rounded-xl border border-gray-100 flex flex-col gap-1">
                   <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Last Updated</span>
-                  <span className="text-xs font-bold text-[#1D3557]">
+                  <span className="text-xs font-bold text-[#121212]">
                     {fullProduct.updatedAt ? new Date(fullProduct.updatedAt).toLocaleDateString() : "Recently"}
                   </span>
                 </div>

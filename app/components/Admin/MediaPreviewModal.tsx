@@ -41,7 +41,7 @@ export function MediaPreviewModal({ isOpen, onClose, media }: MediaPreviewModalP
       </ModalBody>
       <div className="bg-white p-4 border-t border-gray-100 flex justify-between items-center">
         <div className="flex flex-col gap-0.5">
-          <span className="text-xs font-bold text-[#1D3557]">{media.name}</span>
+          <span className="text-xs font-bold text-[#121212]">{media.name}</span>
           <span className="text-[10px] text-gray-400 uppercase tracking-widest">{media.size} • {media.type}</span>
         </div>
         <button 

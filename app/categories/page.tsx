@@ -11,7 +11,9 @@ import { useGetPublicCategoriesQuery } from "@/lib/redux/services/boutiqueApi";
 
 const CategoriesPage = () => {
    const { data: categoriesResponse, isLoading } = useGetPublicCategoriesQuery();
-   const categories = categoriesResponse?.data || [];
+   const categories = categoriesResponse?.data && 'categories' in categoriesResponse.data 
+      ? categoriesResponse.data.categories 
+      : (Array.isArray(categoriesResponse?.data) ? categoriesResponse.data : []);
 
    const collections = categories.map((cat) => ({
       title: cat.name,
@@ -42,7 +44,7 @@ const CategoriesPage = () => {
                      className="flex flex-col gap-4"
                   >
                      <span className="text-brand-gold font-bold tracking-[0.3em] uppercase text-[10px] md:text-xs">Bloom & Mist Catalogs</span>
-                     <h1 className="text-4xl md:text-6xl font-black text-[#1D3557] tracking-tighter leading-none font-inter">
+                     <h1 className="text-4xl md:text-6xl font-black text-[#121212] tracking-tighter leading-none font-inter">
                         The <span className="text-brand-gold">Collections.</span>
                      </h1>
                      <p className="text-gray-500 max-w-xl mx-auto text-sm md:text-lg mt-4 leading-relaxed font-medium">
@@ -86,15 +88,15 @@ const CategoriesPage = () => {
                                     <div className="w-12 h-12 bg-white flex items-center justify-center border border-gray-200">
                                        {col.icon}
                                     </div>
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-[#1D3557] opacity-60">Verified Collection</span>
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-[#121212] opacity-60">Verified Collection</span>
                                  </div>
                                  <div className="flex flex-col gap-1">
-                                    <h3 className="text-2xl font-black text-[#1D3557] tracking-tight">{col.title}</h3>
+                                    <h3 className="text-2xl font-black text-[#121212] tracking-tight">{col.title}</h3>
                                     <span className="text-xs font-bold text-brand-gold uppercase tracking-widest">{col.count}</span>
                                  </div>
                                  <Link
                                     href={col.link}
-                                    className="flex items-center justify-between text-xs font-black uppercase tracking-widest text-[#1D3557] group-hover:text-brand-gold pt-2 transition-colors"
+                                    className="flex items-center justify-between text-xs font-black uppercase tracking-widest text-[#121212] group-hover:text-brand-gold pt-2 transition-colors"
                                  >
                                     Explore Catalog <HiChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
                                  </Link>
@@ -110,7 +112,7 @@ const CategoriesPage = () => {
                   <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
                      <div className="flex flex-col gap-2">
                         <span className="text-brand-gold font-bold tracking-[0.2em] uppercase text-xs">Deeper Discovery</span>
-                        <h2 className="text-3xl md:text-5xl font-black text-[#1D3557] tracking-tight">Popular Verticals.</h2>
+                        <h2 className="text-3xl md:text-5xl font-black text-[#121212] tracking-tight">Popular Verticals.</h2>
                      </div>
                      <p className="text-gray-500 max-w-md text-sm leading-relaxed">
                         Quickly jump into our most-searched niches and trending collections within the Bloom & Mist ecosystem.
@@ -125,7 +127,7 @@ const CategoriesPage = () => {
                            whileInView={{ opacity: 1, x: 0 }}
                            viewport={{ once: true }}
                            transition={{ delay: i * 0.05 }}
-                           className="px-8 py-4 bg-white border border-gray-200 hover:border-brand-gold hover:text-brand-gold transition-all text-sm font-black uppercase tracking-widest text-[#1D3557] cursor-pointer"
+                           className="px-8 py-4 bg-white border border-gray-200 hover:border-brand-gold hover:text-brand-gold transition-all text-sm font-black uppercase tracking-widest text-[#121212] cursor-pointer"
                         >
                            {sub}
                         </motion.div>
@@ -135,10 +137,10 @@ const CategoriesPage = () => {
             </div>
 
             {/* Featured Promotion / Collections Trust */}
-            <section className="bg-[#1D3557] py-20 relative overflow-hidden">
+            <section className="bg-[#121212] py-20 relative overflow-hidden">
                <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 flex flex-col items-center text-center gap-6 relative z-10">
-                  <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight font-inter">Can't find your <span className="text-[#8CB7F5]">bloom?</span></h2>
-                  <p className="text-blue-100/40 text-sm md:text-base max-w-xl">
+                  <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight font-inter">Can't find your <span className="text-[var(--brand-gold-light)]">bloom?</span></h2>
+                  <p className="text-gray-400 text-sm md:text-base max-w-xl">
                      Our concierge sourcing team is always adding new collections to the catalog. Connect with our curators if you're looking for something specific.
                   </p>
                   <Link href="/contact" className="mt-4 px-12 py-5 bg-brand-gold text-white font-black uppercase tracking-widest text-sm hover:scale-105 transition-all">

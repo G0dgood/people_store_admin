@@ -108,7 +108,7 @@ export default function DraftProductsListing() {
     <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
       <div className="">
         <div className="flex flex-col gap-2 ">
-          <h1 className="text-2xl font-black text-[#1D3557]">Product Drafts</h1>
+          <h1 className="text-2xl font-black text-[#121212]">Product Drafts</h1>
           <p className="text-sm font-medium text-gray-400">Manage your unpublished products and prepare them for your storefront.</p>
         </div>
       </div>
@@ -172,7 +172,7 @@ export default function DraftProductsListing() {
                         <img src={product.productImage} alt={product.name} className="w-full h-full object-contain" />
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-sm font-bold text-[#1D3557] leading-tight group-hover:text-brand-gold transition-colors">{product.name}</span>
+                        <span className="text-sm font-bold text-[#121212] leading-tight group-hover:text-brand-gold transition-colors">{product.name}</span>
                         <span className="text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-wider">ID: {product._id.slice(-6)}</span>
                       </div>
                     </div>

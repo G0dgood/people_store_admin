@@ -53,8 +53,8 @@ export default function BrandsListing() {
   setCurrentPage(1);
  };
  const [deleteBrand, { isLoading: isDeleting }] = useDeleteBrandMutation();
- const brandsData = response?.data || [];
- const totalPages = response?.meta?.totalPages || 1;
+ const brandsData = response?.data?.brands || [];
+ const totalPages = response?.data?.pagination?.pages || 1;
 
  const toggleAll = () => {
   if (selectedIds.length === brandsData?.length && brandsData?.length > 0) {
@@ -186,7 +186,7 @@ export default function BrandsListing() {
               <Icon name="Image" folder="dashboardIcon" size="sm" className="text-gray-300" />
              )}
             </div>
-            <span className="text-sm font-bold text-[#1D3557] group-hover:text-brand-gold transition-colors">
+            <span className="text-sm font-bold text-[#121212] group-hover:text-brand-gold transition-colors">
              {brand.name}
             </span>
            </div>
@@ -200,7 +200,7 @@ export default function BrandsListing() {
           <td>
            <div className="flex items-center gap-1.5">
             <Icon name="star" folder="dashboardIcon" size="xs" className="text-amber-400" />
-            <span className="text-xs font-bold text-[#1D3557]">{brand.rating || 0}</span>
+            <span className="text-xs font-bold text-[#121212]">{brand.rating || 0}</span>
            </div>
           </td>
           <td>
@@ -212,7 +212,7 @@ export default function BrandsListing() {
            <div className="flex justify-end items-center gap-2">
             <Tooltip text="View Products" position="top">
              <Button shape="rounded-sm" variant="outline"
-              className="!p-1.5 text-gray-400 hover:text-white hover:bg-[#1D3557] hover:border-[#1D3557] transition-all"
+              className="!p-1.5 text-gray-400 hover:text-white hover:bg-[#121212] hover:border-[#121212] transition-all"
               onClick={() => {
                setSelectedBrandForView(brand);
                setIsViewModalOpen(true);

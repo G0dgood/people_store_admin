@@ -58,7 +58,7 @@ export function BulkActionsDrawer({
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200 flex-shrink-0 bg-gray-50/50">
               <div className="flex flex-col">
-                <h3 className="text-[16px] font-black text-[#1D3557]">{title}</h3>
+                <h3 className="text-[16px] font-black text-[#121212]">{title}</h3>
                 <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5">
                   Batch Management
                 </span>
@@ -96,7 +96,7 @@ export function BulkActionsDrawer({
                         className={`flex items-center gap-4 p-3.5 rounded-[4px] transition-all text-left border border-transparent
                           ${action.variant === "danger"
                             ? "hover:bg-rose-50 hover:border-rose-100 text-rose-600"
-                            : "hover:bg-brand-gold hover:text-white hover:border-brand-gold text-[#1D3557]"}
+                            : "hover:bg-brand-gold hover:text-white hover:border-brand-gold text-[#121212]"}
                           ${isLoading ? "opacity-50 cursor-not-allowed" : ""}
                         `}
                       >

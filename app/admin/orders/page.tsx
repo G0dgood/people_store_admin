@@ -25,7 +25,7 @@ import { formatPrice } from "@/app/utils/formatPrice";
 import { StatCardSkeleton } from "@/app/components/Skeleton/StatCardSkeleton";
 
 const statusConfig = {
-  Delivered: { color: "text-blue-500", icon: "Delivered" },
+  Delivered: { color: "text-brand-gold", icon: "Delivered" },
   Shipped: { color: "text-gray-500", icon: "Shipped" },
   Pending: { color: "text-orange-400", icon: "Pending" },
   Cancelled: { color: "text-rose-500", icon: "Cancelled" },

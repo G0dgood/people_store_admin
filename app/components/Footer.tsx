@@ -25,8 +25,7 @@ const Footer = () => {
       title: "About",
       links: [
         { label: "About Us", href: "/about" },
-        { label: "Categories", href: "/categories" },
-        { label: "Blogs", href: "/blog" }
+        { label: "Categories", href: "/categories" }
       ],
     },
     {

@@ -229,8 +229,8 @@ export const OrderSummary: React.FC = () => {
           <div className="mt-8 flex flex-col gap-4">
 
             <div className="flex items-center justify-center gap-4 opacity-50 hover:opacity-100 transition-opacity">
-              <Image src="/payment/Payment=payment, Pay-type=visa.png" alt="Visa" width={32} height={20} className="object-contain grayscale hover:grayscale-0 transition-all cursor-crosshair" />
-              <Image src="/payment/Payment=payment, Pay-type=mastercard.png" alt="Mastercard" width={32} height={20} className="object-contain grayscale hover:grayscale-0 transition-all cursor-crosshair" />
+              <Image src="/payment/Payment=payment, Pay-type=visa.png" alt="Visa" width={32} height={20} className="object-contain  hover:-0 transition-all cursor-crosshair" />
+              <Image src="/payment/Payment=payment, Pay-type=mastercard.png" alt="Mastercard" width={32} height={20} className="object-contain  hover:-0 transition-all cursor-crosshair" />
               <div className="w-[1px] h-3 bg-gray-300 mx-1" />
               <Icon name="security" size="sm" className="text-gray-400" />
             </div>

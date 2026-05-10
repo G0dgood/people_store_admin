@@ -45,10 +45,10 @@ export const ProductPricingSection: React.FC<ProductPricingSectionProps> = ({
 
   return (
     <div className="bg-white rounded-[6px] flex flex-col gap-8">
-      <h3 className="text-base font-bold text-[#1D3557]">Pricing</h3>
+      <h3 className="text-base font-bold text-[#121212]">Pricing</h3>
 
       <div className="flex flex-col gap-2.5">
-        <label className="text-xs font-bold text-[#1D3557]">Product Price</label>
+        <label className="text-xs font-bold text-[#121212]">Product Price</label>
         <div className="relative" ref={currencyDropdownRef}>
           <Input shape="rounded-sm" type="number"
             value={formData.price}
@@ -142,7 +142,7 @@ export const ProductPricingSection: React.FC<ProductPricingSectionProps> = ({
         </div>
 
         <div className="flex flex-col gap-2.5">
-          <label className="text-xs font-bold text-[#1D3557]">Tax Included</label>
+          <label className="text-xs font-bold text-[#121212]">Tax Included</label>
           <div className="flex items-center gap-6 py-3">
             <Checkbox
               checked={formData.taxIncluded}
@@ -160,7 +160,7 @@ export const ProductPricingSection: React.FC<ProductPricingSectionProps> = ({
 
       <div className="flex flex-col gap-2.5">
         <div className="flex items-center gap-2">
-          <label className="text-xs font-bold text-[#1D3557]">Expiration</label>
+          <label className="text-xs font-bold text-[#121212]">Expiration</label>
           <Tooltip text="Define the start and end dates for the product's availability. The product will only be visible on the boutique during this period." position="top">
             <button type="button" className="text-gray-400 hover:text-brand-gold transition-colors">
               <Icon name="info-circle" folder="dashboardIcon" size="xs" />

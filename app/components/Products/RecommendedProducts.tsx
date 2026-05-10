@@ -8,10 +8,10 @@ import { FavoriteButton } from "../Other";
 import { useCart } from "@/app/context/CartContext";
 import { toast } from "sonner";
 import { EmptyState } from "../Admin/EmptyState";
-import { HiOutlineSparkles } from "react-icons/hi2";
 import { Icon } from "../Icon";
 import { StockWarning } from "../StockWarning";
 import { SectionHeaderSimple } from "../ui/SectionHeaderSimple";
+import { QuickViewModal } from "./QuickViewModal";
 
 interface RecommendedProduct {
   isUnlimited: boolean | undefined;
@@ -28,6 +28,15 @@ interface RecommendedProductsProps {
 
 export const RecommendedProducts: React.FC<RecommendedProductsProps> = ({ products }) => {
   const { addToCart } = useCart();
+  const [selectedProductForQuickView, setSelectedProductForQuickView] = React.useState<RecommendedProduct | null>(null);
+  const [isQuickViewOpen, setIsQuickViewOpen] = React.useState(false);
+  
+  const handleQuickView = (e: React.MouseEvent, product: RecommendedProduct) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSelectedProductForQuickView(product);
+    setIsQuickViewOpen(true);
+  };
 
   const handleAddToCart = (e: React.MouseEvent, product: RecommendedProduct) => {
     e.preventDefault();
@@ -65,7 +74,10 @@ export const RecommendedProducts: React.FC<RecommendedProductsProps> = ({ produc
                 />
 
                 {/* Quick View Button Overlay */}
-                <div className="absolute bottom-0 left-0 right-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-10">
+                <div 
+                  className="absolute bottom-0 left-0 right-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out z-10"
+                  onClick={(e) => handleQuickView(e, product)}
+                >
                   <div className="w-full py-2 bg-black/80 backdrop-blur-md text-white text-[9px] font-bold tracking-[0.2em] hover:bg-brand-gold transition-all text-center">
                     Quick View
                   </div>
@@ -109,6 +121,14 @@ export const RecommendedProducts: React.FC<RecommendedProductsProps> = ({ produc
           </div>
         ))}
       </div>
+      
+      {selectedProductForQuickView && (
+        <QuickViewModal
+          isOpen={isQuickViewOpen}
+          onClose={() => setIsQuickViewOpen(false)}
+          product={selectedProductForQuickView}
+        />
+      )}
     </div>
   );
 };

@@ -30,7 +30,7 @@ export const AttributeDetailModal: React.FC<AttributeDetailModalProps> = ({
               <Icon name="poll" folder="icon" size="sm" className="text-brand-gold" />
             </div>
             <div>
-              <h3 className="text-sm font-black text-[#1D3557] uppercase tracking-wider">Attributes</h3>
+              <h3 className="text-sm font-black text-[#121212] uppercase tracking-wider">Attributes</h3>
               <p className="text-[10px] text-gray-400 font-bold uppercase">{category.name}</p>
             </div>
           </div>
@@ -45,7 +45,7 @@ export const AttributeDetailModal: React.FC<AttributeDetailModalProps> = ({
       footer={
         <button
           onClick={onClose}
-          className="w-full py-2.5 bg-white border border-gray-200 text-[#1D3557] text-[11px] font-black uppercase tracking-widest rounded-lg hover:bg-gray-50 transition-colors  "
+          className="w-full py-2.5 bg-white border border-gray-200 text-[#121212] text-[11px] font-black uppercase tracking-widest rounded-lg hover:bg-gray-50 transition-colors  "
         >
           Close Details
         </button>
@@ -56,13 +56,13 @@ export const AttributeDetailModal: React.FC<AttributeDetailModalProps> = ({
         {category.hasSize && (
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2">
-              <span className="w-1.5 h-4 bg-blue-500 rounded-full" />
+              <span className="w-1.5 h-4 bg-brand-gold rounded-full" />
               <span className="text-[11px] font-black text-gray-400 uppercase tracking-widest">Available Sizes</span>
             </div>
             <div className="flex flex-wrap gap-2">
               {category.selectedSizes?.length > 0 ? (
                 category.selectedSizes.map((size: string, i: number) => (
-                  <span key={i} className="px-3 py-1.5 bg-blue-50 text-blue-600 text-[10px] font-black rounded-lg border border-blue-100">
+                  <span key={i} className="px-3 py-1.5 bg-gray-50 text-blue-600 text-[10px] font-black rounded-lg border border-blue-100">
                     {size}
                   </span>
                 ))

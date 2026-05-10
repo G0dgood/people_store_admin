@@ -84,7 +84,7 @@ export const RealtimeUsers: React.FC<RealtimeUsersProps> = ({ onViewInsight }) =
     >
       {/* Instrumentation Backdrop Grid */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
-        style={{ backgroundImage: `radial-gradient(#1D3557 1px, transparent 1px)`, backgroundSize: '20px 20px' }} />
+        style={{ backgroundImage: `radial-gradient(#121212 1px, transparent 1px)`, backgroundSize: '20px 20px' }} />
 
       {/* Subtle Glow Overlays */}
       <div className="absolute -top-24 -right-24 w-64 h-64 bg-brand-gold/5 rounded-full blur-[80px] pointer-events-none" />
@@ -100,7 +100,7 @@ export const RealtimeUsers: React.FC<RealtimeUsersProps> = ({ onViewInsight }) =
             <span className="text-[10px] font-black text-brand-gold uppercase tracking-[0.1em]">Order Monitor</span>
           </div>
 
-          <h3 className="text-5xl font-black text-[#1D3557] tracking-[-0.04em] mt-3 tabular-nums drop- ">
+          <h3 className="text-5xl font-black text-[#121212] tracking-[-0.04em] mt-3 tabular-nums drop- ">
             {isLoading ? "..." : totalOrders.toLocaleString()}
           </h3>
           <p className="text-[11px] font-bold text-gray-400 mt-2 flex items-center gap-2 uppercase tracking-widest opacity-80">
@@ -112,7 +112,7 @@ export const RealtimeUsers: React.FC<RealtimeUsersProps> = ({ onViewInsight }) =
 
         <div className="relative" ref={dropdownRef}>
           <button
-            className={`p-2 rounded-xl transition-all duration-300 ${isDropdownOpen ? "bg-[#1D3557] text-white shadow-lg" : "text-gray-400 hover:bg-gray-50 border border-transparent hover:border-gray-200"}`}
+            className={`p-2 rounded-xl transition-all duration-300 ${isDropdownOpen ? "bg-[#121212] text-white shadow-lg" : "text-gray-400 hover:bg-gray-50 border border-transparent hover:border-gray-200"}`}
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             <Icon name="DotsHorizontal" folder="dashboardIcon" size="sm" />
@@ -192,20 +192,20 @@ export const RealtimeUsers: React.FC<RealtimeUsersProps> = ({ onViewInsight }) =
           {/* Central Stats Overlay */}
           <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none translate-y-1">
             <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest opacity-60">Status</span>
-            <span className="text-xl font-black text-[#1D3557]">{totalOrders}</span>
+            <span className="text-xl font-black text-[#121212]">{totalOrders}</span>
           </div>
         </div>
       </div>
 
       <div className="flex flex-col gap-6 pt-6 mt-4 relative z-10">
         <div className="flex justify-between items-center bg-gray-50/50 p-2 rounded-lg border border-gray-200/50">
-          <h4 className="text-[12px] font-black text-[#1D3557] uppercase tracking-widest pl-1">Order Status Distribution</h4>
+          <h4 className="text-[12px] font-black text-[#121212] uppercase tracking-widest pl-1">Order Status Distribution</h4>
           <span className="text-[10px] font-black text-brand-gold bg-white px-2 py-0.5 rounded border border-gray-200  ">LIVE</span>
         </div>
 
         {[
           { label: "Pending Orders", val: statsResponse?.data?.pendingOrders || 0, color: "text-amber-500", icon: <HiClock />, trend: "Attention", isUp: false },
-          { label: "Processing", val: statsResponse?.data?.processingOrders || 0, color: "text-blue-500", icon: <HiArrowPath />, trend: "Active", isUp: true },
+          { label: "Processing", val: statsResponse?.data?.processingOrders || 0, color: "text-brand-gold", icon: <HiArrowPath />, trend: "Active", isUp: true },
           { label: "Delivered", val: statsResponse?.data?.completedOrders || 0, color: "text-emerald-500", icon: <HiCheckCircle />, trend: "Completed", isUp: true },
         ].map((s, i) => {
           const percentage = totalOrders > 0 ? (s.val / totalOrders) * 100 : 0;
@@ -218,7 +218,7 @@ export const RealtimeUsers: React.FC<RealtimeUsersProps> = ({ onViewInsight }) =
                     style={{ color: s.color.includes('amber') ? '#F59E0B' : s.color.includes('blue') ? '#3B82F6' : '#10B981' }} />
 
                   <div className="flex flex-col">
-                    <span className="text-[12px] font-black text-[#1D3557] tracking-tight">{s.val.toLocaleString()}</span>
+                    <span className="text-[12px] font-black text-[#121212] tracking-tight">{s.val.toLocaleString()}</span>
                     <span className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.1em] opacity-70">{s.label}</span>
                   </div>
                 </div>

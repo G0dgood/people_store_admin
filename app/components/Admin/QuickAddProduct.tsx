@@ -23,7 +23,9 @@ export const QuickAddProduct: React.FC<QuickAddProductProps> = ({
   const { data: categoriesResponse, isLoading: isLoadingCats } = useGetCategoriesQuery();
   const { data: bestSellersResponse, isLoading: isLoadingBestSellers } = useGetBestSellingProductsQuery();
 
-  const categories = categoriesResponse?.data?.slice(0, 3) || [];
+  const categories = (categoriesResponse?.data && 'categories' in categoriesResponse.data 
+    ? categoriesResponse.data.categories 
+    : (Array.isArray(categoriesResponse?.data) ? categoriesResponse.data : [])).slice(0, 3);
   const topPerformers = bestSellersResponse?.data?.slice(0, 3) || [];
 
   return (
@@ -34,10 +36,10 @@ export const QuickAddProduct: React.FC<QuickAddProductProps> = ({
     >
       {/* Instrumentation Backdrop Grid */}
       <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
-        style={{ backgroundImage: `radial-gradient(#1D3557 1px, transparent 1px)`, backgroundSize: '16px 16px' }} />
+        style={{ backgroundImage: `radial-gradient(#121212 1px, transparent 1px)`, backgroundSize: '16px 16px' }} />
 
       <div className="flex justify-between items-center relative z-10">
-        <h3 className="text-[14px] font-black text-[#1D3557] uppercase tracking-[0.2em] opacity-80">Inventory Actions</h3>
+        <h3 className="text-[14px] font-black text-[#121212] uppercase tracking-[0.2em] opacity-80">Inventory Actions</h3>
         <button
           onClick={onAddNew}
           className="group flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-600 text-[10px] font-black uppercase tracking-widest hover:bg-emerald-500 hover:text-white transition-all duration-300"
@@ -58,18 +60,18 @@ export const QuickAddProduct: React.FC<QuickAddProductProps> = ({
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.1 * i }}
-              className={`flex items-center justify-between p-4 rounded-xl border border-gray-200 hover:border-transparent bg-blue-50/50 hover:shadow-lg hover:shadow-gray-100 transition-all duration-300 cursor-pointer group`}
+              className={`flex items-center justify-between p-4 rounded-xl border border-gray-200 hover:border-transparent bg-gray-50/50 hover:shadow-lg hover:shadow-gray-100 transition-all duration-300 cursor-pointer group`}
             >
               <div className="flex items-center gap-4 flex-1">
                 <div className="w-10 h-10 rounded-xl bg-white border border-white   flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                   <img src={cat.image} className="w-6 h-6 object-contain" alt="" />
                 </div>
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-[13px] font-black text-[#1D3557]">{cat.name}</span>
+                  <span className="text-[13px] font-black text-[#121212]">{cat.name}</span>
                   <span className="text-[10px] font-bold text-gray-400">View Catalog</span>
                 </div>
               </div>
-              <Icon name="chevron_right" size="xs" className="text-gray-300 group-hover:text-[#1D3557] group-hover:translate-x-1 transition-all" />
+              <Icon name="chevron_right" size="xs" className="text-gray-300 group-hover:text-[#121212] group-hover:translate-x-1 transition-all" />
             </motion.div>
           ))}
         </div>
@@ -105,7 +107,7 @@ export const QuickAddProduct: React.FC<QuickAddProductProps> = ({
                     </div>
                   </div>
                   <div className="flex flex-col min-w-0">
-                    <span className="text-[12px] font-black text-[#1D3557] leading-tight truncate max-w-[140px] group-hover/row:text-brand-gold transition-all">{p.name}</span>
+                    <span className="text-[12px] font-black text-[#121212] leading-tight truncate max-w-[140px] group-hover/row:text-brand-gold transition-all">{p.name}</span>
                     <span className={`text-[10px] font-black w-fit px-1.5 py-0.5 rounded mt-1 bg-brand-gold/10 text-brand-gold`}>
                       ₦{p.price.toLocaleString()}
                     </span>

@@ -21,7 +21,7 @@ export const CopywritingTiming: React.FC<CopywritingTimingProps> = ({
   return (
     <section className="bg-white p-8 rounded-[6px] border border-gray-200   flex flex-col gap-8">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-black text-[#1D3557] flex items-center gap-2">
+        <h3 className="text-lg font-black text-[#121212] flex items-center gap-2">
           <span className="w-8 h-8 rounded-[4px] bg-brand-gold/10 text-brand-gold flex items-center justify-center text-xs">01</span>
           Feature Copy & Timing
         </h3>
@@ -169,7 +169,7 @@ export const CopywritingTiming: React.FC<CopywritingTimingProps> = ({
 
         <div className="bg-gray-50 p-6 rounded-[6px] border border-gray-200 flex flex-col gap-6 justify-center">
           <div className="flex flex-col gap-2">
-            <label className="text-xs font-black text-[#1D3557] uppercase tracking-widest">
+            <label className="text-xs font-black text-[#121212] uppercase tracking-widest">
               {activeVisualIndex === null ? "Global Cycle Duration" : `Atmosphere ${activeVisualIndex + 1} Timing Override`}
             </label>
             <p className="text-[10px] text-gray-400 font-medium">

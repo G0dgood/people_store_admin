@@ -24,7 +24,7 @@ import { SVGLoaderFetch, NoRecordFound } from "@/app/components/Options";
 const statusConfig = {
   Active: "text-emerald-600 bg-emerald-50",
   Expired: "text-rose-500 bg-rose-50/50",
-  Scheduled: "text-blue-600 bg-blue-50",
+  Scheduled: "text-blue-600 bg-gray-50",
 };
 
 export default function CouponsListing() {
@@ -193,7 +193,7 @@ export default function CouponsListing() {
                     </td>
                     <td>
                       <div className="flex flex-col gap-1">
-                        <span className="text-xs font-black text-[#1D3557] group-hover:text-brand-gold transition-colors uppercase tracking-widest">
+                        <span className="text-xs font-black text-[#121212] group-hover:text-brand-gold transition-colors uppercase tracking-widest">
                           {coupon.code}
                         </span>
 

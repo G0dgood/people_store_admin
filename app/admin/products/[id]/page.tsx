@@ -309,7 +309,7 @@ export default function EditProduct() {
             <HiArrowLeft size={20} className="text-gray-400" />
           </Button>
           <div className="flex flex-col">
-            <h2 className="text-xl font-black text-[#1D3557]">Edit {product?.status === 'Draft' ? 'Draft' : 'Product'}</h2>
+            <h2 className="text-xl font-black text-[#121212]">Edit {product?.status === 'Draft' ? 'Draft' : 'Product'}</h2>
             <div className="flex items-center gap-2">
               <p className="text-xs font-bold text-gray-400">ID: {productId.slice(-8)}</p>
               {formData.sku && (
@@ -361,10 +361,10 @@ export default function EditProduct() {
         <div className="xl:col-span-2 flex flex-col gap-6">
           {/* Basic Details */}
           <div className="bg-white rounded-[6px] border border-gray-200   p-8 flex flex-col gap-6">
-            <h3 className="text-base font-bold text-[#1D3557]">Basic Details</h3>
+            <h3 className="text-base font-bold text-[#121212]">Basic Details</h3>
 
             <div className="flex flex-col gap-2.5">
-              <label className="text-xs font-bold text-[#1D3557]">Product Name</label>
+              <label className="text-xs font-bold text-[#121212]">Product Name</label>
               <Input shape="rounded-sm" type="text"
                 value={formData.name}
                 onChange={(e) => handleInputChange("name", e.target.value)}
@@ -374,7 +374,7 @@ export default function EditProduct() {
             </div>
 
             <div className="flex flex-col gap-2.5">
-              <label className="text-xs font-bold text-[#1D3557]">Product SKU <span className="text-gray-400 font-medium">(Unique Identifier)</span></label>
+              <label className="text-xs font-bold text-[#121212]">Product SKU <span className="text-gray-400 font-medium">(Unique Identifier)</span></label>
               <Input shape="rounded-sm" type="text"
                 value={formData.sku}
                 onChange={(e) => handleInputChange("sku", e.target.value.toUpperCase())}
@@ -385,7 +385,7 @@ export default function EditProduct() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="flex flex-col gap-2.5">
-                <label className="text-xs font-bold text-[#1D3557]">Gender <span className="text-red-500">*</span></label>
+                <label className="text-xs font-bold text-[#121212]">Gender <span className="text-red-500">*</span></label>
                 <Select
                   shape="rounded-sm"
                   value={formData.gender}
@@ -401,7 +401,7 @@ export default function EditProduct() {
 
               <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-2.5">
-                  <label className="text-xs font-bold text-[#1D3557]">Available Sizes</label>
+                  <label className="text-xs font-bold text-[#121212]">Available Sizes</label>
                   <Select
                     searchable
                     placeholder="Select size..."
@@ -417,7 +417,7 @@ export default function EditProduct() {
             </div>
 
             <div className="flex flex-col gap-2.5 relative">
-              <label className="text-xs font-bold text-[#1D3557]">Product Description</label>
+              <label className="text-xs font-bold text-[#121212]">Product Description</label>
               <div className="relative group">
                 <Textarea shape="rounded-sm"
                   placeholder="Enter product description"
@@ -465,7 +465,7 @@ export default function EditProduct() {
           {/* Product Variants */}
           <div className="bg-white rounded-sm   p-8 flex flex-col gap-6">
             <div className="flex items-center justify-between">
-              <h3 className="text-base font-bold text-[#1D3557]">Product Variants</h3>
+              <h3 className="text-base font-bold text-[#121212]">Product Variants</h3>
               <Button
                 shape="rounded-sm"
                 variant="outline"
@@ -503,7 +503,7 @@ export default function EditProduct() {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="flex flex-col gap-1.5">
-                        <label className="text-xs font-bold text-[#1D3557]">Variant SKU</label>
+                        <label className="text-xs font-bold text-[#121212]">Variant SKU</label>
                         <Input
                           shape="rounded-sm"
                           value={variant.sku}
@@ -516,7 +516,7 @@ export default function EditProduct() {
                         />
                       </div>
                       <div className="flex flex-col gap-1.5">
-                        <label className="text-xs font-bold text-[#1D3557]">Price Override</label>
+                        <label className="text-xs font-bold text-[#121212]">Price Override</label>
                         <Input
                           shape="rounded-sm"
                           type="number"
@@ -530,7 +530,7 @@ export default function EditProduct() {
                         />
                       </div>
                       <div className="flex flex-col gap-1.5">
-                        <label className="text-xs font-bold text-[#1D3557]">Stock</label>
+                        <label className="text-xs font-bold text-[#121212]">Stock</label>
                         <Input
                           shape="rounded-sm"
                           type="number"
@@ -548,7 +548,7 @@ export default function EditProduct() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       {variant.attributes && Object.entries(variant.attributes).map(([attr, val], aIdx) => (
                         <div key={aIdx} className="flex flex-col gap-1.5 min-w-[120px]">
-                          <label className="text-xs font-bold text-[#1D3557]">{attr}</label>
+                          <label className="text-xs font-bold text-[#121212]">{attr}</label>
                           {attr.toLowerCase() === 'color' ? (
                             <div className="flex items-center gap-2">
                               <div className="relative w-8 h-8 rounded-[4px] overflow-hidden border border-gray-200   shrink-0">
@@ -646,10 +646,10 @@ export default function EditProduct() {
 
           {/* Pricing Section */}
           <div className="bg-white rounded-[6px] border border-gray-200   p-8 flex flex-col gap-6">
-            <h3 className="text-base font-bold text-[#1D3557]">Pricing</h3>
+            <h3 className="text-base font-bold text-[#121212]">Pricing</h3>
 
             <div className="flex flex-col gap-2.5">
-              <label className="text-xs font-bold text-[#1D3557]">Product Price</label>
+              <label className="text-xs font-bold text-[#121212]">Product Price</label>
               <div className="relative" ref={currencyDropdownRef}>
                 <Input shape="rounded-sm" type="number"
                   value={formData.price}
@@ -743,7 +743,7 @@ export default function EditProduct() {
               </div>
 
               <div className="flex flex-col gap-2.5">
-                <label className="text-xs font-bold text-[#1D3557]">Tax Included</label>
+                <label className="text-xs font-bold text-[#121212]">Tax Included</label>
                 <div className="flex items-center gap-6 py-3">
                   <Checkbox
                     checked={formData.taxIncluded}
@@ -760,7 +760,7 @@ export default function EditProduct() {
             </div>
 
             <div className="flex flex-col gap-2.5">
-              <label className="text-xs font-bold text-[#1D3557]">Expiration</label>
+              <label className="text-xs font-bold text-[#121212]">Expiration</label>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Input shape="rounded-sm"
                   type="date"
@@ -780,11 +780,11 @@ export default function EditProduct() {
 
           {/* Inventory Section */}
           <div className="bg-white rounded-[6px] border border-gray-200   p-8 flex flex-col gap-6">
-            <h3 className="text-sm font-bold text-[#1D3557]">Inventory</h3>
+            <h3 className="text-sm font-bold text-[#121212]">Inventory</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="flex flex-col gap-2.5">
-                <label className="text-xs font-bold text-[#1D3557]">Stock Quantity</label>
+                <label className="text-xs font-bold text-[#121212]">Stock Quantity</label>
                 <Input shape="rounded-sm"
                   type={formData.isUnlimited ? "text" : "number"}
                   disabled={formData.isUnlimited}
@@ -795,7 +795,7 @@ export default function EditProduct() {
               </div>
 
               <div className="flex flex-col gap-2.5">
-                <label className="text-xs font-bold text-[#1D3557]">Stock Status</label>
+                <label className="text-xs font-bold text-[#121212]">Stock Status</label>
                 <Select
                   shape="rounded-sm"
                   value={formData.stockStatus}
@@ -833,7 +833,7 @@ export default function EditProduct() {
               <button
                 type="button"
                 disabled={isSubmitting}
-                className="bg-white border border-gray-200 text-[#1D3557] px-6 py-2.5 rounded-[6px] text-xs font-bold hover:bg-gray-50 transition-all flex items-center gap-2 disabled:opacity-50"
+                className="bg-white border border-gray-200 text-[#121212] px-6 py-2.5 rounded-[6px] text-xs font-bold hover:bg-gray-50 transition-all flex items-center gap-2 disabled:opacity-50"
                 onClick={() => setIsDraftConfirmOpen(true)}
               >
                 <Icon name="ticket" folder="dashboardIcon" size="xs" className="opacity-70" />
@@ -889,7 +889,7 @@ export default function EditProduct() {
           <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-500 mb-6 animate-bounce">
             <HiCheckCircle size={60} />
           </div>
-          <h2 className="text-xl font-bold text-[#1D3557] mb-2">Product Updated!</h2>
+          <h2 className="text-xl font-bold text-[#121212] mb-2">Product Updated!</h2>
           <p className="text-sm text-gray-500">Your changes have been successfully saved and the product is now updated in the catalog.</p>
         </ModalBody>
         <ModalFooter className="flex justify-center pb-8 border-t-0">
@@ -908,10 +908,10 @@ export default function EditProduct() {
         size="sm"
       >
         <ModalBody className="flex flex-col items-center text-center p-8">
-          <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center text-blue-500 mb-6 animate-pulse">
+          <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center text-brand-gold mb-6 animate-pulse">
             <HiArchiveBox size={60} />
           </div>
-          <h2 className="text-xl font-bold text-[#1D3557] mb-2">Draft Updated</h2>
+          <h2 className="text-xl font-bold text-[#121212] mb-2">Draft Updated</h2>
           <p className="text-sm text-gray-500">The draft has been updated successfully. You can continue editing or return to the product list.</p>
         </ModalBody>
         <ModalFooter className="flex flex-col gap-3 pb-8 border-t-0 px-8">

@@ -89,7 +89,7 @@ export function ReviewsMoreActionsDrawer({
                 </div>
                 <div className="flex flex-col gap-1 flex-1">
                   <span className={`text-[13px] font-black transition-colors
-                    ${action.variant === "danger" ? "text-rose-600" : "text-[#1D3557]"}
+                    ${action.variant === "danger" ? "text-rose-600" : "text-[#121212]"}
                   `}>
                     {action.title}
                   </span>
@@ -105,17 +105,17 @@ export function ReviewsMoreActionsDrawer({
           </div>
         </div>
 
-        <div className="mt-auto p-5 bg-[#1D3557] rounded-2xl border border-blue-900 shadow-xl overflow-hidden relative">
+        <div className="mt-auto p-5 bg-[#121212] rounded-2xl border border-blue-900 shadow-xl overflow-hidden relative">
           <div className="absolute top-0 right-0 p-4 opacity-10 rotate-12">
              <Icon name="verified" folder="icon" size="lg" className="text-white w-20 h-20" />
           </div>
           <div className="relative z-10 flex flex-col gap-3">
-             <div className="w-10 h-10 rounded-xl bg-blue-500/20 border border-blue-400/20 flex items-center justify-center text-blue-400">
+             <div className="w-10 h-10 rounded-xl bg-brand-gold/20 border border-blue-400/20 flex items-center justify-center text-blue-400">
                 <Icon name="verified" folder="icon" size="sm" />
              </div>
              <div className="flex flex-col gap-1">
                 <span className="text-[14px] font-black text-white">Trust & Moderation</span>
-                <span className="text-[11px] font-medium text-blue-200/60 leading-relaxed">
+                <span className="text-[11px] font-medium text-brand-gold-light/60 leading-relaxed">
                    Maintain a high-quality feedback loop. Keeping your reviews clean improves customer trust and SEO.
                 </span>
              </div>

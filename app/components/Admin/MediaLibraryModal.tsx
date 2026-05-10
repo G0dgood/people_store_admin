@@ -21,7 +21,9 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({
   const { data: mediaData, isLoading } = useGetMediaItemsQuery(undefined, { skip: !isOpen });
   const [search, setSearch] = useState("");
 
-  const mediaItems = mediaData?.data || [];
+  const mediaItems = mediaData?.data && 'media' in mediaData.data 
+    ? mediaData.data.media 
+    : (Array.isArray(mediaData?.data) ? mediaData.data : []);
   const filteredItems = mediaItems.filter(item =>
     item.name?.toLowerCase().includes(search.toLowerCase()) ||
     item.url?.toLowerCase().includes(search.toLowerCase())

@@ -47,6 +47,10 @@ export function EditBrandDrawer({ isOpen, onClose, brand }: EditBrandDrawerProps
 
   const [updateBrand, { isLoading: isUpdating }] = useUpdateBrandMutation();
   const { data: categoriesData } = useGetCategoriesQuery();
+  const categories = categoriesData?.data && 'categories' in categoriesData.data 
+    ? categoriesData.data.categories 
+    : (Array.isArray(categoriesData?.data) ? categoriesData.data : []);
+
   const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
 
@@ -112,7 +116,7 @@ export function EditBrandDrawer({ isOpen, onClose, brand }: EditBrandDrawerProps
               <Select
                 className="rounded-sm"
                 shape="rounded-sm"
-                options={categoriesData?.data?.map(cat => ({ value: cat.name, label: cat.name })) || []}
+                options={categories.map(cat => ({ value: cat.name, label: cat.name }))}
                 value={formData.category}
                 onChange={(val) => setFormData({ ...formData, category: val })}
               />

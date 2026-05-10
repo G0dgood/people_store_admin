@@ -13,7 +13,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { MediaSelectionModal } from "./MediaSelectionModal";
 import { Select } from "../Form/Select";
-import { MultiInput } from "../Form/MultiInput";
 import { useApiError } from "@/app/hooks/useApiError";
 import { useCreateCategoryMutation, useGetCategoriesQuery } from "@/lib/redux/services/categoryApi";
 
@@ -26,10 +25,17 @@ const SIZE_OPTIONS = ["XS", "S", "M", "L", "XL", "XXL", "3XL"];
 const ML_OPTIONS = ["50ml", "100ml", "250ml", "500ml", "750ml", "1L"];
 const SEX_OPTIONS = ["Male", "Female", "Kids", "Unisex"];
 
+const PERFUME_GENDERS = ["Women's Perfume", "Men's Perfume", "Unisex"];
+const SCENT_FAMILIES = ["Floral", "Woody", "Oriental", "Fresh", "Citrus", "Spicy"];
+const COLLECTIONS = ["Best Sellers", "New Arrivals", "Niche Perfumes", "Designer Classics"];
+const GIFTINGS = ["Perfume Gift Sets", "Travel Size", "Discovery Sets"];
+
 export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
   const [createCategory, { isLoading, isError, error }] = useCreateCategoryMutation();
   const { data: categoriesData } = useGetCategoriesQuery();
-  const categories = categoriesData?.data || [];
+  const categories = categoriesData?.data && 'categories' in categoriesData.data
+    ? categoriesData?.data?.categories
+    : (Array.isArray(categoriesData?.data) ? categoriesData.data : []);
 
   useApiError(isError, error, "Failed to create category");
   const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
@@ -41,19 +47,27 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
     hasSize: false,
     hasML: false,
     hasSex: false,
+    hasScentFamily: false,
+    hasGender: false,
+    hasCollection: false,
+    hasGifting: false,
     selectedSizes: [] as string[],
     selectedMLs: [] as string[],
     selectedSexes: [] as string[],
+    selectedScentFamilies: [] as string[],
+    selectedGenders: [] as string[],
+    selectedCollections: [] as string[],
+    selectedGiftings: [] as string[],
     parent: "" as string,
     subCategories: [] as string[],
     coverImage: "",
   });
 
-  const toggleSelection = (field: "selectedSizes" | "selectedMLs" | "selectedSexes", value: string) => {
-    setFormData((prev) => ({
+  const toggleSelection = (field: string, value: string) => {
+    setFormData((prev: any) => ({
       ...prev,
       [field]: prev[field].includes(value)
-        ? prev[field].filter((item) => item !== value)
+        ? prev[field].filter((item: string) => item !== value)
         : [...prev[field], value],
     }));
   };
@@ -63,7 +77,6 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
     try {
       await createCategory(formData).unwrap();
       toast.success("Category created successfully");
-      // Reset form
       setFormData({
         name: "",
         image: "",
@@ -71,16 +84,23 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
         hasSize: false,
         hasML: false,
         hasSex: false,
+        hasScentFamily: false,
+        hasGender: false,
+        hasCollection: false,
+        hasGifting: false,
         selectedSizes: [],
         selectedMLs: [],
         selectedSexes: [],
+        selectedScentFamilies: [],
+        selectedGenders: [],
+        selectedCollections: [],
+        selectedGiftings: [],
         parent: "",
         subCategories: [],
         coverImage: "",
       });
       onClose();
     } catch (error) {
-      // Error handled by useApiError hook
     }
   };
 
@@ -206,7 +226,7 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
                 type="button"
                 variant="outline"
                 shape="rounded-sm"
-                className="w-12 h-12 p-0 flex-shrink-0 hover:bg-brand-gold hover:text-white hover:border-brand-gold transition-all"
+                className="w-12 h-12 p-0 flex-shrink-0 hover:bg-brand-gold hover:text-white hover:border-brand-gold transition-all border-gray-200"
                 onClick={() => {
                   setMediaTarget("coverImage");
                   setIsMediaModalOpen(true);
@@ -232,132 +252,127 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
             <label className="text-[9px] sm:text-[10px] font-black text-brand-gold uppercase tracking-[0.15em]">Enabled Product Attributes</label>
 
             <div className="flex flex-col gap-6">
-              {/* Size Attribute */}
+              {/* Scent Family Attribute */}
+              <div className="flex flex-col gap-4">
+                <Checkbox
+                  label="SHOP BY SCENT FAMILY"
+                  checked={formData.hasScentFamily}
+                  onChange={(checked) => setFormData({ ...formData, hasScentFamily: checked })}
+                />
+                <AnimatePresence>
+                  {formData.hasScentFamily && (
+                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+                      <div className="pl-7 grid grid-cols-3 sm:grid-cols-6 gap-2">
+                        {SCENT_FAMILIES.map((item) => (
+                          <button key={item} type="button" onClick={() => toggleSelection("selectedScentFamilies", item)} className={`px-2 py-1.5 rounded-[4px] border text-[10px] font-black transition-all ${formData.selectedScentFamilies.includes(item) ? "bg-brand-gold border-brand-gold text-white" : "bg-white border-gray-200 text-gray-400"}`}>
+                            {item}
+                          </button>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Gender Attribute */}
+              <div className="flex flex-col gap-4">
+                <Checkbox
+                  label="SHOP BY GENDER"
+                  checked={formData.hasGender}
+                  onChange={(checked) => setFormData({ ...formData, hasGender: checked })}
+                />
+                <AnimatePresence>
+                  {formData.hasGender && (
+                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+                      <div className="pl-7 flex gap-2">
+                        {PERFUME_GENDERS.map((item) => (
+                          <button key={item} type="button" onClick={() => toggleSelection("selectedGenders", item)} className={`px-4 py-1.5 rounded-[4px] border text-[10px] font-black transition-all ${formData.selectedGenders.includes(item) ? "bg-brand-gold border-brand-gold text-white" : "bg-white border-gray-200 text-gray-400"}`}>
+                            {item}
+                          </button>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Collections Attribute */}
+              <div className="flex flex-col gap-4">
+                <Checkbox
+                  label="COLLECTIONS"
+                  checked={formData.hasCollection}
+                  onChange={(checked) => setFormData({ ...formData, hasCollection: checked })}
+                />
+                <AnimatePresence>
+                  {formData.hasCollection && (
+                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+                      <div className="pl-7 grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        {COLLECTIONS.map((item) => (
+                          <button key={item} type="button" onClick={() => toggleSelection("selectedCollections", item)} className={`px-2 py-1.5 rounded-[4px] border text-[10px] font-black transition-all ${formData.selectedCollections.includes(item) ? "bg-brand-gold border-brand-gold text-white" : "bg-white border-gray-200 text-gray-400"}`}>
+                            {item}
+                          </button>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Gifting Attribute */}
+              <div className="flex flex-col gap-4">
+                <Checkbox
+                  label="GIFTING"
+                  checked={formData.hasGifting}
+                  onChange={(checked) => setFormData({ ...formData, hasGifting: checked })}
+                />
+                <AnimatePresence>
+                  {formData.hasGifting && (
+                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+                      <div className="pl-7 grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        {GIFTINGS.map((item) => (
+                          <button key={item} type="button" onClick={() => toggleSelection("selectedGiftings", item)} className={`px-2 py-1.5 rounded-[4px] border text-[10px] font-black transition-all ${formData.selectedGiftings.includes(item) ? "bg-brand-gold border-brand-gold text-white" : "bg-white border-gray-200 text-gray-400"}`}>
+                            {item}
+                          </button>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Original Attributes */}
               <div className="flex flex-col gap-4">
                 <Checkbox
                   label="Size (S, M, L...)"
                   checked={formData.hasSize}
                   onChange={(checked) => setFormData({ ...formData, hasSize: checked })}
                 />
-                <AnimatePresence>
-                  {formData.hasSize && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="overflow-hidden"
-                    >
-                      <div className="pl-7 grid grid-cols-4 sm:grid-cols-7 gap-2">
-                        {SIZE_OPTIONS.map((size) => (
-                          <button
-                            key={size}
-                            type="button"
-                            onClick={() => toggleSelection("selectedSizes", size)}
-                            className={`px-2 py-1.5 rounded-[4px] border text-[10px] font-black transition-all
-                              ${formData.selectedSizes.includes(size)
-                                ? "bg-brand-gold border-brand-gold text-white"
-                                : "bg-white border-gray-200 text-gray-400 hover:border-brand-gold/30 hover:text-brand-gold"}
-                            `}
-                          >
-                            {size}
-                          </button>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
               </div>
 
-              {/* Volume Attribute */}
               <div className="flex flex-col gap-4">
                 <Checkbox
                   label="Volume (ML)"
                   checked={formData.hasML}
                   onChange={(checked) => setFormData({ ...formData, hasML: checked })}
                 />
-                <AnimatePresence>
-                  {formData.hasML && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="overflow-hidden"
-                    >
-                      <div className="pl-7 grid grid-cols-3 sm:grid-cols-6 gap-2">
-                        {ML_OPTIONS.map((ml) => (
-                          <button
-                            key={ml}
-                            type="button"
-                            onClick={() => toggleSelection("selectedMLs", ml)}
-                            className={`px-2 py-1.5 rounded-[4px] border text-[10px] font-black transition-all
-                              ${formData.selectedMLs.includes(ml)
-                                ? "bg-brand-gold border-brand-gold text-white"
-                                : "bg-white border-gray-200 text-gray-400 hover:border-brand-gold/30 hover:text-brand-gold"}
-                            `}
-                          >
-                            {ml}
-                          </button>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
               </div>
 
-              {/* Sex Attribute */}
               <div className="flex flex-col gap-4">
                 <Checkbox
                   label="Sex (Gender)"
                   checked={formData.hasSex}
                   onChange={(checked) => setFormData({ ...formData, hasSex: checked })}
                 />
-                <AnimatePresence>
-                  {formData.hasSex && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      className="overflow-hidden"
-                    >
-                      <div className="pl-7 flex gap-2">
-                        {SEX_OPTIONS.map((sex) => (
-                          <button
-                            key={sex}
-                            type="button"
-                            onClick={() => toggleSelection("selectedSexes", sex)}
-                            className={`px-4 py-1.5 rounded-[4px] border text-[10px] font-black transition-all
-                              ${formData.selectedSexes.includes(sex)
-                                ? "bg-brand-gold border-brand-gold text-white"
-                                : "bg-white border-gray-200 text-gray-400 hover:border-brand-gold/30 hover:text-brand-gold"}
-                            `}
-                          >
-                            {sex}
-                          </button>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
               </div>
             </div>
           </div>
         </ModalBody>
 
         <ModalFooter className="flex justify-end gap-3 border-t border-gray-50 pt-6">
-          <Button
-            variant="outline"
-            type="button"
-            onClick={onClose}
-            shape="rounded-sm"
-          >
+          <Button variant="outline" type="button" onClick={onClose} shape="rounded-sm">
             Cancel
           </Button>
-          <Button
-            variant="primary"
-            type="submit"
-            shape="rounded-sm"
-            isLoading={isLoading}
-          >
+          <Button variant="primary" type="submit" shape="rounded-sm" isLoading={isLoading}>
             Create Category
           </Button>
         </ModalFooter>

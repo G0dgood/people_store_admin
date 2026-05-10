@@ -35,11 +35,11 @@ export const ProductMediaMetaSidebar: React.FC<ProductMediaMetaSidebarProps> = (
     <div className="flex flex-col gap-6">
       {/* Upload Media */}
       <div className="bg-white rounded-[6px] border border-gray-200   p-8 flex flex-col gap-6">
-        <h3 className="text-base font-bold text-[#1D3557]">Upload Product Image</h3>
+        <h3 className="text-base font-bold text-[#121212]">Upload Product Image</h3>
 
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
-            <label className="text-xs font-bold text-[#1D3557]">Product Image</label>
+            <label className="text-xs font-bold text-[#121212]">Product Image</label>
             {stagedMedia.length > 0 && (
               <button
                 onClick={() => removeMedia(0)}
@@ -134,7 +134,7 @@ export const ProductMediaMetaSidebar: React.FC<ProductMediaMetaSidebarProps> = (
 
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-2.5">
-            <label className="text-[11px] font-bold text-[#1D3557]">Product Categories</label>
+            <label className="text-[11px] font-bold text-[#121212]">Product Categories</label>
             <Select
               shape="rounded-sm"
               value={formData.category}
@@ -149,7 +149,7 @@ export const ProductMediaMetaSidebar: React.FC<ProductMediaMetaSidebarProps> = (
           </div>
 
           <div className="flex flex-col gap-2.5">
-            <label className="text-[11px] font-bold text-[#1D3557]">Product Brand</label>
+            <label className="text-[11px] font-bold text-[#121212]">Product Brand</label>
             <Select
               shape="rounded-sm"
               value={formData.brand}
@@ -164,12 +164,12 @@ export const ProductMediaMetaSidebar: React.FC<ProductMediaMetaSidebarProps> = (
           </div>
 
           <div className="flex flex-col gap-2.5">
-            <label className="text-[11px] font-bold text-[#1D3557]">Product Tag</label>
+            <label className="text-[11px] font-bold text-[#121212]">Product Tag</label>
             <Select
               shape="rounded-sm"
               value={formData.tag}
               onChange={(val) => handleInputChange("tag", val as string)}
-              placeholder="Select your product"
+              placeholder="Select your product tag"
               options={[
                 { label: "New Arrival", value: "New Arrival" },
                 { label: "Best Seller", value: "Best Seller" },
@@ -182,9 +182,58 @@ export const ProductMediaMetaSidebar: React.FC<ProductMediaMetaSidebarProps> = (
             />
           </div>
 
+          <div className="flex flex-col gap-2.5">
+            <label className="text-[11px] font-bold text-[#121212]">Scent Family</label>
+            <Select
+              shape="rounded-sm"
+              value={formData.scentFamily}
+              onChange={(val) => handleInputChange("scentFamily", val as string)}
+              placeholder="Select scent family"
+              options={[
+                { label: "Floral", value: "Floral" },
+                { label: "Woody", value: "Woody" },
+                { label: "Oriental", value: "Oriental" },
+                { label: "Fresh", value: "Fresh" },
+                { label: "Citrus", value: "Citrus" },
+                { label: "Spicy", value: "Spicy" },
+              ]}
+            />
+          </div>
+
+          <div className="flex flex-col gap-2.5">
+            <label className="text-[11px] font-bold text-[#121212]">Collections</label>
+            <Select
+              shape="rounded-sm"
+              value={formData.collections[0] || ""} // Assuming single for now, or could use MultiSelect if available
+              onChange={(val) => handleInputChange("collections", [val as string])}
+              placeholder="Select collection"
+              options={[
+                { label: "Best Sellers", value: "Best Sellers" },
+                { label: "New Arrivals", value: "New Arrivals" },
+                { label: "Niche Perfumes", value: "Niche Perfumes" },
+                { label: "Designer Classics", value: "Designer Classics" },
+              ]}
+            />
+          </div>
+
+          <div className="flex flex-col gap-2.5">
+            <label className="text-[11px] font-bold text-[#121212]">Gifting</label>
+            <Select
+              shape="rounded-sm"
+              value={formData.gifting}
+              onChange={(val) => handleInputChange("gifting", val as string)}
+              placeholder="Select gifting type"
+              options={[
+                { label: "Perfume Gift Sets", value: "Perfume Gift Sets" },
+                { label: "Travel Size", value: "Travel Size" },
+                { label: "Discovery Sets", value: "Discovery Sets" },
+              ]}
+            />
+          </div>
+
           <div className="flex flex-col gap-4">
             <div className="flex justify-between items-center">
-              <label className="text-[11px] font-bold text-[#1D3557]">
+              <label className="text-[11px] font-bold text-[#121212]">
                 {formData.colors ? "Selected Color" : "Select your color"}
               </label>
               <button
@@ -202,7 +251,7 @@ export const ProductMediaMetaSidebar: React.FC<ProductMediaMetaSidebarProps> = (
                 <div className="flex flex-col gap-2">
                   <span className="text-[10px] font-medium text-gray-400">Modern Presets</span>
                   <div className="flex flex-wrap gap-2">
-                    {["#1D3557", "#457B9D", "#A8DADC", "#2A9D8F", "#E9C46A", "#F4A261", "#E76F51", "#264653"].map((preset) => (
+                    {["#121212", "#1a1a1a", "#f3f4f6", "#2A9D8F", "#E9C46A", "#F4A261", "#E76F51", "#264653"].map((preset) => (
                       <button
                         key={preset}
                         className={`w-6 h-6 rounded-full border   transition-transform hover:scale-125 ${formData.colors === preset ? "border-brand-gold ring-2 ring-brand-gold/20" : "border-white"}`}

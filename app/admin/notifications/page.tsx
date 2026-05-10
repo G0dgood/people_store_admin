@@ -28,8 +28,8 @@ import { HiArrowPath } from "react-icons/hi2";
 const typeStyles = {
   Orders: {
     icon: "Cart",
-    color: "text-blue-500",
-    bg: "bg-blue-50"
+    color: "text-brand-gold",
+    bg: "bg-gray-50"
   },
   Stock: {
     icon: "inventory_2",
@@ -193,7 +193,7 @@ export default function NotificationCenter() {
             notificationsData?.map((item: NotificationItem) => (
               <div
                 key={item._id}
-                className={`p-4 sm:p-6 lg:p-8 flex items-start gap-3 sm:gap-6 border-b border-gray-50 hover:bg-gray-50 transition-all cursor-pointer relative group ${!item.isRead ? "bg-blue-50/10" : ""}`}
+                className={`p-4 sm:p-6 lg:p-8 flex items-start gap-3 sm:gap-6 border-b border-gray-50 hover:bg-gray-50 transition-all cursor-pointer relative group ${!item.isRead ? "bg-gray-50/10" : ""}`}
                 onClick={async () => {
                   if (!item.isRead) {
                     await markAsRead({ ids: [item._id] });
@@ -225,7 +225,7 @@ export default function NotificationCenter() {
                 <div className="flex flex-col gap-1.5 flex-1 min-w-0">
                   <div className="flex items-center justify-between gap-4">
                     <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
-                      <h3 className={`text-sm sm:text-[15px] tracking-tight ${!item.isRead ? "font-black text-[#1D3557]" : "font-bold text-gray-700"}`}>
+                      <h3 className={`text-sm sm:text-[15px] tracking-tight ${!item.isRead ? "font-black text-[#121212]" : "font-bold text-gray-700"}`}>
                         {item.title}
                       </h3>
                       <span className="w-fit px-2 py-0.5 rounded-[4px] bg-gray-100 text-[9px] sm:text-[10px] font-black text-gray-400 uppercase tracking-widest leading-normal">

@@ -48,9 +48,14 @@ export default function AdvertManagement() {
   const { on, off } = useSocket();
 
   const productsData = (productsResponse?.data as any)?.products || [];
-  const categoriesData = categoriesResponse?.data || [];
-  // Synchronized category data for orchestration
-  const availableBackgrounds = (mediaResponse?.data as MediaItem[])?.filter(m => m.type === "image").map(m => m.url) || [
+  const categoriesData = categoriesResponse?.data && 'categories' in categoriesResponse.data
+    ? categoriesResponse.data.categories
+    : (Array.isArray(categoriesResponse?.data) ? categoriesResponse.data : []);
+  const mediaItems = mediaResponse?.data && 'media' in mediaResponse.data 
+    ? mediaResponse.data.media 
+    : (Array.isArray(mediaResponse?.data) ? mediaResponse.data : []);
+
+  const availableBackgrounds = mediaItems.filter(m => m.type === "image").map(m => m.url) || [
     "", // Fallback default
   ];
 
@@ -217,7 +222,7 @@ export default function AdvertManagement() {
     <div className="flex flex-col gap-8 max-w-[1400px] mx-auto pb-20">
       <div className="flex justify-between items-center ">
         <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-black text-[#1D3557]">Advert Control Center</h1>
+          <h1 className="text-xl font-black text-[#121212]">Advert Control Center</h1>
           <p className="text-sm text-gray-400 font-medium">Configure and deploy the interactive login marketing experience.</p>
         </div>
 

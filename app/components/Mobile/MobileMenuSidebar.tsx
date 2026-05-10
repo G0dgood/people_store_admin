@@ -29,7 +29,6 @@ const MobileMenuSidebar = () => {
       items: [
         { label: "Home", icon: "home", href: "/" },
         { label: "Categories", icon: "list", href: "/products" },
-        { label: "Perfume Journal", icon: "description", href: "/blog" },
         { label: "My Cart", icon: "shopping_cart", href: "/cart", badge: cartCount },
         { label: "Favorites", icon: "favorite_border", href: "/wishlist" },
         { label: "My orders", icon: "inventory_2", href: "/orders" },

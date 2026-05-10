@@ -12,11 +12,13 @@ import RecentlyViewed from "./components/Home/RecentlyViewed";
 import { useGetPublicBrandsQuery } from "@/lib/redux/services/boutiqueApi";
 import { CategorySectionSkeleton } from "./components/Skeleton/CategorySectionSkeleton";
 import { BrandCategorySection } from "./components/Home/BrandCategorySection";
-import { BlogSection } from "./components/Home/BlogSection";
+
 
 const Home = () => {
  const { data: brandsData, isLoading: isLoadingBrands } = useGetPublicBrandsQuery();
- const brands = brandsData?.data || [];
+  const brands = brandsData?.data && 'brands' in brandsData.data 
+    ? brandsData.data.brands 
+    : (Array.isArray(brandsData?.data) ? brandsData.data : []);
 
 
  return (
@@ -55,7 +57,7 @@ const Home = () => {
     {/* <InquiryForm /> */}
 
     <RecentlyViewed />
-    <BlogSection />
+
     <RecommendedItems />
 
     <ArtisanalCollections />

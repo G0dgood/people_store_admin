@@ -10,6 +10,7 @@ import { useCart } from "@/app/context/CartContext";
 import { useRecentlyViewed } from "@/app/context/RecentlyViewedContext";
 import { toast } from "sonner";
 import { StockWarning } from "../StockWarning";
+import { ProductActionOverlay } from "./ProductActionOverlay";
 
 interface ProductProps {
    id: string;
@@ -70,19 +71,9 @@ export const ProductGridItem: React.FC<{ product: ProductProps, noBorderRight?: 
                <div className="relative w-full h-full transition-transform duration-300 group-hover:scale-110">
                   <Image src={product.image} alt={product.title} fill className="object-contain" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" />
                </div>
-               {/* Quick View Overlay */}
-               <div className="absolute top-3 right-3 z-10 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">
-                  <button
-                     onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        product.onQuickView?.(product);
-                     }}
-                     className="w-10 h-10 bg-white border border-gray-100   flex items-center justify-center text-gray-400 hover:text-brand-gold hover:border-brand-gold transition-all"
-                  >
-                     <HiEye size={20} />
-                  </button>
-               </div>
+                <ProductActionOverlay 
+                  onQuickView={() => product.onQuickView?.(product)} 
+                />
             </div>
             <div className="p-5 flex flex-col gap-2 justify-between h-full">
                <div>
