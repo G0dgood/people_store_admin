@@ -25,22 +25,22 @@ const Logo: React.FC<LogoProps> = ({
     sm: {
       box: "px-2 py-0.5 text-[11px] tracking-[0.1em]",
       text: "text-[11px] tracking-[0.1em]",
-      img: { w: 20, h: 7 }
+      img: { w: 20, h: 20 }
     },
     md: {
       box: "px-3 py-1 text-sm tracking-[0.15em]",
       text: "text-sm tracking-[0.15em]",
-      img: { w: 30, h: 10 }
+      img: { w: 30, h: 30 }
     },
     lg: {
       box: "px-5 py-2 text-xl tracking-[0.2em]",
       text: "text-xl tracking-[0.2em]",
-      img: { w: 50, h: 16 }
+      img: { w: 50, h: 50 }
     },
     xl: {
       box: "px-8 py-3 text-3xl tracking-[0.3em]",
       text: "text-3xl tracking-[0.3em]",
-      img: { w: 80, h: 26 }
+      img: { w: 80, h: 80 }
     },
   };
 
@@ -60,10 +60,10 @@ const Logo: React.FC<LogoProps> = ({
       <div className={`inline-flex items-center gap-1.5 ${className}`}>
         <div className="relative flex-shrink-0">
           <Image
-            src="/brand_logo/logo.png"
+            src={isLight ? "/brand_logo/logo.svg" : "/brand_logo/logo_black.svg"}
             alt="Bloom & Mist"
             width={style.img.w}
-            height={style.img.h}
+            height={style.img.w} // Square icon
             className="object-contain"
             style={{ height: "auto" }}
             priority

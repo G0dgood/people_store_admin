@@ -56,7 +56,7 @@ const Footer = () => {
     <>
       <footer
         className="w-full pt-20 pb-12 text-white"
-        style={{ backgroundColor: 'var(--brand-charcoal)' }}
+        style={{ backgroundColor: 'var(--brand-black)' }}
       >
         <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-7 gap-12 mb-20">
           {/* Brand Column */}
