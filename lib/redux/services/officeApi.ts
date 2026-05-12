@@ -52,6 +52,10 @@ export const officeApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [{ type: 'Office', id: 'LIST' }],
     }),
+    getOfficeBySubdomain: builder.query<ApiResponse<Office>, string>({
+      query: (subdomain) => `/offices/subdomain/${subdomain}`,
+      providesTags: (result, error, subdomain) => [{ type: 'Office', id: subdomain }],
+    }),
   }),
   overrideExisting: true,
 });
@@ -61,4 +65,5 @@ export const {
   useCreateOfficeMutation,
   useUpdateOfficeMutation,
   useDeleteOfficeMutation,
+  useGetOfficeBySubdomainQuery,
 } = officeApi;

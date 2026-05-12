@@ -1,300 +1,183 @@
 "use client";
 
-import { useState, useEffect, Suspense, useRef, useMemo } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
-import { CustomerHeader } from "../components/customer-header";
-import { CustomerProductCard } from "../components/customer-product-card";
-import { CustomerSubHeader } from "../components/customer-sub-header";
-import { useGetBusinessCatalogQuery, CatalogInventoryItem, useGetBusinessFiltersQuery } from "@/lib/redux/services/businessesApi";
-import { CustomerPageSkeleton } from "../components/Skeleton/CustomerPageSkeleton";
-import { EmptyState } from "../components/empty-state";
-import { useUserInfo } from "../contexts/UserInfoContext";
-import { parseStoreContextFromUrl } from "../utils/storeUtils";
-import { filterOptions, SVGLoaderFetch } from "../components/Options";
-import { useVerifyOrderPaymentQuery } from "@/lib/redux/services/ordersApi";
-import { useCart } from "../context/CartContext";
-import OrderSuccessModal from "../components/Modal/OrderSuccessModal";
-import { useApiError } from "../hooks/useApiError";
+import React, { useMemo } from "react";
+import { useSearchParams } from "next/navigation";
+import { useGetOfficeBySubdomainQuery } from "@/lib/redux/services/officeApi";
+import { useGetProductsByOfficeQuery } from "@/lib/redux/services/productApi";
+import { SVGLoaderFetch } from "@/app/components/Options";
+import { ProductGridItem } from "@/app/components/Products/ProductItems";
+import { Header } from "@/app/components/Header";
+import { Footer } from "@/app/components/Footer";
+import { HiOutlineMapPin, HiOutlineClock, HiOutlinePhone, HiOutlineEnvelope } from "react-icons/hi2";
+import { formatPrice } from "@/app/utils/formatPrice";
 
-function CustomerPageContent() {
-  const router = useRouter();
+export default function OfficeLocationPage() {
   const searchParams = useSearchParams();
-  const { storeContext, user } = useUserInfo();
-  const { clearCart } = useCart();
-  
-  // Initialize state from URL params
-  const [activeFilter, setActiveFilter] = useState(searchParams.get("sort") || "newest");
-  const [categoryId, setCategoryId] = useState<string | undefined>(searchParams.get("categoryId") || undefined);
-  const [officeId, setOfficeId] = useState<string | undefined>(searchParams.get("officeId") || undefined);
-  const [searchQuery, setSearchQuery] = useState(searchParams.get("search") || "");
-  const [inStockOnly, setInStockOnly] = useState(searchParams.get("inStockOnly") === "true");
-  
-  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
-  const [orderStatus, setOrderStatus] = useState("");
-  const processedRef = useRef<string | null>(null);
 
-  // Payment verification logic
-  const trxref = searchParams.get("trxref");
-  const reference = searchParams.get("reference") || trxref;
+  // Extract subdomain from format ?subdomain/name or ?subdomain=name
+  const subdomain = useMemo(() => {
+    const rawParams = searchParams.toString();
+    if (rawParams.includes("subdomain/")) {
+      return rawParams.split("subdomain/")[1].split("&")[0];
+    }
+    return searchParams.get("subdomain");
+  }, [searchParams]);
 
-  const {
-    isLoading: isVerifying,
-    isSuccess: isVerified,
-    isError: isVerificationError,
-    error: verificationError
-  } = useVerifyOrderPaymentQuery(reference!, {
-    skip: !reference
+  const { data: officeRes, isLoading: isLoadingOffice } = useGetOfficeBySubdomainQuery(subdomain || "", {
+    skip: !subdomain
   });
 
-  useApiError(isVerificationError, verificationError, "Payment verification failed");
+  const office = officeRes?.data;
 
-  useEffect(() => {
-    if (isVerified && reference && processedRef.current !== reference) {
-      processedRef.current = reference;
-      setOrderStatus("Payment Successful (Order Confirmed)");
-      setIsSuccessModalOpen(true);
-      clearCart();
+  const { data: productsRes, isLoading: isLoadingProducts } = useGetProductsByOfficeQuery(office?._id || "", {
+    skip: !office?._id
+  });
 
-      // Clean up URL parameters after verification
-      const params = new URLSearchParams(searchParams.toString());
-      params.delete("reference");
-      params.delete("trxref");
-      const newUrl = window.location.pathname + (params.toString() ? `?${params.toString()}` : "");
-      window.history.replaceState({}, "", newUrl);
-    }
-  }, [isVerified, reference, clearCart, searchParams]);
+  const products = productsRes?.data || [];
 
-  // Derive business info from context or URL
-  const businessData = useMemo(() => {
-    const searchString = searchParams.toString();
-    const contextFromUrl = parseStoreContextFromUrl(searchParams, searchString);
-    
-    return {
-      subdomain: contextFromUrl?.subdomain || storeContext?.subdomain || "",
-      businessId: contextFromUrl?.businessId || storeContext?.businessId || user?.businessId || "",
-      officeId: officeId || contextFromUrl?.officeId || storeContext?.officeId || user?.officeId || undefined,
-    };
-  }, [searchParams, storeContext, user, officeId]);
+  if (!subdomain) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white p-6">
+        <div className="text-center space-y-4">
+          <h1 className="text-2xl font-black text-gray-900">Location Not Specified</h1>
+          <p className="text-gray-500 max-w-md">Please use a valid office link to view local inventory and details.</p>
+        </div>
+      </div>
+    );
+  }
 
-  const { data: filtersResponse, isLoading: isLoadingFilters } = useGetBusinessFiltersQuery(
-    businessData.subdomain,
-    { skip: !businessData.subdomain }
-  );
+  if (isLoadingOffice) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <SVGLoaderFetch text={""} />
+      </div>
+    );
+  }
 
-  const offices = useMemo(() => filtersResponse?.data?.offices || [], [filtersResponse]);
-
-  // Sync with global context
-  const { updateStoreContext } = useUserInfo();
-  useEffect(() => {
-    const businessId = filtersResponse?.data?.business?.id;
-    
-    // 1. Sync businessId if missing
-    if (businessId && storeContext && !storeContext.businessId) {
-      updateStoreContext({
-        ...storeContext,
-        businessId: businessId,
-      });
-      return; // Wait for next cycle after context update
-    }
-
-    // 2. Sync office info
-    if (!officeId || offices.length === 0) return;
-    
-    const selectedOffice = offices.find(o => o.id === officeId);
-    if (selectedOffice && (storeContext?.officeId !== officeId || storeContext?.officeName !== selectedOffice.name)) {
-      updateStoreContext({
-        subdomain: businessData.subdomain,
-        businessId: businessData.businessId || businessId || "",
-        officeId: officeId,
-        officeName: selectedOffice.name,
-      });
-    }
-  }, [officeId, offices, businessData.subdomain, businessData.businessId, storeContext, updateStoreContext, filtersResponse]);
-
-  // Auto-select first office if none selected
-  useEffect(() => {
-    if (!businessData.subdomain || isLoadingFilters) return;
-    
-    if (!officeId && offices.length > 0) {
-      // Priority: URL > SessionStorage > First Office
-      const savedData = sessionStorage.getItem(`tecnova_filters_${businessData.subdomain}`);
-      if (savedData) {
-        try {
-          const parsed = JSON.parse(savedData);
-          if (parsed.officeId) {
-            setOfficeId(parsed.officeId);
-            return;
-          }
-        } catch (e) {}
-      }
-      setOfficeId(offices[0].id);
-    }
-  }, [officeId, offices, businessData.subdomain, isLoadingFilters]);
-
-  const { data: catalogResponse, isLoading: isLoadingCatalog } = useGetBusinessCatalogQuery(
-    {
-      subdomain: businessData.subdomain,
-      officeId: officeId || businessData.officeId,
-      categoryId: categoryId,
-      productId: searchParams.get("productId") || undefined,
-      sort: activeFilter,
-      filter: activeFilter,
-      search: searchQuery || undefined,
-      inStockOnly: inStockOnly || undefined,
-      page: Number(searchParams.get("page")) || 1,
-      limit: Number(searchParams.get("limit")) || 12,
-    },
-    { skip: !businessData.subdomain || isLoadingFilters || !(officeId || businessData.officeId) }
-  );
-
-  const inventoryItems = (catalogResponse?.data?.inventory || []) as CatalogInventoryItem[];
-  const business = catalogResponse?.data?.business;
-  const businessLogo = business?.logo?.fileUrl || business?.BusinessDocuments?.[0]?.fileUrl;
-
-  // Sync state TO URL - Simple and robust
-  useEffect(() => {
-    if (!businessData.subdomain) return;
-
-    const params = new URLSearchParams(searchParams.toString());
-    
-    // Standard params
-    if (activeFilter !== "newest") params.set("sort", activeFilter); else params.delete("sort");
-    if (inStockOnly) params.set("inStockOnly", "true"); else params.delete("inStockOnly");
-    if (categoryId) params.set("categoryId", categoryId); else params.delete("categoryId");
-    if (officeId) params.set("officeId", officeId); else params.delete("officeId");
-    if (searchQuery) params.set("search", searchQuery); else params.delete("search");
-
-    const newSearch = params.toString();
-    const currentSearch = searchParams.toString();
-    
-    // Only update if there's a meaningful change to avoid loops
-    if (currentSearch !== newSearch && decodeURIComponent(currentSearch) !== decodeURIComponent(newSearch)) {
-      router.replace(`?${newSearch}`, { scroll: false });
-    }
-    
-    // Persistence
-    const dataToSave = { categoryId, officeId };
-    sessionStorage.setItem(`tecnova_filters_${businessData.subdomain}`, JSON.stringify(dataToSave));
-  }, [activeFilter, categoryId, officeId, inStockOnly, searchQuery, businessData.subdomain, router, searchParams]);
-
-  // Sync URL BACK to state (for back button etc)
-  useEffect(() => {
-    const urlSort = searchParams.get("sort") || "newest";
-    const urlCat = searchParams.get("categoryId") || undefined;
-    const urlOff = searchParams.get("officeId") || undefined;
-    const urlSearch = searchParams.get("search") || "";
-    const urlInStock = searchParams.get("inStockOnly") === "true";
-
-    // Only update state if URL params differ from current state
-    // Use functional updates or check values before setting to avoid unnecessary renders
-    if (urlSort !== activeFilter) setActiveFilter(urlSort);
-    if (urlCat !== categoryId) setCategoryId(urlCat);
-    if (urlOff !== officeId) setOfficeId(urlOff);
-    if (urlSearch !== searchQuery) setSearchQuery(urlSearch);
-    if (urlInStock !== inStockOnly) setInStockOnly(urlInStock);
-  }, [searchParams]); // ONLY depend on searchParams for syncing BACK to state
-
-  if (isLoadingCatalog && !catalogResponse) {
-    return <CustomerPageSkeleton />;
+  if (!office) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white p-6">
+        <div className="text-center space-y-4">
+          <h1 className="text-2xl font-black text-rose-500">Office Not Found</h1>
+          <p className="text-gray-500 max-w-md">We couldn't find an office location with the subdomain "{subdomain}".</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      {isVerifying && (
-        <div className="fixed inset-0 z-[10000] flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm p-6 text-center">
-          <SVGLoaderFetch text="Verifying your payment..." isTable={false} />
-        </div>
-      )}
+    <div className="min-h-screen bg-[#FDFDFD] flex flex-col">
+      <Header />
 
-      <CustomerHeader
-        businessName={business?.name}
-        businessDescription={business?.description}
-        logoUrl={businessLogo}
-        searchValue={searchQuery}
-        onSearchChange={setSearchQuery}
-      />
+      <main className="flex-1">
+        {/* Hero Section */}
+        <section className="relative h-[400px] bg-brand-gold overflow-hidden">
+          <div className="absolute inset-0 bg-black/20 z-10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10" />
+          <div className="container mx-auto px-6 h-full flex flex-col justify-end pb-12 relative z-20">
+            <div className="flex flex-col gap-2">
+              <span className="text-white/80 font-black uppercase tracking-[0.3em] text-xs">Official Office Location</span>
+              <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter uppercase">{office.name}</h1>
+              <div className="flex flex-wrap items-center gap-6 mt-4 text-white/90 font-bold text-sm">
+                <div className="flex items-center gap-2">
+                  <HiOutlineMapPin className="text-brand-gold-light" />
+                  {office.address}
+                </div>
+                {office.workingHours && (
+                  <div className="flex items-center gap-2">
+                    <HiOutlineClock className="text-brand-gold-light" />
+                    {office.workingHours}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
 
-      <CustomerSubHeader
-        filterOptions={filterOptions}
-        activeFilter={activeFilter}
-        onFilterSelect={setActiveFilter}
-        subdomain={businessData.subdomain}
-        categoryId={categoryId}
-        onCategorySelect={setCategoryId}
-        officeId={officeId}
-        onOfficeSelect={setOfficeId}
-        inStockOnly={inStockOnly}
-        onInStockChange={setInStockOnly}
-      />
+        {/* Info Grid */}
+        <section className="py-12 border-b border-gray-100 bg-white">
+          <div className="container mx-auto px-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="flex flex-col gap-1">
+                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Contact Details</span>
+                <div className="flex flex-col gap-3 mt-2">
+                  {office.phone && (
+                    <div className="flex items-center gap-3 text-sm font-bold text-gray-700">
+                      <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-brand-gold">
+                        <HiOutlinePhone size={14} />
+                      </div>
+                      {office.phone}
+                    </div>
+                  )}
+                  {office.email && (
+                    <div className="flex items-center gap-3 text-sm font-bold text-gray-700">
+                      <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-brand-gold">
+                        <HiOutlineEnvelope size={14} />
+                      </div>
+                      {office.email}
+                    </div>
+                  )}
+                </div>
+              </div>
 
-      {/* Product Grid */}
-      <section className="px-6 pt-12 pb-32 md:pb-12 md:px-12">
-        <div className="mx-auto max-w-[1440px]">
-          {inventoryItems.length === 0 ? (
-            <div className="py-20">
-              <EmptyState
-                iconName="NOProduct"
-                title={searchQuery ? "No results found" : "No products available"}
-                description={searchQuery ? `We couldn't find anything matching "${searchQuery}"` : "This business hasn't added any products yet."}
-              />
+              <div className="md:col-span-2">
+                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">About this Location</span>
+                <p className="mt-2 text-sm text-gray-500 font-medium leading-relaxed max-w-2xl">
+                  Welcome to our {office.name} showroom. Here you can experience our full collection in person,
+                  consult with our specialists, and pick up your online orders immediately. Our local inventory
+                  is updated in real-time.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Products Section */}
+        <section className="py-16 container mx-auto px-6">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+            <div className="flex flex-col gap-2">
+              <h2 className="text-3xl font-black text-[#121212] uppercase tracking-tighter">Available In-Store</h2>
+              <p className="text-sm font-bold text-gray-400">Browse products currently in stock at this location.</p>
+            </div>
+            <div className="px-4 py-2 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-black uppercase tracking-widest border border-emerald-100">
+              {products.length} Products Found
+            </div>
+          </div>
+
+          {isLoadingProducts ? (
+            <div className="py-20 flex justify-center">
+              <SVGLoaderFetch text={""} />
+            </div>
+          ) : products.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+              {products.map((product) => (
+                <ProductGridItem
+                  key={product._id}
+                  product={{
+                    id: product._id,
+                    title: product.name,
+                    price: formatPrice(product.price),
+                    description: product.description,
+                    image: product.productImage,
+                    rating: 5, // Default rating if not in model
+                    orders: 0,
+                    shipping: "Free Delivery",
+                    stock: product.stock,
+                    isUnlimited: product.isUnlimited,
+                    media: product.media
+                  }}
+                />
+              ))}
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
-              {inventoryItems.map((item: CatalogInventoryItem) => {
-                const product = item?.product;
-                const images = product?.images || product?.ProductImages || [];
-                const mainImage = images[0]?.filePath || "/genericProduct.jpg";
-
-                const displayStockStatus = (status: string) => {
-                  switch (status) {
-                    case "in_stock": return "In Stock";
-                    case "low_stock": return "Low Stock";
-                    case "out_of_stock": return "Out of Stock";
-                    default: return "In Stock";
-                  }
-                };
-
-                // Extract unique colors from variants
-                const variants = product?.variants || product?.ProductVariant || [];
-                const productColors = Array.from(new Set(
-                  variants
-                    .map((v: { variant?: { color: string }; color?: string }) => v?.variant?.color || v?.color)
-                    .filter((c: string | undefined): c is string => !!c)
-                )) as string[];
-
-                return (
-                  <CustomerProductCard
-                    key={item.id}
-                    id={product?.id || item.productId}
-                    name={product?.name || "Unnamed Product"}
-                    price={`₦ ${product?.price?.toLocaleString()}`}
-                    image={mainImage}
-                    stockStatus={displayStockStatus(item.stockStatus) as "In Stock" | "Low Stock" | "Out of Stock"}
-                    stockCount={item.quantity}
-                    colors={productColors}
-                    item={item}
-                    officeName={storeContext?.officeName || "All Locations"}
-                  />
-                );
-              })}
+            <div className="py-20 text-center border-2 border-dashed border-gray-100 rounded-3xl">
+              <span className="text-gray-300 font-bold">No products currently assigned to this location.</span>
             </div>
           )}
-        </div>
-      </section>
+        </section>
+      </main>
 
-      <OrderSuccessModal
-        isOpen={isSuccessModalOpen}
-        onClose={() => setIsSuccessModalOpen(false)}
-        status={orderStatus}
-      />
+      <Footer />
     </div>
-  );
-}
-
-export default function CustomerPage() {
-  return (
-    <Suspense fallback={<CustomerPageSkeleton />}>
-      <CustomerPageContent />
-    </Suspense>
   );
 }

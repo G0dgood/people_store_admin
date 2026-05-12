@@ -111,6 +111,10 @@ export const productApi = baseApi.injectEndpoints({
       query: () => '/products/recommended',
       providesTags: ['Product'],
     }),
+    getProductsByOffice: builder.query<ApiResponse<Product[]>, string>({
+      query: (officeId) => `/products/office/${officeId}`,
+      providesTags: (result, error, officeId) => [{ type: 'Product', id: `OFFICE_${officeId}` }],
+    }),
   }),
   overrideExisting: true,
 });
@@ -124,4 +128,5 @@ export const {
   useGetBestSellingProductsQuery,
   useGetProductStatsQuery,
   useGetRecommendedProductsQuery,
+  useGetProductsByOfficeQuery,
 } = productApi;
