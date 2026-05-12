@@ -19,9 +19,18 @@ const statusOptions = [
   { value: "Inactive", label: "Inactive" },
 ];
 
+const WORKING_HOURS_OPTIONS = [
+  { label: "Mon - Fri: 9AM - 5PM", value: "Mon - Fri: 9AM - 5PM" },
+  { label: "Mon - Fri: 8AM - 6PM", value: "Mon - Fri: 8AM - 6PM" },
+  { label: "Mon - Sat: 9AM - 5PM", value: "Mon - Sat: 9AM - 5PM" },
+  { label: "Mon - Sat: 8AM - 6PM", value: "Mon - Sat: 8AM - 6PM" },
+  { label: "24 Hours (Daily)", value: "24 Hours (Daily)" },
+];
+
 export function EditOfficeDrawer({ isOpen, onClose, office }: EditOfficeDrawerProps) {
   const [formData, setFormData] = useState({
     name: "",
+    subdomain: "",
     address: "",
     phone: "",
     email: "",
@@ -29,10 +38,17 @@ export function EditOfficeDrawer({ isOpen, onClose, office }: EditOfficeDrawerPr
     status: "Active" as "Active" | "Inactive",
   });
 
+  // Ensure current working hours is an option
+  const options = [...WORKING_HOURS_OPTIONS];
+  if (formData.workingHours && !options.find(o => o.value === formData.workingHours)) {
+    options.push({ label: formData.workingHours, value: formData.workingHours });
+  }
+
   useEffect(() => {
     if (office) {
       setFormData({
         name: office.name || "",
+        subdomain: office.subdomain || "",
         address: office.address || "",
         phone: office.phone || "",
         email: office.email || "",
@@ -80,6 +96,19 @@ export function EditOfficeDrawer({ isOpen, onClose, office }: EditOfficeDrawerPr
           </div>
 
           <div className="flex flex-col gap-2">
+            <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Office Subdomain</label>
+            <Input
+              shape="rounded-sm"
+              placeholder="lagos-hq"
+              value={formData.subdomain}
+              onChange={(e) => setFormData({ ...formData, subdomain: e.target.value.toLowerCase().replace(/\s+/g, '-') })}
+              className="h-12 border-gray-200 font-bold"
+              suffixElement={<span className="text-[10px] font-black text-gray-400 pr-4"> (subdomain)</span>}
+              required
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
             <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Physical Address</label>
             <Input
               shape="rounded-sm"
@@ -116,12 +145,12 @@ export function EditOfficeDrawer({ isOpen, onClose, office }: EditOfficeDrawerPr
 
           <div className="flex flex-col gap-2">
             <label className="text-[10px] font-black text-gray-400 uppercase tracking-[0.15em]">Working Hours</label>
-            <Input
+            <Select
               shape="rounded-sm"
-              placeholder="e.g. Mon-Fri: 9AM - 5PM"
+              options={options}
               value={formData.workingHours}
-              onChange={(e) => setFormData({ ...formData, workingHours: e.target.value })}
-              className="h-12 border-gray-200 font-bold"
+              onChange={(val) => setFormData({ ...formData, workingHours: val as string })}
+              placeholder="Select working hours"
             />
           </div>
 

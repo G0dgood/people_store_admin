@@ -53,6 +53,7 @@ export interface Product {
   variants: ProductVariant[];
   owner: string;
   locations?: any[];
+  branchStock?: Record<string, number>;
   createdAt: string;
   updatedAt: string;
 }

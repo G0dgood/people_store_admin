@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 
 import { useGetOrderStatsQuery } from "@/lib/redux/services/orderApi";
 import { useGetCustomerStatsQuery } from "@/lib/redux/services/customerApi";
+import { useGetOfficesQuery } from "@/lib/redux/services/officeApi";
 import { HiArrowPath } from "react-icons/hi2";
 import { Tooltip } from "../components/Tooltip";
 import { Button } from "../components/Button";
@@ -28,14 +29,16 @@ export default function AdminDashboard() {
   const { data: customerStatsResponse, isLoading: isLoadingCustomers, refetch: refetchCustomers, isFetching: isFetchingCustomers } = useGetCustomerStatsQuery();
   const { data: brandStatsResponse, isLoading: isLoadingBrands, refetch: refetchBrands, isFetching: isFetchingBrands } = useGetBrandStatsQuery();
   const { data: productStatsResponse, isLoading: isLoadingProductStats, refetch: refetchProductStats, isFetching: isFetchingProductStats } = useGetProductStatsQuery();
+  const { data: officesResponse, isLoading: isLoadingOffices, refetch: refetchOffices, isFetching: isFetchingOffices } = useGetOfficesQuery();
 
-  const isGlobalFetching = isFetchingOrders || isFetchingCustomers || isFetchingBrands || isFetchingProductStats;
+  const isGlobalFetching = isFetchingOrders || isFetchingCustomers || isFetchingBrands || isFetchingProductStats || isFetchingOffices;
 
   const handleRefresh = () => {
     refetchOrders();
     refetchCustomers();
     refetchBrands();
     refetchProductStats();
+    refetchOffices();
   };
 
   const orderStats = orderStatsResponse?.data;
@@ -72,9 +75,10 @@ export default function AdminDashboard() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-        {(isLoadingOrders || isLoadingCustomers || isLoadingBrands) ? (
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6">
+        {(isLoadingOrders || isLoadingCustomers || isLoadingBrands || isLoadingOffices) ? (
           <>
+            <StatCardSkeleton />
             <StatCardSkeleton />
             <StatCardSkeleton />
             <StatCardSkeleton />
@@ -117,6 +121,16 @@ export default function AdminDashboard() {
               previousLabel="Unique Products"
               previousValue={(productStats?.totalProducts || 0).toString()}
               onViewDetails={() => router.push("/admin/products")}
+            />
+            <StatCard
+              title="Office Locations"
+              value={(officesResponse?.data?.length || 0).toLocaleString()}
+              trendLabel="Active Sites"
+              trendValue={(officesResponse?.data?.filter((o: any) => o.status === 'Active').length || 0).toString()}
+              trendIsUp={true}
+              previousLabel="Total Branches"
+              previousValue={(officesResponse?.data?.length || 0).toString()}
+              onViewDetails={() => router.push("/admin/offices")}
             />
           </>
         )}

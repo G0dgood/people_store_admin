@@ -41,6 +41,7 @@ const ADMIN_MODULES: SearchResult[] = [
   { id: 913, title: "Support Tickets", subtitle: "Customer service", type: "module", url: "/admin/support" },
   { id: 914, title: "Refund Management", subtitle: "Process returns", type: "module", url: "/admin/refunds" },
   { id: 915, title: "Governance & Roles", subtitle: "Access control", type: "module", url: "/admin/roles" },
+  { id: 916, title: "Office Locations", subtitle: "Manage store branches", type: "module", url: "/admin/offices" },
 ];
 
 interface AdminSearchDropdownProps {

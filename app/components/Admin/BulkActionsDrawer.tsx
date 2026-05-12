@@ -4,6 +4,7 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { IoMdClose } from "react-icons/io";
 import { SelectionSummary } from "./SelectionSummary";
+import { SummarySkeleton } from "../Skeleton/SummarySkeleton";
 import { Icon } from "../Icon";
 
 interface BulkAction {
@@ -73,66 +74,88 @@ export function BulkActionsDrawer({
 
             {/* Content */}
             <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-8 custom-scrollbar">
-              <SelectionSummary
-                selectedIds={selectedIds}
-                items={items}
-                onClear={onClearSelection}
-                idProp={idProp}
-                labelProp={labelProp}
-                title="Your Selection"
-              />
+              {isLoading ? (
+                <div className="flex flex-col gap-8">
+                  <SummarySkeleton />
 
-              {actions.length > 0 && (
-                <div className="flex flex-col gap-3">
-                  <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">
-                    Available Actions
-                  </p>
-                  <div className="flex flex-col gap-2">
-                    {actions.map((action) => (
-                      <button
-                        key={action.id}
-                        onClick={action.onClick}
-                        disabled={isLoading}
-                        className={`flex items-center gap-4 p-3.5 rounded-[4px] transition-all text-left border border-transparent
-                          ${action.variant === "danger"
-                            ? "hover:bg-rose-50 hover:border-rose-100 text-rose-600"
-                            : "hover:bg-brand-gold hover:text-white hover:border-brand-gold text-[#121212]"}
-                          ${isLoading ? "opacity-50 cursor-not-allowed" : ""}
-                        `}
-                      >
-                        <div className={`w-9 h-9 rounded-[4px] flex items-center justify-center shrink-0
-                          ${action.variant === "danger"
-                            ? "bg-rose-50 text-rose-500   shadow-rose-100"
-                            : "bg-white text-brand-gold   border border-gray-50"}
-                        `}>
-                          {isLoading ? (
-                            <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                          ) : (
-                            <Icon name={action.icon} folder={action.folder} size="xs" />
-                          )}
+                  {/* Actions Skeleton */}
+                  <div className="flex flex-col gap-3 animate-pulse">
+                    <div className="h-3 bg-gray-100 rounded w-32 ml-1" />
+                    <div className="flex flex-col gap-2">
+                      {[1, 2, 3].map((i) => (
+                        <div key={i} className="flex items-center gap-4 p-3.5 rounded-[4px] border border-gray-50 bg-gray-50/50">
+                          <div className="w-9 h-9 rounded-[4px] bg-white border border-gray-100 shrink-0" />
+                          <div className="h-4 bg-gray-200 rounded w-32" />
+                          <div className="ml-auto w-4 h-4 bg-gray-200 rounded" />
                         </div>
-                        <span className="text-[12px] font-black">{action.title}</span>
-                        <div className="ml-auto opacity-40">
-                          <Icon name="arrow_forward" folder="icon" size="xs" />
-                        </div>
-                      </button>
-                    ))}
+                      ))}
+                    </div>
                   </div>
                 </div>
-              )}
+              ) : (
+                <>
+                  <SelectionSummary
+                    selectedIds={selectedIds}
+                    items={items}
+                    onClear={onClearSelection}
+                    idProp={idProp}
+                    labelProp={labelProp}
+                    title="Your Selection"
+                  />
 
-              {/* Pro Tip Card */}
-              <div className="mt-auto p-4 bg-gray-900 rounded-2xl relative overflow-hidden group">
-                <div className="absolute top-0 right-0 p-3 opacity-10 rotate-12 transition-transform group-hover:rotate-45 duration-500">
-                  <Icon name="verified" folder="icon" size="lg" className="text-white w-14 h-14" />
-                </div>
-                <div className="relative z-10 flex flex-col gap-2">
-                  <span className="text-[12px] font-black text-white">Efficiency Tip</span>
-                  <p className="text-[10px] font-medium text-gray-400 leading-relaxed">
-                    Batch actions apply instantly to all items in your selection list. Always double-check before confirming bulk deletions.
-                  </p>
-                </div>
-              </div>
+                  {actions.length > 0 && (
+                    <div className="flex flex-col gap-3">
+                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] px-1">
+                        Available Actions
+                      </p>
+                      <div className="flex flex-col gap-2">
+                        {actions.map((action) => (
+                          <button
+                            key={action.id}
+                            onClick={action.onClick}
+                            disabled={isLoading}
+                            className={`flex items-center gap-4 p-3.5 rounded-[4px] transition-all text-left border border-transparent
+                              ${action.variant === "danger"
+                                ? "hover:bg-rose-50 hover:border-rose-100 text-rose-600"
+                                : "hover:bg-brand-gold hover:text-white hover:border-brand-gold text-[#121212]"}
+                              ${isLoading ? "opacity-50 cursor-not-allowed" : ""}
+                            `}
+                          >
+                            <div className={`w-9 h-9 rounded-[4px] flex items-center justify-center shrink-0
+                              ${action.variant === "danger"
+                                ? "bg-rose-50 text-rose-500   shadow-rose-100"
+                                : "bg-white text-brand-gold   border border-gray-50"}
+                            `}>
+                              {isLoading ? (
+                                <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                              ) : (
+                                <Icon name={action.icon} folder={action.folder} size="xs" />
+                              )}
+                            </div>
+                            <span className="text-[12px] font-black">{action.title}</span>
+                            <div className="ml-auto opacity-40">
+                              <Icon name="arrow_forward" folder="icon" size="xs" />
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Pro Tip Card */}
+                  <div className="mt-auto p-4 bg-gray-900 rounded-2xl relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-3 opacity-10 rotate-12 transition-transform group-hover:rotate-45 duration-500">
+                      <Icon name="verified" folder="icon" size="lg" className="text-white w-14 h-14" />
+                    </div>
+                    <div className="relative z-10 flex flex-col gap-2">
+                      <span className="text-[12px] font-black text-white">Efficiency Tip</span>
+                      <p className="text-[10px] font-medium text-gray-400 leading-relaxed">
+                        Batch actions apply instantly to all items in your selection list. Always double-check before confirming bulk deletions.
+                      </p>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </motion.div>
         </div>

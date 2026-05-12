@@ -4,6 +4,7 @@ import { ApiResponse } from '@/lib/types/api';
 export interface Office {
   _id: string;
   name: string;
+  subdomain?: string;
   address: string;
   phone?: string;
   email?: string;

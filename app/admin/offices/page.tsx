@@ -9,12 +9,17 @@ import { RowsPerPage } from "@/app/components/rows-per-page";
 import Checkbox from "@/app/components/Checkbox";
 import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import { Tooltip } from "../../components/Tooltip";
-import { HiOutlineArrowPath } from "react-icons/hi2";
+import { HiOutlineArrowPath, HiOutlineShare } from "react-icons/hi2";
 import { useGetOfficesQuery, useDeleteOfficeMutation } from "@/lib/redux/services/officeApi";
 import { toast } from "sonner";
+import { BulkActionsDrawer } from "@/app/components/Admin/BulkActionsDrawer";
 import { SVGLoaderFetch, NoRecordFound } from "@/app/components/Options";
 import { AddOfficeModal } from "@/app/components/Admin/AddOfficeModal";
 import { EditOfficeDrawer } from "@/app/components/Admin/EditOfficeDrawer";
+import { ViewOfficeProductsModal } from "@/app/components/Admin/ViewOfficeProductsModal";
+import { BusinessLinkModal } from "@/app/components/BusinessLinkModal";
+import { LuPackageSearch } from "react-icons/lu";
+import { useGetProductsQuery } from "@/lib/redux/services/productApi";
 
 const statusConfig = {
   Active: "text-emerald-500 bg-emerald-50/50",
@@ -31,14 +36,20 @@ export default function OfficesListing() {
   const [officeToEdit, setOfficeToEdit] = useState<any>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [officeToDelete, setOfficeToDelete] = useState<any>(null);
+  const [isViewProductsOpen, setIsViewProductsOpen] = useState(false);
+  const [officeForProducts, setOfficeForProducts] = useState<any>(null);
+  const [isLinkModalOpen, setIsLinkModalOpen] = useState(false);
+  const [officeForLink, setOfficeForLink] = useState<any>(null);
 
   const { data: response, isLoading, refetch, isFetching } = useGetOfficesQuery();
+  const { data: productsResponse } = useGetProductsQuery({ limit: 1000 });
+  const products = productsResponse?.data?.products || [];
   const [deleteOffice, { isLoading: isDeleting }] = useDeleteOfficeMutation();
 
   const officesData = response?.data || [];
-  
+
   // Basic client-side search for now
-  const filteredOffices = officesData.filter(office => 
+  const filteredOffices = officesData.filter(office =>
     office.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     office.address.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -76,14 +87,29 @@ export default function OfficesListing() {
     }
   };
 
+  const handleClearSelection = () => {
+    setSelectedIds([]);
+  };
+
+  const handleBulkDelete = async () => {
+    try {
+      await Promise.all(selectedIds.map(id => deleteOffice(id).unwrap()));
+      toast.success("Bulk Deletion Successful", {
+        description: `${selectedIds.length} office locations have been removed.`
+      });
+      setSelectedIds([]);
+      setIsDeleteModalOpen(false);
+    } catch (err: any) {
+      toast.error("Bulk Deletion Failed", {
+        description: "Some locations could not be deleted."
+      });
+    }
+  };
+
   return (
     <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
       {/* Header Area */}
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-black text-gray-900 uppercase tracking-tight">Office Locations</h1>
-          <p className="text-sm text-gray-500 font-medium">Manage physical store locations and pickup points</p>
-        </div>
+      <div className="flex justify-end items-center">
         <div className="flex gap-3 w-full sm:w-auto">
           <Tooltip text="Refresh List">
             <Button shape="rounded-sm" variant="outline"
@@ -141,15 +167,16 @@ export default function OfficesListing() {
                 <th>Location Name</th>
                 <th>Address</th>
                 <th>Contact info</th>
+                <th>Products</th>
                 <th>Status</th>
                 <th className="text-right">Action</th>
               </tr>
             </thead>
             <tbody>
               {isLoading ? (
-                <SVGLoaderFetch asTable={true} text="Loading locations..." colSpan={6} />
+                <SVGLoaderFetch asTable={true} text="Loading locations..." colSpan={7} />
               ) : paginatedOffices.length === 0 ? (
-                <NoRecordFound asTable={true} text="No locations found." colSpan={6} />
+                <NoRecordFound asTable={true} text="No locations found." colSpan={7} />
               ) : (
                 paginatedOffices.map((office) => (
                   <tr key={office._id} className="group">
@@ -176,6 +203,20 @@ export default function OfficesListing() {
                       </div>
                     </td>
                     <td>
+                      <div
+                        className="flex items-center gap-2 cursor-pointer group/count"
+                        onClick={() => {
+                          setOfficeForProducts(office);
+                          setIsViewProductsOpen(true);
+                        }}
+                      >
+                        <div className="w-8 h-8 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center font-black text-[10px] border border-emerald-100 group-hover/count:bg-emerald-500 group-hover/count:text-white group-hover/count:border-emerald-500 transition-all">
+                          {products.filter(p => p.locations?.some((l: any) => (typeof l === 'string' ? l : l._id) === office._id)).length}
+                        </div>
+                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-tighter group-hover/count:text-emerald-600 transition-colors">Assigned</span>
+                      </div>
+                    </td>
+                    <td>
                       <span className={`px-3 py-1.5 rounded-[6px] text-[10px] font-bold ${statusConfig[office.status as keyof typeof statusConfig]}`}>
                         {office.status}
                       </span>
@@ -191,6 +232,17 @@ export default function OfficesListing() {
                             }}
                           >
                             <Icon name="settings" folder="dashboardIcon" size="sm" />
+                          </Button>
+                        </Tooltip>
+                        <Tooltip text="Share Link" position="top">
+                          <Button shape="rounded-sm" variant="outline"
+                            className="!p-1.5 text-gray-400 hover:text-white hover:bg-emerald-500 hover:border-emerald-500 transition-all"
+                            onClick={() => {
+                              setOfficeForLink(office);
+                              setIsLinkModalOpen(true);
+                            }}
+                          >
+                            <HiOutlineShare size={18} />
                           </Button>
                         </Tooltip>
                         <Tooltip text="Delete Location" position="top">
@@ -237,13 +289,59 @@ export default function OfficesListing() {
         />
       )}
 
+      <ViewOfficeProductsModal
+        isOpen={isViewProductsOpen}
+        onClose={() => {
+          setIsViewProductsOpen(false);
+          setOfficeForProducts(null);
+        }}
+        office={officeForProducts}
+        assignedProducts={products.filter(p => p.locations?.some((l: any) => (typeof l === 'string' ? l : l._id) === officeForProducts?._id))}
+      />
+
+      <BusinessLinkModal
+        isOpen={isLinkModalOpen}
+        onClose={() => {
+          setIsLinkModalOpen(false);
+          setOfficeForLink(null);
+        }}
+        officeName={officeForLink?.name}
+        businessLink={officeForLink?.subdomain ? `https://people-store-api.onrender.com/officelocation?subdomain/${officeForLink.subdomain}` : "No subdomain set"}
+      />
+
+      <BulkActionsDrawer
+        isOpen={selectedIds.length > 0}
+        onClose={handleClearSelection}
+        selectedIds={selectedIds}
+        items={filteredOffices}
+        onClearSelection={handleClearSelection}
+        title="Locations Selected"
+        actions={[
+          {
+            id: "delete",
+            title: "Delete Selected",
+            icon: "Delete",
+            folder: "dashboardIcon",
+            variant: "danger",
+            onClick: () => {
+              setOfficeToDelete(null);
+              setIsDeleteModalOpen(true);
+            },
+          },
+        ]}
+      />
+
       <ConfirmationModal
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
-        onConfirm={handleDelete}
-        title="Delete Office Location"
-        message={`Are you sure you want to delete the location "${officeToDelete?.name}"? This action cannot be undone.`}
-        confirmText="Yes, delete location"
+        onConfirm={officeToDelete ? handleDelete : handleBulkDelete}
+        title={officeToDelete ? "Delete Office Location" : "Delete Multiple Locations"}
+        message={
+          officeToDelete
+            ? `Are you sure you want to delete "${officeToDelete.name}"? This action cannot be undone.`
+            : `Are you sure you want to delete ${selectedIds.length} selected locations? This action cannot be undone.`
+        }
+        confirmText={officeToDelete ? "Yes, delete location" : "Yes, delete selected"}
         type="danger"
         isLoading={isDeleting}
       />

@@ -113,6 +113,7 @@ export const AdminHeader: React.FC<HeaderProps> = ({ onOpenMenu, className, isOp
     if (pathname.includes("/admin/categories")) return "Category Management";
     if (pathname.includes("/admin/notifications")) return "Notification Center";
     if (pathname.includes("/admin/faq")) return "FAQ Library";
+    if (pathname.includes("/admin/offices")) return "Office Locations";
     return "Administrative Panel";
   };
 

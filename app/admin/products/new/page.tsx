@@ -678,6 +678,7 @@ export default function CreateProduct() {
           offices={offices || []}
           showColorPicker={showColorPicker}
           setShowColorPicker={setShowColorPicker}
+          hideOffices={true}
         />
       </div>
 

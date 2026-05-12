@@ -12,6 +12,8 @@ import { ProductsMoreActionsDrawer } from "../../components/Admin/ProductsMoreAc
 import { EditProductDrawer } from "../../components/Admin/EditProductDrawer";
 import { ViewProductModal } from "../../components/Admin/ViewProductModal";
 import { BulkActionsDrawer } from "../../components/Admin/BulkActionsDrawer";
+import { BulkAssignLocationModal } from "../../components/Admin/BulkAssignLocationModal";
+import { ProductInventoryModal } from "../../components/Admin/ProductInventoryModal";
 import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
 import { toast } from "sonner";
 import { NoRecordFound, SVGLoaderFetch } from "@/app/components/Options";
@@ -19,7 +21,6 @@ import { Tooltip } from "../../components/Tooltip";
 import { HiArrowPath, HiOutlineEye } from "react-icons/hi2";
 import { StockWarning } from "../../components/StockWarning";
 
-import { StockAdjustmentDrawer } from "../../components/Admin/StockAdjustmentDrawer";
 import { useAddProductMutation, useGetProductsQuery, useDeleteProductMutation, useUpdateProductMutation, Product } from "@/lib/redux/services/productApi";
 import { useGetCategoriesQuery } from "@/lib/redux/services/categoryApi";
 import { useGetBrandsQuery } from "@/lib/redux/services/brandApi";
@@ -66,6 +67,9 @@ export default function ProductListing() {
   const [isArchiveConfirmOpen, setIsArchiveConfirmOpen] = useState(false);
   const [isStatusConfirmOpen, setIsStatusConfirmOpen] = useState(false);
   const [productForStatusToggle, setProductForStatusToggle] = useState<Product | null>(null);
+  const [isBulkAssignOpen, setIsBulkAssignOpen] = useState(false);
+  const [isInventoryModalOpen, setIsInventoryModalOpen] = useState(false);
+  const [productForInventory, setProductForInventory] = useState<Product | null>(null);
 
   // API Queries
   const { data: categoriesResponse } = useGetCategoriesQuery();
@@ -434,12 +438,12 @@ export default function ProductListing() {
                           <HiOutlineEye size={18} />
                         </Button>
                       </Tooltip>
-                      <Tooltip text="Adjust Stock" position="top">
+                      <Tooltip text="Manage Inventory" position="top">
                         <Button shape="rounded-sm" variant="outline"
                           className="!p-1.5 text-gray-400 hover:text-emerald-500 hover:bg-emerald-50 hover:border-emerald-100 transition-all"
                           onClick={() => {
-                            setProductForStock(product);
-                            setIsStockDrawerOpen(true);
+                            setProductForInventory(product);
+                            setIsInventoryModalOpen(true);
                           }}
                         >
                           <LuPackageSearch size={18} />
@@ -509,10 +513,13 @@ export default function ProductListing() {
         />
       </div>
 
-      <StockAdjustmentDrawer
-        isOpen={isStockDrawerOpen}
-        onClose={() => setIsStockDrawerOpen(false)}
-        product={productForStock}
+      <ProductInventoryModal
+        isOpen={isInventoryModalOpen}
+        onClose={() => {
+          setIsInventoryModalOpen(false);
+          setProductForInventory(null);
+        }}
+        product={productForInventory}
       />
 
       <ProductsMoreActionsDrawer
@@ -530,6 +537,13 @@ export default function ProductListing() {
         title="Products Selected"
         actions={[
           {
+            id: "assign-location",
+            title: "Assign Location",
+            icon: "location-01",
+            folder: "dashboardIcon",
+            onClick: () => setIsBulkAssignOpen(true),
+          },
+          {
             id: "export",
             title: "Export Selected",
             icon: "cloud_download",
@@ -545,6 +559,17 @@ export default function ProductListing() {
             onClick: handleBulkDelete,
           },
         ]}
+      />
+
+      <BulkAssignLocationModal
+        isOpen={isBulkAssignOpen}
+        onClose={() => setIsBulkAssignOpen(false)}
+        selectedIds={selectedIds}
+        items={filteredProducts}
+        onSuccess={() => {
+          setSelectedIds([]);
+          refetch();
+        }}
       />
 
       <EditProductDrawer
