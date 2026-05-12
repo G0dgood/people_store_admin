@@ -25,6 +25,7 @@ import { toast } from "sonner";
 import { useSocket } from "@/app/context/SocketContext";
 import { useApiError } from "../../../hooks/useApiError";
 import { useGetBrandsQuery } from "@/lib/redux/services/brandApi";
+import { useGetOfficesQuery } from "@/lib/redux/services/officeApi";
 
 
 export default function CreateProduct() {
@@ -36,10 +37,16 @@ export default function CreateProduct() {
   useApiError(isAddError, addError, "Failed to add product");
   const { data: categoriesResponse, isLoading: isLoadingCategories } = useGetCategoriesQuery();
   const { data: brandsResponse } = useGetBrandsQuery();
+  const { data: officesResponse } = useGetOfficesQuery();
   const { emit } = useSocket();
 
-  const categories = categoriesResponse?.data || [];
-  const brands = brandsResponse?.data || [];
+  const categories = categoriesResponse?.data && 'categories' in categoriesResponse.data 
+    ? (categoriesResponse.data as any).categories 
+    : (Array.isArray(categoriesResponse?.data) ? categoriesResponse.data : []);
+  const brands = brandsResponse?.data && 'brands' in brandsResponse.data 
+    ? (brandsResponse.data as any).brands 
+    : (Array.isArray(brandsResponse?.data) ? brandsResponse.data : []);
+  const offices = officesResponse?.data || [];
 
   // Unified Form State
   const [formData, setFormData] = useState({
@@ -64,13 +71,14 @@ export default function CreateProduct() {
     gender: "Unisex",
     scentFamily: "",
     collections: [] as string[],
-    gifting: ""
+    gifting: "",
+    locations: [] as string[]
   });
 
   // Set initial brand if brandParam exists and brands are loaded
   useEffect(() => {
     if (brandParam && brands.length > 0) {
-      const brand = brands.find(b => b.name === brandParam || b._id === brandParam);
+      const brand = (brands as any[]).find((b: any) => b.name === brandParam || b._id === brandParam);
       if (brand) {
         setFormData(prev => ({ ...prev, brand: brand._id }));
       }
@@ -199,6 +207,7 @@ export default function CreateProduct() {
       postData.append("collections", JSON.stringify(collections));
       postData.append("gifting", gifting);
       postData.append("sku", formData.sku);
+      postData.append("locations", JSON.stringify(formData.locations || []));
       const cleanedVariants = formData.variants.map(v => ({
         ...v,
         attributes: Object.fromEntries(
@@ -666,6 +675,7 @@ export default function CreateProduct() {
           setIsUploadModalOpen={setIsUploadModalOpen}
           categories={categories || []}
           brands={brands || []}
+          offices={offices || []}
           showColorPicker={showColorPicker}
           setShowColorPicker={setShowColorPicker}
         />
@@ -738,7 +748,8 @@ export default function CreateProduct() {
             gender: "Unisex",
             scentFamily: "",
             collections: [],
-            gifting: ""
+            gifting: "",
+            locations: []
           });
           setStagedMedia([]);
           setIsResetConfirmOpen(false);

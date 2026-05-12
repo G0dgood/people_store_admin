@@ -259,6 +259,30 @@ const ProductDetailsInfo: React.FC<ProductDetailsInfoProps> = ({ product }) => {
 
       <SpecsTable specs={specs} />
 
+      {/* Availability in Physical Stores */}
+      {product.locations?.length > 0 && (
+        <div className="flex flex-col gap-4 p-5 bg-gray-50/50 border border-gray-100 rounded-sm">
+          <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-widest text-gray-900">
+            <Icon name="mdi_location (1)" folder="dashboardIcon" size="sm" className="text-brand-gold" />
+            <span>Available in {product.locations.length} {product.locations.length === 1 ? 'Location' : 'Locations'}</span>
+          </div>
+          <div className="flex flex-col gap-4">
+            {product.locations.map((loc: any) => (
+              <div key={loc._id} className="flex flex-col gap-1 border-l-2 border-brand-gold/20 pl-4">
+                <span className="text-[11px] font-black text-gray-800">{loc.name}</span>
+                <span className="text-[10px] text-gray-400 leading-relaxed">{loc.address}</span>
+                {loc.workingHours && (
+                  <div className="flex items-center gap-1.5 mt-1">
+                    <Icon name="clock" size="xs" className="text-gray-300" />
+                    <span className="text-[9px] text-gray-400 font-medium">{loc.workingHours}</span>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="flex flex-col gap-4">
         <div className="flex gap-4">
           <button

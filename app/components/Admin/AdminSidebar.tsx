@@ -60,6 +60,7 @@ const moduleIconMap: Record<string, string | React.ReactNode> = {
   profile: "user-profile-circle",
   roles: "settings",
   permissions: <HiShieldCheck size={14} />,
+  offices: "fluent-mdl2_product-list",
 };
 
 // Map module IDs to their primary display names and routes if they differ from the default slug
@@ -253,6 +254,7 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
             items: [
               { name: "Support", href: "/admin/support", icon: moduleIconMap["support"], moduleId: "support" as any },
               { name: "FAQ", href: "/admin/faq", icon: <HiOutlineQuestionMarkCircle size={14} />, moduleId: "faq" as any },
+              { name: "Offices", href: "/admin/offices", icon: moduleIconMap["offices"], moduleId: "offices" as any },
               { name: "Notifications", href: "/admin/notifications", icon: moduleIconMap["notifications"], moduleId: "notifications" as any },
             ]
           }

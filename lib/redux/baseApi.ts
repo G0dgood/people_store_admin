@@ -60,7 +60,8 @@ export const baseApi = createApi({
     'Wishlist',
     'RecentlyViewed',
     'GiftBox',
-    'GiftCard'
+    'GiftCard',
+    'Office'
   ],
   endpoints: () => ({}),
 });

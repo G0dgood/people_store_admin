@@ -26,6 +26,7 @@ import { useSocket } from "@/app/context/SocketContext";
 import { SVGLoaderFetch } from "@/app/components/Options";
 import { EditProductSkeleton } from "@/app/components/Admin/EditProductSkeleton";
 import { useGetBrandsQuery } from "@/lib/redux/services/brandApi";
+import { useGetOfficesQuery } from "@/lib/redux/services/officeApi";
 
 export default function EditProduct() {
   const router = useRouter();
@@ -36,6 +37,7 @@ export default function EditProduct() {
   const [updateProduct, { isLoading: isSubmitting, isError: isUpdateError, error: updateError }] = useUpdateProductMutation();
   const { data: categoriesResponse, isLoading: isLoadingCategories, isError: isCategoriesError, error: categoriesError } = useGetCategoriesQuery();
   const { data: brandsResponse } = useGetBrandsQuery();
+  const { data: officesResponse } = useGetOfficesQuery();
   const { emit } = useSocket();
 
   useApiError(isProductError, productError, "Failed to load product details");
@@ -43,8 +45,13 @@ export default function EditProduct() {
   useApiError(isUpdateError, updateError, "Failed to update product");
 
   const product = productResponse?.data;
-  const categories = categoriesResponse?.data || [];
-  const brands = brandsResponse?.data || [];
+  const categories = categoriesResponse?.data && 'categories' in categoriesResponse.data 
+    ? (categoriesResponse.data as any).categories 
+    : (Array.isArray(categoriesResponse?.data) ? categoriesResponse.data : []);
+  const brands = brandsResponse?.data && 'brands' in brandsResponse.data 
+    ? (brandsResponse.data as any).brands 
+    : (Array.isArray(brandsResponse?.data) ? brandsResponse.data : []);
+  const offices = officesResponse?.data || [];
 
   // Unified Form State
   const [formData, setFormData] = useState({
@@ -66,7 +73,8 @@ export default function EditProduct() {
     variants: [] as any[],
     colors: "",
     size: "",
-    gender: "Unisex"
+    gender: "Unisex",
+    locations: [] as string[]
   });
 
   const getRecommendedStatus = (quantity: string | number) => {
@@ -124,9 +132,9 @@ export default function EditProduct() {
 
   const currencies = [
     { code: "NGN", label: "Nigeria", symbol: "₦", flag: "/country/Property 1=NG.svg" },
-    { code: "USD", label: "USA", symbol: "$", flag: "/country/Property 1=US.png" },
-    { code: "GBP", label: "UK", symbol: "£", flag: "/country/Property 1=GB.png" },
-    { code: "EUR", label: "EU", symbol: "€", flag: "/country/Property 1=FR.png" },
+    // { code: "USD", label: "USA", symbol: "$", flag: "/country/Property 1=US.png" },
+    // { code: "GBP", label: "UK", symbol: "£", flag: "/country/Property 1=GB.png" },
+    // { code: "EUR", label: "EU", symbol: "€", flag: "/country/Property 1=FR.png" },
   ];
 
   // Populate form when product data arrives
@@ -155,7 +163,8 @@ export default function EditProduct() {
           if (Array.isArray(raw)) return raw[0] || "";
           return String(raw);
         })(),
-        gender: product?.gender || "Unisex"
+        gender: product?.gender || "Unisex",
+        locations: product?.locations?.map((l: any) => typeof l === 'string' ? l : l._id) || []
       });
 
       if (product?.media && product?.media.length > 0) {
@@ -254,6 +263,7 @@ export default function EditProduct() {
       postData.append("size", size || "");
       postData.append("gender", gender);
       postData.append("sku", formData.sku);
+      postData.append("locations", JSON.stringify(formData.locations || []));
       const cleanedVariants = formData.variants.map(v => ({
         ...v,
         attributes: Object.fromEntries(
@@ -861,6 +871,7 @@ export default function EditProduct() {
           setIsUploadModalOpen={setIsUploadModalOpen}
           categories={categories || []}
           brands={brands || []}
+          offices={offices || []}
           showColorPicker={showColorPicker}
           setShowColorPicker={setShowColorPicker}
         />

@@ -52,6 +52,7 @@ export interface Product {
   media: ProductMedia[];
   variants: ProductVariant[];
   owner: string;
+  locations?: any[];
   createdAt: string;
   updatedAt: string;
 }

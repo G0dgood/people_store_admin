@@ -17,6 +17,7 @@ interface ProductMediaMetaSidebarProps {
   brands: any[];
   showColorPicker: boolean;
   setShowColorPicker: (show: boolean) => void;
+  offices: any[];
 }
 
 export const ProductMediaMetaSidebar: React.FC<ProductMediaMetaSidebarProps> = ({
@@ -30,6 +31,7 @@ export const ProductMediaMetaSidebar: React.FC<ProductMediaMetaSidebarProps> = (
   brands,
   showColorPicker,
   setShowColorPicker,
+  offices,
 }) => {
   return (
     <div className="flex flex-col gap-6">
@@ -229,6 +231,35 @@ export const ProductMediaMetaSidebar: React.FC<ProductMediaMetaSidebarProps> = (
                 { label: "Discovery Sets", value: "Discovery Sets" },
               ]}
             />
+          </div>
+
+          <div className="flex flex-col gap-4">
+            <label className="text-[11px] font-bold text-[#121212]">Available in Offices</label>
+            <div className="flex flex-col gap-2 max-h-40 overflow-y-auto custom-scrollbar pr-2">
+              {offices?.map((office) => (
+                <label key={office._id} className="flex items-center gap-3 p-2.5 rounded-[4px] border border-gray-50 hover:bg-gray-50 cursor-pointer transition-colors group">
+                  <input
+                    type="checkbox"
+                    className="w-4 h-4 rounded border-gray-300 text-brand-gold focus:ring-brand-gold cursor-pointer"
+                    checked={formData.locations?.includes(office._id)}
+                    onChange={(e) => {
+                      const currentLocations = formData.locations || [];
+                      const newLocations = e.target.checked
+                        ? [...currentLocations, office._id]
+                        : currentLocations.filter((id: string) => id !== office._id);
+                      handleInputChange("locations", newLocations);
+                    }}
+                  />
+                  <div className="flex flex-col">
+                    <span className="text-xs font-bold text-gray-700 group-hover:text-brand-gold transition-colors">{office.name}</span>
+                    <span className="text-[10px] text-gray-400 truncate max-w-[150px]">{office.address}</span>
+                  </div>
+                </label>
+              ))}
+              {offices?.length === 0 && (
+                <p className="text-[10px] text-gray-400 italic">No offices defined. <a href="/admin/offices" className="text-brand-gold hover:underline">Add one</a></p>
+              )}
+            </div>
           </div>
 
           <div className="flex flex-col gap-4">

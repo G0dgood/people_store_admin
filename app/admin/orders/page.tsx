@@ -19,6 +19,8 @@ import { Tooltip } from "../../components/Tooltip";
 
 
 import { useGetOrdersQuery, useGetOrderStatsQuery, useUpdateOrderStatusMutation, useDeleteOrderMutation } from "@/lib/redux/services/orderApi";
+import { useGetBrandsQuery } from "@/lib/redux/services/brandApi";
+import { useGetCategoriesQuery } from "@/lib/redux/services/categoryApi";
 import { SVGLoaderFetch, NoRecordFound } from "../../components/Options";
 import { toast } from "sonner";
 import { formatPrice } from "@/app/utils/formatPrice";
@@ -43,13 +45,33 @@ export default function OrderListing() {
   const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
   const [orderToDelete, setOrderToDelete] = useState<string | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedBrand, setSelectedBrand] = useState("All");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
+  const { data: brandsResponse } = useGetBrandsQuery();
+  const { data: categoriesResponse } = useGetCategoriesQuery();
+
+  const brands = brandsResponse?.data?.brands || [];
+  const categories = categoriesResponse?.data?.categories || [];
+
+  const brandOptions = [
+    { value: "All", label: "All Brands" },
+    ...brands.map((b: any) => ({ value: b._id, label: b.name }))
+  ];
+
+  const categoryOptions = [
+    { value: "All", label: "All Categories" },
+    ...categories.map((c: any) => ({ value: c._id, label: c.name }))
+  ];
 
   const { data: statsResponse, isLoading: isLoadingStats, refetch: refetchStats, isFetching: isFetchingStats } = useGetOrderStatsQuery();
   const { data: ordersResponse, isLoading: isLoadingOrders, refetch: refetchOrders, isFetching: isFetchingOrders } = useGetOrdersQuery({
     page: currentPage,
     limit: rowsPerPage,
     status: activeTab === "All" ? "" : activeTab,
-    search: searchQuery
+    search: searchQuery,
+    brand: selectedBrand === "All" ? "" : selectedBrand,
+    category: selectedCategory === "All" ? "" : selectedCategory
   });
 
   const [deleteOrder, { isLoading: isDeleting }] = useDeleteOrderMutation();
@@ -143,27 +165,45 @@ export default function OrderListing() {
     <div className="bg-white border border-[#1C1C1C1A] rounded-[6px] overflow-hidden flex flex-col">
      {/* Filter Controls Row */}
      <div className="p-4 sm:p-6 flex flex-col lg:flex-row gap-6 items-center justify-between border-b border-gray-50">
-       <div className="w-full lg:w-64">
-        <Dropdown
-         options={[
-          { value: "All", label: "All Status" },
-          { value: "Pending", label: "Pending" },
-          { value: "Processing", label: "Processing" },
-          { value: "Shipped", label: "Shipped" },
-          { value: "Delivered", label: "Delivered" },
-          { value: "Cancelled", label: "Cancelled" },
-         ]}
-         value={activeTab}
-         onChange={setActiveTab}
-         getOptionDotColor={(opt) => {
-          if (opt.value === "Pending") return "#FB923C";
-          if (opt.value === "Processing") return "#10B981";
-          if (opt.value === "Shipped") return "#6B7280";
-          if (opt.value === "Delivered") return "#3B82F6";
-          if (opt.value === "Cancelled") return "#F43F5E";
-          return undefined;
-         }}
-        />
+       <div className="flex flex-col sm:flex-row items-center gap-4 w-full lg:w-auto">
+        <div className="w-full sm:w-48">
+          <Dropdown
+           options={[
+            { value: "All", label: "All Status" },
+            { value: "Pending", label: "Pending" },
+            { value: "Processing", label: "Processing" },
+            { value: "Shipped", label: "Shipped" },
+            { value: "Delivered", label: "Delivered" },
+            { value: "Cancelled", label: "Cancelled" },
+           ]}
+           value={activeTab}
+           onChange={setActiveTab}
+           getOptionDotColor={(opt) => {
+            if (opt.value === "Pending") return "#FB923C";
+            if (opt.value === "Processing") return "#10B981";
+            if (opt.value === "Shipped") return "#6B7280";
+            if (opt.value === "Delivered") return "#3B82F6";
+            if (opt.value === "Cancelled") return "#F43F5E";
+            return undefined;
+           }}
+          />
+        </div>
+
+        <div className="w-full sm:w-48">
+          <Dropdown
+            options={brandOptions}
+            value={selectedBrand}
+            onChange={setSelectedBrand}
+          />
+        </div>
+
+        <div className="w-full sm:w-48">
+          <Dropdown
+            options={categoryOptions}
+            value={selectedCategory}
+            onChange={setSelectedCategory}
+          />
+        </div>
        </div>
 
       <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">

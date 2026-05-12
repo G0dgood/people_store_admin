@@ -27,7 +27,7 @@ export interface OrderRecord {
 
 export const orderApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-        getOrders: builder.query<ApiResponse<{ orders: OrderRecord[], pagination: any }>, { page?: number, limit?: number, status?: string, search?: string }>({
+        getOrders: builder.query<ApiResponse<{ orders: OrderRecord[], pagination: any }>, { page?: number, limit?: number, status?: string, search?: string, brand?: string, category?: string }>({
             query: (params) => ({
                 url: '/orders/all',
                 params
