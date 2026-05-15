@@ -8,6 +8,7 @@ import { useGetPublicBrandsQuery, useGetPublicCategoriesQuery } from "@/lib/redu
 export const SecondaryNavbar: React.FC = () => {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [triangleLeft, setTriangleLeft] = useState<number>(0);
+  const [itemOffset, setItemOffset] = useState<number>(0);
   const pathname = usePathname();
   const navRef = useRef<HTMLDivElement>(null);
   const buttonRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
@@ -40,6 +41,7 @@ export const SecondaryNavbar: React.FC = () => {
       const navRect = navRef.current?.getBoundingClientRect();
       if (navRect) {
         setTriangleLeft(rect.left - navRect.left + rect.width / 2);
+        setItemOffset(-(rect.left - navRect.left));
       }
     }
     setActiveMenu(label);
@@ -185,10 +187,10 @@ export const SecondaryNavbar: React.FC = () => {
               key={item.label}
               className="h-full relative flex items-center"
               onMouseEnter={() => handleMouseEnter(item.label)}
+              onMouseLeave={() => setActiveMenu(null)}
             >
               <button
                 ref={(el) => { buttonRefs.current[item.label] = el; }}
-                onClick={() => handleMouseEnter(item.label)}
                 className={`relative flex items-center gap-2 text-[11px] font-black tracking-[0.15em] transition-colors outline-none ${activeMenu === item.label ? "text-black" : "text-gray-500 hover:text-black"
                   }`}
               >
@@ -197,58 +199,63 @@ export const SecondaryNavbar: React.FC = () => {
                   <HiChevronDown className={`transition-transform duration-200 text-gray-400 ${activeMenu === item.label ? "rotate-180" : ""}`} size={12} />
                 )}
               </button>
+
+              <AnimatePresence>
+                {activeMenu === item.label && item.hasDropdown && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    transition={{ duration: 0.2 }}
+                    className="absolute top-full bg-white border-b border-gray-100 shadow-[0_20px_50px_rgba(0,0,0,0.05)] z-[100] pb-16 pt-10"
+                    style={{ 
+                      left: `${itemOffset}px`, 
+                      width: navRef.current?.offsetWidth || '100vw'
+                    }}
+                  >
+                    {/* Triangle Indicator */}
+                    <div className="absolute -top-2 left-0 w-full overflow-hidden h-2">
+                      <div
+                        className="absolute top-1 w-4 h-4 bg-white border-l border-t border-gray-100 rotate-45"
+                        style={{ left: `${triangleLeft}px`, marginLeft: '-8px' }}
+                      />
+                    </div>
+
+                    <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16">
+                      <div className={`grid ${activeMenu === "ALL BRANDS" ? "grid-cols-8" : activeMenu === "SKINCARE" ? "grid-cols-5" : "grid-cols-4"} gap-12`}>
+                        {(
+                          activeMenu === "ALL BRANDS" ? dynamicBrandsGroups :
+                            activeMenu === "SKINCARE" ? dynamicSkincareGroups :
+                              activeMenu === "PERFUME" ? perfumeGroups :
+                                giftGroups
+                        ).map((group) => (
+                          <div key={group.title} className="flex flex-col gap-8">
+                            <h3 className="text-[14px] font-black text-black uppercase tracking-widest">
+                              {group.title}
+                            </h3>
+                            <ul className="flex flex-col gap-4">
+                              {group.items.map((link: string) => (
+                                <li key={link}>
+                                  <Link
+                                    href={`/products?${activeMenu === "ALL BRANDS" ? "brand" : "category"}=${encodeURIComponent(link)}`}
+                                    className="text-[15px] text-gray-500 hover:text-brand-gold transition-colors block font-medium tracking-tight"
+                                  >
+                                    {link}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           ))}
         </nav>
       </div>
-
-      <AnimatePresence>
-        {activeMenu && currentItem?.hasDropdown && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            transition={{ duration: 0.2 }}
-            className="absolute top-full left-0 w-full bg-white border-b border-gray-100 shadow-[0_20px_50px_rgba(0,0,0,0.05)] z-[100] pb-16 pt-10"
-            onMouseLeave={() => setActiveMenu(null)}
-          >
-            <div className="absolute -top-2 left-0 w-full overflow-hidden h-2">
-              <div
-                className="absolute top-1 w-4 h-4 bg-white border-l border-t border-gray-100 rotate-45"
-                style={{ left: `${triangleLeft}px`, marginLeft: '-8px' }}
-              />
-            </div>
-            <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16">
-              <div className={`grid ${activeMenu === "ALL BRANDS" ? "grid-cols-8" : activeMenu === "SKINCARE" ? "grid-cols-5" : "grid-cols-4"} gap-12`}>
-                {(
-                  activeMenu === "ALL BRANDS" ? dynamicBrandsGroups :
-                    activeMenu === "SKINCARE" ? dynamicSkincareGroups :
-                      activeMenu === "PERFUME" ? perfumeGroups :
-                        giftGroups
-                ).map((group) => (
-                  <div key={group.title} className="flex flex-col gap-8">
-                    <h3 className="text-[14px] font-black text-black uppercase tracking-widest">
-                      {group.title}
-                    </h3>
-                    <ul className="flex flex-col gap-4">
-                      {group.items.map((link: string) => (
-                        <li key={link}>
-                          <Link
-                            href={`/products?${activeMenu === "ALL BRANDS" ? "brand" : "category"}=${encodeURIComponent(link)}`}
-                            className="text-[15px] text-gray-500 hover:text-brand-gold transition-colors block font-medium tracking-tight"
-                          >
-                            {link}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 };

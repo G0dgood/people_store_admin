@@ -7,37 +7,40 @@ import { useSearchParams } from "next/navigation";
 import { IoGrid } from "react-icons/io5";
 import {
   useGetCurrentCustomerQuery,
-  useUpdateOwnCustomerProfileMutation,
-  useUpdateOwnCustomerPasswordMutation
-} from "@/lib/redux/services/customersApi";
+  useUpdateCustomerProfileMutation,
+  useChangeCustomerPasswordMutation
+} from "@/lib/redux/services/customerApi";
+import { useGetMyOrdersQuery as useGetCurrentOfficeLocationOrdersQuery } from "@/lib/redux/services/orderApi";
+import { useGetOfficeBySubdomainQuery } from "@/lib/redux/services/officeApi";
+import { useDispatch } from "react-redux";
 import { toast } from "sonner";
 import { SVGLoader } from "@/app/components/SVGLoader";
 import { useApiError } from "@/app/hooks/useApiError";
-import { CustomerProfileSkeleton } from "@/app/components/Skeleton/CustomerProfileSkeleton";
-import { useDispatch, useSelector } from "react-redux";
-import { setCustomer, selectCustomer } from "@/lib/redux/slices/authSlice";
-import { useUserInfo } from "@/app/contexts/UserInfoContext";
-import { getStoreUrl, parseStoreContextFromUrl, getShopUrl } from "@/app/utils/storeUtils";
-import Input from "@/app/components/Input";
-import Button from "@/app/components/Button";
-import { useGetCurrentCustomerOrdersQuery } from "@/lib/redux/services/ordersApi";
-import { CustomerHeader } from "../../components/customer-header";
+import { CustomerProfileSkeleton } from "../components/Skeleton/CustomerProfileSkeleton";
+import { useCustomerAuth } from "@/app/context/CustomerAuthContext";
+import { useOfficeLocationInfo } from "@/app/context/OfficeLocationContext";
+import { getStoreUrl, parseStoreContextFromUrl, getShopUrl } from "../utils/storeUtils";
+import { Input } from "@/app/components/Form/Inputs";
+import { CustomerHeader } from "../components/customer-header";
+import { Button } from "@/app/components/Button";
+import { Label } from "@/app/components/Form";
 
 function CustomerProfilePageContent() {
   const searchParams = useSearchParams();
   const dispatch = useDispatch();
-  const { storeContext, updateStoreContext } = useUserInfo();
-  const currentCustomer = useSelector(selectCustomer);
-  const { data: customerData, isLoading: isLoadingCustomer } = useGetCurrentCustomerQuery();
-  const [updateProfile, { isLoading: isUpdatingProfile, isError: isProfileError, error: profileError }] = useUpdateOwnCustomerProfileMutation();
-  const [updatePassword, { isLoading: isUpdatingPassword, isError: isPasswordError, error: passwordError }] = useUpdateOwnCustomerPasswordMutation();
+  const { storeContext, updateStoreContext } = useOfficeLocationInfo();
+  const { customer: currentStaff, setCustomerData } = useCustomerAuth();
+  const { data: customerResponse, isLoading: isLoadingCustomer } = useGetCurrentCustomerQuery();
+  const StaffData = customerResponse?.data;
+  const [updateProfile, { isLoading: isUpdatingProfile, isError: isProfileError, error: profileError }] = useUpdateCustomerProfileMutation();
+  const [updatePassword, { isLoading: isUpdatingPassword, isError: isPasswordError, error: passwordError }] = useChangeCustomerPasswordMutation();
 
-  const { data: ordersData, isLoading: isLoadingOrders } = useGetCurrentCustomerOrdersQuery(
-    undefined,
-    { skip: !customerData?.id && !currentCustomer?.id }
+  const { data: ordersData, isLoading: isLoadingOrders } = useGetCurrentOfficeLocationOrdersQuery(
+    {},
+    { skip: !StaffData?._id && !currentStaff?._id }
   );
 
-  const orders = ordersData?.data || [];
+  const orders = ordersData?.data?.orders || [];
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -52,44 +55,42 @@ function CustomerProfilePageContent() {
     confirmPassword: "",
   });
 
-  const [businessInfo, setBusinessInfo] = useState<import("@/lib/redux/services/businessesApi").Business | null>(null);
-
   const subdomain = searchParams.get("subdomain") || storeContext?.subdomain;
 
-  useEffect(() => {
-    if (subdomain) {
-      const savedBusiness = localStorage.getItem(`tecnova_business_${subdomain}`);
-      if (savedBusiness) {
-        setBusinessInfo(JSON.parse(savedBusiness));
-      }
-    }
-  }, [subdomain]);
+  const { data: officeRes, isLoading: isLoadingOffice } = useGetOfficeBySubdomainQuery(subdomain || "", {
+    skip: !subdomain
+  });
+  const office = officeRes?.data;
 
   useEffect(() => {
-    const searchString = window.location.search.substring(1);
-    const context = parseStoreContextFromUrl(searchParams, searchString);
-    if (context) {
-      updateStoreContext(context);
+    const rawParams = searchParams.toString();
+    const parsed = parseStoreContextFromUrl(searchParams, rawParams);
+    if (parsed) {
+      updateStoreContext(parsed);
     }
   }, [searchParams, updateStoreContext]);
 
   useEffect(() => {
-    if (customerData) {
+    const data = StaffData || currentStaff;
+    if (data) {
+      // Handle name splitting if only fullName is available
+      let fName = (data as any).firstName || "";
+      let lName = (data as any).lastName || "";
+
+      if (!fName && !lName && (data as any).fullName) {
+        const parts = (data as any).fullName.split(" ");
+        fName = parts[0] || "";
+        lName = parts.slice(1).join(" ") || "";
+      }
+
       setFormData({
-        firstName: customerData.firstName || "",
-        lastName: customerData.lastName || "",
-        phoneNumber: customerData.phoneNumber || customerData.phone || "",
-        email: customerData.email || "",
-      });
-    } else if (currentCustomer) {
-      setFormData({
-        firstName: currentCustomer.firstName || "",
-        lastName: currentCustomer.lastName || "",
-        phoneNumber: currentCustomer.phoneNumber || currentCustomer.phone || "",
-        email: currentCustomer.email || "",
+        firstName: fName,
+        lastName: lName,
+        phoneNumber: (data as any).phoneNumber || (data as any).phone || "",
+        email: data.email || "",
       });
     }
-  }, [customerData, currentCustomer]);
+  }, [StaffData, currentStaff]);
 
   useApiError(isProfileError, profileError, "Failed to update profile");
   useApiError(isPasswordError, passwordError, "Failed to update password");
@@ -98,8 +99,9 @@ function CustomerProfilePageContent() {
     e.preventDefault();
     try {
       const result = await updateProfile(formData).unwrap();
-      dispatch(setCustomer(result));
-      localStorage.setItem("tecnovaCustomer", JSON.stringify(result));
+      if (result?.data) {
+        setCustomerData(result.data);
+      }
       toast.success("Profile updated successfully!");
     } catch (err: unknown) {
       console.error("Profile update failed:", err);
@@ -129,14 +131,12 @@ function CustomerProfilePageContent() {
   }
 
   const recentOrders = orders?.slice(0, 3) || [];
-  const businessLogo = businessInfo?.logo?.fileUrl || businessInfo?.BusinessDocuments?.[0]?.fileUrl;
-
   return (
     <div className="min-h-screen bg-white">
       <CustomerHeader
-        businessName={businessInfo?.name}
-        businessDescription={businessInfo?.description}
-        logoUrl={businessLogo}
+        businessName={office?.name || "Bloom & Mist"}
+        businessDescription={office?.address}
+        logoUrl={undefined}
         showSearch={false}
       />
 
@@ -148,7 +148,7 @@ function CustomerProfilePageContent() {
               <span className="text-xs font-medium md:text-sm">Powered by Tecnovo</span>
             </div>
             <Link
-              href={getStoreUrl(storeContext?.subdomain, storeContext?.businessId, storeContext?.officeId)}
+              href={getStoreUrl(storeContext?.subdomain, storeContext?.officeId)}
               className="text-xs font-medium text-[#156BB6] hover:underline md:text-sm"
             >
               Back to Home
@@ -168,47 +168,51 @@ function CustomerProfilePageContent() {
             <h2 className="text-xl font-medium text-[#3E4347] mb-6">Personal Information</h2>
             <form className="space-y-6" onSubmit={handleProfileSubmit}>
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <Input
-                  label="First Name"
-                  placeholder="Enter here"
-                  value={formData.firstName}
-                  onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                  required
-                  fullWidth
-                  disabled={isUpdatingProfile}
-                />
-                <Input
-                  label="Last Name"
-                  placeholder="Enter here"
-                  value={formData.lastName}
-                  onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                  required
-                  fullWidth
-                  disabled={isUpdatingProfile}
-                />
-                <Input
-                  label="Phone Number"
-                  placeholder="+2348144699332"
-                  value={formData.phoneNumber}
-                  onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
-                  required
-                  fullWidth
-                  disabled={isUpdatingProfile}
-                />
-                <Input
-                  label="Email Address"
-                  type="email"
-                  placeholder="example@gmail.com"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  required
-                  fullWidth
-                  disabled={true}
-                />
+                <div className="space-y-1">
+                  <Label>First Name</Label>
+                  <Input
+                    placeholder="Enter first name"
+                    value={formData.firstName}
+                    onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                    required
+                    disabled={isUpdatingProfile}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label>Last Name</Label>
+                  <Input
+                    placeholder="Enter last name"
+                    value={formData.lastName}
+                    onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                    required
+                    disabled={isUpdatingProfile}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label>Phone Number</Label>
+                  <Input
+                    placeholder="+2348144699332"
+                    value={formData.phoneNumber}
+                    onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
+                    required
+                    disabled={isUpdatingProfile}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label>Email Address</Label>
+                  <Input
+                    type="email"
+                    placeholder="example@gmail.com"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    required
+                    disabled={true}
+                  />
+                </div>
               </div>
 
               <div className="pt-4">
-                <Button type="submit" fullWidth size="lg" disabled={isUpdatingProfile}>
+                <Button type="submit" size="lg" disabled={isUpdatingProfile}>
                   {isUpdatingProfile ? <SVGLoader width="24px" height="24px" color="#fff" /> : "Save Changes"}
                 </Button>
               </div>
@@ -220,44 +224,44 @@ function CustomerProfilePageContent() {
           <section className="">
             <h2 className="text-xl font-medium text-[#3E4347] mb-6">Security</h2>
             <form className="space-y-6" onSubmit={handlePasswordSubmit}>
-              <Input
-                label="Current Password"
-                type="password"
-                placeholder="Enter here"
-                value={passwordData.currentPassword}
-                onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
-                required
-                fullWidth
-                showPasswordToggle
-                disabled={isUpdatingPassword}
-              />
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div className="space-y-1">
+                <Label>Current Password</Label>
                 <Input
-                  label="New Password"
                   type="password"
-                  placeholder="Enter here"
-                  value={passwordData.newPassword}
-                  onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+                  placeholder="Enter current password"
+                  value={passwordData.currentPassword}
+                  onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
                   required
-                  fullWidth
-                  showPasswordToggle
-                  disabled={isUpdatingPassword}
-                />
-                <Input
-                  label="Confirm New Password"
-                  type="password"
-                  placeholder="Enter here"
-                  value={passwordData.confirmPassword}
-                  onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-                  required
-                  fullWidth
-                  showPasswordToggle
                   disabled={isUpdatingPassword}
                 />
               </div>
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div className="space-y-1">
+                  <Label>New Password</Label>
+                  <Input
+                    type="password"
+                    placeholder="Enter new password"
+                    value={passwordData.newPassword}
+                    onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+                    required
+                    disabled={isUpdatingPassword}
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label>Confirm New Password</Label>
+                  <Input
+                    type="password"
+                    placeholder="Confirm new password"
+                    value={passwordData.confirmPassword}
+                    onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
+                    required
+                    disabled={isUpdatingPassword}
+                  />
+                </div>
+              </div>
 
               <div className="pt-4">
-                <Button type="submit" fullWidth size="lg" variant="outline-primary" disabled={isUpdatingPassword}>
+                <Button type="submit" size="lg" variant="outline" disabled={isUpdatingPassword}>
                   {isUpdatingPassword ? <SVGLoader width="24px" height="24px" color="#156BB6" /> : "Update Password"}
                 </Button>
               </div>
@@ -294,14 +298,14 @@ function CustomerProfilePageContent() {
             ) : (
               <div className="space-y-4">
                 {recentOrders.map((order) => {
-                  const firstItem = order.items?.[0]?.officeInventory?.product;
-                  const orderName = firstItem?.name || order.name || "Order";
+                  const firstItem = order.items?.[0]?.product;
+                  const orderName = firstItem?.name || order.orderId || "Order";
                   const orderImage = firstItem?.ProductImages?.[0]?.filePath || firstItem?.images?.[0]?.filePath || "/genericProduct.jpg";
 
                   return (
                     <Link
-                      key={order.id}
-                      href={getShopUrl(`/customer/orders/${order.id}`, storeContext?.subdomain)}
+                      key={order._id}
+                      href={getShopUrl(`/orders`, storeContext?.subdomain)}
                       className="flex flex-col gap-3 rounded-xl border border-neutral-100 p-4 transition-colors hover:bg-neutral-50 sm:flex-row sm:items-center sm:justify-between"
                     >
                       <div className="flex items-center gap-4">
@@ -324,11 +328,11 @@ function CustomerProfilePageContent() {
                         <p className="text-sm font-semibold text-[#156BB6]">
                           ₦ {order.totalAmount?.toLocaleString()}
                         </p>
-                        <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-medium ${order.status === 'COMPLETED' ? 'bg-green-100 text-green-800' :
-                          order.status === 'CANCELLED' ? 'bg-red-100 text-red-800' :
+                        <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-medium ${order.status === 'Delivered' ? 'bg-green-100 text-green-800' :
+                          order.status === 'Cancelled' ? 'bg-red-100 text-red-800' :
                             'bg-blue-100 text-blue-800'
                           }`}>
-                          {order.status || "PENDING"}
+                          {order.status || "Pending"}
                         </span>
                       </div>
                     </Link>

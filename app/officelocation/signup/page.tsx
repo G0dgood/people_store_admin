@@ -1,192 +1,214 @@
 "use client";
 
-import { useState, Suspense, useEffect } from "react";
+import React, { useState, Suspense, useMemo } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { IoGrid } from "react-icons/io5";
-import { useCustomerRegisterMutation } from "@/lib/redux/services/customerAuthApi";
+import { Input } from "@/app/components/Form/Inputs";
+import { Label } from "@/app/components/Form/Field";
+import { Button } from "@/app/components/Button/Button";
+import { Checkbox } from "@/app/components/Form/Checkbox";
+import { useRegisterCustomerMutation } from "@/lib/redux/services/customerApi";
+import { useGetOfficeBySubdomainQuery } from "@/lib/redux/services/officeApi";
 import { toast } from "sonner";
-import { SVGLoader } from "@/app/components/SVGLoader";
-import { useApiError } from "@/app/hooks/useApiError";
-import { useUserInfo } from "@/app/contexts/UserInfoContext";
-import { getStoreUrl, parseStoreContextFromUrl } from "@/app/utils/storeUtils";
-import Input from "@/app/components/Input";
-import Button from "@/app/components/Button";
-import Checkbox from "@/app/components/Checkbox";
-import { useGetBusinessFiltersQuery } from "@/lib/redux/services/businessesApi";
-import { AuthPageSkeleton } from "@/app/components/Skeleton/AuthPageSkeleton";
+import { SVGLoaderFetch } from "@/app/components/Options";
+import { Logo } from "@/app/components/Logo";
+import { HiOutlineEye, HiOutlineEyeSlash } from "react-icons/hi2";
+import { getShopUrl } from "../utils/storeUtils";
 
-function CustomerSignupPageContent() {
+function OfficeLocationSignupPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { storeContext, updateStoreContext } = useUserInfo();
-  const [register, { isLoading, isError, error }] = useCustomerRegisterMutation();
+  const [register, { isLoading }] = useRegisterCustomerMutation();
 
-  const [business, setBusiness] = useState<import("@/lib/redux/services/businessesApi").Business | null>(null);
-
-  const { data: filtersResponse, isLoading: isLoadingFilters } = useGetBusinessFiltersQuery(
-    storeContext?.subdomain || "",
-    { skip: !storeContext?.subdomain }
-  );
-
-  const apiBusiness = filtersResponse?.data?.business;
-
-  useEffect(() => {
-    if (storeContext?.subdomain) {
-      const savedBusiness = localStorage.getItem(`tecnova_business_${storeContext.subdomain}`);
-      if (savedBusiness && !business) {
-        setBusiness(JSON.parse(savedBusiness));
-      }
+  // Extract subdomain
+  const subdomain = useMemo(() => {
+    const rawParams = searchParams.toString();
+    if (rawParams.includes("subdomain/")) {
+      return rawParams.split("subdomain/")[1].split("&")[0];
     }
-  }, [storeContext, business]);
+    return searchParams.get("subdomain");
+  }, [searchParams]);
 
-  // Sync API business to local state for persistence
-  useEffect(() => {
-    if (apiBusiness && storeContext?.subdomain) {
-      setBusiness(apiBusiness);
-      localStorage.setItem(`tecnova_business_${storeContext.subdomain}`, JSON.stringify(apiBusiness));
-    }
-  }, [apiBusiness, storeContext?.subdomain]);
+  const { data: officeRes } = useGetOfficeBySubdomainQuery(subdomain || "", {
+    skip: !subdomain
+  });
+  const office = officeRes?.data;
 
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
-    phoneNumber: "",
     email: "",
     password: "",
   });
-  const [rememberPassword, setRememberPassword] = useState(false);
-
-  useEffect(() => {
-    const searchString = window.location.search.substring(1);
-    const context = parseStoreContextFromUrl(searchParams, searchString);
-    if (context) {
-      updateStoreContext(context);
-    }
-  }, [searchParams, updateStoreContext]);
-
-  useApiError(isError, error, "Failed to create account");
-
-  const getCustomParams = () => {
-    if (!storeContext?.subdomain) return "";
-    return `?subdomain/${storeContext.subdomain}`;
-  };
+  const [agreeTerms, setAgreeTerms] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!agreeTerms) {
+      toast.error("Please agree to our terms and conditions.");
+      return;
+    }
+
     try {
-      await register(formData).unwrap();
-      toast.success("Account created successfully!");
-      const targetUrl = getStoreUrl(storeContext?.subdomain);
+      await register({
+        fullName: `${formData.firstName} ${formData.lastName}`.trim(),
+        email: formData.email,
+        password: formData.password
+      }).unwrap();
+
+      toast.success("Welcome to Bloom & Mist! Your account is ready.");
+
+      // Redirect to signin
+      const targetUrl = subdomain ? `/officelocation/signin?subdomain/${subdomain}` : "/officelocation/signin";
       router.push(targetUrl);
-    } catch (err: unknown) {
-      console.error("Signup failed:", err);
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Signup failed. Please try again.");
     }
   };
 
-  if (isLoadingFilters && !apiBusiness && !business) {
-    return <AuthPageSkeleton />;
-  }
-
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-white px-4 py-12 sm:px-6 lg:px-8">
-      <div className="w-full max-w-2xl space-y-8">
-        <div className="flex items-center gap-2 text-neutral-500">
-          <IoGrid className="text-tecnova-blue h-6 w-6" />
-          <span className="text-sm font-medium">Powered by Tecnova</span>
+    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-white">
+      {/* Left: Branding & Visual */}
+      <div className="hidden lg:flex flex-col justify-between p-12 bg-brand-charcoal text-white relative overflow-hidden">
+        <div className="relative z-10">
+          <div className="flex items-center gap-4">
+             <Logo variant="on-dark" size="md" />
+          </div>
+          <div className="mt-20 space-y-6 max-w-md">
+            <h1 className="text-5xl font-black uppercase tracking-tighter leading-none text-brand-gold">
+              Join the <br />
+              Collective.
+            </h1>
+            <p className="text-gray-400 font-medium leading-relaxed">
+              Unlock exclusive access to limited drops, personalized fragrance profiles, and early member benefits.
+            </p>
+          </div>
         </div>
 
-        <div className="mt-8">
-          <h1 className="text-3xl font-semibold tracking-tight text-[#156BB6] sm:text-4xl">
-            Welcome to <br />
-            <span className="text-[#3E4347]">{apiBusiness?.name || business?.name || ""}</span>
-          </h1>
-          <p className="mt-2 text-base text-neutral-500">
-            Sign up to continue shopping or place an order
-          </p>
-        </div>
+        {office && (
+          <div className="relative z-10 p-6 bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl">
+            <div className="flex flex-col gap-1">
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-gold">Registering via</span>
+              <h3 className="text-lg font-black uppercase">{office.name}</h3>
+              <p className="text-xs text-gray-400">{office.address}</p>
+            </div>
+          </div>
+        )}
+        
+        {/* Decorative element */}
+        <div className="absolute -top-20 -left-20 w-96 h-96 bg-brand-gold/10 rounded-full blur-3xl" />
+      </div>
 
-        <form className="mt-10 space-y-6" onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            <Input
-              label="First Name"
-              placeholder="Enter here"
-              value={formData.firstName}
-              onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-              required
-              fullWidth
-              disabled={isLoading}
-            />
-            <Input
-              label="Last Name"
-              placeholder="Enter here"
-              value={formData.lastName}
-              onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-              required
-              fullWidth
-              disabled={isLoading}
-            />
-            <Input
-              label="Phone Number"
-              placeholder="+2348144699332"
-              value={formData.phoneNumber}
-              onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
-              required
-              fullWidth
-              disabled={isLoading}
-            />
-            <Input
-              label="Email Address"
-              type="email"
-              placeholder="example@gmail.com"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              required
-              fullWidth
-              disabled={isLoading}
-            />
-            <Input
-              label="Password"
-              type="password"
-              placeholder="Enter here"
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              required
-              fullWidth
-              showPasswordToggle
-              disabled={isLoading}
-            />
+      {/* Right: Form */}
+      <div className="flex flex-col justify-center px-8 md:px-20 lg:px-24 py-12">
+        <div className="max-w-md w-full mx-auto space-y-10">
+          <div className="space-y-2">
+            <div className="lg:hidden mb-8">
+              <Logo size="sm" />
+            </div>
+            <h2 className="text-3xl font-black text-gray-900 uppercase tracking-tighter">Create Account</h2>
+            <p className="text-sm text-gray-500 font-medium">Join our global community of luxury enthusiasts.</p>
           </div>
 
-          <div className="flex items-center justify-between">
-            <Checkbox
-              checked={rememberPassword}
-              onChange={setRememberPassword}
-              label="Remember Password"
-            />
-            <Link
-              href={`/customer/signin${getCustomParams()}`}
-              className="text-sm font-medium text-[#156BB6] hover:underline"
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-1">
+                <Label>First Name</Label>
+                <Input
+                  placeholder="John"
+                  value={formData.firstName}
+                  onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                  required
+                  disabled={isLoading}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label>Last Name</Label>
+                <Input
+                  placeholder="Doe"
+                  value={formData.lastName}
+                  onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                  required
+                  disabled={isLoading}
+                />
+              </div>
+            </div>
+            
+            <div className="space-y-4">
+              <div className="space-y-1">
+                <Label>Email Address</Label>
+                <Input
+                  type="email"
+                  placeholder="your@email.com"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  required
+                  disabled={isLoading}
+                />
+              </div>
+              <div className="space-y-1">
+                <Label>Password</Label>
+                <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Min. 8 characters"
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    required
+                    disabled={isLoading}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  >
+                    {showPassword ? <HiOutlineEyeSlash size={18} /> : <HiOutlineEye size={18} />}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-start">
+              <Checkbox
+                checked={agreeTerms}
+                onChange={(e) => setAgreeTerms(e.target.checked)}
+                label="I agree to the Terms of Service and Privacy Policy"
+              />
+            </div>
+
+            <Button 
+              type="submit" 
+              size="lg" 
+              className="h-14 font-black uppercase tracking-[0.2em] text-xs shadow-xl shadow-brand-gold/10"
+              disabled={isLoading}
             >
-              Already have an account? Sign In
-            </Link>
-          </div>
-
-          <div className="pt-4">
-            <Button type="submit" fullWidth size="lg" disabled={isLoading}>
-              {isLoading ? <SVGLoader width="24px" height="24px" color="#fff" /> : "Sign Up"}
+              {isLoading ? <SVGLoaderFetch text="" /> : "Create Account"}
             </Button>
+          </form>
+
+          <div className="pt-6 border-t border-gray-100">
+            <p className="text-center text-sm text-gray-500 font-medium">
+              Already have an account?{" "}
+              <Link
+                href={getShopUrl("/signin", subdomain, office?._id)}
+                className="text-brand-gold font-black hover:underline uppercase tracking-widest ml-1"
+              >
+                Sign In
+              </Link>
+            </p>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
 }
 
-export default function CustomerSignupPage() {
+export default function OfficeLocationSignupPage() {
   return (
-    <Suspense fallback={<div>Loading signup...</div>}>
-      <CustomerSignupPageContent />
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><SVGLoaderFetch text="Opening the vault..." /></div>}>
+      <OfficeLocationSignupPageContent />
     </Suspense>
   );
 }

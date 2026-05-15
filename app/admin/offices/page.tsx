@@ -306,7 +306,7 @@ export default function OfficesListing() {
           setOfficeForLink(null);
         }}
         officeName={officeForLink?.name}
-        businessLink={officeForLink?.subdomain ? `https://people-store-api.onrender.com/officelocation?subdomain/${officeForLink.subdomain}` : "No subdomain set"}
+        businessLink={officeForLink?.subdomain ? `localhost:3000/officelocation?subdomain/${officeForLink.subdomain}` : "No subdomain set"}
       />
 
       <BulkActionsDrawer

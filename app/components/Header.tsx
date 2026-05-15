@@ -1,12 +1,7 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Icon } from "./Icon";
-import { DropdownMenu, DropdownItem } from "./Dropdown/DropdownMenu";
 import { Logo } from "./Logo";
 import { useMobileMenu } from "@/app/context/MobileMenuContext";
 import { SearchBar } from "./Header/SearchBar";
@@ -18,12 +13,12 @@ import { useGetPublicCategoriesQuery } from "@/lib/redux/services/boutiqueApi";
 const Header = () => {
   const { toggleMenu } = useMobileMenu();
   const { data: categoriesResponse } = useGetPublicCategoriesQuery();
-  const categories = categoriesResponse?.data && 'categories' in categoriesResponse.data 
-    ? categoriesResponse.data.categories 
+  const categories = categoriesResponse?.data && 'categories' in categoriesResponse.data
+    ? categoriesResponse.data.categories
     : (Array.isArray(categoriesResponse?.data) ? categoriesResponse.data : []);
 
   return (
-    <header className="w-full bg-white border-b border-gray-200 sticky top-0 z-[80]">
+    <header className="w-full bg-white border-b border-red-200 sticky top-0 z-[80]">
       {/* Top Main Header */}
       <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 h-16 md:h-20 flex items-center justify-between gap-4 md:gap-12">
         {/* Mobile: Hamburger & Logo Group */}

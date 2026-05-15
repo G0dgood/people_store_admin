@@ -11,6 +11,7 @@ import { ProductTabs } from "@/app/components/Products/ProductTabs";
 import { YouMayLike } from "@/app/components/Products/YouMayLike";
 import { DiscountBanner } from "@/app/components/Products/DiscountBanner";
 import { RelatedProducts } from "@/app/components/Products/RelatedProducts";
+import { Breadcrumbs } from "@/app/components/Breadcrumbs";
 
 import { useSearchParams } from "next/navigation";
 import { useGetPublicProductByIdQuery, useGetPublicRelatedProductsQuery } from "@/lib/redux/services/boutiqueApi";
@@ -47,7 +48,9 @@ function ProductDetailContent() {
       name: p.name,
       price: `₦${p.price.toLocaleString()}`,
       image: p.productImage || "/placeholder.png",
-      media: p.media || []
+      media: p.media || [],
+      stock: p.stock,
+      isUnlimited: p.isUnlimited
    }));
 
    if (isLoading) {
@@ -80,20 +83,14 @@ function ProductDetailContent() {
          <Header />
 
          <div className="flex-1 max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 py-4 md:py-8 flex flex-col gap-6 md:gap-10 w-full">
-            {/* Breadcrumbs */}
-            <div className="flex items-center gap-2 text-[10px] uppercase tracking-widest text-gray-400 overflow-x-auto whitespace-nowrap scrollbar-none pb-2 border-b border-gray-200">
-               <Link href="/" className="hover:text-brand-gold transition-colors">Home</Link>
-               <Icon name="chevron_right" size="xs" />
-               <Link href="/products" className="hover:text-brand-gold transition-colors">Boutique</Link>
-               {product.category && (
-                  <>
-                     <Icon name="chevron_right" size="xs" />
-                     <Link href={`/products?category=${product.category.name}`} className="hover:text-brand-gold transition-colors">{product.category.name}</Link>
-                  </>
-               )}
-               <Icon name="chevron_right" size="xs" />
-               <span className="text-gray-900 font-bold whitespace-nowrap">{product.name}</span>
-            </div>
+            <Breadcrumbs 
+               items={[
+                  { label: "Boutique", href: "/products" },
+                  ...(product.category ? [{ label: product.category.name, href: `/products?category=${product.category.name}` }] : []),
+                  { label: product.name }
+               ]}
+               className="pb-2 border-b border-gray-200 w-full"
+            />
 
             {/* Top Product Section */}
             <div className="bg-white flex flex-col lg:flex-row gap-8 lg:gap-16">

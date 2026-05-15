@@ -95,7 +95,7 @@ const FilterSidebar: React.FC<FilterSidebarProps> = ({
   }, [setFilters]);
 
   return (
-    <aside className="w-full lg:w-64 flex-shrink-0 flex flex-col gap-4 max-h-[calc(100vh-120px)] overflow-y-auto overscroll-contain pr-2 scrollbar-none hover:scrollbar-thin transition-all">
+    <aside className="w-full flex-shrink-0 flex flex-col gap-4 max-h-[calc(100vh-250px)] overflow-y-auto overscroll-contain pr-2 scrollbar-none hover:scrollbar-thin transition-all">
       {/* Categories */}
       <FilterSection title="Category">
         <ul className="flex flex-col gap-3 text-[11px] uppercase tracking-widest font-bold">

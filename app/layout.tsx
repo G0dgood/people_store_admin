@@ -19,6 +19,7 @@ import StoreProvider from "@/lib/redux/StoreProvider";
 import { AuthPersistence } from "./components/Auth/AuthPersistence";
 import { AdminSessionProvider } from "./context/AdminSessionContext";
 import { CustomerSessionProvider } from "./context/CustomerSessionContext";
+import { OfficeLocationProvider } from "./context/OfficeLocationContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -77,7 +78,8 @@ export default function RootLayout({
           <AdminSessionProvider>
             <CustomerSessionProvider>
               <CustomerAuthProvider>
-                <RecentlyViewedProvider>
+                <OfficeLocationProvider>
+                  <RecentlyViewedProvider>
                   <FilterProvider>
                     <AuthPersistence>
                       <SocketProvider>
@@ -99,7 +101,8 @@ export default function RootLayout({
                       </SocketProvider>
                     </AuthPersistence>
                   </FilterProvider>
-                </RecentlyViewedProvider>
+                  </RecentlyViewedProvider>
+                </OfficeLocationProvider>
               </CustomerAuthProvider>
             </CustomerSessionProvider>
           </AdminSessionProvider>

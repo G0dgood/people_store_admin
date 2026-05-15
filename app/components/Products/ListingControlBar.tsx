@@ -159,9 +159,9 @@ const ListingControlBar: React.FC<ListingControlBarProps> = ({
   const handleClearAll = () => onFiltersChange(DEFAULT_FILTERS);
 
   return (
-    <div className="w-full flex flex-col gap-6">
+    <div className="w-full flex flex-col">
       {/* Desktop Bar */}
-      <div className="hidden md:flex w-full bg-white border border-gray-200 h-20 items-center justify-between px-8">
+      <div className="hidden md:flex w-full bg-white border border-gray-200 h-20 items-center justify-between px-8 relative z-10">
         <div className="flex items-center gap-12">
           <div className="flex flex-col">
             <span className="text-[10px] tracking-[0.2em] font-bold text-gray-400 mb-1">Curation</span>
@@ -171,10 +171,10 @@ const ListingControlBar: React.FC<ListingControlBarProps> = ({
             </span>
           </div>
 
-          <ListingSearch
+          {/* <ListingSearch
             value={filters.search || ""}
             onChange={(val) => onFiltersChange({ ...filters, search: val })}
-          />
+          /> */}
         </div>
 
         <div className="flex items-center gap-4">
@@ -190,59 +190,76 @@ const ListingControlBar: React.FC<ListingControlBarProps> = ({
         </div>
       </div>
 
-      {/* Mobile Bar */}
-      <div className="flex md:hidden flex-col gap-4 md:px-4 px-0">
-
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col">
-            <span className="text-[10px] tracking-[0.2em] font-bold text-gray-400">Discovering</span>
-            <span className="text-[11px] font-outfit font-bold">{count} PRODUCTS</span>
-          </div>
-          <ViewSwitcher mode={viewMode} onChange={onViewModeChange} />
-        </div>
-
-        <div className="flex items-center gap-2">
-          {/* Mobile Sort/Filter Buttons */}
-          <div className="flex-1">
-            <SortSelector
-              currentSort={sortBy}
-              onSortChange={onSortChange}
-              className="w-full h-full"
-            />
-          </div>
-
-          <button
-            onClick={onFilterClick}
-            className="flex-1 flex items-center justify-between px-4 py-3 bg-white border border-gray-200 group hover:border-brand-gold transition-colors"
-          >
-            <div className="flex items-center gap-3">
-              <span className="text-[10px] font-bold tracking-widest text-gray-600">Filter</span>
-              {activeTags.length > 0 && (
-                <span className="bg-brand-gold text-white text-[9px] w-4 h-4 flex items-center justify-center font-bold">
-                  {activeTags.length}
-                </span>
-              )}
-            </div>
-            <Icon name="filter_alt" size="xs" className="text-gray-300 group-hover:text-brand-gold" />
-          </button>
-        </div>
-      </div>
-
       {/* Active Filter Tags */}
       {activeTags.length > 0 && (
-        <div className="flex flex-wrap items-center gap-3 pt-2">
-          <span className="text-[10px] tracking-[0.2em] font-bold text-gray-400 mr-2">Refining by:</span>
-          {activeTags.map((tag) => (
-            <FilterTag key={tag.id} label={tag.label} onRemove={tag.onRemove} />
-          ))}
+        <div className="hidden md:flex flex-wrap items-center gap-3 py-4 px-8 bg-white border-x border-b border-gray-200 -mt-px relative z-0">
+          <span className="text-[10px] tracking-[0.2em] font-bold text-gray-400 mr-2 uppercase">Refining by:</span>
+          <div className="flex flex-wrap items-center gap-2">
+            {activeTags.map((tag) => (
+              <FilterTag key={tag.id} label={tag.label} onRemove={tag.onRemove} />
+            ))}
+          </div>
           <button
             onClick={handleClearAll}
-            className="text-brand-gold text-[10px] font-bold tracking-[0.15em] ml-2 hover:tracking-[0.2em] transition-all duration-300 border-b border-brand-gold/0 hover:border-brand-gold"
+            className="text-brand-gold text-[10px] font-bold tracking-[0.15em] ml-4 hover:tracking-[0.2em] transition-all duration-300 border-b border-brand-gold/0 hover:border-brand-gold uppercase"
           >
             Clear selection
           </button>
         </div>
       )}
+
+      {/* Mobile Bar */}
+      <div className="flex md:hidden flex-col gap-4">
+        <div className="bg-white border border-gray-200 p-4">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-col">
+              <span className="text-[10px] tracking-[0.2em] font-bold text-gray-400">Discovering</span>
+              <span className="text-[11px] font-outfit font-bold">{count} PRODUCTS</span>
+            </div>
+            <ViewSwitcher mode={viewMode} onChange={onViewModeChange} />
+          </div>
+
+          <div className="flex items-center gap-2">
+            <div className="flex-1">
+              <SortSelector
+                currentSort={sortBy}
+                onSortChange={onSortChange}
+                className="w-full h-full"
+              />
+            </div>
+
+            <button
+              onClick={onFilterClick}
+              className="flex-1 flex items-center justify-between px-4 py-3 bg-white border border-gray-200 group hover:border-brand-gold transition-colors"
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-[10px] font-bold tracking-widest text-gray-600">Filter</span>
+                {activeTags.length > 0 && (
+                  <span className="bg-brand-gold text-white text-[9px] w-4 h-4 flex items-center justify-center font-bold">
+                    {activeTags.length}
+                  </span>
+                )}
+              </div>
+              <Icon name="filter_alt" size="xs" className="text-gray-300 group-hover:text-brand-gold" />
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Filter Tags */}
+        {activeTags.length > 0 && (
+          <div className="flex flex-wrap items-center gap-2 px-1 py-1">
+            {activeTags.map((tag) => (
+              <FilterTag key={tag.id} label={tag.label} onRemove={tag.onRemove} />
+            ))}
+            <button
+              onClick={handleClearAll}
+              className="text-brand-gold text-[10px] font-bold tracking-[0.15em] ml-1 uppercase"
+            >
+              Clear
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

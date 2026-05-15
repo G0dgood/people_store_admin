@@ -30,6 +30,16 @@ export const boutiqueApi = baseApi.injectEndpoints({
       query: () => '/products/recommended',
       providesTags: ['Product'],
     }),
+    getPublicNewArrivals: builder.query<ApiResponse<{ products: Product[], pagination: any }>, { limit?: number } | void>({
+      query: (params) => ({
+        url: '/products',
+        params: {
+          sort: '-createdAt',
+          limit: params?.limit || 10
+        }
+      }),
+      providesTags: ['Product'],
+    }),
     getPublicBrands: builder.query<ApiResponse<{ brands: Brand[], pagination: any }>, void>({
       query: () => '/brands',
       providesTags: ['Brand'],
@@ -96,6 +106,7 @@ export const {
   useGetPublicProductByIdQuery,
   useGetPublicRelatedProductsQuery,
   useGetPublicRecommendedProductsQuery,
+  useGetPublicNewArrivalsQuery,
   useGetPublicBrandsQuery,
   useGetPublicCategoriesQuery,
   useGetPublicCouponsQuery,

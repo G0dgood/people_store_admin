@@ -18,7 +18,7 @@ const regions = [
 const RegionSuppliers = () => {
   return (
     <section className="w-full">
-      <h3 className="text-xl md:text-2xl font-bold mb-6 md:mb-8 text-gray-900">Suppliers by region</h3>
+      <h3 className="text-xl md:text-2xl font-bold mb-6 md:mb-8 text-gray-900 font-outfit">Suppliers by region</h3>
       <div className="grid grid-cols-2 lg:grid-cols-5 gap-x-8 md:gap-x-12 gap-y-6">
         {regions.map((region, idx) => (
           <div key={idx} className="flex items-center gap-3 group cursor-pointer hover:bg-white p-2 -m-2 rounded-lg transition-colors">
@@ -26,10 +26,10 @@ const RegionSuppliers = () => {
               <Image src={region.flag} alt={region.name} fill className="object-cover" sizes="28px" />
             </div>
             <div className="flex flex-col min-w-0">
-              <span className="text-sm font-medium group-hover:text-brand-gold transition-colors truncate">
+              <span className="text-sm font-bold font-outfit group-hover:text-brand-gold transition-colors truncate">
                 {region.name}
               </span>
-              <span className="text-[10px] text-gray-400 truncate">
+              <span className="text-[10px] text-gray-400 font-outfit truncate">
                 {region.domain}
               </span>
             </div>

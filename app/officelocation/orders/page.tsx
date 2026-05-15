@@ -2,30 +2,30 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { CustomerHeader } from "../../components/customer-header";
-import { useUserInfo } from "../../contexts/UserInfoContext";
-import { useSelector } from "react-redux";
-import { selectCustomer } from "@/lib/redux/slices/authSlice";
-import { useGetCurrentCustomerOrdersQuery } from "@/lib/redux/services/ordersApi";
-import { EmptyState } from "../../components/empty-state";
-import { CustomerOrdersSkeleton } from "../../components/Skeleton/CustomerOrdersSkeleton";
-import { getStoreUrl, getShopUrl } from "../../utils/storeUtils";
-import { GoBackButton } from "../../components/go-back-button";
+import { OfficeLocationHeader } from "../components/OfficeLocationHeader";
+import { useGetMyOrdersQuery as useGetCurrentOfficeLocationOrdersQuery } from "@/lib/redux/services/orderApi";
+import { useGetOfficeBySubdomainQuery } from "@/lib/redux/services/officeApi";
+import { useOfficeLocationInfo } from "@/app/context/OfficeLocationContext";
+import { useCustomerAuth } from "@/app/context/CustomerAuthContext";
+import { EmptyState } from "../components/empty-state";
+import { CustomerOrdersSkeleton } from "../components/Skeleton/CustomerOrdersSkeleton";
+import { getStoreUrl, getShopUrl } from "../utils/storeUtils";
+import { GoBackButton } from "../components/go-back-button";
 import Image from "next/image";
-import CustomerOrderDetailModal from "../../components/Modal/CustomerOrderDetailModal";
+import OfficeLocationOrderDetailModal from "../components/Modal/OfficeLocationOrderDetailModal";
 
 function OrdersPageContent() {
   const searchParams = useSearchParams();
-  const { storeContext } = useUserInfo();
-  const customer = useSelector(selectCustomer);
+  const { storeContext } = useOfficeLocationInfo();
+  const { customer } = useCustomerAuth();
   const subdomain = searchParams.get("subdomain") || storeContext?.subdomain;
 
-  const { data: ordersData, isLoading: isLoadingOrders } = useGetCurrentCustomerOrdersQuery(
-    undefined,
+  const { data: ordersData, isLoading: isLoadingOrders } = useGetCurrentOfficeLocationOrdersQuery(
+    {},
     { skip: !customer }
   );
 
-  const orders = ordersData?.data || [];
+  const orders = ordersData?.data?.orders || [];
 
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -37,28 +37,16 @@ function OrdersPageContent() {
 
   const visibleOrders = orders;
 
-  const [businessInfo, setBusinessInfo] = useState<import("@/lib/redux/services/businessesApi").Business | null>(null);
-  useEffect(() => {
-    if (subdomain) {
-      const savedBusiness = localStorage.getItem(`tecnova_business_${subdomain}`);
-      if (savedBusiness) {
-        setBusinessInfo(JSON.parse(savedBusiness));
-      }
-    }
-  }, [subdomain]);
-
-  const businessLogo = businessInfo?.logo?.fileUrl || businessInfo?.BusinessDocuments?.[0]?.fileUrl;
+  const { data: officeRes, isLoading: isLoadingOffice } = useGetOfficeBySubdomainQuery(subdomain || "", {
+    skip: !subdomain
+  });
+  const office = officeRes?.data;
 
   if (isLoadingOrders) return <CustomerOrdersSkeleton />;
 
   return (
     <div className="min-h-screen bg-white">
-      <CustomerHeader
-        businessName={businessInfo?.name}
-        businessDescription={businessInfo?.description}
-        logoUrl={businessLogo}
-        showSearch={false}
-      />
+      <OfficeLocationHeader />
 
       <section className="mx-auto max-w-[1440px] px-6 pt-12 pb-32 md:pb-12 md:px-12">
         <div className="mb-12 flex items-center justify-between">
@@ -94,13 +82,13 @@ function OrdersPageContent() {
 
             <div className="space-y-6">
               {visibleOrders.map((order) => {
-                const firstItem = order.items?.[0]?.officeInventory?.product;
-                const orderName = firstItem?.name || order.name || "Unnamed Order";
+                const firstItem = order.items?.[0]?.product;
+                const orderName = firstItem?.name || order.orderId || "Unnamed Order";
                 const orderImage = firstItem?.ProductImages?.[0]?.filePath || firstItem?.images?.[0]?.filePath || "/genericProduct.jpg";
 
                 return (
                   <div
-                    key={order.id}
+                    key={order._id}
                     className="group flex flex-col gap-6 border-b border-[#F4F4F4] pb-8 transition-all hover:opacity-90 md:flex-row md:items-start md:justify-between md:border-none md:bg-white md:p-6 md:rounded-2xl md:border md:border-gray-100 md:hover:shadow-sm"
                   >
                     <div className="flex items-center gap-4 md:gap-6">
@@ -124,18 +112,18 @@ function OrdersPageContent() {
                           </span>
                         </div>
                         <div className="mt-2">
-                          <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium md:px-2.5 md:text-xs ${order.status === 'COMPLETED' ? 'bg-green-100 text-green-800' :
-                            order.status === 'CANCELLED' ? 'bg-red-100 text-red-800' :
+                          <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium md:px-2.5 md:text-xs ${order.status === 'Delivered' ? 'bg-green-100 text-green-800' :
+                            order.status === 'Cancelled' ? 'bg-red-100 text-red-800' :
                               'bg-blue-100 text-blue-800'
                             }`}>
-                            {order.status || "PENDING"}
+                            {order.status || "Pending"}
                           </span>
                         </div>
                       </div>
                     </div>
                     <div className="flex items-center justify-end gap-4 md:pt-4">
                       <button
-                        onClick={() => handleViewDetails(order.id)}
+                        onClick={() => handleViewDetails(order._id)}
                         className="w-full rounded-full border border-gray-200 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50 md:w-auto md:px-6"
                       >
                         View Details
@@ -149,7 +137,7 @@ function OrdersPageContent() {
         )}
       </section>
 
-      <CustomerOrderDetailModal
+      <OfficeLocationOrderDetailModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         orderId={selectedOrderId || ""}

@@ -1,150 +1,157 @@
 "use client";
 
-import { useState, Suspense, useEffect } from "react";
+import React, { useState, Suspense, useMemo } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import Input from "@/app/components/Input";
-import Button from "@/app/components/Button";
-import Checkbox from "@/app/components/Checkbox";
-import { IoGrid } from "react-icons/io5";
-import { useUserLoginMutation } from "@/lib/redux/services/userAuthApi";
+import { Input } from "@/app/components/Form/Inputs";
+import { Label } from "@/app/components/Form/Field";
+import { Button } from "@/app/components/Button/Button";
+import { useLoginMutation } from "@/lib/redux/services/authApi";
+import { useGetOfficeBySubdomainQuery } from "@/lib/redux/services/officeApi";
+import { useOfficeLocationInfo } from "@/app/context/OfficeLocationContext";
 import { toast } from "sonner";
-import { SVGLoader } from "@/app/components/SVGLoader";
-import { useApiError } from "@/app/hooks/useApiError";
-import { useAuth } from "@/app/contexts/AuthContext";
-import { useUserInfo } from "@/app/contexts/UserInfoContext";
-import { getStoreUrl, parseStoreContextFromUrl } from "@/app/utils/storeUtils";
+import { SVGLoaderFetch } from "@/app/components/Options";
+import { Logo } from "@/app/components/Logo";
+import { HiOutlineEye, HiOutlineEyeSlash, HiOutlineShieldCheck } from "react-icons/hi2";
 
-function StaffSigninPageContent() {
+function OfficeStaffLoginPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { storeContext, updateStoreContext } = useUserInfo();
-  const auth = useAuth();
-  const [login, { isLoading, isError, error }] = useUserLoginMutation();
+  const { staffLogin: setAuthData } = useOfficeLocationInfo();
+  const [login, { isLoading }] = useLoginMutation();
 
-  const [business, setBusiness] = useState<import("@/lib/redux/services/businessesApi").Business | null>(null);
-
-  useEffect(() => {
-    if (storeContext?.subdomain) {
-      const savedBusiness = localStorage.getItem(`tecnova_business_${storeContext.subdomain}`);
-      if (savedBusiness) {
-        setBusiness(JSON.parse(savedBusiness));
-      }
+  // Extract subdomain
+  const subdomain = useMemo(() => {
+    const rawParams = searchParams.toString();
+    if (rawParams.includes("subdomain/")) {
+      return rawParams.split("subdomain/")[1].split("&")[0];
     }
-  }, [storeContext]);
+    return searchParams.get("subdomain");
+  }, [searchParams]);
+
+  const { data: officeRes } = useGetOfficeBySubdomainQuery(subdomain || "", {
+    skip: !subdomain
+  });
+  const office = officeRes?.data;
 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
-  const [rememberPassword, setRememberPassword] = useState(false);
-
-  useEffect(() => {
-    const searchString = window.location.search.substring(1);
-    const context = parseStoreContextFromUrl(searchParams, searchString);
-    if (context) {
-      updateStoreContext(context);
-    }
-  }, [searchParams, updateStoreContext]);
-
-  useApiError(isError, error, "Failed to login");
-
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const response = await login(formData).unwrap();
-      const { user, token, refresh_token } = response.data;
+      const { user, token } = response.data;
 
-      auth.login(user, {
-        accessToken: token,
-        refresh_token: refresh_token
+      setAuthData(user, {
+        accessToken: token
       });
 
-      toast.success("Login successful!");
+      toast.success(`Welcome back, ${user.fullName}. Authorized access granted.`);
 
-      const targetUrl = getStoreUrl(storeContext?.subdomain);
-
-      router.push(targetUrl);
-    } catch (err: unknown) {
-      console.error("Login failed:", err);
+      // Redirect to admin dashboard
+      router.push("/officelocation/dashboard");
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Authentication failed. Authorized personnel only.");
     }
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-white px-4 py-12 sm:px-6 lg:px-8">
-      <div className="w-full max-w-2xl space-y-8">
-        <div className="flex items-center gap-2 text-neutral-500">
-          <IoGrid className="text-tecnova-blue h-6 w-6" />
-          <span className="text-sm font-medium">Powered by Tecnovo</span>
+    <div className="min-h-screen bg-brand-charcoal flex flex-col items-center justify-center p-6">
+      <div className="w-full max-w-md space-y-8">
+        {/* Branding */}
+        <div className="flex flex-col items-center text-center space-y-4">
+          <Logo variant="on-dark" size="md" />
+          <div className="flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 rounded-full">
+            <HiOutlineShieldCheck className="text-brand-gold" size={14} />
+            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Staff Portal</span>
+          </div>
         </div>
 
-        <div className="mt-8">
-          <h1 className="text-3xl font-semibold tracking-tight text-[#156BB6] sm:text-4xl">
-            Welcome to <br />
-            <span className="text-[#3E4347]">{business?.name || ""}</span>
-          </h1>
-          <p className="mt-2 text-base text-neutral-500">
-            Sign up to continue shopping or place an order
-          </p>
-        </div>
+        <div className="bg-white rounded-3xl p-8 md:p-10 shadow-2xl space-y-8">
+          <div className="space-y-2">
+            <h2 className="text-2xl font-black text-gray-900 uppercase tracking-tighter">Authorized Access</h2>
+            <p className="text-xs text-gray-500 font-medium leading-relaxed">
+              Sign in with your branch credentials to manage inventory and operations for
+              <span className="text-gray-900 font-bold ml-1">
+                {office?.name || "this location"}
+              </span>.
+            </p>
+          </div>
 
-        <form className="mt-10 space-y-6" onSubmit={handleSubmit}>
-          <div className="flex flex-col gap-6">
-            <Input
-              label="Email Address"
-              type="email"
-              placeholder="example@gmail.com"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              required
-              fullWidth
-              disabled={isLoading}
-            />
-            <div className="relative">
-              <Input
-                label="Password"
-                type="password"
-                placeholder="Enter here"
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                required
-                fullWidth
-                showPasswordToggle
-                disabled={isLoading}
-              />
-              <Link
-                href="/customer/forgot-password"
-                className="absolute right-0 top-0 text-xs font-medium text-[#156BB6] hover:underline"
-              >
-                Forgot Password?
-              </Link>
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            <div className="space-y-4">
+              <div className="space-y-1">
+                <Label>Staff Email</Label>
+                <Input
+                  type="email"
+                  placeholder="staff@bloomandmist.com"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  required
+                  disabled={isLoading}
+                  shape="rounded-sm"
+                />
+              </div>
+              <div className="space-y-1">
+                <Label>Secure Key</Label>
+                <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    required
+                    disabled={isLoading}
+                    shape="rounded-sm"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  >
+                    {showPassword ? <HiOutlineEyeSlash size={18} /> : <HiOutlineEye size={18} />}
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
 
-          <div className="flex items-center justify-between">
-            <Checkbox
-              checked={rememberPassword}
-              onChange={setRememberPassword}
-              label="Remember Password"
-            />
-          </div>
-
-          <div className="pt-4">
-            <Button type="submit" fullWidth size="lg" disabled={isLoading}>
-              {isLoading ? <SVGLoader width="24px" height="24px" color="#fff" /> : "Sign In"}
+            <Button
+              type="submit"
+              size="lg"
+              className="h-14 bg-brand-charcoal hover:bg-black font-black uppercase tracking-[0.2em] text-[10px] shadow-xl shadow-black/10"
+              disabled={isLoading}
+            >
+              {isLoading ? <SVGLoaderFetch text="" /> : "Authenticate Portal"}
             </Button>
+          </form>
+
+          <div className="pt-4 text-center">
+            <Link
+              href={`/officelocation?subdomain/${subdomain}`}
+              className="text-[10px] font-black uppercase tracking-widest text-gray-400 hover:text-brand-gold transition-colors"
+            >
+              Back to Branch View
+            </Link>
           </div>
-        </form>
+        </div>
+
+        {/* Footer info */}
+        <p className="text-center text-[9px] text-white/40 font-bold uppercase tracking-[0.3em]">
+          Security Protocol Enabled • IP Logged
+        </p>
       </div>
     </div>
   );
 }
 
-export default function StaffSigninPage() {
+export default function OfficeStaffLoginPage() {
   return (
-    <Suspense fallback={<div>Loading login...</div>}>
-      <StaffSigninPageContent />
+    <Suspense fallback={<div className="min-h-screen bg-brand-charcoal flex items-center justify-center"><SVGLoaderFetch text="Securing connection..." /></div>}>
+      <OfficeStaffLoginPageContent />
     </Suspense>
   );
 }

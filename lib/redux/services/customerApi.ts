@@ -96,6 +96,13 @@ export const customerApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Customers'],
     }),
+    changeCustomerPassword: builder.mutation({
+      query: (passwords) => ({
+        url: '/customers/change-password',
+        method: 'POST',
+        body: passwords,
+      }),
+    }),
   }),
   overrideExisting: true,
 });
@@ -111,5 +118,6 @@ export const {
   useGetAllCustomersQuery,
   useDeleteCustomerMutation,
   useGetCustomerStatsQuery,
-  useToggleCustomerStatusMutation
+  useToggleCustomerStatusMutation,
+  useChangeCustomerPasswordMutation
 } = customerApi;

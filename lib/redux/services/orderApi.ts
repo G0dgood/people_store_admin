@@ -8,6 +8,7 @@ export interface OrderItem {
 }
 
 export interface OrderRecord {
+    id(id: any): void;
     _id: string;
     orderId: string;
     customer: any;
@@ -96,6 +97,28 @@ export const orderApi = baseApi.injectEndpoints({
             }),
             invalidatesTags: [{ type: 'Order', id: 'LIST' }, { type: 'Order', id: 'STATS' }],
         }),
+        createOrderPaymentIntent: builder.mutation<ApiResponse<{ paymentUrl: string, reference: string }>, any>({
+            query: (data) => ({
+                url: '/orders/payment-intent',
+                method: 'POST',
+                body: data
+            }),
+        }),
+        payOrderCash: builder.mutation<ApiResponse<OrderRecord>, any>({
+            query: (data) => ({
+                url: '/orders/pay-cash',
+                method: 'POST',
+                body: data
+            }),
+            invalidatesTags: [{ type: 'Order', id: 'LIST' }],
+        }),
+        verifyOrderPayment: builder.query<ApiResponse<any>, { reference: string, orderId?: string }>({
+            query: (params) => ({
+                url: '/transactions/verify-paystack',
+                method: 'POST',
+                body: params
+            }),
+        }),
         deleteOrder: builder.mutation<ApiResponse<{}>, string>({
             query: (id) => ({
                 url: `/orders/delete/${id}`,
@@ -121,5 +144,8 @@ export const {
     useGetFunnelStatsQuery,
     useGetMarketIntelligenceQuery,
     useCreateOrderMutation,
+    useCreateOrderPaymentIntentMutation,
+    usePayOrderCashMutation,
+    useVerifyOrderPaymentQuery,
     useDeleteOrderMutation
 } = orderApi;

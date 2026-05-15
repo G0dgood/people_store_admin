@@ -9,6 +9,13 @@ export const authApi = baseApi.injectEndpoints({
         body: credentials,
       }),
     }),
+    forgotPassword: builder.mutation({
+      query: (data) => ({
+        url: '/users/forgot-password',
+        method: 'POST',
+        body: data,
+      }),
+    }),
     register: builder.mutation({
       query: (userData) => {
         const formData = new FormData();
@@ -171,6 +178,7 @@ export const {
   useUpdateAccountMutation,
   useUpdateAvatarMutation,
   useChangePasswordMutation,
+  useForgotPasswordMutation,
   useOnboardUserMutation,
   useUpdateStaffMutation,
   useDeleteStaffMutation,

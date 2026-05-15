@@ -51,8 +51,8 @@ const DealsSection = () => {
   const [selectedQuickView, setSelectedQuickView] = useState<any>(null);
 
   const timerData = timerResponse?.data?.timer;
-  const dealProducts = dealsResponse?.data && 'deals' in dealsResponse.data 
-    ? dealsResponse.data.deals 
+  const dealProducts = dealsResponse?.data && 'deals' in dealsResponse.data
+    ? dealsResponse.data.deals
     : (Array.isArray(dealsResponse?.data) ? dealsResponse.data : []);
 
   // Local timer state
@@ -134,15 +134,15 @@ const DealsSection = () => {
   return (
     <section className="w-full bg-white flex flex-col md:flex-row overflow-hidden border border-gray-200">
       <div className="w-full md:w-80 p-8 border-b md:border-b-0 md:border-r border-gray-200 flex md:flex-col justify-between md:justify-center items-center md:items-start gap-6 bg-gray-50/50">
-        <div className="flex flex-col gap-1">
-          <h3 className="text-xl md:text-2xl font-outfit font-bold text-gray-900 uppercase tracking-wider">Limited <span className="text-brand-gold">Offers</span></h3>
+        <div className="flex flex-col gap-1 font-outfit">
+          <h3 className="text-xl md:text-2xl font-bold text-gray-900 tracking-wider">Limited <span className="text-brand-gold">Offers</span></h3>
           <p className="text-gray-500 text-xs md:text-sm font-medium tracking-wide">Curated Luxury Fragrances</p>
         </div>
         <div className="flex gap-2">
           {timerUnits.map((t, idx) => (
             <div
               key={idx}
-              className="flex flex-col items-center justify-center w-12 h-12 md:w-14 md:h-14 bg-black text-white rounded-lg shadow-lg"
+              className="flex flex-col items-center justify-center w-12 h-12 md:w-14 md:h-14 bg-brand-charcoal text-white rounded-lg shadow-lg font-outfit"
             >
               <span className="text-sm md:text-base font-bold text-brand-gold">{t.v}</span>
               <span className="text-[8px] md:text-[9px] uppercase tracking-widest font-bold opacity-60">{t.l}</span>
@@ -155,7 +155,7 @@ const DealsSection = () => {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
-        className="flex-1 flex overflow-x-auto scrollbar-none divide-x divide-gray-100"
+        className="flex-1 flex overflow-hidden overflow-x-scroll scrollbar-none divide-x divide-gray-100"
       >
         {dealProducts?.map((prod, idx) => (
           <div key={idx} className="flex-shrink-0 relative group">
@@ -177,7 +177,7 @@ const DealsSection = () => {
                     sizes="(max-width: 768px) 160px, 220px"
                   />
                 </div>
-                <div className="flex flex-col items-start gap-1 w-full">
+                <div className="flex flex-col items-start gap-1 w-full font-outfit">
                   <p className="text-xs md:text-sm text-start line-clamp-1 text-gray-600 group-hover:text-brand-gold transition-colors font-medium">
                     {prod.product?.name || "Premium Fragrance"}
                   </p>
@@ -185,18 +185,18 @@ const DealsSection = () => {
                     <span className="text-sm md:text-base font-bold text-gray-900">
                       ₦{(prod.product?.price * (1 - prod.discount / 100)).toLocaleString()}
                     </span>
-                    <span className="text-[10px] text-gray-400 line-through decoration-brand-gold">
+                    <span className="text-xs md:text-base text-gray-500 line-through decoration-brand-gray-500 font-normal font-outfit">
                       ₦{prod.product?.price?.toLocaleString()}
                     </span>
                   </div>
                 </div>
                 <div className="flex items-start justify-between w-full">
 
-                  <StockWarning
+                  {/* <StockWarning
                     stock={prod.product?.stock}
                     quantity={0}
                     isUnlimited={prod.product?.isUnlimited}
-                  />
+                  /> */}
                 </div>
               </motion.div>
             </Link>
@@ -216,7 +216,7 @@ const DealsSection = () => {
                 />
                 <Button
                   onClick={(e) => handleAddToCart(e, prod)}
-                  className="bg-black text-white hover:bg-brand-gold text-[10px] font-bold uppercase tracking-widest px-6 py-2 rounded-none shadow-lg"
+                  className="bg-brand-charcoal text-white hover:bg-brand-gold text-[10px] font-bold uppercase tracking-widest px-6 py-2 rounded-none shadow-lg"
                 >
                   Quick Add
                 </Button>

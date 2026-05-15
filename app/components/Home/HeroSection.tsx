@@ -144,60 +144,28 @@ const HeroSection = () => {
             variants={bannerVariants}
             className="absolute inset-0"
           >
-            <Image
-              src={activeBg.url || "/brandImage/brand_banner.png"}
-              alt="Dynamic Banner"
-              fill
-              className="object-cover"
-              style={{
-                objectPosition: `${activeBg.positionX || 50}% ${activeBg.positionY || 50}%`
-              }}
-              priority
-              loading="eager"
-              sizes="(max-width: 768px) 100vw, 80vw"
-            />
-            <div className="absolute inset-0 p-6 md:p-12 lg:p-24 flex flex-col justify-center gap-8 md:gap-12 bg-black/40">
-              <motion.div
-                initial="hidden"
-                animate="visible"
-                transition={{ staggerChildren: 0.1, delayChildren: 0.2 }}
-                className={`flex flex-col gap-4 ${advertConfig?.layout === "right-form" ? "items-end text-right" : "items-start text-left"}`}
-              >
-                {showHighlight && highlight && (
-                  <motion.h2 variants={textVariants} className="text-sm md:text-base font-medium text-brand-gold uppercase tracking-[0.5em] opacity-90">
-                    {highlight}
-                  </motion.h2>
-                )}
-                {showTitle && title && (
-                  <motion.h1 variants={textVariants} className="text-4xl md:text-7xl font-outfit font-light text-white uppercase tracking-[0.1em] leading-[1.1]">
-                    {title.split(' ').map((word, i) => (
-                      <React.Fragment key={i}>
-                        {i === 0 ? <span className="font-bold">{word}</span> : word}{" "}
-                      </React.Fragment>
-                    ))}
-                  </motion.h1>
-                )}
-                {showDescription && description && (
-                  <motion.p variants={textVariants} className="text-white/90 text-sm md:text-lg max-w-lg font-light tracking-wide leading-relaxed hidden md:block">
-                    {description}
-                  </motion.p>
-                )}
-              </motion.div>
-              <motion.div variants={textVariants} initial="hidden" animate="visible" transition={{ delay: 0.5 }} className={`${advertConfig?.layout === "right-form" ? "flex justify-end" : ""}`}>
-                <Link href={activeBg.linkedCategory ? `/products?category=${activeBg.linkedCategory}` : "/products"}>
-                  <Button
-                    variant="ghost"
-                    className="w-fit bg-white text-black hover:bg-brand-gold hover:text-white font-bold border-none px-12 h-14 md:h-16 uppercase text-[11px] tracking-[0.2em] transition-all duration-500 active:scale-95 shadow-xl"
-                  >
-                    Explore More
-                  </Button>
-                </Link>
-              </motion.div>
-            </div>
+            <Link 
+              href={`/products?search=${encodeURIComponent(title)}`}
+              className="absolute inset-0 cursor-pointer block z-10"
+            >
+              <Image
+                src={activeBg.url || "/brandImage/brand_banner.png"}
+                alt={title || "Dynamic Banner"}
+                fill
+                className="object-cover"
+                style={{
+                  objectPosition: `${activeBg.positionX || 50}% ${activeBg.positionY || 50}%`
+                }}
+                priority
+                loading="eager"
+                sizes="(max-width: 768px) 100vw, 80vw"
+              />
+            </Link>
+            {/* Overlay content removed to focus on visuals */}
           </motion.div>
         </AnimatePresence>
 
-        <CarouselIndicators 
+        <CarouselIndicators
           total={backgrounds.length}
           currentIndex={currentIndex}
           onSelect={setCurrentIndex}

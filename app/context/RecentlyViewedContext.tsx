@@ -16,6 +16,8 @@ export interface RecentlyViewedItem {
   title: string;
   price: string;
   image: string;
+  rating?: number;
+  media?: { type: string; url: string }[];
 }
 
 interface RecentlyViewedContextType {
@@ -65,7 +67,9 @@ export const RecentlyViewedProvider = ({ children }: { children: React.ReactNode
       price: `₦${p.price.toLocaleString()}`,
       image: p.productImage || "/placeholder.png",
       isUnlimited: p.isUnlimited,
-      stock: p.stock
+      stock: p.stock,
+      rating: p.rating,
+      media: p.media
     }));
   }, [backendHistoryData]);
 

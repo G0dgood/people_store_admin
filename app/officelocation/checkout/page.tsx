@@ -2,37 +2,39 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { CustomerHeader } from "../../components/customer-header";
-import { GoBackButton } from "../../components/go-back-button";
-import OrderSuccessModal from "../../components/Modal/OrderSuccessModal";
-import HomeDeliveryModal, { DeliveryDetails } from "../../components/Modal/HomeDeliveryModal";
-import OrderReviewModal from "../../components/Modal/OrderReviewModal";
-import Dropdown from "../../components/Dropdown";
-import { CustomerCheckoutSkeleton } from "../../components/Skeleton/CustomerCheckoutSkeleton";
-import { useCart } from "../../context/CartContext";
-import { useUserInfo } from "../../contexts/UserInfoContext";
-import { getShopUrl, getStoreUrl, parseStoreContextFromUrl } from "../../utils/storeUtils";
-import { usePayOrderCashMutation, useCreateOrderPaymentIntentMutation, useVerifyOrderPaymentQuery } from "@/lib/redux/services/ordersApi";
+import { OfficeLocationHeader } from "../components/OfficeLocationHeader";
+import { GoBackButton } from "../components/go-back-button";
+import OrderSuccessModal from "../components/Modal/OrderSuccessModal";
+import HomeDeliveryModal, { DeliveryDetails } from "../components/Modal/HomeDeliveryModal";
+import OrderReviewModal from "../components/Modal/OrderReviewModal";
+import Dropdown from "@/app/components/Form/Dropdown";
+import { CustomerCheckoutSkeleton } from "../components/Skeleton/CustomerCheckoutSkeleton";
+import { useCart, CartItem } from "@/app/officelocation/context/CartContext";
+import { useOfficeLocationInfo } from "@/app/context/OfficeLocationContext";
+import { getShopUrl, getStoreUrl, parseStoreContextFromUrl } from "../utils/storeUtils";
+import { usePayOrderCashMutation, useCreateOrderPaymentIntentMutation, useVerifyOrderPaymentQuery } from "@/lib/redux/services/orderApi";
 import { toast } from "sonner";
-import { useApiError } from "../../hooks/useApiError";
-import { InfoBanner } from "../../components/InfoBanner";
+import { useApiError } from "@/app/hooks/useApiError";
+import { InfoBanner } from "@/app/officelocation/components/InfoBanner";
 import { SVGLoaderFetch } from "@/app/components/Options";
-import { useGetBusinessFiltersQuery } from "@/lib/redux/services/businessesApi";
+import { useGetOfficeBySubdomainQuery } from "@/lib/redux/services/officeApi";
+import { useAppSelector } from "@/lib/redux/hooks";
+import { selectCurrentUser } from "@/lib/redux/features/authSlice";
 
-function CheckoutPageContent() {
+function OfficeLocationCheckoutPageContent() {
   const { items, subtotal, totalItems, clearCart } = useCart();
-  const { storeContext, updateStoreContext, customer, user } = useUserInfo();
+  const { storeContext, updateStoreContext, officelocation } = useOfficeLocationInfo();
+  const user = useAppSelector(selectCurrentUser);
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [business, setBusiness] = useState<import("@/lib/redux/services/businessesApi").Business | null>(null);
-
-  const [payOrderCash, { isLoading: isPaying, isError, error }] = usePayOrderCashMutation();
-  const [createPaymentIntent, { isLoading: isInitializingPayment, isError: isPaymentError, error: paymentError }] = useCreateOrderPaymentIntentMutation();
-
-  const { data: filtersResponse, isLoading: isLoadingFilters } = useGetBusinessFiltersQuery(
+  const { data: officeRes, isLoading: isLoadingOffice } = useGetOfficeBySubdomainQuery(
     storeContext?.subdomain || "",
     { skip: !storeContext?.subdomain }
   );
+  const office = officeRes?.data;
+
+  const [payOrderCash, { isLoading: isPaying, isError, error }] = usePayOrderCashMutation();
+  const [createPaymentIntent, { isLoading: isInitializingPayment, isError: isPaymentError, error: paymentError }] = useCreateOrderPaymentIntentMutation();
 
   useApiError(isError, error, "Failed to process order");
   useApiError(isPaymentError, paymentError, "Failed to initialize payment");
@@ -53,7 +55,7 @@ function CheckoutPageContent() {
     isSuccess: isVerified,
     isError: isVerificationError,
     error: verificationError
-  } = useVerifyOrderPaymentQuery(reference!, {
+  } = useVerifyOrderPaymentQuery(reference ? { reference } : (undefined as any), {
     skip: !reference
   });
 
@@ -68,58 +70,24 @@ function CheckoutPageContent() {
       // Only update if subdomain changed OR if the URL provides a DIFFERENT non-empty ID
       const isDifferent =
         context.subdomain !== storeContext?.subdomain ||
-        (context.businessId && context.businessId !== storeContext?.businessId) ||
         (context.officeId && context.officeId !== storeContext?.officeId);
 
       if (isDifferent) {
         updateStoreContext({
           subdomain: context.subdomain,
-          businessId: context.businessId || storeContext?.businessId || "",
           officeId: context.officeId || storeContext?.officeId,
           officeName: storeContext?.officeName,
         });
       }
     } else if (storeContext?.subdomain && !reference) {
       // If no context in URL but we have it in state, redirect to include it
-      const newUrl = getShopUrl("/customer/checkout", storeContext.subdomain, storeContext?.businessId, storeContext?.officeId);
+      const newUrl = getShopUrl("/officelocation/checkout", storeContext.subdomain, storeContext?.officeId);
       router.replace(newUrl);
     }
 
   }, [searchParams, updateStoreContext, storeContext, router, reference]);
 
-  useEffect(() => {
-    if (filtersResponse?.data?.business) {
-      const businessData = filtersResponse.data.business;
 
-      // Only update if data is different
-      if (business?.id !== businessData.id) {
-        setBusiness(businessData);
-        localStorage.setItem(`tecnova_business_${storeContext?.subdomain}`, JSON.stringify(businessData));
-      }
-
-      // Update storeContext if businessId is missing
-      if (storeContext && !storeContext.businessId && businessData.id) {
-        updateStoreContext({
-          ...storeContext,
-          businessId: businessData.id
-        });
-      }
-    } else if (storeContext?.subdomain) {
-      const savedBusiness = localStorage.getItem(`tecnova_business_${storeContext.subdomain}`);
-      if (savedBusiness && !business) {
-        const parsedBusiness = JSON.parse(savedBusiness);
-        setBusiness(parsedBusiness);
-
-        // Also update storeContext from saved business if missing
-        if (storeContext && !storeContext.businessId && parsedBusiness.id) {
-          updateStoreContext({
-            ...storeContext,
-            businessId: parsedBusiness.id
-          });
-        }
-      }
-    }
-  }, [filtersResponse, storeContext, business, updateStoreContext]);
 
   useEffect(() => {
     if (isVerified) {
@@ -149,12 +117,12 @@ function CheckoutPageContent() {
   const estimatedTotal = subtotal;
 
   const handlePayment = (type: "paystack" | "instore" | "home") => {
-    if (type === "paystack" && !customer) {
+    if (type === "paystack" && !officelocation) {
       toast.error("Please login to proceed with online payment");
       return;
     }
 
-    if (type === "home" && !customer) {
+    if (type === "home" && !officelocation) {
       toast.error("Please login to proceed with home delivery");
       return;
     }
@@ -165,9 +133,9 @@ function CheckoutPageContent() {
       setReviewData({
         details: {
           address: "Pickup Station",
-          fullName: customer ? `${customer.firstName} ${customer.lastName}` : "Guest Customer",
-          phoneNumber: customer?.phoneNumber || customer?.phone || "",
-          email: customer?.email || "",
+          fullName: officelocation?.fullName || user?.fullName || "Guest Customer",
+          phoneNumber: officelocation?.phoneNumber || user?.phoneNumber || "",
+          email: officelocation?.email || user?.email || "",
         },
         paymentType: type
       });
@@ -189,11 +157,10 @@ function CheckoutPageContent() {
 
     if (paymentType === "instore") {
       const payload = {
-        businessId: storeContext?.businessId || business?.id || "",
         officeId: storeContext?.officeId || "",
-        customerEmail: details.email || customer?.email || "",
-        customerId: customer?.id || customer?._id || undefined,
-        items: items?.map(item => ({
+        customerEmail: details.email || officelocation?.email || "",
+        customerId: officelocation?.id || officelocation?._id || undefined,
+        items: items?.map((item: CartItem) => ({
           officeInventoryId: item.id,
           variantId: item.variantId,
           quantity: item.quantity,
@@ -227,10 +194,9 @@ function CheckoutPageContent() {
       }
     } else if (paymentType === "paystack") {
       const payload = {
-        businessId: storeContext?.businessId || business?.id || "",
         officeId: storeContext?.officeId || "",
-        customerEmail: details.email || customer?.email || "",
-        customerId: customer?.id || customer?._id || "",
+        customerEmail: details.email || officelocation?.email || "",
+        customerId: officelocation?.id || officelocation?._id || "",
         items: items?.map(item => ({
           officeInventoryId: item.id,
           variantId: item.variantId,
@@ -252,7 +218,7 @@ function CheckoutPageContent() {
         payment: {
           method: "CARD" as const
         },
-        callback_url: `${window.location.origin}${getStoreUrl(storeContext?.subdomain, storeContext?.businessId, storeContext?.officeId)}`
+        callback_url: `${window.location.origin}${getStoreUrl(storeContext?.subdomain, storeContext?.officeId)}`
       };
 
 
@@ -278,16 +244,14 @@ function CheckoutPageContent() {
     }).format(amount);
   };
 
-  const businessLogo = business?.logo?.fileUrl || business?.BusinessDocuments?.[0]?.fileUrl;
-
-  if (isLoadingFilters && !business && !reference) {
+  if (isLoadingOffice && !office && !reference) {
     return <CustomerCheckoutSkeleton />;
   }
 
   if (isVerifying) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-white p-6 text-center">
-        <SVGLoaderFetch text="Verifying your payment..." isTable={false} />
+        <SVGLoaderFetch text="Verifying your payment..." asTable={false} />
         <p className="mt-4 text-sm text-[rgba(31,31,31,0.5)] font-sans">
           Please do not refresh the page or close your browser.
         </p>
@@ -295,7 +259,7 @@ function CheckoutPageContent() {
         {isVerificationError && (
           <div className="mt-8">
             <button
-              onClick={() => router.push(getStoreUrl(storeContext?.subdomain, storeContext?.businessId, storeContext?.officeId))}
+              onClick={() => router.push(getStoreUrl(storeContext?.subdomain, storeContext?.officeId))}
               className="text-[#156BB6] underline underline-offset-4 font-sans text-sm"
             >
               Return to shopping
@@ -308,17 +272,12 @@ function CheckoutPageContent() {
 
 
   return (
-    <div className="min-h-screen bg-white pb-20">
-      <CustomerHeader
-        businessName={business?.name}
-        businessDescription={business?.description}
-        logoUrl={businessLogo}
-        showSearch={false}
-      />
+    <div className="min-h-screen bg-white">
+      <OfficeLocationHeader />
 
-      <section className="mx-auto max-w-[1440px] px-6 py-12 md:px-12">
+      <section className="mx-auto max-w-[1440px] px-6 pt-12 pb-32 md:pb-16 md:px-12">
         <div className="mb-6">
-          <GoBackButton href={getShopUrl("/customer/cart", storeContext?.subdomain, storeContext?.businessId, storeContext?.officeId)} />
+          <GoBackButton href={getShopUrl("/officelocation/cart", storeContext?.subdomain, storeContext?.officeId)} />
         </div>
 
         <h1 className="mb-8 font-sans font-normal text-[25px] leading-[42px] tracking-[-0.03em] text-[#1F1F1F]">
@@ -353,7 +312,7 @@ function CheckoutPageContent() {
             Items Ordered
           </h2>
           <div className="flex flex-col gap-4">
-            {items.map((item) => (
+            {items.map((item: CartItem) => (
               <div key={`${item.id}-${item.selectedColor}-${item.selectedSize}`} className="flex justify-between items-center text-[14px] font-sans">
                 <div className="flex flex-col">
                   <span className="font-medium text-[#1F1F1F]">{item.name}</span>
@@ -446,7 +405,7 @@ function CheckoutPageContent() {
         isOpen={isSuccessModalOpen}
         onClose={() => {
           setIsSuccessModalOpen(false);
-          router.push(getStoreUrl(storeContext?.subdomain, storeContext?.businessId, storeContext?.officeId));
+          router.push(getStoreUrl(storeContext?.subdomain, storeContext?.officeId));
         }}
         status={orderStatus}
       />
@@ -456,10 +415,10 @@ function CheckoutPageContent() {
         onClose={() => setIsHomeDeliveryModalOpen(false)}
         onSave={handleHomeDeliverySave}
         initialData={{
-          fullName: customer ? `${customer.firstName} ${customer.lastName}` : "",
-          email: customer?.email || "",
-          phoneNumber: customer?.phoneNumber || customer?.phone || "",
-          address: customer?.address?.street || "",
+          fullName: officelocation?.fullName || "",
+          email: officelocation?.email || "",
+          phoneNumber: officelocation?.phoneNumber || "",
+          address: officelocation?.address || "",
         }}
       />
 
@@ -498,7 +457,7 @@ function CheckoutPageContent() {
 export default function CheckoutPage() {
   return (
     <Suspense fallback={<CustomerCheckoutSkeleton />}>
-      <CheckoutPageContent />
+      <OfficeLocationCheckoutPageContent />
     </Suspense>
   );
 }

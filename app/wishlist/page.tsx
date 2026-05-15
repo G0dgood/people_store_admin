@@ -71,10 +71,10 @@ const WishlistPage = () => {
 
       <div className="flex-1 max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 py-4 md:py-8 flex flex-col gap-4 md:gap-8 w-full">
         {/* Breadcrumbs */}
-        <Breadcrumbs 
+        <Breadcrumbs
           items={[
             { label: "Wishlist" }
-          ]} 
+          ]}
           className="pb-2"
         />
 
@@ -192,7 +192,7 @@ const WishlistPage = () => {
               </Link>
             ))}
             {recentlyViewedItems.length === 0 && (
-              <div className="col-span-full py-8 text-center text-gray-400 text-[10px] uppercase tracking-widest font-bold">
+              <div className="col-span-full py-8 text-center text-gray-400 text-[10px] tracking-widest font-bold">
                 No recently viewed items yet
               </div>
             )}
