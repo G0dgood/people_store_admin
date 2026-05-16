@@ -1,179 +1,127 @@
+
 "use client";
 
-import React from "react";
-import Image from "next/image";
-import Link from "next/link";
+import React, { useState, useMemo } from "react";
 import { Header } from "@/app/components/Header";
 import { Footer } from "@/app/components/Footer";
-import { HiChevronRight, HiStar, HiShoppingBag } from "react-icons/hi2";
-import { motion } from "framer-motion";
-
 import { useGetPublicBrandsQuery } from "@/lib/redux/services/boutiqueApi";
-import { BrandSkeleton } from "../components/Skeleton/BrandSkeleton";
-import { BrandDetailModal } from "../components/Brands/BrandDetailModal";
-import { useState } from "react";
+import Link from "next/link";
+import { AlphabetFilter } from "@/app/components/Brands/AlphabetFilter";
+import { SectionHeaderRich } from "../components/ui/SectionHeaderRich";
+
+const alphabet = ["ALL", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
 
 const BrandsPage = () => {
-   const { data: brandsResponse, isLoading } = useGetPublicBrandsQuery();
-   const brands = brandsResponse?.data && 'brands' in brandsResponse.data 
-      ? brandsResponse.data.brands 
-      : (Array.isArray(brandsResponse?.data) ? brandsResponse.data : []);
-   const [selectedBrand, setSelectedBrand] = useState<any>(null);
-   const [isModalOpen, setIsModalOpen] = useState(false);
+ const { data: brandsResponse, isLoading } = useGetPublicBrandsQuery();
+ const [activeLetter, setActiveLetter] = useState("ALL");
 
-   const handleBrandClick = (brand: any) => {
-      setSelectedBrand(brand);
-      setIsModalOpen(true);
-   };
+ const allBrands = useMemo(() => {
+  return brandsResponse?.data && 'brands' in brandsResponse.data
+   ? brandsResponse.data.brands
+   : (Array.isArray(brandsResponse?.data) ? brandsResponse.data : []);
+ }, [brandsResponse]);
 
-   const renderContent = () => {
-      if (isLoading) {
-         return (
-            <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
-               {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-                  <BrandSkeleton key={i} />
-               ))}
-            </section>
-         );
-      }
+ const filteredBrands = useMemo(() => {
+  if (activeLetter === "ALL") return allBrands;
+  if (activeLetter === "#") {
+   return allBrands.filter((b: any) => /^[0-9]/.test(b.name));
+  }
+  return allBrands.filter((b: any) => b.name.toUpperCase().startsWith(activeLetter));
+ }, [allBrands, activeLetter]);
 
-      if (brands.length === 0) {
-         return (
-            <div className="py-32 flex flex-col items-center justify-center text-center gap-6 w-full col-span-full">
-               <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center text-gray-200 border border-gray-100">
-                  <HiShoppingBag size={40} />
-               </div>
-               <h3 className="text-2xl font-black text-black">No Brands Found</h3>
-               <p className="text-gray-400 max-w-sm">We are currently curating new collections. Please check back soon for our latest arrivals.</p>
-            </div>
-         );
-      }
+ const groupedBrands = useMemo(() => {
+  const groups: { [key: string]: any[] } = {};
 
-      return (
-         <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
-            {brands.map((brand: any, i: number) => (
-               <motion.div
-                  key={brand._id}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.05 }}
-                  className="relative aspect-[4/5] rounded-[32px] overflow-hidden cursor-pointer group hover:shadow-xl transition-all duration-500 border border-gray-100"
-               >
-                  <Image
-                     src={brand.logo || "/placeholder.png"}
-                     alt={brand.name}
-                     fill
-                     className="object-cover  group-hover:-0 group-hover:scale-110 transition-all duration-700"
-                     sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
-                  />
+  // For ALL, we group everything
+  const targetBrands = filteredBrands;
 
-                  {/* Glassmorphism Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-60 group-hover:opacity-90 transition-opacity duration-500" />
+  targetBrands.forEach((b: any) => {
+   let firstChar = b.name[0].toUpperCase();
+   if (!/[A-Z]/.test(firstChar)) {
+    firstChar = "#";
+   }
+   if (!groups[firstChar]) groups[firstChar] = [];
+   groups[firstChar].push(b);
+  });
 
-                  <div className="absolute inset-0 p-4 flex flex-col justify-end" onClick={() => handleBrandClick(brand)}>
-                     <div className="bg-white/10 backdrop-blur-md p-4 rounded-3xl border border-white/20 flex flex-col gap-3 group-hover:-translate-y-2 transition-transform duration-500">
-                        <div className="flex items-center justify-end">
-                           <div className="flex items-center gap-1">
-                              <HiStar className="text-brand-gold" size={10} />
-                              <span className="text-[9px] font-bold text-white">{brand.rating || 5.0}</span>
-                           </div>
-                        </div>
-                        <div className="flex flex-col gap-1">
-                           <h3 className="text-lg font-black text-white tracking-tight leading-tight truncate">{brand.name}</h3>
-                           <p className="text-[10px] text-white/60 leading-relaxed font-medium line-clamp-2">
-                              Luxury heritage & artisanal mastery.
-                           </p>
-                        </div>
-                        <div className="flex items-center justify-between text-[9px] font-black tracking-[0.2em] text-brand-gold pt-1">
-                           Discover <HiChevronRight size={14} />
-                        </div>
-                     </div>
-                  </div>
-               </motion.div>
-            ))}
-         </section>
-      );
-   };
+  return Object.keys(groups).sort().reduce((acc: any, key) => {
+   acc[key] = groups[key].sort((a, b) => a.name.localeCompare(b.name));
+   return acc;
+  }, {});
+ }, [filteredBrands]);
 
-   return (
-      <div className="min-h-screen !bg-white flex flex-col font-sans text-black">
-         <Header />
+ return (
+  <div className="min-h-screen bg-white flex flex-col font-outfit">
+   <Header />
 
-         <main className="flex-1 w-full bg-white py-8 md:py-12">
-            <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 flex flex-col gap-12 md:gap-24">
-               {/* Brands Hero Section */}
-               <section className="relative pt-16 pb-12 md:pt-24 md:pb-20 bg-black overflow-hidden">
-                  <Image
-                     src="/brandImage/brand_banner.png"
-                     alt="Brands Background"
-                     fill
-                     className="object-cover opacity-100  brightness-50"
-                     priority
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
-                  <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-gold rounded-full filter blur-[140px] opacity-10 translate-x-1/2 -translate-y-1/2" />
+   <div className="flex-1 max-w-[1440px] mx-auto w-full px-6 md:px-10 lg:px-16 py-12 md:py-20">
+    <div className="flex flex-col gap-12">
+     <SectionHeaderRich
+      title="Brands"
+      mainHref="/brands"
+      exploreLabel="Return to Shop"
+      exploreHref="/"
+      className="!mt-0"
+     />
 
-                  <div className="px-6 md:px-10 lg:px-16 relative z-10">
-                     <motion.div
-                        initial={{ opacity: 0, x: -30 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.7 }}
-                        className="flex flex-col gap-6"
-                     >
-                        <span className="text-brand-gold font-black tracking-[0.4em] text-xs">Artisanal Houses</span>
-                        <h1 className="text-4xl md:text-7xl font-black text-white tracking-tighter leading-none font-inter">
-                           The <br /><span className="text-brand-gold">Brands.</span>
-                        </h1>
-                        <p className="text-gray-400 max-w-xl text-lg font-medium leading-relaxed">
-                           Explore our curated selection of luxury perfume houses and skincare curators, each bringing a unique signature to the Bloom & Mist ecosystem.
-                        </p>
-                     </motion.div>
-                  </div>
-               </section>
+     {/* Alphabet Filter */}
+     <AlphabetFilter
+      alphabet={alphabet}
+      activeLetter={activeLetter}
+      onLetterClick={setActiveLetter}
+     />
 
-               <div className="py-8 md:py-12">
-                  {/* Dynamic Content */}
-                  {renderContent()}
-               </div>
-
-               {/* Brands Concierge section */}
-               <section className="bg-black py-24 md:py-32 relative overflow-hidden rounded-[48px]">
-
-                  <Image
-                     src="/brandImage/cat_body.png"
-                     alt="Concierge Background"
-                     fill
-                     className="object-cover opacity-20 "
-                     sizes="100vw"
-                  />
-                  <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 flex flex-col items-center text-center gap-8 relative z-20">
-                     <div className="flex flex-col gap-4">
-                        <span className="text-brand-gold font-bold tracking-[0.4em] text-xs">Custom Procurement</span>
-                        <h2 className="text-4xl md:text-6xl font-black text-white tracking-tighter leading-none font-inter">
-                           Looking for a specific <br /><span className="text-brand-gold">Creator?</span>
-                        </h2>
-                     </div>
-                     <p className="text-gray-400 text-sm md:text-lg max-w-2xl font-medium leading-relaxed">
-                        Our artisans maintain connections with luxury houses globally. If you need a specific brand or collector's edition not shown here, our concierge sourcing team is at your disposal.
-                     </p>
-                     <Link href="/contact" className="mt-4 px-16 py-6 bg-brand-gold text-white rounded-3xl font-black tracking-widest text-sm shadow-2xl shadow-black/40 hover:scale-105 active:scale-95 transition-all">
-                        Consult a Brand Curator
-                     </Link>
-                  </div>
-               </section>
-            </div>
-         </main>
-
-         <BrandDetailModal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            brand={selectedBrand}
-         />
-
-         <Footer />
+     {/* Brands Directory */}
+     {isLoading ? (
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-12 animate-pulse mt-8">
+       {[...Array(6)].map((_, i) => (
+        <div key={i} className="h-40 bg-gray-50 rounded-none border border-gray-100" />
+       ))}
       </div>
-   );
+     ) : (
+      <div className="flex flex-col gap-16 mt-8">
+       {Object.keys(groupedBrands).map((letter) => (
+        <div key={letter} className="flex flex-col md:flex-row gap-8 md:gap-24 border-t border-gray-100 pt-12 first:border-0 first:pt-0">
+         <div className="w-12 h-12 flex items-center justify-center bg-gray-50 rounded-none border border-gray-100 flex-shrink-0">
+          <span className="text-2xl font-black text-gray-900">{letter}</span>
+         </div>
+
+         <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-6">
+          {groupedBrands[letter].map((brand: any) => (
+           <Link
+            key={brand._id}
+            href={`/products?brand=${encodeURIComponent(brand.name)}`}
+            className="group flex items-center gap-4 py-1"
+           >
+            <div className="text-[15px] font-medium text-gray-600 group-hover:text-brand-gold transition-colors tracking-tight">
+             {brand.name}
+            </div>
+           </Link>
+          ))}
+         </div>
+        </div>
+       ))}
+
+       {Object.keys(groupedBrands).length === 0 && (
+        <div className="flex flex-col items-center justify-center py-32 text-center">
+         <span className="text-gray-300 font-black text-6xl mb-4">?</span>
+         <p className="text-gray-500 font-medium">No brands found for "{activeLetter}"</p>
+         <button
+          onClick={() => setActiveLetter("ALL")}
+          className="mt-6 text-brand-gold font-bold text-xs uppercase tracking-widest hover:underline"
+         >
+          Clear Filter
+         </button>
+        </div>
+       )}
+      </div>
+     )}
+    </div>
+   </div>
+
+   <Footer />
+  </div>
+ );
 };
 
 export default BrandsPage;

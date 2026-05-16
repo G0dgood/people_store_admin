@@ -40,11 +40,11 @@ export default function CreateProduct() {
   const { data: officesResponse } = useGetOfficesQuery();
   const { emit } = useSocket();
 
-  const categories = categoriesResponse?.data && 'categories' in categoriesResponse.data 
-    ? (categoriesResponse.data as any).categories 
+  const categories = categoriesResponse?.data && 'categories' in categoriesResponse.data
+    ? (categoriesResponse.data as any).categories
     : (Array.isArray(categoriesResponse?.data) ? categoriesResponse.data : []);
-  const brands = brandsResponse?.data && 'brands' in brandsResponse.data 
-    ? (brandsResponse.data as any).brands 
+  const brands = brandsResponse?.data && 'brands' in brandsResponse.data
+    ? (brandsResponse.data as any).brands
     : (Array.isArray(brandsResponse?.data) ? brandsResponse.data : []);
   const offices = officesResponse?.data || [];
 
@@ -253,7 +253,7 @@ export default function CreateProduct() {
           <div className="flex flex-col">
             <h2 className="text-xl font-black text-[#121212]">Add New Product</h2>
             <div className="flex items-center gap-2">
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Product Catalog</p>
+              <p className="text-xs font-bold text-gray-400 tracking-widest">Product Catalog</p>
               {formData.sku && (
                 <>
                   <span className="w-1.5 h-1.5 bg-gray-200 rounded-full" />
@@ -305,9 +305,23 @@ export default function CreateProduct() {
         {/* Left Column (Main Details) */}
         <div className="xl:col-span-2 flex flex-col gap-6">
           {/* Basic Details */}
+
           <div className="bg-white rounded-[6px] border border-gray-200   p-8 flex flex-col gap-6">
             <h3 className="text-base font-bold text-[#121212]">Basic Details</h3>
-
+            <div className="flex flex-col gap-2.5">
+              <label className="text-[11px] font-bold text-[#121212]">Product Categories</label>
+              <Select
+                shape="rounded-sm"
+                value={formData.category}
+                onChange={(val) => handleInputChange("category", val as string)}
+                placeholder="Select your product"
+                options={categories?.map((c: any) => ({
+                  label: c?.name?.toUpperCase(),
+                  value: c?.name
+                }))}
+                searchable
+              />
+            </div>
             <div className="flex flex-col gap-2.5">
               <label className="text-xs font-bold text-[#121212]">Product Name</label>
               <Input shape="rounded-sm" type="text"

@@ -1,61 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useGetPublicNewArrivalsQuery } from "@/lib/redux/services/boutiqueApi";
-import Link from "next/link";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 import { useCart } from "../context/CartContext";
 import { QuickViewModal } from "./Products/QuickViewModal";
-import { Button } from "./Button";
 import { toast } from "sonner";
 import { ProductGridItem } from "./Products/ProductItems";
-import { SectionHeaderSimple } from "./ui/SectionHeaderSimple";
+import { SectionHeaderRich } from "./ui/SectionHeaderRich";
 
-const blogData = [
-  {
-    // image: industries,
-    title: "Logistics & Supply Chain",
-    text: " Optimizing supply chain operations with cutting-edge solutions for warehousing, transportation, and inventory management.",
-  },
-  {
-    // image: Government,
-    title: "Government & Public Services",
-    text: "Supporting public sector transformation with secure, efficient, and citizen-centric solutions.",
-  },
-  {
-    // image: Business,
-    title: "Business Process Outsourcing",
-    text: "Streamlining operations and enhancing efficiency through comprehensive BPO solutions and AI.",
-  },
-  {
-    // image: Telecommunication,
-    title: "Telecommunication",
-    text: "Advanced communication solutions powering next-generation connectivity and network infrastructure.",
-  },
-  {
-    // image: Telemedicine,
-    title: "Health & Telemedicine",
-    text: "Digital healthcare solutions enabling remote patient care and efficient medical service delivery.",
-  },
-  {
-    // image: Ecommerce,
-    title: "E-commerce & Retail",
-    text: "Comprehensive digital solutions for modern retail operations and online shopping experiences.",
-  },
-  {
-    // image: Banking,
-    title: "Banking",
-    text: "Secure and scalable solutions for modern banking operations, risk management, and customer service excellence.",
-  },
-  {
-    // image: Fintech,
-    title: "Fintech & Digital Payment",
-    text: "Innovative financial technology solutions for secure and seamless digital transactions.",
-  },
-  {
-    // image: Cybersecurity,
-    title: "Cybersecurity & AI Solutions",
-    text: "Advanced security solutions powered by artificial intelligence and machine learning.",
-  },
-];
+
 
 const NewArrivals = () => {
   const { data: newArrivalsData, isLoading } = useGetPublicNewArrivalsQuery({ limit: 10 });
@@ -143,15 +95,13 @@ const NewArrivals = () => {
 
   return (
     <div className="relative group/section">
-      <SectionHeaderSimple title="New Arrivals" className="!p-0 !border-0 mb-5">
-        <Link 
-          href="/products?search="
-          className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-brand-gold transition-colors group/viewall"
-        >
-          View All
-          <HiChevronRight className="transition-transform group-hover/viewall:translate-x-0.5" />
-        </Link>
-      </SectionHeaderSimple>
+      <SectionHeaderRich
+        title="New Arrivals"
+        mainHref="/products?search="
+        exploreLabel="View All"
+        exploreHref="/products?search="
+        className="mb-5 !mt-0"
+      />
       <button
         onClick={() => scroll("left")}
         className="absolute left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 bg-white/90 backdrop-blur-md border border-gray-200 rounded-full flex items-center justify-center text-gray-900 opacity-0 group-hover/section:opacity-100 transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold shadow-lg"

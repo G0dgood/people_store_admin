@@ -10,10 +10,7 @@ interface BrandCategorySectionProps {
   productDetailPath?: string;
 }
 
-import { SectionHeaderSimple } from "../ui/SectionHeaderSimple";
-
-import Link from "next/link";
-import { HiChevronRight } from "react-icons/hi2";
+import { SectionHeaderRich } from "../ui/SectionHeaderRich";
 
 const BrandCategorySection: React.FC<BrandCategorySectionProps> = ({ brand, index, productDetailPath }) => {
   const { data: productsData } = useGetPublicProductsQuery({
@@ -35,15 +32,13 @@ const BrandCategorySection: React.FC<BrandCategorySectionProps> = ({ brand, inde
 
   return (
     <div className="flex flex-col gap-4 mb-10">
-      <SectionHeaderSimple title={brand.name} className="!p-0 !border-0">
-        <Link 
-          href={`/products?brand=${encodeURIComponent(brand.name)}`}
-          className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400 hover:text-brand-gold transition-colors group/viewall"
-        >
-          View All
-          <HiChevronRight className="transition-transform group-hover/viewall:translate-x-0.5" />
-        </Link>
-      </SectionHeaderSimple>
+      <SectionHeaderRich 
+        title={brand.name} 
+        mainHref={`/products?brand=${encodeURIComponent(brand.name)}`}
+        exploreLabel="View All"
+        exploreHref={`/products?brand=${encodeURIComponent(brand.name)}`}
+        className="!p-0 !border-0 !mt-0 !mb-0"
+      />
       <CategorySection
         title={brand.name}
         category={brand.category}

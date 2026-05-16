@@ -14,6 +14,7 @@ import { CategorySectionSkeleton } from "./components/Skeleton/CategorySectionSk
 import { BrandCategorySection } from "./components/Home/BrandCategorySection";
 import { RegionSuppliers } from "./components/Home/RegionSuppliers";
 import NewArrivals from "./components/NewArrivals";
+import { TopBrands } from "./components/Home/TopBrands";
 
 
 const Home = () => {
@@ -36,7 +37,8 @@ const Home = () => {
           </div>
           {/* <HeroUserCard /> */}
         </div>
-        <ArtisanalCollections />
+        <TopBrands />
+        {/* <ArtisanalCollections /> */}
         <NewArrivals />
         <DealsSection />
 
@@ -65,7 +67,7 @@ const Home = () => {
 
         <ArtisanalCollections />
 
-        <RegionSuppliers />
+        {/* <RegionSuppliers /> */}
 
       </div>
 

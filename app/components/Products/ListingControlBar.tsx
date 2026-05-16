@@ -185,7 +185,7 @@ const ListingControlBar: React.FC<ListingControlBarProps> = ({
             <span className="text-[10px] font-bold tracking-widest text-gray-500 group-hover:text-gray-900">Filter</span>
             <Icon name="filter_alt" size="xs" className="text-gray-300 group-hover:text-brand-gold" />
           </button>
-          <SortSelector currentSort={sortBy} onSortChange={onSortChange} />
+          {/* <SortSelector currentSort={sortBy} onSortChange={onSortChange} /> */}
           <ViewSwitcher mode={viewMode} onChange={onViewModeChange} />
         </div>
       </div>

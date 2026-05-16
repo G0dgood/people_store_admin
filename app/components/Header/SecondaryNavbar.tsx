@@ -189,16 +189,26 @@ export const SecondaryNavbar: React.FC = () => {
               onMouseEnter={() => handleMouseEnter(item.label)}
               onMouseLeave={() => setActiveMenu(null)}
             >
-              <button
-                ref={(el) => { buttonRefs.current[item.label] = el; }}
-                className={`relative flex items-center gap-2 text-[11px] font-black tracking-[0.15em] transition-colors outline-none ${activeMenu === item.label ? "text-black" : "text-gray-500 hover:text-black"
-                  }`}
+              <div
+                className="flex items-center gap-2"
+                onClick={() => {
+                  if (item.label === "ALL BRANDS") {
+                    window.location.href = "/brands";
+                  }
+                }}
               >
-                {item.label}
+                <Link
+                  href={item.label === "ALL BRANDS" ? "/brands" : "#"}
+                  ref={(el) => { buttonRefs.current[item.label] = el as any; }}
+                  className={`relative flex items-center gap-2 text-[11px] font-black tracking-[0.15em] transition-colors outline-none cursor-pointer ${activeMenu === item.label ? "text-black" : "text-gray-500 hover:text-black"
+                    }`}
+                >
+                  {item.label}
+                </Link>
                 {item.hasDropdown && (
                   <HiChevronDown className={`transition-transform duration-200 text-gray-400 ${activeMenu === item.label ? "rotate-180" : ""}`} size={12} />
                 )}
-              </button>
+              </div>
 
               <AnimatePresence>
                 {activeMenu === item.label && item.hasDropdown && (

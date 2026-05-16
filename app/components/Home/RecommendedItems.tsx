@@ -6,7 +6,7 @@ import { useGetRecommendedProductsQuery } from "@/lib/redux/services/productApi"
 import { RecommendedItemsSkeleton } from "../Skeleton/RecommendedItemsSkeleton";
 import { EmptyState } from "../Admin/EmptyState";
 import { HiOutlineSparkles } from "react-icons/hi2";
-import { SectionHeaderSimple } from "../ui/SectionHeaderSimple";
+import { SectionHeaderRich } from "../ui/SectionHeaderRich";
 
 const RecommendedItems = () => {
   const { data: recommendedData, isLoading } = useGetRecommendedProductsQuery();
@@ -39,7 +39,11 @@ const RecommendedItems = () => {
     return (
       <section className="w-full border border-gray-200 overflow-hidden bg-white mt-8 mb-12">
         <div className="p-6 border-b border-gray-200">
-          <SectionHeaderSimple title="Recommended items" className="!p-0 !border-0" />
+          <SectionHeaderRich 
+            title="Recommended items" 
+            className="!p-0 !border-0 !mt-0 !mb-0"
+            exploreLabel="Explore Boutique"
+          />
         </div>
         <EmptyState
           icon={<HiOutlineSparkles size={36} />}
@@ -53,11 +57,12 @@ const RecommendedItems = () => {
   return (
     <>
       <section className="w-full border border-gray-200 overflow-hidden bg-white mt-8 mb-12">
-        <div className="p-6 border-b border-gray-200 flex items-center justify-between">
-          <SectionHeaderSimple title="Recommended items" className="!p-0 !border-0" />
-          <Link href="/products" className="text-[10px] font-outfit font-bold tracking-[0.2em] text-brand-gold hover:tracking-[0.3em] transition-all uppercase">
-            Explore Boutique
-          </Link>
+        <div className="p-6 border-b border-gray-200">
+          <SectionHeaderRich 
+            title="Recommended items" 
+            className="!p-0 !border-0 !mt-0 !mb-0"
+            exploreLabel="Explore Boutique"
+          />
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 border-t border-l border-gray-200 -m-[1px]">
           {items.slice(0, 5).map((item, idx) => (

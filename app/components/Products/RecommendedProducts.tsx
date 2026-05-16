@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { ProductGridItem } from "./ProductItems";
-import { SectionHeaderSimple } from "../ui/SectionHeaderSimple";
+import { SectionHeaderRich } from "../ui/SectionHeaderRich";
 import { QuickViewModal } from "./QuickViewModal";
 
 interface RecommendedProduct {
@@ -33,11 +33,13 @@ export const RecommendedProducts: React.FC<RecommendedProductsProps> = ({ produc
   return (
     <>
       <div className="flex flex-col mt-8 border border-gray-200 overflow-hidden bg-white mb-12">
-        <div className="p-6 border-b border-gray-200 flex items-center justify-between">
-          <SectionHeaderSimple title="You may also like" className="!p-0 !border-0" />
-          <Link href="/products" className="text-[10px] font-outfit font-bold tracking-[0.2em] text-brand-gold hover:tracking-[0.3em] transition-all uppercase">
-            Explore Boutique
-          </Link>
+        <div className="p-6 border-b border-gray-200">
+          <SectionHeaderRich 
+            title="You may also like" 
+            className="!p-0 !border-0 !mt-0 !mb-0"
+            exploreLabel="Explore Boutique"
+            exploreHref="/products"
+          />
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 border-t border-l border-gray-200 -m-[1px]">
           {products.slice(0, 4).map((item) => (

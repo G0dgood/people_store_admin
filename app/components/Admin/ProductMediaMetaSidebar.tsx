@@ -137,20 +137,7 @@ export const ProductMediaMetaSidebar: React.FC<ProductMediaMetaSidebarProps> = (
         <div className="h-px bg-gray-50 my-2" />
 
         <div className="flex flex-col gap-6">
-          <div className="flex flex-col gap-2.5">
-            <label className="text-[11px] font-bold text-[#121212]">Product Categories</label>
-            <Select
-              shape="rounded-sm"
-              value={formData.category}
-              onChange={(val) => handleInputChange("category", val as string)}
-              placeholder="Select your product"
-              options={categories?.map(c => ({
-                label: c?.name?.toUpperCase(),
-                value: c?.name
-              }))}
-              searchable
-            />
-          </div>
+
 
           <div className="flex flex-col gap-2.5">
             <label className="text-[11px] font-bold text-[#121212]">Product Brand</label>

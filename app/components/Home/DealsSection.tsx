@@ -1,13 +1,18 @@
+
 "use client";
 
-import React from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, Variants } from "framer-motion";
 import { Button } from "../Button/Button";
-import { FavoriteButton } from "../Other";
 import { useCart } from "@/app/context/CartContext";
 import { toast } from "sonner";
+import { useGetPublicDealsQuery, useGetPublicTimerQuery } from "@/lib/redux/services/boutiqueApi";
+import { useSocket } from "@/app/context/SocketContext";
+import { QuickViewModal } from "../Products/QuickViewModal";
+import { ProductActionOverlay } from "../Products/ProductActionOverlay";
+import { SectionHeaderRich } from "../ui/SectionHeaderRich";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -34,14 +39,6 @@ const itemVariants: Variants = {
   }
 };
 
-import { useState, useEffect, useMemo } from "react";
-import { useGetPublicDealsQuery, useGetPublicTimerQuery } from "@/lib/redux/services/boutiqueApi";
-import { useSocket } from "@/app/context/SocketContext";
-import { StockWarning } from "../StockWarning";
-import { QuickViewModal } from "../Products/QuickViewModal";
-import { ProductActionOverlay } from "../Products/ProductActionOverlay";
-import { Icon } from "../Icon";
-
 const DealsSection = () => {
   const { addToCart } = useCart();
   const { data: timerResponse, refetch: refetchTimer } = useGetPublicTimerQuery();
@@ -55,7 +52,6 @@ const DealsSection = () => {
     ? dealsResponse.data.deals
     : (Array.isArray(dealsResponse?.data) ? dealsResponse.data : []);
 
-  // Local timer state
   const initialSeconds = useMemo(() => {
     if (!timerData) return 0;
     return (
@@ -82,7 +78,6 @@ const DealsSection = () => {
     return () => clearInterval(interval);
   }, [timerData?.isRunning, totalSeconds]);
 
-  // Sync with global updates
   useEffect(() => {
     const handleTimerUpdate = () => refetchTimer();
     const handleDealUpdate = () => refetchDeals();
@@ -127,115 +122,111 @@ const DealsSection = () => {
   };
 
   if (isLoadingDeals || !timerData?.isRunning && totalSeconds <= 0) {
-    if (isLoadingDeals) return null; // Or skeleton
-    return null; // Hide if no deals or timer expired
+    if (isLoadingDeals) return null;
+    return null;
   }
 
   return (
-    <section className="w-full bg-white flex flex-col md:flex-row overflow-hidden border border-gray-200">
-      <div className="w-full md:w-80 p-8 border-b md:border-b-0 md:border-r border-gray-200 flex md:flex-col justify-between md:justify-center items-center md:items-start gap-6 bg-gray-50/50">
-        <div className="flex flex-col gap-1 font-outfit">
-          <h3 className="text-xl md:text-2xl font-bold text-gray-900 tracking-wider">Limited <span className="text-brand-gold">Offers</span></h3>
-          <p className="text-gray-500 text-xs md:text-sm font-medium tracking-wide">Curated Luxury Fragrances</p>
-        </div>
-        <div className="flex gap-2">
-          {timerUnits.map((t, idx) => (
-            <div
-              key={idx}
-              className="flex flex-col items-center justify-center w-12 h-12 md:w-14 md:h-14 bg-brand-charcoal text-white rounded-lg shadow-lg font-outfit"
-            >
-              <span className="text-sm md:text-base font-bold text-brand-gold">{t.v}</span>
-              <span className="text-[8px] md:text-[9px] uppercase tracking-widest font-bold opacity-60">{t.l}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-100px" }}
-        className="flex-1 flex overflow-hidden overflow-x-scroll scrollbar-none divide-x divide-gray-100"
-      >
-        {dealProducts?.map((prod, idx) => (
-          <div key={idx} className="flex-shrink-0 relative group">
-            <Link href={`/products/detail?id=${prod.product?._id || prod.id}`}>
-              <motion.div
-                variants={itemVariants}
-                whileHover={{ y: -5, transition: { type: "spring", stiffness: 300, damping: 15 } }}
-                className="w-[160px] md:w-[220px] p-6 md:p-8 flex flex-col items-center gap-4 hover:bg-gray-50/80 transition-all duration-500 cursor-pointer h-full"
+    <div className="flex flex-col gap-0 mt-8 mb-12">
+      <SectionHeaderRich 
+        title="Limited Offers" 
+        mainHref="/products"
+        exploreLabel="View All Deals"
+        exploreHref="/products"
+        className="!mt-0 !mb-6"
+      />
+      <section className="w-full bg-white flex flex-col md:flex-row overflow-hidden border border-gray-200">
+        <div className="w-full md:w-80 p-8 border-b md:border-b-0 md:border-r border-gray-200 flex md:flex-col justify-between md:justify-center items-center md:items-start gap-6 bg-gray-50/50">
+          <div className="flex flex-col gap-1 font-outfit">
+            <p className="text-gray-900 text-sm md:text-base font-bold uppercase tracking-[0.2em]">Ends in:</p>
+            <p className="text-gray-500 text-[10px] md:text-xs font-medium tracking-wide">Luxury Fragrance Event</p>
+          </div>
+          <div className="flex gap-2">
+            {timerUnits.map((t, idx) => (
+              <div
+                key={idx}
+                className="flex flex-col items-center justify-center w-12 h-12 md:w-14 md:h-14 bg-brand-charcoal text-white rounded-lg shadow-lg font-outfit"
               >
-                <div className="w-28 h-28 md:w-40 md:h-40 relative bg-white p-4 flex items-center justify-center transition-shadow">
-                  <div className="absolute top-2 right-2 z-10 bg-brand-gold text-white text-[9px] font-black px-2 py-1 rounded-full uppercase tracking-widest">
-                    -{prod.discount}%
-                  </div>
-                  <Image
-                    src={prod.product?.productImage || "/placeholder.png"}
-                    alt={prod.product?.name || "Product"}
-                    fill
-                    className="object-contain group-hover:scale-105 transition-transform duration-300"
-                    sizes="(max-width: 768px) 160px, 220px"
-                  />
-                </div>
-                <div className="flex flex-col items-start gap-1 w-full font-outfit">
-                  <p className="text-xs md:text-sm text-start line-clamp-1 text-gray-600 group-hover:text-brand-gold transition-colors font-medium">
-                    {prod.product?.name || "Premium Fragrance"}
-                  </p>
-                  <div className="flex items-center justify-between gap-2 w-full">
-                    <span className="text-sm md:text-base font-bold text-gray-900">
-                      ₦{(prod.product?.price * (1 - prod.discount / 100)).toLocaleString()}
-                    </span>
-                    <span className="text-xs md:text-base text-gray-500 line-through decoration-brand-gray-500 font-normal font-outfit">
-                      ₦{prod.product?.price?.toLocaleString()}
-                    </span>
-                  </div>
-                </div>
-                <div className="flex items-start justify-between w-full">
-
-                  {/* <StockWarning
-                    stock={prod.product?.stock}
-                    quantity={0}
-                    isUnlimited={prod.product?.isUnlimited}
-                  /> */}
-                </div>
-              </motion.div>
-            </Link>
-
-            {/* Hover Actions */}
-            <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none z-10">
-              <div className="flex items-center gap-2 pointer-events-auto transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                <ProductActionOverlay
-                  useAbsolute={false}
-                  onQuickView={() => setSelectedQuickView({
-                    ...prod.product,
-                    id: prod.product?._id || prod.id,
-                    image: prod.product?.productImage,
-                    price: (prod.product?.price * (1 - prod.discount / 100))
-                  })}
-                  className="!opacity-100 !translate-x-0 !top-0 !right-0 shadow-lg"
-                />
-                <Button
-                  onClick={(e) => handleAddToCart(e, prod)}
-                  className="bg-brand-charcoal text-white hover:bg-brand-gold text-[10px] font-bold uppercase tracking-widest px-6 py-2 rounded-none shadow-lg"
+                <span className="text-sm md:text-base font-bold text-brand-gold">{t.v}</span>
+                <span className="text-[8px] md:text-[9px] uppercase tracking-widest font-bold opacity-60">{t.l}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="flex-1 flex overflow-hidden overflow-x-scroll scrollbar-none divide-x divide-gray-100"
+        >
+          {dealProducts?.map((prod, idx) => (
+            <div key={idx} className="flex-shrink-0 relative group">
+              <Link href={`/products/detail?id=${prod.product?._id || prod.id}`}>
+                <motion.div
+                  variants={itemVariants}
+                  whileHover={{ y: -5, transition: { type: "spring", stiffness: 300, damping: 15 } }}
+                  className="w-[160px] md:w-[220px] p-6 md:p-8 flex flex-col items-center gap-4 hover:bg-gray-50/80 transition-all duration-500 cursor-pointer h-full"
                 >
-                  Quick Add
-                </Button>
-
-
+                  <div className="w-28 h-28 md:w-40 md:h-40 relative bg-white p-4 flex items-center justify-center transition-shadow">
+                    <div className="absolute top-2 right-2 z-10 bg-brand-gold text-white text-[9px] font-black px-2 py-1 rounded-full uppercase tracking-widest">
+                      -{prod.discount}%
+                    </div>
+                    <Image
+                      src={prod.product?.productImage || "/placeholder.png"}
+                      alt={prod.product?.name || "Product"}
+                      fill
+                      className="object-contain group-hover:scale-105 transition-transform duration-300"
+                      sizes="(max-width: 768px) 160px, 220px"
+                    />
+                  </div>
+                  <div className="flex flex-col items-start gap-1 w-full font-outfit">
+                    <p className="text-xs md:text-sm text-start line-clamp-1 text-gray-600 group-hover:text-brand-gold transition-colors font-medium">
+                      {prod.product?.name || "Premium Fragrance"}
+                    </p>
+                    <div className="flex items-center justify-between gap-2 w-full">
+                      <span className="text-sm md:text-base font-bold text-gray-900">
+                        ₦{(prod.product?.price * (1 - prod.discount / 100)).toLocaleString()}
+                      </span>
+                      <span className="text-xs md:text-base text-gray-500 line-through decoration-brand-gray-500 font-normal font-outfit">
+                        ₦{prod.product?.price?.toLocaleString()}
+                      </span>
+                    </div>
+                  </div>
+                </motion.div>
+              </Link>
+              <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none z-10">
+                <div className="flex items-center gap-2 pointer-events-auto transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                  <ProductActionOverlay
+                    useAbsolute={false}
+                    onQuickView={() => setSelectedQuickView({
+                      ...prod.product,
+                      id: prod.product?._id || prod.id,
+                      image: prod.product?.productImage,
+                      price: (prod.product?.price * (1 - prod.discount / 100))
+                    })}
+                    className="!opacity-100 !translate-x-0 !top-0 !right-0 shadow-lg"
+                  />
+                  <Button
+                    onClick={(e) => handleAddToCart(e, prod)}
+                    className="bg-brand-charcoal text-white hover:bg-brand-gold text-[10px] font-bold uppercase tracking-widest px-6 py-2 rounded-none shadow-lg"
+                  >
+                    Quick Add
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
-      </motion.div>
-
-      <QuickViewModal
-        isOpen={!!selectedQuickView}
-        onClose={() => setSelectedQuickView(null)}
-        product={selectedQuickView}
-        subtitle="Limited Offer"
-        description={selectedQuickView?.description}
-      />
-    </section>
+          ))}
+        </motion.div>
+        <QuickViewModal
+          isOpen={!!selectedQuickView}
+          onClose={() => setSelectedQuickView(null)}
+          product={selectedQuickView}
+          subtitle="Limited Offer"
+          description={selectedQuickView?.description}
+        />
+      </section>
+    </div>
   );
 };
 
