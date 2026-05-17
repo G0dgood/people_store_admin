@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 
 export const LoginBackground = () => {
-  const [images, setImages] = useState<BackgroundAsset[]>([{ url: "/images/login-hero.png", positionX: 50, positionY: 50 }]);
+  const [images, setImages] = useState<BackgroundAsset[]>([{ url: "/web_images/luxury_perfume_exclusive_banner_1777030581224.png", positionX: 50, positionY: 50 }]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [duration, setDuration] = useState(8);
 
@@ -90,7 +90,7 @@ export const LoginBackground = () => {
             className="absolute inset-0"
           >
             <Image
-              src={images[currentIndex]?.url || "/images/login-hero.png"}
+              src={images[currentIndex]?.url || "/web_images/luxury_perfume_exclusive_banner_1777030581224.png"}
               alt="Premium Workspace"
               fill
               className="object-cover transition-all duration-1000"

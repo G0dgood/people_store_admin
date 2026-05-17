@@ -59,6 +59,24 @@ export const RecentlyViewedProvider = ({ children }: { children: React.ReactNode
     }
   }, [guestHistory, isInitialized, isAuthenticated]);
 
+  // Sync guest history to backend upon successful login on web
+  useEffect(() => {
+    if (isInitialized && isAuthenticated && guestHistory.length > 0) {
+      const syncHistory = async () => {
+        for (const item of guestHistory) {
+          try {
+            await addBackendItem(item.id).unwrap();
+          } catch (err) {
+            console.error("Failed to sync guest item to backend:", item.id, err);
+          }
+        }
+        setGuestHistory([]);
+        localStorage.removeItem("recently_viewed");
+      };
+      syncHistory();
+    }
+  }, [isAuthenticated, guestHistory, isInitialized, addBackendItem]);
+
   const backendHistory = useMemo(() => {
     if (!backendHistoryData?.data?.products) return [];
     return backendHistoryData.data.products.map((p: any) => ({
