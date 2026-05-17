@@ -8,7 +8,7 @@ export interface OrderItem {
 }
 
 export interface OrderRecord {
-    id(id: any): void;
+    id: string;
     _id: string;
     orderId: string;
     customer: any;
