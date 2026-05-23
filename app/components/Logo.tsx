@@ -60,7 +60,7 @@ const Logo: React.FC<LogoProps> = ({
       <div className={`inline-flex items-center gap-1.5 ${className}`}>
         <div className="relative flex-shrink-0">
           <Image
-            src={isLight ? "/brand_logo/logo.svg" : "/brand_logo/logo_black.svg"}
+            src="/brand_logo/logo.png"
             alt="Bloom & Mist"
             width={style.img.w}
             height={style.img.w} // Square icon
