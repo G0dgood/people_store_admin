@@ -38,6 +38,7 @@ export interface Product {
   price: number;
   discountPrice?: number;
   category: CategoryRef;
+  subCategory?: string;
   tags: string[];
   colors: string[];
   stock: number;

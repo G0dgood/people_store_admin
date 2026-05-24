@@ -17,6 +17,7 @@ import { Tooltip } from "../../components/Tooltip";
 import { AttributeDetailModal } from "../../components/Admin/AttributeDetailModal";
 import { QuickAddProductModal } from "../../components/Admin/QuickAddProductModal";
 import { CategoryProductsModal } from "../../components/Admin/CategoryProductsModal";
+import { ProductAttributesModal } from "../../components/Admin/ProductAttributesModal";
 import { HiArrowPath, HiOutlineEye } from "react-icons/hi2";
 import { usePrivilege } from "@/lib/contexts/PrivilegeContext";
 import { NoRecordFound, SVGLoaderFetch } from "@/app/components/Options";
@@ -55,6 +56,7 @@ export default function CategoriesPage() {
  const [selectedCategoryForQuickAdd, setSelectedCategoryForQuickAdd] = useState<any>(null);
  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
  const [selectedCategoryForView, setSelectedCategoryForView] = useState<any>(null);
+ const [isAttributesGlobalModalOpen, setIsAttributesGlobalModalOpen] = useState(false);
  const [selectedIds, setSelectedIds] = useState<string[]>([]);
  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -128,6 +130,13 @@ export default function CategoriesPage() {
        Add Category
       </Button>
      )}
+     <Button shape="rounded-sm" variant="primary"
+      className="transition-all duration-300 hover:bg-brand-gold hover:text-white hover:border-brand-gold flex-1 sm:flex-initial"
+      iconLeft={<Icon name="add" folder="icon" size="md" />}
+      onClick={() => setIsAttributesGlobalModalOpen(true)}
+     >
+      Product Attributes
+     </Button>
      <Button shape="rounded-sm" variant="outline"
       className="flex-1 sm:flex-initial"
       iconRight={<Icon name="more_vert" folder="icon" size="xs" />}
@@ -264,8 +273,18 @@ export default function CategoriesPage() {
            >
             {c.hasSize && <span className="px-2 py-0.5 bg-gray-50 text-brand-gold text-[9px] font-black rounded uppercase">Size</span>}
             {c.hasML && <span className="px-2 py-0.5 bg-emerald-50 text-emerald-500 text-[9px] font-black rounded uppercase">Volume</span>}
-            {c.hasSex && <span className="px-2 py-0.5 bg-purple-50 text-purple-500 text-[9px] font-black rounded uppercase">Gender</span>}
-            {!c.hasSize && !c.hasML && !c.hasSex && <span className="text-[10px] text-gray-300 font-bold italic">No attributes</span>}
+            {(c.hasSex || c.hasGender) && <span className="px-2 py-0.5 bg-purple-50 text-purple-500 text-[9px] font-black rounded uppercase">Gender</span>}
+            {c.hasScentFamily && <span className="px-2 py-0.5 bg-blue-50 text-blue-500 text-[9px] font-black rounded uppercase">Scent Family</span>}
+            {c.hasCollection && <span className="px-2 py-0.5 bg-amber-50 text-amber-600 text-[9px] font-black rounded uppercase">Collection</span>}
+            {c.hasGifting && <span className="px-2 py-0.5 bg-rose-50 text-rose-500 text-[9px] font-black rounded uppercase">Gifting</span>}
+            {c.customAttributes?.length > 0 && (
+             <span className="px-2 py-0.5 bg-indigo-50 text-indigo-500 text-[9px] font-black rounded uppercase">
+              {c.customAttributes.length} Custom
+             </span>
+            )}
+            {!c.hasSize && !c.hasML && !c.hasSex && !c.hasGender && !c.hasScentFamily && !c.hasCollection && !c.hasGifting && (!c.customAttributes || c.customAttributes.length === 0) && (
+             <span className="text-[10px] text-gray-300 font-bold italic">No attributes</span>
+            )}
            </div>
           </td>
           <td>
@@ -444,6 +463,11 @@ export default function CategoriesPage() {
      setSelectedCategoryForView(null);
     }}
     category={selectedCategoryForView}
+   />
+
+   <ProductAttributesModal
+    isOpen={isAttributesGlobalModalOpen}
+    onClose={() => setIsAttributesGlobalModalOpen(false)}
    />
   </div>
  );

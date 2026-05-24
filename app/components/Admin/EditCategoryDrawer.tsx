@@ -12,22 +12,31 @@ import { MediaSelectionModal } from "./MediaSelectionModal";
 import { Select } from "../Form/Select";
 import { MultiInput } from "../Form/MultiInput";
 import { useGetCategoriesQuery, useUpdateCategoryMutation } from "@/lib/redux/services/categoryApi";
+import { useGetAttributesQuery } from "@/lib/redux/services/attributeApi";
 import { toast } from "sonner";
 import { useApiError } from "@/app/hooks/useApiError";
+import { HiXMark } from "react-icons/hi2";
 
 interface EditCategoryDrawerProps {
- isOpen: boolean;
- onClose: () => void;
- category: any;
+  isOpen: boolean;
+  onClose: () => void;
+  category: any;
 }
 
 const SIZE_OPTIONS = ["XS", "S", "M", "L", "XL", "XXL", "3XL"];
 const ML_OPTIONS = ["50ml", "100ml", "250ml", "500ml", "750ml", "1L"];
 const SEX_OPTIONS = ["Male", "Female", "Kids", "Unisex"];
 
+const PERFUME_GENDERS = ["Women's Perfume", "Men's Perfume", "Unisex"];
+const SCENT_FAMILIES = ["Floral", "Woody", "Oriental", "Fresh", "Citrus", "Spicy"];
+const COLLECTIONS = ["Best Sellers", "New Arrivals", "Niche Perfumes", "Designer Classics"];
+const GIFTINGS = ["Perfume Gift Sets", "Travel Size", "Discovery Sets"];
+
 export function EditCategoryDrawer({ isOpen, onClose, category }: EditCategoryDrawerProps) {
- const [updateCategory, { isLoading, isError, error }] = useUpdateCategoryMutation();
- const { data: categoriesData } = useGetCategoriesQuery();
+  const [updateCategory, { isLoading, isError, error }] = useUpdateCategoryMutation();
+  const { data: categoriesData } = useGetCategoriesQuery();
+  const { data: attributesResponse } = useGetAttributesQuery();
+  const globalAttributes = attributesResponse?.data || [];
   const categories = categoriesData?.data && 'categories' in categoriesData.data 
     ? categoriesData.data.categories 
     : (Array.isArray(categoriesData?.data) ? categoriesData.data : []);
@@ -43,11 +52,20 @@ export function EditCategoryDrawer({ isOpen, onClose, category }: EditCategoryDr
   hasSize: false,
   hasML: false,
   hasSex: false,
+  hasScentFamily: false,
+  hasGender: false,
+  hasCollection: false,
+  hasGifting: false,
   selectedSizes: [] as string[],
   selectedMLs: [] as string[],
   selectedSexes: [] as string[],
+  selectedScentFamilies: [] as string[],
+  selectedGenders: [] as string[],
+  selectedCollections: [] as string[],
+  selectedGiftings: [] as string[],
   parent: "" as string,
   subCategories: [] as string[],
+  customAttributes: [] as { name: string; subAttributes: string[] }[],
  });
 
  useEffect(() => {
@@ -60,20 +78,29 @@ export function EditCategoryDrawer({ isOpen, onClose, category }: EditCategoryDr
     hasSize: category.hasSize || false,
     hasML: category.hasML || false,
     hasSex: category.hasSex || false,
+    hasScentFamily: category.hasScentFamily || false,
+    hasGender: category.hasGender || false,
+    hasCollection: category.hasCollection || false,
+    hasGifting: category.hasGifting || false,
     selectedSizes: category.selectedSizes || [],
     selectedMLs: category.selectedMLs || [],
     selectedSexes: category.selectedSexes || [],
+    selectedScentFamilies: category.selectedScentFamilies || [],
+    selectedGenders: category.selectedGenders || [],
+    selectedCollections: category.selectedCollections || [],
+    selectedGiftings: category.selectedGiftings || [],
     parent: typeof category.parent === 'object' ? category.parent?._id : category.parent || "",
     subCategories: category.subCategories || [],
+    customAttributes: category.customAttributes || [],
    });
   }
  }, [category]);
 
- const toggleSelection = (field: "selectedSizes" | "selectedMLs" | "selectedSexes", value: string) => {
-  setFormData((prev) => ({
+ const toggleSelection = (field: string, value: string) => {
+  setFormData((prev: any) => ({
    ...prev,
    [field]: prev[field].includes(value)
-    ? prev[field].filter((item) => item !== value)
+    ? prev[field].filter((item: string) => item !== value)
     : [...prev[field], value],
   }));
  };
@@ -206,6 +233,150 @@ export function EditCategoryDrawer({ isOpen, onClose, category }: EditCategoryDr
         <label className="text-[10px] font-black text-brand-gold uppercase tracking-[0.2em]">Enabled Product Attributes</label>
 
         <div className="flex flex-col gap-8">
+         {/* Scent Family Attribute */}
+         <div className="flex flex-col gap-4">
+          <Checkbox
+           label="SHOP BY SCENT FAMILY"
+           checked={formData.hasScentFamily}
+           onChange={(checked) => setFormData({ ...formData, hasScentFamily: checked })}
+          />
+          <AnimatePresence>
+           {formData.hasScentFamily && (
+            <motion.div
+             initial={{ height: 0, opacity: 0 }}
+             animate={{ height: "auto", opacity: 1 }}
+             exit={{ height: 0, opacity: 0 }}
+             className="overflow-hidden"
+            >
+             <div className="pl-8 grid grid-cols-3 sm:grid-cols-6 gap-2">
+              {SCENT_FAMILIES.map((item) => (
+               <button
+                key={item}
+                type="button"
+                onClick={() => toggleSelection("selectedScentFamilies", item)}
+                className={`px-2 py-2 rounded-lg border text-[10px] font-black transition-all
+                                  ${formData.selectedScentFamilies.includes(item)
+                  ? "bg-brand-gold border-brand-gold text-white shadow-md shadow-amber-100"
+                  : "bg-white border-gray-200 text-gray-400 hover:border-brand-gold/30 hover:text-brand-gold"}
+                                `}
+               >
+                {item}
+               </button>
+              ))}
+             </div>
+            </motion.div>
+           )}
+          </AnimatePresence>
+         </div>
+
+         {/* Gender Attribute */}
+         <div className="flex flex-col gap-4">
+          <Checkbox
+           label="SHOP BY GENDER"
+           checked={formData.hasGender}
+           onChange={(checked) => setFormData({ ...formData, hasGender: checked })}
+          />
+          <AnimatePresence>
+           {formData.hasGender && (
+            <motion.div
+             initial={{ height: 0, opacity: 0 }}
+             animate={{ height: "auto", opacity: 1 }}
+             exit={{ height: 0, opacity: 0 }}
+             className="overflow-hidden"
+            >
+             <div className="pl-8 flex flex-wrap gap-2">
+              {PERFUME_GENDERS.map((item) => (
+               <button
+                key={item}
+                type="button"
+                onClick={() => toggleSelection("selectedGenders", item)}
+                className={`px-4 py-2 rounded-lg border text-[10px] font-black transition-all
+                                  ${formData.selectedGenders.includes(item)
+                  ? "bg-brand-gold border-brand-gold text-white shadow-md shadow-amber-100"
+                  : "bg-white border-gray-200 text-gray-400 hover:border-brand-gold/30 hover:text-brand-gold"}
+                                `}
+               >
+                {item}
+               </button>
+              ))}
+             </div>
+            </motion.div>
+           )}
+          </AnimatePresence>
+         </div>
+
+         {/* Collections Attribute */}
+         <div className="flex flex-col gap-4">
+          <Checkbox
+           label="COLLECTIONS"
+           checked={formData.hasCollection}
+           onChange={(checked) => setFormData({ ...formData, hasCollection: checked })}
+          />
+          <AnimatePresence>
+           {formData.hasCollection && (
+            <motion.div
+             initial={{ height: 0, opacity: 0 }}
+             animate={{ height: "auto", opacity: 1 }}
+             exit={{ height: 0, opacity: 0 }}
+             className="overflow-hidden"
+            >
+             <div className="pl-8 grid grid-cols-2 sm:grid-cols-4 gap-2">
+              {COLLECTIONS.map((item) => (
+               <button
+                key={item}
+                type="button"
+                onClick={() => toggleSelection("selectedCollections", item)}
+                className={`px-2 py-2 rounded-lg border text-[10px] font-black transition-all
+                                  ${formData.selectedCollections.includes(item)
+                  ? "bg-brand-gold border-brand-gold text-white shadow-md shadow-amber-100"
+                  : "bg-white border-gray-200 text-gray-400 hover:border-brand-gold/30 hover:text-brand-gold"}
+                                `}
+               >
+                {item}
+               </button>
+              ))}
+             </div>
+            </motion.div>
+           )}
+          </AnimatePresence>
+         </div>
+
+         {/* Gifting Attribute */}
+         <div className="flex flex-col gap-4">
+          <Checkbox
+           label="GIFTING"
+           checked={formData.hasGifting}
+           onChange={(checked) => setFormData({ ...formData, hasGifting: checked })}
+          />
+          <AnimatePresence>
+           {formData.hasGifting && (
+            <motion.div
+             initial={{ height: 0, opacity: 0 }}
+             animate={{ height: "auto", opacity: 1 }}
+             exit={{ height: 0, opacity: 0 }}
+             className="overflow-hidden"
+            >
+             <div className="pl-8 grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {GIFTINGS.map((item) => (
+               <button
+                key={item}
+                type="button"
+                onClick={() => toggleSelection("selectedGiftings", item)}
+                className={`px-2 py-2 rounded-lg border text-[10px] font-black transition-all
+                                  ${formData.selectedGiftings.includes(item)
+                  ? "bg-brand-gold border-brand-gold text-white shadow-md shadow-amber-100"
+                  : "bg-white border-gray-200 text-gray-400 hover:border-brand-gold/30 hover:text-brand-gold"}
+                                `}
+               >
+                {item}
+               </button>
+              ))}
+             </div>
+            </motion.div>
+           )}
+          </AnimatePresence>
+         </div>
+
          {/* Size Attribute */}
          <div className="flex flex-col gap-4">
           <Checkbox
@@ -313,6 +484,75 @@ export function EditCategoryDrawer({ isOpen, onClose, category }: EditCategoryDr
            )}
           </AnimatePresence>
          </div>
+        </div>
+       </div>
+
+       {/* Custom Product Attributes Section */}
+       <div className="flex flex-col gap-6 p-5 bg-gray-50/50 rounded-xl border border-gray-200">
+        <label className="text-[10px] font-black text-brand-gold uppercase tracking-[0.2em]">Enabled Custom Attributes</label>
+
+        <div className="flex flex-col gap-6">
+         {globalAttributes.map((attr: any) => {
+          const isEnabled = formData.customAttributes.some((a) => a.name === attr.name);
+          const selectedAttr = formData.customAttributes.find((a) => a.name === attr.name);
+
+          return (
+           <div key={attr._id} className="flex flex-col gap-4 border-b border-gray-100/50 pb-4 last:border-b-0 last:pb-0">
+            <Checkbox
+             label={attr.name.toUpperCase()}
+             checked={isEnabled}
+             onChange={(checked) => {
+              if (checked) {
+               setFormData({
+                ...formData,
+                customAttributes: [...formData.customAttributes, { name: attr.name, subAttributes: [...attr.subAttributes] }]
+               });
+              } else {
+               setFormData({
+                ...formData,
+                customAttributes: formData.customAttributes.filter((a) => a.name !== attr.name)
+               });
+              }
+             }}
+            />
+            <AnimatePresence>
+             {isEnabled && selectedAttr && (
+              <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+               <div className="pl-8 flex flex-wrap gap-2">
+                {attr.subAttributes.map((sub: string) => {
+                 const isSubSelected = selectedAttr.subAttributes.includes(sub);
+                 return (
+                  <button
+                   key={sub}
+                   type="button"
+                   onClick={() => {
+                    const updatedSubs = isSubSelected
+                      ? selectedAttr.subAttributes.filter((item) => item !== sub)
+                      : [...selectedAttr.subAttributes, sub];
+                    const updatedAttrs = formData.customAttributes.map((a) =>
+                      a.name === attr.name ? { ...a, subAttributes: updatedSubs } : a
+                    );
+                    setFormData({ ...formData, customAttributes: updatedAttrs });
+                   }}
+                   className={`px-3 py-1.5 rounded-lg border text-[10px] font-black transition-all ${isSubSelected ? "bg-brand-gold border-brand-gold text-white shadow-md shadow-amber-100" : "bg-white border-gray-200 text-gray-400 hover:border-brand-gold/30 hover:text-brand-gold"}`}
+                  >
+                   {sub}
+                  </button>
+                 );
+                })}
+               </div>
+              </motion.div>
+             )}
+            </AnimatePresence>
+           </div>
+          );
+         })}
+         {globalAttributes.length === 0 && (
+          <div className="py-6 flex flex-col items-center justify-center text-center gap-2">
+           <span className="text-[10px] text-gray-450 font-bold italic">No custom attributes created yet.</span>
+           <p className="text-[9px] text-gray-400">Use the 'Product Attributes' button on Categories page to create attributes.</p>
+          </div>
+         )}
         </div>
        </div>
       </div>

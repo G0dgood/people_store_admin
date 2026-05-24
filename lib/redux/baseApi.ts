@@ -61,7 +61,8 @@ export const baseApi = createApi({
     'RecentlyViewed',
     'GiftBox',
     'GiftCard',
-    'Office'
+    'Office',
+    'Attribute'
   ],
   endpoints: () => ({}),
 });

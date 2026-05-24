@@ -35,6 +35,40 @@ export const ProductMediaMetaSidebar: React.FC<ProductMediaMetaSidebarProps> = (
   offices,
   hideOffices = false,
 }) => {
+  const selectedCategoryObj = categories?.find((c: any) => c.name === formData.category);
+
+  const showScentFamily = !selectedCategoryObj || selectedCategoryObj.hasScentFamily || (selectedCategoryObj.selectedScentFamilies?.length > 0);
+  const showCollection = !selectedCategoryObj || selectedCategoryObj.hasCollection || (selectedCategoryObj.selectedCollections?.length > 0);
+  const showGifting = !selectedCategoryObj || selectedCategoryObj.hasGifting || (selectedCategoryObj.selectedGiftings?.length > 0);
+
+  const scentFamilyOptions = selectedCategoryObj?.selectedScentFamilies?.length > 0
+    ? selectedCategoryObj.selectedScentFamilies.map((sf: string) => ({ label: sf, value: sf }))
+    : [
+        { label: "Floral", value: "Floral" },
+        { label: "Woody", value: "Woody" },
+        { label: "Oriental", value: "Oriental" },
+        { label: "Fresh", value: "Fresh" },
+        { label: "Citrus", value: "Citrus" },
+        { label: "Spicy", value: "Spicy" },
+      ];
+
+  const collectionOptions = selectedCategoryObj?.selectedCollections?.length > 0
+    ? selectedCategoryObj.selectedCollections.map((col: string) => ({ label: col, value: col }))
+    : [
+        { label: "Best Sellers", value: "Best Sellers" },
+        { label: "New Arrivals", value: "New Arrivals" },
+        { label: "Niche Perfumes", value: "Niche Perfumes" },
+        { label: "Designer Classics", value: "Designer Classics" },
+      ];
+
+  const giftingOptions = selectedCategoryObj?.selectedGiftings?.length > 0
+    ? selectedCategoryObj.selectedGiftings.map((g: string) => ({ label: g, value: g }))
+    : [
+        { label: "Perfume Gift Sets", value: "Perfume Gift Sets" },
+        { label: "Travel Size", value: "Travel Size" },
+        { label: "Discovery Sets", value: "Discovery Sets" },
+      ];
+
   return (
     <div className="flex flex-col gap-6">
       {/* Upload Media */}
@@ -173,54 +207,44 @@ export const ProductMediaMetaSidebar: React.FC<ProductMediaMetaSidebarProps> = (
             />
           </div>
 
-          <div className="flex flex-col gap-2.5">
-            <label className="text-[11px] font-bold text-[#121212]">Scent Family</label>
-            <Select
-              shape="rounded-sm"
-              value={formData.scentFamily}
-              onChange={(val) => handleInputChange("scentFamily", val as string)}
-              placeholder="Select scent family"
-              options={[
-                { label: "Floral", value: "Floral" },
-                { label: "Woody", value: "Woody" },
-                { label: "Oriental", value: "Oriental" },
-                { label: "Fresh", value: "Fresh" },
-                { label: "Citrus", value: "Citrus" },
-                { label: "Spicy", value: "Spicy" },
-              ]}
-            />
-          </div>
+          {showScentFamily && (
+            <div className="flex flex-col gap-2.5">
+              <label className="text-[11px] font-bold text-[#121212]">Scent Family</label>
+              <Select
+                shape="rounded-sm"
+                value={formData.scentFamily}
+                onChange={(val) => handleInputChange("scentFamily", val as string)}
+                placeholder="Select scent family"
+                options={scentFamilyOptions}
+              />
+            </div>
+          )}
 
-          <div className="flex flex-col gap-2.5">
-            <label className="text-[11px] font-bold text-[#121212]">Collections</label>
-            <Select
-              shape="rounded-sm"
-              value={formData.collections[0] || ""} // Assuming single for now, or could use MultiSelect if available
-              onChange={(val) => handleInputChange("collections", [val as string])}
-              placeholder="Select collection"
-              options={[
-                { label: "Best Sellers", value: "Best Sellers" },
-                { label: "New Arrivals", value: "New Arrivals" },
-                { label: "Niche Perfumes", value: "Niche Perfumes" },
-                { label: "Designer Classics", value: "Designer Classics" },
-              ]}
-            />
-          </div>
+          {showCollection && (
+            <div className="flex flex-col gap-2.5">
+              <label className="text-[11px] font-bold text-[#121212]">Collections</label>
+              <Select
+                shape="rounded-sm"
+                value={formData.collections[0] || ""} // Assuming single for now, or could use MultiSelect if available
+                onChange={(val) => handleInputChange("collections", [val as string])}
+                placeholder="Select collection"
+                options={collectionOptions}
+              />
+            </div>
+          )}
 
-          <div className="flex flex-col gap-2.5">
-            <label className="text-[11px] font-bold text-[#121212]">Gifting</label>
-            <Select
-              shape="rounded-sm"
-              value={formData.gifting}
-              onChange={(val) => handleInputChange("gifting", val as string)}
-              placeholder="Select gifting type"
-              options={[
-                { label: "Perfume Gift Sets", value: "Perfume Gift Sets" },
-                { label: "Travel Size", value: "Travel Size" },
-                { label: "Discovery Sets", value: "Discovery Sets" },
-              ]}
-            />
-          </div>
+          {showGifting && (
+            <div className="flex flex-col gap-2.5">
+              <label className="text-[11px] font-bold text-[#121212]">Gifting</label>
+              <Select
+                shape="rounded-sm"
+                value={formData.gifting}
+                onChange={(val) => handleInputChange("gifting", val as string)}
+                placeholder="Select gifting type"
+                options={giftingOptions}
+              />
+            </div>
+          )}
 
           {!hideOffices && (
             <div className="flex flex-col gap-4">

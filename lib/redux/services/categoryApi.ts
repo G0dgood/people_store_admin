@@ -12,6 +12,15 @@ export interface CategoryItem {
   selectedSizes: string[];
   selectedMLs: string[];
   selectedSexes: string[];
+  hasScentFamily?: boolean;
+  selectedScentFamilies?: string[];
+  hasGender?: boolean;
+  selectedGenders?: string[];
+  hasCollection?: boolean;
+  selectedCollections?: string[];
+  hasGifting?: boolean;
+  selectedGiftings?: string[];
+  customAttributes?: { name: string; subAttributes: string[] }[];
   owner?: string;
   parent?: string | CategoryItem | null;
   subCategories?: string[] | CategoryItem[];

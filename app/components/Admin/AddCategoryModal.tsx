@@ -15,6 +15,8 @@ import { MediaSelectionModal } from "./MediaSelectionModal";
 import { Select } from "../Form/Select";
 import { useApiError } from "@/app/hooks/useApiError";
 import { useCreateCategoryMutation, useGetCategoriesQuery } from "@/lib/redux/services/categoryApi";
+import { useGetAttributesQuery } from "@/lib/redux/services/attributeApi";
+import { HiXMark } from "react-icons/hi2";
 
 interface AddCategoryModalProps {
   isOpen: boolean;
@@ -33,6 +35,8 @@ const GIFTINGS = ["Perfume Gift Sets", "Travel Size", "Discovery Sets"];
 export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
   const [createCategory, { isLoading, isError, error }] = useCreateCategoryMutation();
   const { data: categoriesData } = useGetCategoriesQuery();
+  const { data: attributesResponse } = useGetAttributesQuery();
+  const globalAttributes = attributesResponse?.data || [];
   const categories = categoriesData?.data && 'categories' in categoriesData.data
     ? categoriesData?.data?.categories
     : (Array.isArray(categoriesData?.data) ? categoriesData.data : []);
@@ -61,6 +65,7 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
     parent: "" as string,
     subCategories: [] as string[],
     coverImage: "",
+    customAttributes: [] as { name: string; subAttributes: string[] }[],
   });
 
   const toggleSelection = (field: string, value: string) => {
@@ -98,6 +103,7 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
         parent: "",
         subCategories: [],
         coverImage: "",
+        customAttributes: [],
       });
       onClose();
     } catch (error) {
@@ -364,6 +370,75 @@ export function AddCategoryModal({ isOpen, onClose }: AddCategoryModalProps) {
                   onChange={(checked) => setFormData({ ...formData, hasSex: checked })}
                 />
               </div>
+            </div>
+          </div>
+
+          {/* Custom Product Attributes Section */}
+          <div className="flex flex-col gap-6 p-4 bg-gray-50/50 rounded-[6px] border border-gray-200">
+            <label className="text-[9px] sm:text-[10px] font-black text-brand-gold uppercase tracking-[0.15em]">Enabled Custom Attributes</label>
+
+            <div className="flex flex-col gap-6">
+              {globalAttributes.map((attr: any) => {
+                const isEnabled = formData.customAttributes.some((a) => a.name === attr.name);
+                const selectedAttr = formData.customAttributes.find((a) => a.name === attr.name);
+
+                return (
+                  <div key={attr._id} className="flex flex-col gap-4 border-b border-gray-100/50 pb-4 last:border-b-0 last:pb-0">
+                    <Checkbox
+                      label={attr.name.toUpperCase()}
+                      checked={isEnabled}
+                      onChange={(checked) => {
+                        if (checked) {
+                          setFormData({
+                            ...formData,
+                            customAttributes: [...formData.customAttributes, { name: attr.name, subAttributes: [...attr.subAttributes] }]
+                          });
+                        } else {
+                          setFormData({
+                            ...formData,
+                            customAttributes: formData.customAttributes.filter((a) => a.name !== attr.name)
+                          });
+                        }
+                      }}
+                    />
+                    <AnimatePresence>
+                      {isEnabled && selectedAttr && (
+                        <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+                          <div className="pl-8 flex flex-wrap gap-2">
+                            {attr.subAttributes.map((sub: string) => {
+                              const isSubSelected = selectedAttr.subAttributes.includes(sub);
+                              return (
+                                <button
+                                  key={sub}
+                                  type="button"
+                                  onClick={() => {
+                                    const updatedSubs = isSubSelected
+                                      ? selectedAttr.subAttributes.filter((item) => item !== sub)
+                                      : [...selectedAttr.subAttributes, sub];
+                                    const updatedAttrs = formData.customAttributes.map((a) =>
+                                      a.name === attr.name ? { ...a, subAttributes: updatedSubs } : a
+                                    );
+                                    setFormData({ ...formData, customAttributes: updatedAttrs });
+                                  }}
+                                  className={`px-3 py-1.5 rounded-lg border text-[10px] font-black transition-all ${isSubSelected ? "bg-brand-gold border-brand-gold text-white shadow-md shadow-amber-100" : "bg-white border-gray-200 text-gray-400 hover:border-brand-gold/30 hover:text-brand-gold"}`}
+                                >
+                                  {sub}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              })}
+              {globalAttributes.length === 0 && (
+                <div className="py-6 flex flex-col items-center justify-center text-center gap-2">
+                  <span className="text-[10px] text-gray-400 font-bold italic">No custom attributes created yet.</span>
+                  <p className="text-[9px] text-gray-400">Use the 'Product Attributes' button on Categories page to create attributes.</p>
+                </div>
+              )}
             </div>
           </div>
         </ModalBody>
