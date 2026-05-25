@@ -19,7 +19,7 @@ import { HiArrowPath, HiXMark, HiArrowLeft, HiCheckCircle, HiArchiveBox } from "
 import { Tooltip } from "../../../components/Tooltip";
 import { AISettingsModal } from "../../../components/Admin/AISettingsModal";
 import { useUpdateProductMutation, useGetProductByIdQuery, useGetProductsQuery } from "@/lib/redux/services/productApi";
-import { useGetCategoriesQuery } from "@/lib/redux/services/categoryApi";
+import { useGetCategoriesQuery, useGetCategoryCustomAttributesQuery } from "@/lib/redux/services/categoryApi";
 import { toast } from "sonner";
 import { useApiError } from "../../../hooks/useApiError";
 import { useSocket } from "@/app/context/SocketContext";
@@ -29,1128 +29,1037 @@ import { useGetBrandsQuery } from "@/lib/redux/services/brandApi";
 import { useGetOfficesQuery } from "@/lib/redux/services/officeApi";
 
 export default function EditProduct() {
-  const router = useRouter();
-  const { id } = useParams();
-  const productId = id as string;
+ const router = useRouter();
+ const { id } = useParams();
+ const productId = id as string;
 
-  const { data: productResponse, isLoading: isLoadingProduct, isError: isProductError, error: productError } = useGetProductByIdQuery(productId);
-  const [updateProduct, { isLoading: isSubmitting, isError: isUpdateError, error: updateError }] = useUpdateProductMutation();
-  const { data: categoriesResponse, isLoading: isLoadingCategories, isError: isCategoriesError, error: categoriesError } = useGetCategoriesQuery();
-  const { data: brandsResponse } = useGetBrandsQuery();
-  const { data: officesResponse } = useGetOfficesQuery();
-  const { emit } = useSocket();
+ const { data: productResponse, isLoading: isLoadingProduct, isError: isProductError, error: productError } = useGetProductByIdQuery(productId);
+ const [updateProduct, { isLoading: isSubmitting, isError: isUpdateError, error: updateError }] = useUpdateProductMutation();
+ const { data: categoriesResponse, isLoading: isLoadingCategories, isError: isCategoriesError, error: categoriesError } = useGetCategoriesQuery();
+ const { data: brandsResponse } = useGetBrandsQuery();
+ const { data: officesResponse } = useGetOfficesQuery();
+ const { emit } = useSocket();
 
-  useApiError(isProductError, productError, "Failed to load product details");
-  useApiError(isCategoriesError, categoriesError, "Failed to load categories");
-  useApiError(isUpdateError, updateError, "Failed to update product");
+ useApiError(isProductError, productError, "Failed to load product details");
+ useApiError(isCategoriesError, categoriesError, "Failed to load categories");
+ useApiError(isUpdateError, updateError, "Failed to update product");
 
-  const product = productResponse?.data;
-  const categories = categoriesResponse?.data && 'categories' in categoriesResponse.data 
-    ? (categoriesResponse.data as any).categories 
-    : (Array.isArray(categoriesResponse?.data) ? categoriesResponse.data : []);
-  const brands = brandsResponse?.data && 'brands' in brandsResponse.data 
-    ? (brandsResponse.data as any).brands 
-    : (Array.isArray(brandsResponse?.data) ? brandsResponse.data : []);
-  const offices = officesResponse?.data || [];
+ const product = productResponse?.data;
+ const categories = categoriesResponse?.data && 'categories' in categoriesResponse.data
+  ? (categoriesResponse.data as any).categories
+  : (Array.isArray(categoriesResponse?.data) ? categoriesResponse.data : []);
+ const brands = brandsResponse?.data && 'brands' in brandsResponse.data
+  ? (brandsResponse.data as any).brands
+  : (Array.isArray(brandsResponse?.data) ? brandsResponse.data : []);
+ const offices = officesResponse?.data || [];
 
-  // Unified Form State
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    price: "",
-    discountPrice: "",
-    category: "",
-    subCategory: "",
-    brand: "",
-    tag: "",
-    stockStatus: "In Stock",
-    stockQuantity: "10",
-    isUnlimited: false,
-    isFeatured: false,
-    taxIncluded: true,
-    expiryStart: "",
-    expiryEnd: "",
-    sku: "",
-    variants: [] as any[],
-    colors: "",
-    size: "",
-    volume: "",
-    gender: "Unisex",
-    locations: [] as string[]
-  });
+ // Unified Form State
+ const [formData, setFormData] = useState({
+  name: "",
+  description: "",
+  price: "",
+  discountPrice: "",
+  category: "",
+  subCategory: "",
+  brand: "",
+  tag: "",
+  stockStatus: "In Stock",
+  stockQuantity: "10",
+  isUnlimited: false,
+  isFeatured: false,
+  taxIncluded: true,
+  expiryStart: "",
+  expiryEnd: "",
+  sku: "",
+  variants: [] as any[],
+  colors: "",
+  locations: [] as string[],
+  attributes: {} as Record<string, string>
+ });
 
-  const { data: allProductsResponse } = useGetProductsQuery({ limit: 10000 });
+ const { data: allProductsResponse } = useGetProductsQuery({ limit: 10000 });
 
-  const prevCategoryRef = useRef("");
-  const prevSubCategoryRef = useRef("");
+ const { data: customAttributesResponse } = useGetCategoryCustomAttributesQuery(
+  formData.category,
+  { skip: !formData.category }
+ );
+ const customAttributes = customAttributesResponse?.data || [];
 
-  const generateSKUSuggestion = (categoryName: string, subCategoryName: string, allProducts: any[]) => {
-    if (!categoryName) return "";
-    const cleanCat = categoryName.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
-    const catCode = cleanCat.slice(0, 3);
+ const prevCategoryRef = useRef("");
+ const prevSubCategoryRef = useRef("");
 
-    let subCatCode = "";
-    if (subCategoryName) {
-      const cleanSub = subCategoryName.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
-      subCatCode = cleanSub.slice(0, 3);
-    }
+ const generateSKUSuggestion = (categoryName: string, subCategoryName: string, allProducts: any[]) => {
+  if (!categoryName) return "";
+  const cleanCat = categoryName.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+  const catCode = cleanCat.slice(0, 3);
 
-    const prefix = subCatCode ? `${catCode}-${subCatCode}` : catCode;
+  let subCatCode = "";
+  if (subCategoryName) {
+   const cleanSub = subCategoryName.replace(/[^A-Za-z0-9]/g, "").toUpperCase();
+   subCatCode = cleanSub.slice(0, 3);
+  }
 
-    let nextIndex = 1;
-    let suggestedSku = "";
-    let isTaken = true;
+  const prefix = subCatCode ? `${catCode}-${subCatCode}` : catCode;
 
-    // Loop until we find a SKU that does not exist in any product globally (excluding this product)
-    while (isTaken) {
-      const paddedIndex = String(nextIndex).padStart(3, "0");
-      suggestedSku = `${prefix}-${paddedIndex}`;
-      isTaken = allProducts.some(p => p._id !== productId && p.sku?.toUpperCase() === suggestedSku.toUpperCase());
-      if (isTaken) {
-        nextIndex++;
-      }
-    }
+  let nextIndex = 1;
+  let suggestedSku = "";
+  let isTaken = true;
 
-    return suggestedSku;
-  };
+  // Loop until we find a SKU that does not exist in any product globally (excluding this product)
+  while (isTaken) {
+   const paddedIndex = String(nextIndex).padStart(3, "0");
+   suggestedSku = `${prefix}-${paddedIndex}`;
+   isTaken = allProducts.some(p => p._id !== productId && p.sku?.toUpperCase() === suggestedSku.toUpperCase());
+   if (isTaken) {
+    nextIndex++;
+   }
+  }
 
-  const handleGenerateSKU = () => {
-    if (!formData.category) {
-      toast.error("Please select a category first.");
-      return;
-    }
+  return suggestedSku;
+ };
+
+ const handleGenerateSKU = () => {
+  if (!formData.category) {
+   toast.error("Please select a category first.");
+   return;
+  }
+  const allProducts = allProductsResponse?.data && 'products' in allProductsResponse.data
+   ? (allProductsResponse.data as any).products
+   : (Array.isArray(allProductsResponse?.data) ? allProductsResponse.data : []);
+  const suggested = generateSKUSuggestion(formData.category, formData.subCategory, allProducts);
+  if (suggested) {
+   handleInputChange("sku", suggested);
+   toast.success(`SKU generated: ${suggested}`);
+  }
+ };
+
+ useEffect(() => {
+  const catChanged = formData.category !== prevCategoryRef.current;
+  const subCatChanged = formData.subCategory !== prevSubCategoryRef.current;
+
+  if (catChanged || subCatChanged) {
+   prevCategoryRef.current = formData.category;
+   prevSubCategoryRef.current = formData.subCategory;
+
+   const isAutoGeneratedStyle = !formData.sku || /^[A-Z0-9]{3,}(-[A-Z0-9]{3,})?-\d+$/.test(formData.sku);
+   if (isAutoGeneratedStyle && formData.category) {
     const allProducts = allProductsResponse?.data && 'products' in allProductsResponse.data
-      ? (allProductsResponse.data as any).products
-      : (Array.isArray(allProductsResponse?.data) ? allProductsResponse.data : []);
+     ? (allProductsResponse.data as any).products
+     : (Array.isArray(allProductsResponse?.data) ? allProductsResponse.data : []);
     const suggested = generateSKUSuggestion(formData.category, formData.subCategory, allProducts);
     if (suggested) {
-      handleInputChange("sku", suggested);
-      toast.success(`SKU generated: ${suggested}`);
+     setFormData(prev => ({ ...prev, sku: suggested }));
     }
+   }
+  }
+ }, [formData.category, formData.subCategory, allProductsResponse]);
+
+ const getRecommendedStatus = (quantity: string | number) => {
+  const q = Number(quantity);
+  if (q === 0) return "Out of Stock";
+  if (q <= 5) return "Low Stock";
+  return "In Stock";
+ };
+
+ const [pendingStockStatus, setPendingStockStatus] = useState("");
+ const [isOverrideModalOpen, setIsOverrideModalOpen] = useState(false);
+
+ const handleInputChange = (field: string, value: any) => {
+  if (field === "stockQuantity") {
+   const recommended = getRecommendedStatus(value);
+   setFormData(prev => ({
+    ...prev,
+    stockQuantity: value,
+    stockStatus: recommended
+   }));
+   return;
+  }
+
+  if (field === "stockStatus") {
+   const recommended = getRecommendedStatus(formData.stockQuantity);
+   if (value !== recommended) {
+    setPendingStockStatus(value);
+    setIsOverrideModalOpen(true);
+    return;
+   }
+  }
+
+  setFormData(prev => ({ ...prev, [field]: value }));
+ };
+
+ const handleAttributeChange = (name: string, value: string) => {
+  setFormData(prev => ({
+   ...prev,
+   attributes: {
+    ...(prev.attributes || {}),
+    [name]: value
+   }
+  }));
+ };
+
+ // UI States
+ const [isPublishConfirmOpen, setIsPublishConfirmOpen] = useState(false);
+ const [isPublishSuccessOpen, setIsPublishSuccessOpen] = useState(false);
+ const [isDraftConfirmOpen, setIsDraftConfirmOpen] = useState(false);
+ const [isDraftSuccessOpen, setIsDraftSuccessOpen] = useState(false);
+ const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
+ const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
+ const [stagedMedia, setStagedMedia] = useState<{ file?: File, url: string, isExisting?: boolean }[]>([]);
+ const [showColorPicker, setShowColorPicker] = useState(false);
+
+ const [isRefining, setIsRefining] = useState(false);
+ const [isAISettingsOpen, setIsAISettingsOpen] = useState(false);
+ const [aiTone, setAiTone] = useState("Professional");
+ const [selectedCurrency, setSelectedCurrency] = useState("NGN");
+ const [isCurrencyDropdownOpen, setIsCurrencyDropdownOpen] = useState(false);
+ const [isDiscountDropdownOpen, setIsDiscountDropdownOpen] = useState(false);
+
+ const currencyDropdownRef = useRef<HTMLDivElement>(null);
+ const discountDropdownRef = useRef<HTMLDivElement>(null);
+
+ const currencies = [
+  { code: "NGN", label: "Nigeria", symbol: "₦", flag: "/country/Property 1=NG.svg" },
+ ];
+
+ // Populate form when product data arrives
+ useEffect(() => {
+  if (product) {
+   setFormData({
+    name: product?.name || "",
+    description: product?.description || "",
+    price: product?.price?.toString() || "",
+    discountPrice: product?.discountPrice?.toString() || "",
+    category: (typeof product?.category === 'object' ? product?.category?.name : product?.category) || "",
+    subCategory: product?.subCategory || "",
+    brand: (typeof product?.brand === 'object' ? product?.brand?._id : product?.brand) || "",
+    tag: product?.tags?.[0] || "",
+    stockStatus: product?.stockStatus || "In Stock",
+    stockQuantity: product?.stock?.toString() || "0",
+    isUnlimited: product?.isUnlimited || false,
+    isFeatured: product?.isFeatured || false,
+    taxIncluded: product?.taxIncluded || true,
+    expiryStart: product?.expiryStart ? new Date(product?.expiryStart).toISOString().split('T')[0] : "",
+    expiryEnd: product?.expiryEnd ? new Date(product?.expiryEnd).toISOString().split('T')[0] : "",
+    sku: product?.sku || "",
+    variants: product?.variants || [],
+    colors: Array.isArray(product?.colors) ? product.colors[0] || "" : (product?.colors || ""),
+    locations: product?.locations?.map((l: any) => typeof l === 'string' ? l : l._id) || [],
+    attributes: product?.attributes || {}
+   });
+
+   if (product?.media && product?.media.length > 0) {
+    setStagedMedia(product.media.map((m: any) => ({
+     url: m.url,
+     isExisting: true
+    })));
+   } else if (product?.productImage) {
+    setStagedMedia([{ url: product.productImage, isExisting: true }]);
+   }
+  }
+ }, [product]);
+
+ // Cleanup effect for preview URLs
+ useEffect(() => {
+  return () => {
+   stagedMedia.forEach(item => {
+    if (!item.isExisting) URL.revokeObjectURL(item.url);
+   });
   };
+ }, [stagedMedia]);
 
-  useEffect(() => {
-    const catChanged = formData.category !== prevCategoryRef.current;
-    const subCatChanged = formData.subCategory !== prevSubCategoryRef.current;
+ // Close currency dropdowns on outside click
+ useEffect(() => {
+  const handleClickOutside = (event: MouseEvent) => {
+   const target = event.target as Node;
+   if (currencyDropdownRef.current && !currencyDropdownRef.current.contains(target)) {
+    setIsCurrencyDropdownOpen(false);
+   }
+   if (discountDropdownRef.current && !discountDropdownRef.current.contains(target)) {
+    setIsDiscountDropdownOpen(false);
+   }
+  };
+  document.addEventListener("mousedown", handleClickOutside);
+  return () => document.removeEventListener("mousedown", handleClickOutside);
+ }, []);
 
-    if (catChanged || subCatChanged) {
-      prevCategoryRef.current = formData.category;
-      prevSubCategoryRef.current = formData.subCategory;
+ const handleMediaUpload = (files: File[]) => {
+  const newMedia = files.map(file => ({
+   file,
+   url: URL.createObjectURL(file),
+   isExisting: false
+  }));
+  setStagedMedia(prev => [...prev, ...newMedia]);
+ };
 
-      const isAutoGeneratedStyle = !formData.sku || /^[A-Z0-9]{3,}(-[A-Z0-9]{3,})?-\d+$/.test(formData.sku);
-      if (isAutoGeneratedStyle && formData.category) {
-        const allProducts = allProductsResponse?.data && 'products' in allProductsResponse.data
-          ? (allProductsResponse.data as any).products
-          : (Array.isArray(allProductsResponse?.data) ? allProductsResponse.data : []);
-        const suggested = generateSKUSuggestion(formData.category, formData.subCategory, allProducts);
-        if (suggested) {
-          setFormData(prev => ({ ...prev, sku: suggested }));
-        }
-      }
+ const removeMedia = (index: number) => {
+  setStagedMedia(prev => {
+   const itemToRemove = prev[index];
+   if (itemToRemove && !itemToRemove.isExisting) URL.revokeObjectURL(itemToRemove.url);
+   return prev.filter((_, i) => i !== index);
+  });
+ };
+
+ const makePrimary = (index: number) => {
+  setStagedMedia(prev => {
+   const newMedia = [...prev];
+   const [selected] = newMedia.splice(index, 1);
+   newMedia.unshift(selected);
+   return newMedia;
+  });
+  toast.success("Image set as primary");
+ };
+
+ const handleSubmit = async (submitStatus: "Published" | "Draft") => {
+  try {
+   const {
+    name, description, price, category, subCategory, discountPrice,
+    stockStatus, stockQuantity, isUnlimited, isFeatured,
+    taxIncluded, expiryStart, expiryEnd, tag, colors
+   } = formData;
+
+   if (!name || !description || !price || !category) {
+    toast.error("Please fill in all required fields (Name, Description, Price, Category)");
+    return;
+   }
+
+   const postData = new FormData();
+   postData.append("name", name);
+   postData.append("description", description);
+   postData.append("price", price);
+   postData.append("discountPrice", discountPrice || "0");
+   postData.append("category", category);
+   postData.append("subCategory", subCategory || "");
+   if (formData.brand) postData.append("brand", formData.brand);
+   postData.append("stock", isUnlimited ? "0" : stockQuantity);
+   postData.append("stockStatus", stockStatus);
+   postData.append("status", submitStatus);
+   postData.append("isUnlimited", String(isUnlimited));
+   postData.append("isFeatured", String(isFeatured));
+   postData.append("taxIncluded", String(taxIncluded));
+   if (expiryStart) postData.append("expiryStart", expiryStart);
+   if (expiryEnd) postData.append("expiryEnd", expiryEnd);
+   postData.append("tags", JSON.stringify(tag ? [tag] : []));
+   postData.append("colors", colors || "");
+   postData.append("sku", formData.sku);
+   postData.append("locations", JSON.stringify(formData.locations || []));
+   postData.append("attributes", JSON.stringify(formData.attributes || {}));
+   const cleanedVariants = formData.variants.map(v => ({
+    ...v,
+    attributes: Object.fromEntries(
+     Object.entries(v.attributes || {}).map(([key, val]) => [
+      key,
+      Array.isArray(val) ? val.join(", ") : val
+     ])
+    )
+   }));
+   postData.append("variants", JSON.stringify(cleanedVariants));
+
+   // Append existing media URLs or IDs if the backend supports it
+   // For simplicity, we'll send the new files and the backend can decide what to do
+   const newFiles = stagedMedia.filter(m => !m.isExisting && m.file).map(m => m.file as File);
+   newFiles.forEach((file) => {
+    postData.append("media", file);
+   });
+
+   // If the backend needs to know which existing media to keep, we'd add that here
+   const existingUrls = stagedMedia.filter(m => m.isExisting).map(m => m.url);
+   postData.append("existingMedia", JSON.stringify(existingUrls));
+
+   const response = await updateProduct({
+    productId,
+    data: postData as any
+   }).unwrap();
+
+   if (response.success) {
+    emit("PRODUCT_UPDATED", { type: "update", product: response.data });
+    setIsPublishConfirmOpen(false);
+    setIsDraftConfirmOpen(false);
+    if (submitStatus === "Published") {
+     setIsPublishSuccessOpen(true);
+    } else {
+     setIsDraftSuccessOpen(true);
     }
-  }, [formData.category, formData.subCategory, allProductsResponse]);
+    toast.success(`Product updated and ${submitStatus === 'Published' ? 'published' : 'saved as draft'} successfully!`);
+   }
+  } catch (error: any) {
+   console.error("Failed to update product:", error);
+   // Error handled by hook
+  }
+ };
 
-  const getRecommendedStatus = (quantity: string | number) => {
-    const q = Number(quantity);
-    if (q === 0) return "Out of Stock";
-    if (q <= 5) return "Low Stock";
-    return "In Stock";
-  };
+ if (isLoadingProduct) return <EditProductSkeleton />;
 
-  const [pendingStockStatus, setPendingStockStatus] = useState("");
-  const [isOverrideModalOpen, setIsOverrideModalOpen] = useState(false);
-
-  const handleInputChange = (field: string, value: any) => {
-    if (field === "stockQuantity") {
-      const recommended = getRecommendedStatus(value);
-      setFormData(prev => ({
-        ...prev,
-        stockQuantity: value,
-        stockStatus: recommended
-      }));
-      return;
-    }
-
-    if (field === "stockStatus") {
-      const recommended = getRecommendedStatus(formData.stockQuantity);
-      if (value !== recommended) {
-        setPendingStockStatus(value);
-        setIsOverrideModalOpen(true);
-        return;
-      }
-    }
-
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  // UI States
-  const [isPublishConfirmOpen, setIsPublishConfirmOpen] = useState(false);
-  const [isPublishSuccessOpen, setIsPublishSuccessOpen] = useState(false);
-  const [isDraftConfirmOpen, setIsDraftConfirmOpen] = useState(false);
-  const [isDraftSuccessOpen, setIsDraftSuccessOpen] = useState(false);
-  const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
-  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
-  const [stagedMedia, setStagedMedia] = useState<{ file?: File, url: string, isExisting?: boolean }[]>([]);
-  const [showColorPicker, setShowColorPicker] = useState(false);
-
-  const [isRefining, setIsRefining] = useState(false);
-  const [isAISettingsOpen, setIsAISettingsOpen] = useState(false);
-  const [aiTone, setAiTone] = useState("Professional");
-  const [selectedCurrency, setSelectedCurrency] = useState("NGN");
-  const [isCurrencyDropdownOpen, setIsCurrencyDropdownOpen] = useState(false);
-  const [isDiscountDropdownOpen, setIsDiscountDropdownOpen] = useState(false);
-
-  const currencyDropdownRef = useRef<HTMLDivElement>(null);
-  const discountDropdownRef = useRef<HTMLDivElement>(null);
-
-  const currencies = [
-    { code: "NGN", label: "Nigeria", symbol: "₦", flag: "/country/Property 1=NG.svg" },
-    // { code: "USD", label: "USA", symbol: "$", flag: "/country/Property 1=US.png" },
-    // { code: "GBP", label: "UK", symbol: "£", flag: "/country/Property 1=GB.png" },
-    // { code: "EUR", label: "EU", symbol: "€", flag: "/country/Property 1=FR.png" },
-  ];
-
-  // Populate form when product data arrives
-  useEffect(() => {
-    if (product) {
-      setFormData({
-        name: product?.name || "",
-        description: product?.description || "",
-        price: product?.price?.toString() || "",
-        discountPrice: product?.discountPrice?.toString() || "",
-        category: (typeof product?.category === 'object' ? product?.category?.name : product?.category) || "",
-        subCategory: product?.subCategory || "",
-        brand: (typeof product?.brand === 'object' ? product?.brand?._id : product?.brand) || "",
-        tag: product?.tags?.[0] || "",
-        stockStatus: product?.stockStatus || "In Stock",
-        stockQuantity: product?.stock?.toString() || "0",
-        isUnlimited: product?.isUnlimited || false,
-        isFeatured: product?.isFeatured || false,
-        taxIncluded: product?.taxIncluded || true,
-        expiryStart: product?.expiryStart ? new Date(product?.expiryStart).toISOString().split('T')[0] : "",
-        expiryEnd: product?.expiryEnd ? new Date(product?.expiryEnd).toISOString().split('T')[0] : "",
-        sku: product?.sku || "",
-        variants: product?.variants || [],
-        colors: Array.isArray(product?.colors) ? product.colors[0] || "" : (product?.colors || ""),
-        size: (() => {
-          const raw = product?.size || "";
-          if (Array.isArray(raw)) return raw[0] || "";
-          return String(raw);
-        })(),
-        volume: (() => {
-          const raw = product?.volume || "";
-          if (Array.isArray(raw)) return raw[0] || "";
-          return String(raw);
-        })(),
-        gender: product?.gender || "Unisex",
-        locations: product?.locations?.map((l: any) => typeof l === 'string' ? l : l._id) || []
-      });
-
-      if (product?.media && product?.media.length > 0) {
-        setStagedMedia(product.media.map((m: any) => ({
-          url: m.url,
-          isExisting: true
-        })));
-      } else if (product?.productImage) {
-        setStagedMedia([{ url: product.productImage, isExisting: true }]);
-      }
-    }
-  }, [product]);
-
-  // Cleanup effect for preview URLs
-  useEffect(() => {
-    return () => {
-      stagedMedia.forEach(item => {
-        if (!item.isExisting) URL.revokeObjectURL(item.url);
-      });
-    };
-  }, [stagedMedia]);
-
-  // Close currency dropdowns on outside click
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Node;
-      if (currencyDropdownRef.current && !currencyDropdownRef.current.contains(target)) {
-        setIsCurrencyDropdownOpen(false);
-      }
-      if (discountDropdownRef.current && !discountDropdownRef.current.contains(target)) {
-        setIsDiscountDropdownOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const handleMediaUpload = (files: File[]) => {
-    const newMedia = files.map(file => ({
-      file,
-      url: URL.createObjectURL(file),
-      isExisting: false
-    }));
-    setStagedMedia(prev => [...prev, ...newMedia]);
-  };
-
-  const removeMedia = (index: number) => {
-    setStagedMedia(prev => {
-      const itemToRemove = prev[index];
-      if (itemToRemove && !itemToRemove.isExisting) URL.revokeObjectURL(itemToRemove.url);
-      return prev.filter((_, i) => i !== index);
-    });
-  };
-
-  const makePrimary = (index: number) => {
-    setStagedMedia(prev => {
-      const newMedia = [...prev];
-      const [selected] = newMedia.splice(index, 1);
-      newMedia.unshift(selected);
-      return newMedia;
-    });
-    toast.success("Image set as primary");
-  };
-
-  const handleSubmit = async (submitStatus: "Published" | "Draft") => {
-    try {
-      const {
-        name, description, price, category, subCategory, discountPrice,
-        stockStatus, stockQuantity, isUnlimited, isFeatured,
-        taxIncluded, expiryStart, expiryEnd, tag, colors,
-        size, volume, gender
-      } = formData;
-
-      if (!name || !description || !price || !category) {
-        toast.error("Please fill in all required fields (Name, Description, Price, Category)");
-        return;
-      }
-
-      const postData = new FormData();
-      postData.append("name", name);
-      postData.append("description", description);
-      postData.append("price", price);
-      postData.append("discountPrice", discountPrice || "0");
-      postData.append("category", category);
-      postData.append("subCategory", subCategory || "");
-      if (formData.brand) postData.append("brand", formData.brand);
-      postData.append("stock", isUnlimited ? "0" : stockQuantity);
-      postData.append("stockStatus", stockStatus);
-      postData.append("status", submitStatus);
-      postData.append("isUnlimited", String(isUnlimited));
-      postData.append("isFeatured", String(isFeatured));
-      postData.append("taxIncluded", String(taxIncluded));
-      if (expiryStart) postData.append("expiryStart", expiryStart);
-      if (expiryEnd) postData.append("expiryEnd", expiryEnd);
-      postData.append("tags", JSON.stringify(tag ? [tag] : []));
-      postData.append("colors", colors || "");
-      postData.append("size", size || "");
-      postData.append("volume", volume || "");
-      postData.append("gender", gender);
-      postData.append("sku", formData.sku);
-      postData.append("locations", JSON.stringify(formData.locations || []));
-      const cleanedVariants = formData.variants.map(v => ({
-        ...v,
-        attributes: Object.fromEntries(
-          Object.entries(v.attributes || {}).map(([key, val]) => [
-            key,
-            Array.isArray(val) ? val.join(", ") : val
-          ])
-        )
-      }));
-      postData.append("variants", JSON.stringify(cleanedVariants));
-
-      // Append existing media URLs or IDs if the backend supports it
-      // For simplicity, we'll send the new files and the backend can decide what to do
-      const newFiles = stagedMedia.filter(m => !m.isExisting && m.file).map(m => m.file as File);
-      newFiles.forEach((file) => {
-        postData.append("media", file);
-      });
-
-      // If the backend needs to know which existing media to keep, we'd add that here
-      const existingUrls = stagedMedia.filter(m => m.isExisting).map(m => m.url);
-      postData.append("existingMedia", JSON.stringify(existingUrls));
-
-      const response = await updateProduct({
-        productId,
-        data: postData as any
-      }).unwrap();
-
-      if (response.success) {
-        emit("PRODUCT_UPDATED", { type: "update", product: response.data });
-        setIsPublishConfirmOpen(false);
-        setIsDraftConfirmOpen(false);
-        if (submitStatus === "Published") {
-          setIsPublishSuccessOpen(true);
-        } else {
-          setIsDraftSuccessOpen(true);
-        }
-        toast.success(`Product updated and ${submitStatus === 'Published' ? 'published' : 'saved as draft'} successfully!`);
-      }
-    } catch (error: any) {
-      console.error("Failed to update product:", error);
-      // Error handled by hook
-    }
-  };
-
-  if (isLoadingProduct) return <EditProductSkeleton />;
-
-  // Dynamic Category-Based Attributes
-  const selectedCategoryObj = categories.find((c: any) => c.name === formData.category);
-
-  const showGender = !selectedCategoryObj || selectedCategoryObj.hasGender || selectedCategoryObj.hasSex || (selectedCategoryObj.selectedGenders?.length > 0) || (selectedCategoryObj.selectedSexes?.length > 0);
-  const showSize = !selectedCategoryObj || selectedCategoryObj.hasSize || (selectedCategoryObj.selectedSizes?.length > 0);
-  const showML = !selectedCategoryObj || selectedCategoryObj.hasML || (selectedCategoryObj.selectedMLs?.length > 0);
-
-  const genderLabel = selectedCategoryObj?.hasSex && !selectedCategoryObj?.hasGender ? "Sex (Gender)" : "Gender";
-
-  const genderOptions = selectedCategoryObj?.selectedGenders?.length > 0
-    ? selectedCategoryObj.selectedGenders.map((g: any) => ({ label: g, value: g }))
-    : (selectedCategoryObj?.selectedSexes?.length > 0
-      ? selectedCategoryObj.selectedSexes.map((s: any) => ({ label: s, value: s }))
-      : [
-          { label: "Men", value: "Men" },
-          { label: "Women", value: "Women" },
-          { label: "Unisex", value: "Unisex" },
-          { label: "Kids", value: "Kids" },
-        ]
-    );
-
-  const sizeOptions = selectedCategoryObj?.selectedSizes?.length > 0
-    ? selectedCategoryObj.selectedSizes.map((s: any) => ({ label: s, value: s }))
-    : [];
-
-  const volumeOptions = selectedCategoryObj?.selectedMLs?.length > 0
-    ? selectedCategoryObj.selectedMLs.map((m: any) => ({ label: m, value: m }))
-    : [];
-
-  const activeColumns = [showGender, showSize, showML].filter(Boolean).length;
-  const gridClass = activeColumns === 3 ? "grid grid-cols-1 md:grid-cols-3 gap-6" : activeColumns === 2 ? "grid grid-cols-1 md:grid-cols-2 gap-6" : "grid grid-cols-1 gap-6";
-
-  return (
-    <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
-      {/* Top Header / Action Bar */}
-      <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4">
-        <div className="flex items-center gap-4">
-          <Button shape="rounded-sm" variant="ghost" className="!p-2 hover:bg-gray-100" onClick={() => router.back()}>
-            <HiArrowLeft size={20} className="text-gray-400" />
-          </Button>
-          <div className="flex flex-col">
-            <h2 className="text-xl font-black text-[#121212]">Edit {product?.status === 'Draft' ? 'Draft' : 'Product'}</h2>
-            <div className="flex items-center gap-2">
-              <p className="text-xs font-bold text-gray-400">ID: {productId.slice(-8)}</p>
-              {formData.sku && (
-                <>
-                  <span className="w-1.5 h-1.5 bg-gray-200 rounded-full" />
-                  <p className="text-[10px] font-black text-brand-gold uppercase tracking-wider">SKU: {formData.sku}</p>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
-          <div className="flex gap-2">
-            <Button shape="rounded-sm" variant="primary"
-              size="md"
-              isLoading={isSubmitting}
-              onClick={() => setIsPublishConfirmOpen(true)}
-            >
-              {product?.status === 'Published' ? 'Update Live' : 'Publish Product'}
-            </Button>
-            <Button shape="rounded-sm"
-              variant="outline"
-              size="md"
-              isLoading={isSubmitting}
-              iconLeft={<Icon name="ticket"
-                folder="dashboardIcon"
-                size="md"
-                className="opacity-70" />}
-              onClick={() => setIsDraftConfirmOpen(true)}
-            >
-              {product?.status === 'Draft' ? 'Update Draft' : 'Save as Draft'}
-            </Button>
-            <Tooltip text="Discard Changes" position="top">
-              <Button shape="rounded-sm" variant="outline"
-                className="!p-3"
-                onClick={() => router.back()}
-              >
-                <Icon name="arrow-refresh-06" folder="dashboardIcon" size="sm" />
-              </Button>
-            </Tooltip>
-          </div>
-        </div>
+ return (
+  <div className="flex flex-col gap-6 max-w-[1600px] mx-auto pb-12">
+   {/* Top Header / Action Bar */}
+   <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4">
+    <div className="flex items-center gap-4">
+     <Button shape="rounded-sm" variant="ghost" className="!p-2 hover:bg-gray-100" onClick={() => router.back()}>
+      <HiArrowLeft size={20} className="text-gray-400" />
+     </Button>
+     <div className="flex flex-col">
+      <h2 className="text-xl font-black text-[#121212]">Edit {product?.status === 'Draft' ? 'Draft' : 'Product'}</h2>
+      <div className="flex items-center gap-2">
+       <p className="text-xs font-bold text-gray-400">ID: {productId.slice(-8)}</p>
+       {formData.sku && (
+        <>
+         <span className="w-1.5 h-1.5 bg-gray-200 rounded-full" />
+         <p className="text-[10px] font-black text-brand-gold uppercase tracking-wider">SKU: {formData.sku}</p>
+        </>
+       )}
       </div>
-
-      {/* Main Form Content (Exactly like new/page.tsx) */}
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
-        {/* Left Column (Main Details) */}
-        <div className="xl:col-span-2 flex flex-col gap-6">
-          {/* Basic Details */}
-          <div className="bg-white rounded-[6px] border border-gray-200   p-8 flex flex-col gap-6">
-            <h3 className="text-base font-bold text-[#121212]">Basic Details</h3>
-
-            <div className="flex flex-col gap-2.5">
-              <label className="text-[11px] font-bold text-[#121212]">Product Categories</label>
-              <Select
-                shape="rounded-sm"
-                value={formData.category}
-                onChange={(val) => {
-                  handleInputChange("category", val as string);
-                  handleInputChange("subCategory", ""); // Reset subcategory when category changes
-                }}
-                placeholder="Select your product"
-                options={categories?.map((c: any) => ({
-                  label: c?.name?.toUpperCase(),
-                  value: c?.name
-                }))}
-                searchable
-              />
-            </div>
-            {(() => {
-              const selectedCategoryObj = categories.find((c: any) => c.name === formData.category);
-              const subCategories = selectedCategoryObj?.subCategories || [];
-              if (subCategories.length === 0) return null;
-              return (
-                <div className="flex flex-col gap-2.5">
-                  <label className="text-[11px] font-bold text-[#121212]">Product Sub Categories</label>
-                  <Select
-                    shape="rounded-sm"
-                    value={formData.subCategory}
-                    onChange={(val) => handleInputChange("subCategory", val as string)}
-                    placeholder="Select sub category"
-                    options={subCategories.map((sub: any) => {
-                      const name = typeof sub === 'object' ? sub?.name : sub;
-                      return {
-                        label: name?.toUpperCase(),
-                        value: name
-                      };
-                    })}
-                    searchable
-                  />
-                </div>
-              );
-            })()}
-
-            <div className="flex flex-col gap-2.5">
-              <label className="text-xs font-bold text-[#121212]">Product Name</label>
-              <Input shape="rounded-sm" type="text"
-                value={formData.name}
-                onChange={(e) => handleInputChange("name", e.target.value)}
-                className="bg-gray-50/80 border-gray-50 text-sm font-medium text-gray-700"
-                placeholder="Enter product name"
-              />
-            </div>
-
-            <div className="flex flex-col gap-2.5">
-              <label className="text-xs font-bold text-[#121212]">Product SKU <span className="text-gray-400 font-medium">(Unique Identifier)</span></label>
-              <Input shape="rounded-sm" type="text"
-                value={formData.sku}
-                onChange={(e) => handleInputChange("sku", e.target.value.toUpperCase())}
-                className="bg-gray-50/80 border-gray-50 text-sm font-bold text-gray-900 uppercase"
-                placeholder="e.g. PRD-001"
-                suffixElement={
-                  <button
-                    type="button"
-                    onClick={handleGenerateSKU}
-                    className="text-[10px] font-bold text-brand-gold hover:underline cursor-pointer px-2 py-1 bg-white border border-gray-200 rounded-[4px] hover:bg-gray-50 transition-colors"
-                  >
-                    Generate
-                  </button>
-                }
-              />
-            </div>
-
-            {(showGender || showSize || showML) && (
-              <div className={gridClass}>
-                {showGender && (
-                  <div className="flex flex-col gap-2.5">
-                    <label className="text-xs font-bold text-[#121212]">{genderLabel} <span className="text-red-500">*</span></label>
-                    <Select
-                      shape="rounded-sm"
-                      value={formData.gender}
-                      onChange={(val) => handleInputChange("gender", val as string)}
-                      options={genderOptions}
-                    />
-                  </div>
-                )}
-
-                {showSize && (
-                  <div className="flex flex-col gap-2.5">
-                    <label className="text-xs font-bold text-[#121212]">Available Sizes</label>
-                    <Select
-                      searchable
-                      placeholder="Select size..."
-                      shape="rounded-sm"
-                      options={sizeOptions}
-                      value={formData.size}
-                      onChange={(val) => handleInputChange("size", val as string)}
-                    />
-                    <p className="text-[9px] text-gray-400 font-medium">Select the available size for this product</p>
-                  </div>
-                )}
-
-                {showML && (
-                  <div className="flex flex-col gap-2.5">
-                    <label className="text-xs font-bold text-[#121212]">Volume (ML)</label>
-                    <Select
-                      searchable
-                      placeholder="Select volume..."
-                      shape="rounded-sm"
-                      options={volumeOptions}
-                      value={formData.volume}
-                      onChange={(val) => handleInputChange("volume", val as string)}
-                    />
-                    <p className="text-[9px] text-gray-400 font-medium">Select the volume for this product</p>
-                  </div>
-                )}
-              </div>
-            )}
-
-            <div className="flex flex-col gap-2.5 relative">
-              <label className="text-xs font-bold text-[#121212]">Product Description</label>
-              <div className="relative group">
-                <Textarea shape="rounded-sm"
-                  placeholder="Enter product description"
-                  rows={6}
-                  value={formData.description}
-                  onChange={(e) => handleInputChange("description", e.target.value)}
-                  className="bg-gray-50/80 border-gray-50 text-sm font-medium text-gray-700 resize-none leading-relaxed"
-                />
-                <div className="absolute bottom-4 right-4 flex gap-1.5 opacity-40 group-hover:opacity-100 transition-opacity">
-                  <Tooltip text="Description Settings" position="top">
-                    <button
-                      type="button"
-                      className="p-1.5 hover:bg-gray-100 rounded-[6px] transition-colors"
-                      onClick={() => setIsAISettingsOpen(true)}
-                    >
-                      <Icon name="settings" folder="dashboardIcon" size="md" />
-                    </button>
-                  </Tooltip>
-                  <Tooltip text="Magic Polish (AI)" position="top">
-                    <button
-                      type="button"
-                      disabled={isRefining}
-                      className={`p-1.5 rounded-[6px] transition-all ${isRefining ? "bg-brand-gold/10 text-brand-gold animate-pulse" : "hover:bg-gray-100"}`}
-                      onClick={() => {
-                        setIsRefining(true);
-                        setTimeout(() => {
-                          handleInputChange("description", formData.description.trim() + " This masterpiece represents the pinnacle of mobile excellence.");
-                          setIsRefining(false);
-                        }, 1200);
-                      }}
-                    >
-                      <Icon
-                        name="star"
-                        folder="dashboardIcon"
-                        size="md"
-                        className={isRefining ? "animate-spin" : ""}
-                      />
-                    </button>
-                  </Tooltip>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Product Variants */}
-          <div className="bg-white rounded-sm   p-8 flex flex-col gap-6">
-            <div className="flex items-center justify-between">
-              <h3 className="text-base font-bold text-[#121212]">Product Variants</h3>
-              <Button
-                shape="rounded-sm"
-                variant="outline"
-                className="text-[10px] font-bold"
-                onClick={() => {
-                  const newVariant = {
-                    sku: `${formData.sku || 'SKU'}-${formData.variants.length + 1}`,
-                    price: formData.price || "0",
-                    stock: formData.stockQuantity || "0",
-                    attributes: {
-                      color: formData.colors[0] || "",
-                      size: Array.isArray(formData.size) ? formData.size[0] : (formData.size || "")
-                    }
-                  };
-                  handleInputChange("variants", [...formData.variants, newVariant]);
-                }}
-              >
-                Add Variant
-              </Button>
-            </div>
-
-            {formData.variants.length > 0 ? (
-              <div className="flex flex-col gap-4">
-                {formData.variants.map((variant, vIdx) => (
-                  <div key={vIdx} className="p-4 bg-gray-50/50 border border-gray-200 rounded-[6px] flex flex-col gap-4 relative group">
-                    <button
-                      onClick={() => {
-                        const newVariants = formData.variants.filter((_, i) => i !== vIdx);
-                        handleInputChange("variants", newVariants);
-                      }}
-                      className="absolute top-2 right-2 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <HiXMark size={16} />
-                    </button>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div className="flex flex-col gap-1.5">
-                        <label className="text-xs font-bold text-[#121212]">Variant SKU</label>
-                        <Input
-                          shape="rounded-sm"
-                          value={variant.sku}
-                          onChange={(e) => {
-                            const newVariants = [...formData.variants];
-                            newVariants[vIdx] = { ...variant, sku: e.target.value.toUpperCase() };
-                            handleInputChange("variants", newVariants);
-                          }}
-                          className="bg-white border-gray-200 text-xs font-bold"
-                        />
-                      </div>
-                      <div className="flex flex-col gap-1.5">
-                        <label className="text-xs font-bold text-[#121212]">Price Override</label>
-                        <Input
-                          shape="rounded-sm"
-                          type="number"
-                          value={variant.price}
-                          onChange={(e) => {
-                            const newVariants = [...formData.variants];
-                            newVariants[vIdx] = { ...variant, price: e.target.value };
-                            handleInputChange("variants", newVariants);
-                          }}
-                          className="bg-white border-gray-200 text-xs font-bold"
-                        />
-                      </div>
-                      <div className="flex flex-col gap-1.5">
-                        <label className="text-xs font-bold text-[#121212]">Stock</label>
-                        <Input
-                          shape="rounded-sm"
-                          type="number"
-                          value={variant.stock}
-                          onChange={(e) => {
-                            const newVariants = [...formData.variants];
-                            newVariants[vIdx] = { ...variant, stock: e.target.value };
-                            handleInputChange("variants", newVariants);
-                          }}
-                          className="bg-white border-gray-200 text-xs font-bold"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      {variant.attributes && Object.entries(variant.attributes).map(([attr, val], aIdx) => (
-                        <div key={aIdx} className="flex flex-col gap-1.5 min-w-[120px]">
-                          <label className="text-xs font-bold text-[#121212]">{attr}</label>
-                          {attr.toLowerCase() === 'color' ? (
-                            <div className="flex items-center gap-2">
-                              <div className="relative w-8 h-8 rounded-[4px] overflow-hidden border border-gray-200   shrink-0">
-                                <input
-                                  type="color"
-                                  value={val as string || "#000000"}
-                                  onChange={(e) => {
-                                    const newVariants = [...formData.variants];
-                                    newVariants[vIdx] = {
-                                      ...variant,
-                                      attributes: { ...variant.attributes, [attr]: e.target.value.toUpperCase() }
-                                    };
-                                    handleInputChange("variants", newVariants);
-                                  }}
-                                  className="absolute inset-[-4px] w-[calc(100%+8px)] h-[calc(100%+8px)] cursor-pointer border-none bg-transparent"
-                                />
-                              </div>
-                              <Input
-                                shape="rounded-sm"
-                                value={val as string}
-                                onChange={(e) => {
-                                  const newVariants = [...formData.variants];
-                                  newVariants[vIdx] = {
-                                    ...variant,
-                                    attributes: { ...variant.attributes, [attr]: e.target.value.toUpperCase() }
-                                  };
-                                  handleInputChange("variants", newVariants);
-                                }}
-                                placeholder="#000000"
-                                className="bg-white border-gray-200 text-[10px] font-mono h-8"
-                              />
-                            </div>
-                          ) : attr.toLowerCase() === 'size' ? (
-                            <Select
-                              options={PRODUCT_SIZE_OPTIONS}
-                              value={Array.isArray(val) ? val[0] : (val as string || "")}
-                              onChange={(selectedVal) => {
-                                const newVariants = [...formData.variants];
-                                newVariants[vIdx] = {
-                                  ...variant,
-                                  attributes: { ...variant.attributes, [attr]: selectedVal as string }
-                                };
-                                handleInputChange("variants", newVariants);
-                              }}
-                              placeholder="Size"
-                              shape="rounded-sm"
-                              className="h-8"
-                              searchable
-                            />
-                          ) : (
-                            <Input
-                              shape="rounded-sm"
-                              value={val as string}
-                              onChange={(e) => {
-                                const newVariants = [...formData.variants];
-                                newVariants[vIdx] = {
-                                  ...variant,
-                                  attributes: { ...variant.attributes, [attr]: e.target.value }
-                                };
-                                handleInputChange("variants", newVariants);
-                              }}
-                              placeholder={`Enter ${attr}`}
-                              className="bg-white border-gray-200 text-xs h-8"
-                            />
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="py-12 flex flex-col items-center justify-center border-2 border-dashed border-gray-100 rounded-[6px] bg-gray-50/30">
-                <p className="text-xs text-gray-400 font-medium">No variants added yet</p>
-                <button
-                  onClick={() => {
-                    const newVariant = {
-                      sku: `${formData.sku || 'SKU'}-1`,
-                      price: formData.price || "0",
-                      stock: formData.stockQuantity || "0",
-                      attributes: {
-                        color: formData.colors[0] || "",
-                        size: formData.size[0] ? [formData.size[0]] : []
-                      }
-                    };
-                    handleInputChange("variants", [...formData.variants, newVariant]);
-                  }}
-                  className="mt-2 text-[10px] font-bold text-brand-gold hover:underline"
-                >
-                  Create your first variant
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Pricing Section */}
-          <div className="bg-white rounded-[6px] border border-gray-200   p-8 flex flex-col gap-6">
-            <h3 className="text-base font-bold text-[#121212]">Pricing</h3>
-
-            <div className="flex flex-col gap-2.5">
-              <label className="text-xs font-bold text-[#121212]">Product Price</label>
-              <div className="relative" ref={currencyDropdownRef}>
-                <Input shape="rounded-sm" type="number"
-                  value={formData.price}
-                  onChange={(e) => handleInputChange("price", e.target.value)}
-                  placeholder="0.00"
-                  className="bg-gray-50/80 border-gray-50 text-sm font-bold text-gray-900"
-                  prefixElement={<span className="text-sm font-bold text-gray-400">{currencies.find(c => c.code === selectedCurrency)?.symbol}</span>}
-                  suffixElement={
-                    <div
-                      className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-[6px] cursor-pointer   hover:bg-gray-50 transition-colors"
-                      onClick={() => setIsCurrencyDropdownOpen(!isCurrencyDropdownOpen)}
-                    >
-                      <img src={currencies.find(c => c.code === selectedCurrency)?.flag} alt={selectedCurrency} className="w-5 h-3 object-cover rounded-[1px]" />
-                      <Icon name="material-symbols_arrow-downward-rounded" folder="dashboardIcon" size="xs" className="text-gray-400" />
-                    </div>
-                  }
-                />
-                {isCurrencyDropdownOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-44 bg-white border border-gray-200 rounded-[6px] shadow-xl z-50 py-1 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
-                    {currencies.map((curr) => (
-                      <div
-                        key={curr.code}
-                        className={`flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 cursor-pointer transition-colors ${selectedCurrency === curr.code ? "bg-gray-50" : ""}`}
-                        onClick={() => {
-                          setSelectedCurrency(curr.code);
-                          setIsCurrencyDropdownOpen(false);
-                        }}
-                      >
-                        <img src={curr.flag} alt={curr.label} className="w-5 h-3 object-cover rounded-[1px]" />
-                        <div className="flex flex-col">
-                          <span className="text-[11px] font-bold text-gray-700">{curr.label}</span>
-                          <span className="text-[9px] text-gray-400 font-medium uppercase">{curr.code}</span>
-                        </div>
-                        {selectedCurrency === curr.code && (
-                          <div className="ml-auto w-1.5 h-1.5 bg-brand-gold rounded-full" />
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="flex flex-col gap-2.5">
-                <label className="text-xs font-bold text-gray-400">Discounted Price <span className="text-gray-300 font-medium">(Optional)</span></label>
-                <div className="relative" ref={discountDropdownRef}>
-                  <Input
-                    shape="rounded-sm"
-                    type="number"
-                    value={formData.discountPrice}
-                    onChange={(e) => handleInputChange("discountPrice", e.target.value)}
-                    placeholder="0.00"
-                    className="bg-gray-50/80 border-gray-50 text-sm font-bold text-gray-900"
-                    prefixElement={<span className="text-sm font-bold text-gray-400">{currencies.find(c => c.code === selectedCurrency)?.symbol}</span>}
-                    suffixElement={
-                      <div
-                        className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-[6px] cursor-pointer   hover:bg-gray-50 transition-colors"
-                        onClick={() => setIsDiscountDropdownOpen(!isDiscountDropdownOpen)}
-                      >
-                        <img src={currencies.find(c => c.code === selectedCurrency)?.flag} alt={selectedCurrency} className="w-5 h-3 object-cover rounded-[1px]" />
-                        <Icon name="material-symbols_arrow-downward-rounded" folder="dashboardIcon" size="xs" className="text-gray-400" />
-                      </div>
-                    }
-                    containerClassName="w-full"
-                  />
-                  {isDiscountDropdownOpen && (
-                    <div className="absolute right-0 top-full mt-2 w-44 bg-white border border-gray-200 rounded-[6px] shadow-xl z-50 py-1 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
-                      {currencies.map((curr) => (
-                        <div
-                          key={curr.code}
-                          className={`flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 cursor-pointer transition-colors ${selectedCurrency === curr.code ? "bg-gray-50" : ""}`}
-                          onClick={() => {
-                            setSelectedCurrency(curr.code);
-                            setIsDiscountDropdownOpen(false);
-                          }}
-                        >
-                          <img src={curr.flag} alt={curr.label} className="w-5 h-3 object-cover rounded-[1px]" />
-                          <div className="flex flex-col">
-                            <span className="text-[11px] font-bold text-gray-700">{curr.label}</span>
-                            <span className="text-[9px] text-gray-400 font-medium uppercase">{curr.code}</span>
-                          </div>
-                          {selectedCurrency === curr.code && (
-                            <div className="ml-auto w-1.5 h-1.5 bg-brand-gold rounded-full" />
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-2.5">
-                <label className="text-xs font-bold text-[#121212]">Tax Included</label>
-                <div className="flex items-center gap-6 py-3">
-                  <Checkbox
-                    checked={formData.taxIncluded}
-                    onChange={() => handleInputChange("taxIncluded", true)}
-                    label="Yes"
-                  />
-                  <Checkbox
-                    checked={!formData.taxIncluded}
-                    onChange={() => handleInputChange("taxIncluded", false)}
-                    label="No"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-2.5">
-              <label className="text-xs font-bold text-[#121212]">Expiration</label>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <Input shape="rounded-sm"
-                  type="date"
-                  value={formData.expiryStart}
-                  onChange={(e) => handleInputChange("expiryStart", e.target.value)}
-                  placeholder="Start"
-                />
-                <Input shape="rounded-sm"
-                  type="date"
-                  value={formData.expiryEnd}
-                  onChange={(e) => handleInputChange("expiryEnd", e.target.value)}
-                  placeholder="End"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Inventory Section */}
-          <div className="bg-white rounded-[6px] border border-gray-200   p-8 flex flex-col gap-6">
-            <h3 className="text-sm font-bold text-[#121212]">Inventory</h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="flex flex-col gap-2.5">
-                <label className="text-xs font-bold text-[#121212]">Stock Quantity</label>
-                <Input shape="rounded-sm"
-                  type={formData.isUnlimited ? "text" : "number"}
-                  disabled={formData.isUnlimited}
-                  value={formData.isUnlimited ? "Unlimited" : formData.stockQuantity}
-                  onChange={(e) => handleInputChange("stockQuantity", e.target.value)}
-                  className="bg-gray-50/80 border-gray-50 text-sm font-bold text-gray-900 focus:bg-white transition-colors"
-                />
-              </div>
-
-              <div className="flex flex-col gap-2.5">
-                <label className="text-xs font-bold text-[#121212]">Stock Status</label>
-                <Select
-                  shape="rounded-sm"
-                  value={formData.stockStatus}
-                  onChange={(val) => handleInputChange("stockStatus", val as string)}
-                  options={[
-                    { label: "In Stock", value: "In Stock" },
-                    { label: "Out of Stock", value: "Out of Stock" },
-                    { label: "Low Stock", value: "Low Stock" },
-                    { label: "Pre-order", value: "Pre-order" },
-                    { label: "Discontinued", value: "Discontinued" },
-                  ]}
-                />
-              </div>
-            </div>
-
-            <div className="flex flex-col gap-4 pt-2">
-              <div className="flex items-center justify-between w-full max-w-[200px]">
-                <Switch
-                  checked={formData.isUnlimited}
-                  onChange={(e) => handleInputChange("isUnlimited", e.target.checked)}
-                  label={<span className="text-xs font-bold text-gray-900">Unlimited</span>}
-                />
-              </div>
-
-              <Checkbox
-                checked={formData.isFeatured}
-                onChange={(checked) => handleInputChange("isFeatured", checked)}
-                className="w-fit pt-2"
-              >
-                <span className="text-xs font-bold text-gray-400 underline underline-offset-4 decoration-gray-200">Highlight this product in a featured section.</span>
-              </Checkbox>
-            </div>
-
-            <div className="flex gap-3 justify-end mt-4 pt-6 border-t border-gray-50">
-              <button
-                type="button"
-                disabled={isSubmitting}
-                className="bg-white border border-gray-200 text-[#121212] px-6 py-2.5 rounded-[6px] text-xs font-bold hover:bg-gray-50 transition-all flex items-center gap-2 disabled:opacity-50"
-                onClick={() => setIsDraftConfirmOpen(true)}
-              >
-                <Icon name="ticket" folder="dashboardIcon" size="xs" className="opacity-70" />
-                {isSubmitting ? "Updating..." : "Update Draft"}
-              </button>
-              <Button shape="rounded-sm" variant="primary"
-                className="px-8 py-2.5"
-                isLoading={isSubmitting}
-                onClick={() => setIsPublishConfirmOpen(true)}
-              >
-                {product?.status === 'Published' ? 'Update Catalog' : 'Publish Product'}
-              </Button>
-            </div>
-
-          </div>
-        </div>
-
-        {/* Right Column (Media & Meta) */}
-        <ProductMediaMetaSidebar
-          formData={formData}
-          handleInputChange={handleInputChange}
-          stagedMedia={stagedMedia}
-          removeMedia={removeMedia}
-          makePrimary={makePrimary}
-          setIsUploadModalOpen={setIsUploadModalOpen}
-          categories={categories || []}
-          brands={brands || []}
-          offices={offices || []}
-          showColorPicker={showColorPicker}
-          setShowColorPicker={setShowColorPicker}
-          hideOffices={true}
-        />
-      </div>
-
-      <ConfirmationModal
-        isOpen={isPublishConfirmOpen}
-        onClose={() => setIsPublishConfirmOpen(false)}
-        onConfirm={() => handleSubmit("Published")}
-        title="Confirm Update"
-        message="Are you sure you want to update this product? The storefront will reflect these changes immediately."
-        confirmText="Yes, update catalog"
-        type="success"
-        isLoading={isSubmitting}
-      />
-
-      <Modal
-        isOpen={isPublishSuccessOpen}
-        onClose={() => {
-          setIsPublishSuccessOpen(false);
-          router.push("/admin/products");
-        }}
-        size="sm"
-      >
-        <ModalBody className="flex flex-col items-center text-center p-8">
-          <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-500 mb-6 animate-bounce">
-            <HiCheckCircle size={60} />
-          </div>
-          <h2 className="text-xl font-bold text-[#121212] mb-2">Product Updated!</h2>
-          <p className="text-sm text-gray-500">Your changes have been successfully saved and the product is now updated in the catalog.</p>
-        </ModalBody>
-        <ModalFooter className="flex justify-center pb-8 border-t-0">
-          <Button shape="rounded-sm" variant="primary" onClick={() => router.push("/admin/products")}>
-            Back to Inventory
-          </Button>
-        </ModalFooter>
-      </Modal>
-
-      <Modal
-        isOpen={isDraftSuccessOpen}
-        onClose={() => {
-          setIsDraftSuccessOpen(false);
-          router.push("/admin/products");
-        }}
-        size="sm"
-      >
-        <ModalBody className="flex flex-col items-center text-center p-8">
-          <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center text-brand-gold mb-6 animate-pulse">
-            <HiArchiveBox size={60} />
-          </div>
-          <h2 className="text-xl font-bold text-[#121212] mb-2">Draft Updated</h2>
-          <p className="text-sm text-gray-500">The draft has been updated successfully. You can continue editing or return to the product list.</p>
-        </ModalBody>
-        <ModalFooter className="flex flex-col gap-3 pb-8 border-t-0 px-8">
-          <Button shape="rounded-sm"
-            variant="primary"
-            className="w-full"
-            onClick={() => {
-              setIsDraftSuccessOpen(false);
-              router.push("/admin/products");
-            }}
-          >
-            Back to Inventory
-          </Button>
-          <Button shape="rounded-sm"
-            variant="ghost"
-            className="w-full text-xs font-bold text-gray-400"
-            onClick={() => setIsDraftSuccessOpen(false)}
-          >
-            Continue editing
-          </Button>
-        </ModalFooter>
-      </Modal>
-
-      <AISettingsModal
-        isOpen={isAISettingsOpen}
-        onClose={() => setIsAISettingsOpen(false)}
-        tone={aiTone}
-        onToneChange={setAiTone}
-      />
-
-      <UploadMediaModal
-        isOpen={isUploadModalOpen}
-        onClose={() => setIsUploadModalOpen(false)}
-        onUploadSuccess={handleMediaUpload}
-        onlyStaging
-      />
-
-      <ConfirmationModal
-        isOpen={isOverrideModalOpen}
-        onClose={() => setIsOverrideModalOpen(false)}
-        onConfirm={() => {
-          setFormData(prev => ({ ...prev, stockStatus: pendingStockStatus }));
-          setIsOverrideModalOpen(false);
-          toast.info(`Stock status manually overridden to ${pendingStockStatus}`);
-        }}
-        title="Override Stock Status?"
-        message={`The recommended status for ${formData.stockQuantity} units is "${getRecommendedStatus(formData.stockQuantity)}". Are you sure you want to manually set it to "${pendingStockStatus}"?`}
-        confirmText="Yes, Override"
-        type="warning"
-      />
+     </div>
     </div>
-  );
+
+    <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
+     <div className="flex gap-2">
+      <Button shape="rounded-sm" variant="primary"
+       size="md"
+       isLoading={isSubmitting}
+       onClick={() => setIsPublishConfirmOpen(true)}
+      >
+       {product?.status === 'Published' ? 'Update Live' : 'Publish Product'}
+      </Button>
+      <Button shape="rounded-sm"
+       variant="outline"
+       size="md"
+       isLoading={isSubmitting}
+       iconLeft={<Icon name="ticket"
+        folder="dashboardIcon"
+        size="md"
+        className="opacity-70" />}
+       onClick={() => setIsDraftConfirmOpen(true)}
+      >
+       {product?.status === 'Draft' ? 'Update Draft' : 'Save as Draft'}
+      </Button>
+      <Tooltip text="Discard Changes" position="top">
+       <Button shape="rounded-sm" variant="outline"
+        className="!p-3"
+        onClick={() => router.back()}
+       >
+        <Icon name="arrow-refresh-06" folder="dashboardIcon" size="sm" />
+       </Button>
+      </Tooltip>
+     </div>
+    </div>
+   </div>
+
+   {/* Main Form Content (Exactly like new/page.tsx) */}
+   <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
+    {/* Left Column (Main Details) */}
+    <div className="xl:col-span-2 flex flex-col gap-6">
+     {/* Basic Details */}
+     <div className="bg-white rounded-[6px] border border-gray-200   p-8 flex flex-col gap-6">
+      <h3 className="text-base font-bold text-[#121212]">Basic Details</h3>
+
+      <div className="flex flex-col gap-2.5">
+       <label className="text-[11px] font-bold text-[#121212]">Product Categories</label>
+       <Select
+        shape="rounded-sm"
+        value={formData.category}
+        onChange={(val) => {
+         handleInputChange("category", val as string);
+         handleInputChange("subCategory", ""); // Reset subcategory when category changes
+         setFormData(prev => ({ ...prev, attributes: {} }));
+        }}
+        placeholder="Select your product"
+        options={categories?.map((c: any) => ({
+         label: c?.name?.toUpperCase(),
+         value: c?.name
+        }))}
+        searchable
+       />
+      </div>
+      {(() => {
+       const selectedCategoryObj = categories.find((c: any) => c.name === formData.category);
+       const subCategories = selectedCategoryObj?.subCategories || [];
+       if (subCategories.length === 0) return null;
+       return (
+        <div className="flex flex-col gap-2.5">
+         <label className="text-[11px] font-bold text-[#121212]">Product Sub Categories</label>
+         <Select
+          shape="rounded-sm"
+          value={formData.subCategory}
+          onChange={(val) => handleInputChange("subCategory", val as string)}
+          placeholder="Select sub category"
+          options={subCategories.map((sub: any) => {
+           const name = typeof sub === 'object' ? sub?.name : sub;
+           return {
+            label: name?.toUpperCase(),
+            value: name
+           };
+          })}
+          searchable
+         />
+        </div>
+       );
+      })()}
+
+      <div className="flex flex-col gap-2.5">
+       <label className="text-xs font-bold text-[#121212]">Product Name</label>
+       <Input shape="rounded-sm" type="text"
+        value={formData.name}
+        onChange={(e) => handleInputChange("name", e.target.value)}
+        className="bg-gray-50/80 border-gray-50 text-sm font-medium text-gray-700"
+        placeholder="Enter product name"
+       />
+      </div>
+
+      <div className="flex flex-col gap-2.5">
+       <label className="text-xs font-bold text-[#121212]">Product SKU <span className="text-gray-400 font-medium">(Unique Identifier)</span></label>
+       <Input shape="rounded-sm" type="text"
+        value={formData.sku}
+        onChange={(e) => handleInputChange("sku", e.target.value.toUpperCase())}
+        className="bg-gray-50/80 border-gray-50 text-sm font-bold text-gray-900 uppercase"
+        placeholder="e.g. PRD-001"
+        suffixElement={
+         <button
+          type="button"
+          onClick={handleGenerateSKU}
+          className="text-[10px] font-bold text-brand-gold hover:underline cursor-pointer px-2 py-1 bg-white border border-gray-200 rounded-[4px] hover:bg-gray-50 transition-colors"
+         >
+          Generate
+         </button>
+        }
+       />
+      </div>
+
+
+
+      {customAttributes.length > 0 && (
+       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {customAttributes.map((attr: any) => (
+         <div key={attr.name} className="flex flex-col gap-2.5">
+          <label className="text-xs font-bold text-[#121212]">{attr.name?.toUpperCase()}</label>
+          <Select
+           shape="rounded-sm"
+           placeholder={`Select ${attr.name}`}
+           value={formData.attributes?.[attr.name] || ""}
+           onChange={(val) => handleAttributeChange(attr.name, val as string)}
+           options={attr.subAttributes?.map((opt: string) => ({
+            label: opt.toUpperCase(),
+            value: opt
+           })) || []}
+          />
+         </div>
+        ))}
+       </div>
+      )}
+
+      <div className="flex flex-col gap-2.5 relative">
+       <label className="text-xs font-bold text-[#121212]">Product Description</label>
+       <div className="relative group">
+        <Textarea shape="rounded-sm"
+         placeholder="Enter product description"
+         rows={6}
+         value={formData.description}
+         onChange={(e) => handleInputChange("description", e.target.value)}
+         className="bg-gray-50/80 border-gray-50 text-sm font-medium text-gray-700 resize-none leading-relaxed"
+        />
+        <div className="absolute bottom-4 right-4 flex gap-1.5 opacity-40 group-hover:opacity-100 transition-opacity">
+         <Tooltip text="Description Settings" position="top">
+          <button
+           type="button"
+           className="p-1.5 hover:bg-gray-100 rounded-[6px] transition-colors"
+           onClick={() => setIsAISettingsOpen(true)}
+          >
+           <Icon name="settings" folder="dashboardIcon" size="md" />
+          </button>
+         </Tooltip>
+         <Tooltip text="Magic Polish (AI)" position="top">
+          <button
+           type="button"
+           disabled={isRefining}
+           className={`p-1.5 rounded-[6px] transition-all ${isRefining ? "bg-brand-gold/10 text-brand-gold animate-pulse" : "hover:bg-gray-100"}`}
+           onClick={() => {
+            setIsRefining(true);
+            setTimeout(() => {
+             handleInputChange("description", formData.description.trim() + " This masterpiece represents the pinnacle of mobile excellence.");
+             setIsRefining(false);
+            }, 1200);
+           }}
+          >
+           <Icon
+            name="star"
+            folder="dashboardIcon"
+            size="md"
+            className={isRefining ? "animate-spin" : ""}
+           />
+          </button>
+         </Tooltip>
+        </div>
+       </div>
+      </div>
+     </div>
+
+     {/* Product Variants */}
+     <div className="bg-white rounded-sm   p-8 flex flex-col gap-6">
+      <div className="flex items-center justify-between">
+       <h3 className="text-base font-bold text-[#121212]">Product Variants</h3>
+       <Button
+        shape="rounded-sm"
+        variant="outline"
+        className="text-[10px] font-bold"
+        onClick={() => {
+         const newVariant = {
+          sku: `${formData.sku || 'SKU'}-${formData.variants.length + 1}`,
+          price: formData.price || "0",
+          stock: formData.stockQuantity || "0",
+          attributes: {
+           size: ""
+          }
+         };
+         handleInputChange("variants", [...formData.variants, newVariant]);
+        }}
+       >
+        Add Variant
+       </Button>
+      </div>
+
+      {formData.variants.length > 0 ? (
+       <div className="flex flex-col gap-4">
+        {formData.variants.map((variant, vIdx) => (
+         <div key={vIdx} className="p-4 bg-gray-50/50 border border-gray-200 rounded-[6px] flex flex-col gap-4 relative group">
+          <button
+           onClick={() => {
+            const newVariants = formData.variants.filter((_, i) => i !== vIdx);
+            handleInputChange("variants", newVariants);
+           }}
+           className="absolute top-2 right-2 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+          >
+           <HiXMark size={16} />
+          </button>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+           <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-bold text-[#121212]">Variant SKU</label>
+            <Input
+             shape="rounded-sm"
+             value={variant.sku}
+             onChange={(e) => {
+              const newVariants = [...formData.variants];
+              newVariants[vIdx] = { ...variant, sku: e.target.value.toUpperCase() };
+              handleInputChange("variants", newVariants);
+             }}
+             className="bg-white border-gray-200 text-xs font-bold"
+            />
+           </div>
+           <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-bold text-[#121212]">Price Override</label>
+            <Input
+             shape="rounded-sm"
+             type="number"
+             value={variant.price}
+             onChange={(e) => {
+              const newVariants = [...formData.variants];
+              newVariants[vIdx] = { ...variant, price: e.target.value };
+              handleInputChange("variants", newVariants);
+             }}
+             className="bg-white border-gray-200 text-xs font-bold"
+            />
+           </div>
+           <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-bold text-[#121212]">Stock</label>
+            <Input
+             shape="rounded-sm"
+             type="number"
+             value={variant.stock}
+             onChange={(e) => {
+              const newVariants = [...formData.variants];
+              newVariants[vIdx] = { ...variant, stock: e.target.value };
+              handleInputChange("variants", newVariants);
+             }}
+             className="bg-white border-gray-200 text-xs font-bold"
+            />
+           </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+           {variant.attributes && Object.entries(variant.attributes).map(([attr, val], aIdx) => (
+            <div key={aIdx} className="flex flex-col gap-1.5 min-w-[120px]">
+             <label className="text-xs font-bold text-[#121212]">{attr}</label>
+             {attr.toLowerCase() === 'size' ? (
+              <Select
+               options={PRODUCT_SIZE_OPTIONS}
+               value={Array.isArray(val) ? val[0] : (val as string || "")}
+               onChange={(selectedVal) => {
+                const newVariants = [...formData.variants];
+                newVariants[vIdx] = {
+                 ...variant,
+                 attributes: { ...variant.attributes, [attr]: selectedVal as string }
+                };
+                handleInputChange("variants", newVariants);
+               }}
+               placeholder="Size"
+               shape="rounded-sm"
+               className="h-8"
+               searchable
+              />
+             ) : (
+              <Input
+               shape="rounded-sm"
+               value={val as string}
+               onChange={(e) => {
+                const newVariants = [...formData.variants];
+                newVariants[vIdx] = {
+                 ...variant,
+                 attributes: { ...variant.attributes, [attr]: e.target.value }
+                };
+                handleInputChange("variants", newVariants);
+               }}
+               placeholder={`Enter ${attr}`}
+               className="bg-white border-gray-200 text-xs h-8"
+              />
+             )}
+            </div>
+           ))}
+          </div>
+         </div>
+        ))}
+       </div>
+      ) : (
+       <div className="py-12 flex flex-col items-center justify-center border-2 border-dashed border-gray-100 rounded-[6px] bg-gray-50/30">
+        <p className="text-xs text-gray-400 font-medium">No variants added yet</p>
+        <button
+         onClick={() => {
+          const newVariant = {
+           sku: `${formData.sku || 'SKU'}-1`,
+           price: formData.price || "0",
+           stock: formData.stockQuantity || "0",
+           attributes: {
+            size: ""
+           }
+          };
+          handleInputChange("variants", [...formData.variants, newVariant]);
+         }}
+         className="mt-2 text-[10px] font-bold text-brand-gold hover:underline"
+        >
+         Create your first variant
+        </button>
+       </div>
+      )}
+     </div>
+
+     {/* Pricing Section */}
+     <div className="bg-white rounded-[6px] border border-gray-200   p-8 flex flex-col gap-6">
+      <h3 className="text-base font-bold text-[#121212]">Pricing</h3>
+
+      <div className="flex flex-col gap-2.5">
+       <label className="text-xs font-bold text-[#121212]">Product Price</label>
+       <div className="relative" ref={currencyDropdownRef}>
+        <Input shape="rounded-sm" type="number"
+         value={formData.price}
+         onChange={(e) => handleInputChange("price", e.target.value)}
+         placeholder="0.00"
+         className="bg-gray-50/80 border-gray-50 text-sm font-bold text-gray-900"
+         prefixElement={<span className="text-sm font-bold text-gray-400">{currencies.find(c => c.code === selectedCurrency)?.symbol}</span>}
+         suffixElement={
+          <div
+           className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-[6px] cursor-pointer   hover:bg-gray-50 transition-colors"
+           onClick={() => setIsCurrencyDropdownOpen(!isCurrencyDropdownOpen)}
+          >
+           <img src={currencies.find(c => c.code === selectedCurrency)?.flag} alt={selectedCurrency} className="w-5 h-3 object-cover rounded-[1px]" />
+           <Icon name="material-symbols_arrow-downward-rounded" folder="dashboardIcon" size="xs" className="text-gray-400" />
+          </div>
+         }
+        />
+        {isCurrencyDropdownOpen && (
+         <div className="absolute right-0 top-full mt-2 w-44 bg-white border border-gray-200 rounded-[6px] shadow-xl z-50 py-1 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+          {currencies.map((curr) => (
+           <div
+            key={curr.code}
+            className={`flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 cursor-pointer transition-colors ${selectedCurrency === curr.code ? "bg-gray-50" : ""}`}
+            onClick={() => {
+             setSelectedCurrency(curr.code);
+             setIsCurrencyDropdownOpen(false);
+            }}
+           >
+            <img src={curr.flag} alt={curr.label} className="w-5 h-3 object-cover rounded-[1px]" />
+            <div className="flex flex-col">
+             <span className="text-[11px] font-bold text-gray-700">{curr.label}</span>
+             <span className="text-[9px] text-gray-400 font-medium uppercase">{curr.code}</span>
+            </div>
+            {selectedCurrency === curr.code && (
+             <div className="ml-auto w-1.5 h-1.5 bg-brand-gold rounded-full" />
+            )}
+           </div>
+          ))}
+         </div>
+        )}
+       </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+       <div className="flex flex-col gap-2.5">
+        <label className="text-xs font-bold text-gray-400">Discounted Price <span className="text-gray-300 font-medium">(Optional)</span></label>
+        <div className="relative" ref={discountDropdownRef}>
+         <Input
+          shape="rounded-sm"
+          type="number"
+          value={formData.discountPrice}
+          onChange={(e) => handleInputChange("discountPrice", e.target.value)}
+          placeholder="0.00"
+          className="bg-gray-50/80 border-gray-50 text-sm font-bold text-gray-900"
+          prefixElement={<span className="text-sm font-bold text-gray-400">{currencies.find(c => c.code === selectedCurrency)?.symbol}</span>}
+          suffixElement={
+           <div
+            className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-200 rounded-[6px] cursor-pointer   hover:bg-gray-50 transition-colors"
+            onClick={() => setIsDiscountDropdownOpen(!isDiscountDropdownOpen)}
+           >
+            <img src={currencies.find(c => c.code === selectedCurrency)?.flag} alt={selectedCurrency} className="w-5 h-3 object-cover rounded-[1px]" />
+            <Icon name="material-symbols_arrow-downward-rounded" folder="dashboardIcon" size="xs" className="text-gray-400" />
+           </div>
+          }
+          containerClassName="w-full"
+         />
+         {isDiscountDropdownOpen && (
+          <div className="absolute right-0 top-full mt-2 w-44 bg-white border border-gray-200 rounded-[6px] shadow-xl z-50 py-1 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+           {currencies.map((curr) => (
+            <div
+             key={curr.code}
+             className={`flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 cursor-pointer transition-colors ${selectedCurrency === curr.code ? "bg-gray-50" : ""}`}
+             onClick={() => {
+              setSelectedCurrency(curr.code);
+              setIsDiscountDropdownOpen(false);
+             }}
+            >
+             <img src={curr.flag} alt={curr.label} className="w-5 h-3 object-cover rounded-[1px]" />
+             <div className="flex flex-col">
+              <span className="text-[11px] font-bold text-gray-700">{curr.label}</span>
+              <span className="text-[9px] text-gray-400 font-medium uppercase">{curr.code}</span>
+             </div>
+             {selectedCurrency === curr.code && (
+              <div className="ml-auto w-1.5 h-1.5 bg-brand-gold rounded-full" />
+             )}
+            </div>
+           ))}
+          </div>
+         )}
+        </div>
+       </div>
+
+       <div className="flex flex-col gap-2.5">
+        <label className="text-xs font-bold text-[#121212]">Tax Included</label>
+        <div className="flex items-center gap-6 py-3">
+         <Checkbox
+          checked={formData.taxIncluded}
+          onChange={() => handleInputChange("taxIncluded", true)}
+          label="Yes"
+         />
+         <Checkbox
+          checked={!formData.taxIncluded}
+          onChange={() => handleInputChange("taxIncluded", false)}
+          label="No"
+         />
+        </div>
+       </div>
+      </div>
+
+      <div className="flex flex-col gap-2.5">
+       <label className="text-xs font-bold text-[#121212]">Expiration</label>
+       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Input shape="rounded-sm"
+         type="date"
+         value={formData.expiryStart}
+         onChange={(e) => handleInputChange("expiryStart", e.target.value)}
+         placeholder="Start"
+        />
+        <Input shape="rounded-sm"
+         type="date"
+         value={formData.expiryEnd}
+         onChange={(e) => handleInputChange("expiryEnd", e.target.value)}
+         placeholder="End"
+        />
+       </div>
+      </div>
+     </div>
+
+     {/* Inventory Section */}
+     <div className="bg-white rounded-[6px] border border-gray-200   p-8 flex flex-col gap-6">
+      <h3 className="text-sm font-bold text-[#121212]">Inventory</h3>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+       <div className="flex flex-col gap-2.5">
+        <label className="text-xs font-bold text-[#121212]">Stock Quantity</label>
+        <Input shape="rounded-sm"
+         type={formData.isUnlimited ? "text" : "number"}
+         disabled={formData.isUnlimited}
+         value={formData.isUnlimited ? "Unlimited" : formData.stockQuantity}
+         onChange={(e) => handleInputChange("stockQuantity", e.target.value)}
+         className="bg-gray-50/80 border-gray-50 text-sm font-bold text-gray-900 focus:bg-white transition-colors"
+        />
+       </div>
+
+       <div className="flex flex-col gap-2.5">
+        <label className="text-xs font-bold text-[#121212]">Stock Status</label>
+        <Select
+         shape="rounded-sm"
+         value={formData.stockStatus}
+         onChange={(val) => handleInputChange("stockStatus", val as string)}
+         options={[
+          { label: "In Stock", value: "In Stock" },
+          { label: "Out of Stock", value: "Out of Stock" },
+          { label: "Low Stock", value: "Low Stock" },
+          { label: "Pre-order", value: "Pre-order" },
+          { label: "Discontinued", value: "Discontinued" },
+         ]}
+        />
+       </div>
+      </div>
+
+      <div className="flex flex-col gap-4 pt-2">
+       <div className="flex items-center justify-between w-full max-w-[200px]">
+        <Switch
+         checked={formData.isUnlimited}
+         onChange={(e) => handleInputChange("isUnlimited", e.target.checked)}
+         label={<span className="text-xs font-bold text-gray-900">Unlimited</span>}
+        />
+       </div>
+
+       <Checkbox
+        checked={formData.isFeatured}
+        onChange={(checked) => handleInputChange("isFeatured", checked)}
+        className="w-fit pt-2"
+       >
+        <span className="text-xs font-bold text-gray-400 underline underline-offset-4 decoration-gray-200">Highlight this product in a featured section.</span>
+       </Checkbox>
+      </div>
+
+      <div className="flex gap-3 justify-end mt-4 pt-6 border-t border-gray-50">
+       <button
+        type="button"
+        disabled={isSubmitting}
+        className="bg-white border border-gray-200 text-[#121212] px-6 py-2.5 rounded-[6px] text-xs font-bold hover:bg-gray-50 transition-all flex items-center gap-2 disabled:opacity-50"
+        onClick={() => setIsDraftConfirmOpen(true)}
+       >
+        <Icon name="ticket" folder="dashboardIcon" size="xs" className="opacity-70" />
+        {isSubmitting ? "Updating..." : "Update Draft"}
+       </button>
+       <Button shape="rounded-sm" variant="primary"
+        className="px-8 py-2.5"
+        isLoading={isSubmitting}
+        onClick={() => setIsPublishConfirmOpen(true)}
+       >
+        {product?.status === 'Published' ? 'Update Catalog' : 'Publish Product'}
+       </Button>
+      </div>
+
+     </div>
+    </div>
+
+    {/* Right Column (Media & Meta) */}
+    <ProductMediaMetaSidebar
+     formData={formData}
+     handleInputChange={handleInputChange}
+     stagedMedia={stagedMedia}
+     removeMedia={removeMedia}
+     makePrimary={makePrimary}
+     setIsUploadModalOpen={setIsUploadModalOpen}
+     categories={categories || []}
+     brands={brands || []}
+     offices={offices || []}
+     showColorPicker={showColorPicker}
+     setShowColorPicker={setShowColorPicker}
+     hideOffices={true}
+    />
+   </div>
+
+   <ConfirmationModal
+    isOpen={isPublishConfirmOpen}
+    onClose={() => setIsPublishConfirmOpen(false)}
+    onConfirm={() => handleSubmit("Published")}
+    title="Confirm Update"
+    message="Are you sure you want to update this product? The storefront will reflect these changes immediately."
+    confirmText="Yes, update catalog"
+    type="success"
+    isLoading={isSubmitting}
+   />
+
+   <Modal
+    isOpen={isPublishSuccessOpen}
+    onClose={() => {
+     setIsPublishSuccessOpen(false);
+     router.push("/admin/products");
+    }}
+    size="sm"
+   >
+    <ModalBody className="flex flex-col items-center text-center p-8">
+     <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center text-emerald-500 mb-6 animate-bounce">
+      <HiCheckCircle size={60} />
+     </div>
+     <h2 className="text-xl font-bold text-[#121212] mb-2">Product Updated!</h2>
+     <p className="text-sm text-gray-500">Your changes have been successfully saved and the product is now updated in the catalog.</p>
+    </ModalBody>
+    <ModalFooter className="flex justify-center pb-8 border-t-0">
+     <Button shape="rounded-sm" variant="primary" onClick={() => router.push("/admin/products")}>
+      Back to Inventory
+     </Button>
+    </ModalFooter>
+   </Modal>
+
+   <Modal
+    isOpen={isDraftSuccessOpen}
+    onClose={() => {
+     setIsDraftSuccessOpen(false);
+     router.push("/admin/products");
+    }}
+    size="sm"
+   >
+    <ModalBody className="flex flex-col items-center text-center p-8">
+     <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center text-brand-gold mb-6 animate-pulse">
+      <HiArchiveBox size={60} />
+     </div>
+     <h2 className="text-xl font-bold text-[#121212] mb-2">Draft Updated</h2>
+     <p className="text-sm text-gray-500">The draft has been updated successfully. You can continue editing or return to the product list.</p>
+    </ModalBody>
+    <ModalFooter className="flex flex-col gap-3 pb-8 border-t-0 px-8">
+     <Button shape="rounded-sm"
+      variant="primary"
+      className="w-full"
+      onClick={() => {
+       setIsDraftSuccessOpen(false);
+       router.push("/admin/products");
+      }}
+     >
+      Back to Inventory
+     </Button>
+     <Button shape="rounded-sm"
+      variant="ghost"
+      className="w-full text-xs font-bold text-gray-400"
+      onClick={() => setIsDraftSuccessOpen(false)}
+     >
+      Continue editing
+     </Button>
+    </ModalFooter>
+   </Modal>
+
+   <AISettingsModal
+    isOpen={isAISettingsOpen}
+    onClose={() => setIsAISettingsOpen(false)}
+    tone={aiTone}
+    onToneChange={setAiTone}
+   />
+
+   <UploadMediaModal
+    isOpen={isUploadModalOpen}
+    onClose={() => setIsUploadModalOpen(false)}
+    onUploadSuccess={handleMediaUpload}
+    onlyStaging
+   />
+
+   <ConfirmationModal
+    isOpen={isOverrideModalOpen}
+    onClose={() => setIsOverrideModalOpen(false)}
+    onConfirm={() => {
+     setFormData(prev => ({ ...prev, stockStatus: pendingStockStatus }));
+     setIsOverrideModalOpen(false);
+     toast.info(`Stock status manually overridden to ${pendingStockStatus}`);
+    }}
+    title="Override Stock Status?"
+    message={`The recommended status for ${formData.stockQuantity} units is "${getRecommendedStatus(formData.stockQuantity)}". Are you sure you want to manually set it to "${pendingStockStatus}"?`}
+    confirmText="Yes, Override"
+    type="warning"
+   />
+  </div>
+ );
 }

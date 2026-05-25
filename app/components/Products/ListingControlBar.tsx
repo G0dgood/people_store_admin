@@ -125,7 +125,15 @@ const ListingControlBar: React.FC<ListingControlBarProps> = ({
       tags.push({
         id: `cat-${filters.category}`,
         label: filters.category,
-        onRemove: () => onFiltersChange({ ...filters, category: "" }),
+        onRemove: () => onFiltersChange({ ...filters, category: "", subCategory: "" }),
+      });
+    }
+
+    if (filters.subCategory) {
+      tags.push({
+        id: `subcat-${filters.subCategory}`,
+        label: filters.subCategory,
+        onRemove: () => onFiltersChange({ ...filters, subCategory: "" }),
       });
     }
 
@@ -167,7 +175,12 @@ const ListingControlBar: React.FC<ListingControlBarProps> = ({
             <span className="text-[10px] tracking-[0.2em] font-bold text-gray-400 mb-1">Curation</span>
             <span className="text-md font-outfit text-gray-900">
               <span className="font-bold text-brand-gold">{count.toLocaleString()}</span> masterpieces found
-              {filters.category && <span> in <span className="font-bold">{filters.category}</span></span>}
+              {filters.category && (
+                <span> in <span className="font-bold">{filters.category}</span></span>
+              )}
+              {filters.subCategory && (
+                <span> &gt; <span className="font-bold text-brand-gold">{filters.subCategory}</span></span>
+              )}
             </span>
           </div>
 

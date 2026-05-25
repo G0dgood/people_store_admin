@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { HiChevronDown } from "react-icons/hi2";
 import { useGetPublicBrandsQuery, useGetPublicCategoriesQuery } from "@/lib/redux/services/boutiqueApi";
@@ -10,18 +10,19 @@ export const SecondaryNavbar: React.FC = () => {
   const [triangleLeft, setTriangleLeft] = useState<number>(0);
   const [itemOffset, setItemOffset] = useState<number>(0);
   const pathname = usePathname();
+  const router = useRouter();
   const navRef = useRef<HTMLDivElement>(null);
   const buttonRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
 
   const { data: brandsResponse } = useGetPublicBrandsQuery();
   const { data: categoriesResponse } = useGetPublicCategoriesQuery();
 
-  const allBrands = brandsResponse?.data && 'brands' in brandsResponse.data 
-    ? brandsResponse.data.brands 
+  const allBrands = brandsResponse?.data && 'brands' in brandsResponse.data
+    ? brandsResponse.data.brands
     : (Array.isArray(brandsResponse?.data) ? brandsResponse.data : []);
 
-  const allCategories = categoriesResponse?.data && 'categories' in categoriesResponse.data 
-    ? categoriesResponse.data.categories 
+  const allCategories = categoriesResponse?.data && 'categories' in categoriesResponse.data
+    ? categoriesResponse.data.categories
     : (Array.isArray(categoriesResponse?.data) ? categoriesResponse.data : []);
 
   useEffect(() => {
@@ -70,113 +71,69 @@ export const SecondaryNavbar: React.FC = () => {
     return groups;
   }, [allBrands]);
 
-  const dynamicSkincareGroups = useMemo(() => {
-    return [
-      {
-        title: "ALL SKINCARE",
-        items: [
-          "All Skincare",
-          "Clarins",
-          "Clinique",
-          "Elizabeth Arden",
-          "Estee Lauder",
-          "Fenty Skin",
-          "Lancome",
-          "Loccitane",
-          "M·A·C"
-        ]
-      },
-      {
-        title: "Face",
-        items: [
-          "Cleansers & Toners",
-          "Moisturizers",
-          "Treatments & Masks",
-          "Sun Care",
-          "Make-Up Remover",
-          "Exfoliators"
-        ]
-      },
-      {
-        title: "Body",
-        items: [
-          "Body Wash",
-          "Body Moisturizer",
-          "Body Exfoliator",
-          "Body Oil",
-          "Specific Care"
-        ]
-      },
-      {
-        title: "Men",
-        items: [
-          "Cleansers & Exfoliators",
-          "Moisturizer",
-          "Shaving Accessories"
-        ]
-      },
-      {
-        title: "Shop by Concern",
-        items: [
-          "Acne/Blemish",
-          "Anti-Aging",
-          "Dark Spots/Pigmentation",
-          "Dryness",
-          "Fine Lines/Wrinkles",
-          "Pores",
-          "Redness",
-          "Dullness/Uneven Texture"
-        ]
-      }
+  const activeCategory = useMemo(() => {
+    if (!activeMenu || activeMenu === "ALL BRANDS") return null;
+    return allCategories.find((cat: any) => cat.name.toUpperCase() === activeMenu);
+  }, [activeMenu, allCategories]);
+
+  const activeCategoryGroups = useMemo(() => {
+    if (!activeCategory) return [];
+    const groups: { title: string; items: string[]; type: "subcategory" | "attribute" | "all" }[] = [];
+
+    // 1. Subcategories Group
+    const subs = activeCategory.subCategories || [];
+    const uniqueSubs = Array.from(new Set(
+      (Array.isArray(subs) ? subs.map((s: any) => typeof s === 'string' ? s : s.name) : [])
+      .filter(Boolean)
+    ));
+
+    groups.push({
+      title: `ALL ${activeCategory.name.toUpperCase()}`,
+      items: [
+        `All ${activeCategory.name}`,
+        ...uniqueSubs
+      ],
+      type: "subcategory"
+    });
+
+    // 2. Custom Attributes Group
+    if (activeCategory.customAttributes && Array.isArray(activeCategory.customAttributes)) {
+      activeCategory.customAttributes.forEach((attr: any) => {
+        if (attr.name && attr.name.toUpperCase() !== "VOLUME" && attr.subAttributes && attr.subAttributes.length > 0) {
+          groups.push({
+            title: attr.name.toUpperCase(),
+            items: attr.subAttributes,
+            type: "attribute"
+          });
+        }
+      });
+    }
+
+    return groups;
+  }, [activeCategory]);
+
+  const navItems = useMemo(() => {
+    const items = [
+      { label: "ALL BRANDS", hasDropdown: true, type: "brands" }
     ];
-  }, []);
 
-  const perfumeGroups = [
-    {
-      title: "SHOP BY GENDER",
-      items: ["Women's Perfume", "Men's Perfume", "Unisex"]
-    },
-    {
-      title: "SHOP BY SCENT FAMILY",
-      items: ["Floral", "Woody", "Oriental", "Fresh", "Citrus", "Spicy"]
-    },
-    {
-      title: "COLLECTIONS",
-      items: ["Best Sellers", "New Arrivals", "Niche Perfumes", "Designer Classics"]
-    },
-    {
-      title: "GIFTING",
-      items: ["Perfume Gift Sets", "Travel Size", "Discovery Sets"]
-    }
-  ];
+    allCategories.forEach((cat: any) => {
+      const hasDropdown = 
+        (cat.subCategories && cat.subCategories.length > 0) || 
+        (cat.customAttributes && cat.customAttributes.length > 0) ||
+        cat.hasGender || cat.hasScentFamily || cat.hasCollection || cat.hasGifting || cat.hasSize || cat.hasML || cat.hasSex;
 
-  const giftGroups = [
-    {
-      title: "SHOP BY RECIPIENT",
-      items: ["For Her", "For Him", "For Them", "For Kids"]
-    },
-    {
-      title: "SHOP BY OCCASION",
-      items: ["Birthday", "Anniversary", "Wedding", "Corporate", "Thank You"]
-    },
-    {
-      title: "GIFT TYPE",
-      items: ["Gift Boxes", "Gift Cards", "Luxury Sets", "Personalized Gifts"]
-    },
-    {
-      title: "PRICE RANGE",
-      items: ["Under ₦20,000", "₦20,000 - ₦50,000", "₦50,000 - ₦100,000", "Above ₦100,000"]
-    }
-  ];
+      items.push({
+        label: cat.name.toUpperCase(),
+        hasDropdown: !!hasDropdown,
+        type: "category"
+      });
+    });
 
-  const navItems = [
-    { label: "ALL BRANDS", hasDropdown: true, type: "brands" },
-    { label: "PERFUME", hasDropdown: true, type: "category" },
-    { label: "SKINCARE", hasDropdown: true, type: "category" },
-    { label: "GIFT", hasDropdown: true, type: "category" },
-  ];
+    return items;
+  }, [allCategories]);
 
-  const currentItem = navItems.find(item => item.label === activeMenu);
+
 
   return (
     <div className="w-full bg-white border-b border-gray-100 hidden lg:block relative" ref={navRef}>
@@ -193,12 +150,14 @@ export const SecondaryNavbar: React.FC = () => {
                 className="flex items-center gap-2"
                 onClick={() => {
                   if (item.label === "ALL BRANDS") {
-                    window.location.href = "/brands";
+                    router.push("/brands");
+                  } else {
+                    router.push(`/products?category=${encodeURIComponent(item.label)}`);
                   }
                 }}
               >
                 <Link
-                  href={item.label === "ALL BRANDS" ? "/brands" : "#"}
+                  href={item.label === "ALL BRANDS" ? "/brands" : `/products?category=${encodeURIComponent(item.label)}`}
                   ref={(el) => { buttonRefs.current[item.label] = el as any; }}
                   className={`relative flex items-center gap-2 text-[11px] font-black tracking-[0.15em] transition-colors outline-none cursor-pointer ${activeMenu === item.label ? "text-black" : "text-gray-500 hover:text-black"
                     }`}
@@ -218,8 +177,8 @@ export const SecondaryNavbar: React.FC = () => {
                     exit={{ opacity: 0, y: 10 }}
                     transition={{ duration: 0.2 }}
                     className="absolute top-full bg-white border-b border-gray-100 shadow-[0_20px_50px_rgba(0,0,0,0.05)] z-[100] pb-16 pt-10"
-                    style={{ 
-                      left: `${itemOffset}px`, 
+                    style={{
+                      left: `${itemOffset}px`,
                       width: navRef.current?.offsetWidth || '100vw'
                     }}
                   >
@@ -232,28 +191,45 @@ export const SecondaryNavbar: React.FC = () => {
                     </div>
 
                     <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16">
-                      <div className={`grid ${activeMenu === "ALL BRANDS" ? "grid-cols-8" : activeMenu === "SKINCARE" ? "grid-cols-5" : "grid-cols-4"} gap-12`}>
-                        {(
-                          activeMenu === "ALL BRANDS" ? dynamicBrandsGroups :
-                            activeMenu === "SKINCARE" ? dynamicSkincareGroups :
-                              activeMenu === "PERFUME" ? perfumeGroups :
-                                giftGroups
-                        ).map((group) => (
+                      <div 
+                        className="grid gap-12"
+                        style={{
+                          gridTemplateColumns: `repeat(${activeMenu === "ALL BRANDS" ? 8 : activeCategoryGroups.length || 1}, minmax(0, 1fr))`
+                        }}
+                      >
+                        {(activeMenu === "ALL BRANDS" ? dynamicBrandsGroups : activeCategoryGroups).map((group) => (
                           <div key={group.title} className="flex flex-col gap-8">
                             <h3 className="text-[14px] font-black text-black uppercase tracking-widest">
                               {group.title}
                             </h3>
                             <ul className="flex flex-col gap-4">
-                              {group.items.map((link: string) => (
-                                <li key={link}>
-                                  <Link
-                                    href={`/products?${activeMenu === "ALL BRANDS" ? "brand" : "category"}=${encodeURIComponent(link)}`}
-                                    className="text-[15px] text-gray-500 hover:text-brand-gold transition-colors block font-medium tracking-tight"
-                                  >
-                                    {link}
-                                  </Link>
-                                </li>
-                              ))}
+                              {group.items.map((link: string) => {
+                                let href = "#";
+                                if (activeMenu === "ALL BRANDS") {
+                                  href = `/products?brand=${encodeURIComponent(link)}`;
+                                } else if (activeCategory) {
+                                  if ('type' in group && group.type === "subcategory") {
+                                    if (link === `All ${activeCategory.name}`) {
+                                      href = `/products?category=${encodeURIComponent(activeCategory.name)}`;
+                                    } else {
+                                      href = `/products?category=${encodeURIComponent(activeCategory.name)}&subCategory=${encodeURIComponent(link)}`;
+                                    }
+                                  } else {
+                                    // It's a product attribute/tag selection
+                                    href = `/products?category=${encodeURIComponent(activeCategory.name)}&search=${encodeURIComponent(link)}`;
+                                  }
+                                }
+                                return (
+                                  <li key={link}>
+                                    <Link
+                                      href={href}
+                                      className="text-[15px] text-gray-500 hover:text-brand-gold transition-colors block font-medium tracking-tight"
+                                    >
+                                      {link}
+                                    </Link>
+                                  </li>
+                                );
+                              })}
                             </ul>
                           </div>
                         ))}

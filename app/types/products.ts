@@ -1,5 +1,6 @@
 export interface FilterState {
   category: string;
+  subCategory: string;
   brand: string;
   minPrice: number | undefined;
   maxPrice: number | undefined;
@@ -13,6 +14,7 @@ export type ViewMode = "grid" | "list";
 
 export const DEFAULT_FILTERS: FilterState = {
   category: "",
+  subCategory: "",
   brand: "",
   minPrice: undefined,
   maxPrice: undefined,

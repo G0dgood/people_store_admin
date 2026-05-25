@@ -11,7 +11,7 @@ import { ReviewRecord } from './reviewApi';
 
 export const boutiqueApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getPublicProducts: builder.query<ApiResponse<{ products: Product[], pagination: any }>, { limit?: number, category?: string, brand?: string, search?: string, page?: number, sort?: string, minPrice?: number, maxPrice?: number, status?: string, condition?: string, rating?: number } | void>({
+    getPublicProducts: builder.query<ApiResponse<{ products: Product[], pagination: any }>, { limit?: number, category?: string, brand?: string, search?: string, page?: number, sort?: string, minPrice?: number, maxPrice?: number, status?: string, condition?: string, rating?: number, subCategory?: string } | void>({
       query: (params) => ({
         url: '/products',
         params: params || {}

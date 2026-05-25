@@ -66,19 +66,77 @@ export const OfficeLocationSecondaryNavbar: React.FC = () => {
     return groups;
   }, [allBrands]);
 
-  const navItems = [
-    { label: "ALL BRANDS", hasDropdown: true, type: "brands" },
-    { label: "PERFUME", hasDropdown: true, type: "category" },
-    { label: "SKINCARE", hasDropdown: true, type: "category" },
-    { label: "GIFT", hasDropdown: true, type: "category" },
-  ];
+  const activeCategory = useMemo(() => {
+    if (!activeMenu || activeMenu === "ALL BRANDS") return null;
+    return allCategories.find((cat: any) => cat.name.toUpperCase() === activeMenu);
+  }, [activeMenu, allCategories]);
+
+  const activeCategoryGroups = useMemo(() => {
+    if (!activeCategory) return [];
+    const groups: { title: string; items: string[]; type: "subcategory" | "attribute" | "all" }[] = [];
+
+    // 1. Subcategories Group
+    const subs = activeCategory.subCategories || [];
+    const uniqueSubs = Array.from(new Set(
+      (Array.isArray(subs) ? subs.map((s: any) => typeof s === 'string' ? s : s.name) : [])
+      .filter(Boolean)
+    ));
+
+    groups.push({
+      title: `ALL ${activeCategory.name.toUpperCase()}`,
+      items: [
+        `All ${activeCategory.name}`,
+        ...uniqueSubs
+      ],
+      type: "subcategory"
+    });
+
+    // 2. Custom Attributes Group
+    if (activeCategory.customAttributes && Array.isArray(activeCategory.customAttributes)) {
+      activeCategory.customAttributes.forEach((attr: any) => {
+        if (attr.name && attr.subAttributes && attr.subAttributes.length > 0) {
+          groups.push({
+            title: attr.name.toUpperCase(),
+            items: attr.subAttributes,
+            type: "attribute"
+          });
+        }
+      });
+    }
+
+    return groups;
+  }, [activeCategory]);
+
+  const navItems = useMemo(() => {
+    const items = [
+      { label: "ALL BRANDS", hasDropdown: true, type: "brands" }
+    ];
+
+    allCategories.forEach((cat: any) => {
+      const hasDropdown = 
+        (cat.subCategories && cat.subCategories.length > 0) || 
+        (cat.customAttributes && cat.customAttributes.length > 0);
+
+      items.push({
+        label: cat.name.toUpperCase(),
+        hasDropdown: !!hasDropdown,
+        type: "category"
+      });
+    });
+
+    return items;
+  }, [allCategories]);
 
   const currentItem = navItems.find(item => item.label === activeMenu);
 
-  const getUrl = (type: string, value: string) => {
+  const getUrl = (params: { brand?: string; category?: string; subCategory?: string; search?: string }) => {
     const baseUrl = getShopUrl("/products", storeContext.subdomain, storeContext.officeId);
-    const separator = baseUrl.includes("?") ? "&" : "?";
-    return `${baseUrl}${separator}${type}=${encodeURIComponent(value)}`;
+    const hasOrigin = baseUrl.startsWith("http://") || baseUrl.startsWith("https://");
+    const urlObj = new URL(baseUrl, hasOrigin ? undefined : window.location.origin);
+    Object.entries(params).forEach(([key, val]) => {
+      if (val) urlObj.searchParams.set(key, val);
+    });
+    return hasOrigin ? urlObj.toString() : `${urlObj.pathname}${urlObj.search}`;
   };
 
   return (
@@ -124,29 +182,45 @@ export const OfficeLocationSecondaryNavbar: React.FC = () => {
               />
             </div>
             <div className="max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16">
-              <div className={`grid grid-cols-4 gap-12`}>
-                {(activeMenu === "ALL BRANDS" ? dynamicBrandsGroups : [
-                  { 
-                    title: activeMenu, 
-                    items: allCategories.filter(c => c.name.toUpperCase().includes(activeMenu)).map(c => c.name) 
-                  }
-                ]).map((group) => (
+              <div 
+                className="grid gap-12"
+                style={{
+                  gridTemplateColumns: `repeat(${activeMenu === "ALL BRANDS" ? 3 : activeCategoryGroups.length || 1}, minmax(0, 1fr))`
+                }}
+              >
+                {(activeMenu === "ALL BRANDS" ? dynamicBrandsGroups : activeCategoryGroups).map((group) => (
                   <div key={group.title} className="flex flex-col gap-8">
                     <h3 className="text-[14px] font-black text-black uppercase tracking-widest">
                       {group.title}
                     </h3>
                     <ul className="flex flex-col gap-4">
-                      {group.items.length > 0 ? group.items.map((link: string) => (
-                        <li key={link}>
-                          <Link
-                            href={getUrl(activeMenu === "ALL BRANDS" ? "brand" : "category", link)}
-                            className="text-[15px] text-gray-500 hover:text-brand-gold transition-colors block font-medium tracking-tight"
-                          >
-                            {link}
-                          </Link>
-                        </li>
-                      )) : (
-                        <li className="text-[13px] text-gray-400 italic">No specific subcategories</li>
+                      {group.items.length > 0 ? group.items.map((link: string) => {
+                        let href = "#";
+                        if (activeMenu === "ALL BRANDS") {
+                          href = getUrl({ brand: link });
+                        } else if (activeCategory) {
+                          if ('type' in group && group.type === "subcategory") {
+                            if (link === `All ${activeCategory.name}`) {
+                              href = getUrl({ category: activeCategory.name });
+                            } else {
+                              href = getUrl({ category: activeCategory.name, subCategory: link });
+                            }
+                          } else {
+                            href = getUrl({ category: activeCategory.name, search: link });
+                          }
+                        }
+                        return (
+                          <li key={link}>
+                            <Link
+                              href={href}
+                              className="text-[15px] text-gray-500 hover:text-brand-gold transition-colors block font-medium tracking-tight"
+                            >
+                              {link}
+                            </Link>
+                          </li>
+                        );
+                      }) : (
+                        <li className="text-[13px] text-gray-400 italic">No items found</li>
                       )}
                     </ul>
                   </div>

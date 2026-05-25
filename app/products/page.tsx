@@ -68,12 +68,14 @@ const ProductsPage = () => {
   React.useEffect(() => {
     const brandParam = searchParams.get("brand");
     const categoryParam = searchParams.get("category");
+    const subCategoryParam = searchParams.get("subCategory");
 
-    if (brandParam || categoryParam) {
+    if (brandParam || categoryParam || subCategoryParam) {
       setFilters(prev => ({
         ...prev,
         brand: brandParam || prev.brand,
-        category: categoryParam || prev.category
+        category: categoryParam || prev.category,
+        subCategory: subCategoryParam || ""
       }));
     }
   }, [searchParams, setFilters]);
@@ -88,6 +90,7 @@ const ProductsPage = () => {
     category: filters.category || undefined,
     brand: filters.brand || undefined,
     search: searchBarQuery,
+    subCategory: filters.subCategory || undefined,
     page: currentPage,
     limit: rowsPerPage,
     sort: sortBy,
@@ -161,7 +164,7 @@ const ProductsPage = () => {
         <CategoryChips
           categories={categories.map(c => c.name)}
           selectedCategory={filters.category}
-          onSelect={(cat) => setFilters(prev => ({ ...prev, category: cat }))}
+          onSelect={(cat) => setFilters(prev => ({ ...prev, category: cat, subCategory: "" }))}
           className="md:hidden"
         />
 

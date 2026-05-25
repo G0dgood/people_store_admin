@@ -55,6 +55,7 @@ export interface Product {
   owner: string;
   locations?: any[];
   branchStock?: Record<string, number>;
+  attributes?: Record<string, string>;
   createdAt: string;
   updatedAt: string;
 }

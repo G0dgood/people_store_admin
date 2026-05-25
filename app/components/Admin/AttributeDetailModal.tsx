@@ -73,7 +73,7 @@ export const AttributeDetailModal: React.FC<AttributeDetailModalProps> = ({
           </div>
         )}
 
-        {/* Volumes (ML) */}
+        {/* Volumes */}
         {category.hasML && (
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-2">

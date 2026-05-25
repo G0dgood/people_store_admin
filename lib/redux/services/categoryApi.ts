@@ -66,6 +66,10 @@ export const categoryApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [{ type: 'Category', id: 'LIST' }],
     }),
+    getCategoryCustomAttributes: builder.query<ApiResponse<{ name: string; subAttributes: string[] }[]>, string>({
+      query: (categoryIdOrName) => `/categories/${categoryIdOrName}/custom-attributes`,
+      providesTags: (result, error, categoryIdOrName) => [{ type: 'Category' as const, id: `ATTRIBUTES_${categoryIdOrName}` }],
+    }),
   }),
   overrideExisting: true,
 });
@@ -75,4 +79,5 @@ export const {
   useCreateCategoryMutation,
   useUpdateCategoryMutation,
   useDeleteCategoryMutation,
+  useGetCategoryCustomAttributesQuery,
 } = categoryApi;
