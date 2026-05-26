@@ -61,6 +61,53 @@ export default function DeliveriesManagement() {
   search: searchQuery,
  });
 
+ // Listen for real-time delivery notifications
+ useEffect(() => {
+  if (!socket) return;
+
+  const handleOrderStatusChanged = (updatedOrder: any) => {
+   refetchOrders();
+   if (!updatedOrder) return;
+
+   const orderRef = updatedOrder.orderId || updatedOrder._id || "";
+   const driverName = updatedOrder.driver?.fullName || "Courier";
+
+   if (updatedOrder.status === "Processing") {
+    toast.info(`Order ${orderRef} has been ACCEPTED by ${driverName}`, {
+     description: "The courier is now heading to the pickup warehouse.",
+     icon: "✅",
+    });
+   } else if (updatedOrder.status === "Pending" && !updatedOrder.driver) {
+    toast.warning(`Order ${orderRef} has been DECLINED by the courier`, {
+     description: "The order is now back in the unassigned queue.",
+     icon: "⚠️",
+    });
+   } else if (updatedOrder.status === "Shipped") {
+    toast.info(`Order ${orderRef} has been PICKED UP by ${driverName}`, {
+     description: "The shipment is currently in transit to the customer.",
+     icon: "🚚",
+    });
+   } else if (updatedOrder.status === "Delivered") {
+    toast.success(`Order ${orderRef} has been DELIVERED by ${driverName}`, {
+     description: "The delivery is successfully completed.",
+     icon: "🎉",
+    });
+   }
+  };
+
+  const handleOrderListUpdate = () => {
+   refetchOrders();
+  };
+
+  socket.on("orderStatusChanged", handleOrderStatusChanged);
+  socket.on("orderListUpdate", handleOrderListUpdate);
+
+  return () => {
+   socket.off("orderStatusChanged", handleOrderStatusChanged);
+   socket.off("orderListUpdate", handleOrderListUpdate);
+  };
+ }, [socket, refetchOrders]);
+
  const [updateOrderStatus, { isLoading: isUpdatingStatus }] = useUpdateOrderStatusMutation();
  const [assignDriverToOrder, { isLoading: isAssigningDriver }] = useAssignDriverToOrderMutation();
 
