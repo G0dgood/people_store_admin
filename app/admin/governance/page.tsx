@@ -18,7 +18,7 @@ export default function GovernancePage() {
   const { data: rolesData, isLoading: isLoadingRoles } = useGetRolesQuery();
 
   const totalStaff = usersData?.users?.length || 0;
-  const activeRoles = rolesData?.length || 0;
+  const activeRoles = rolesData?.roles?.length || 0;
   const superAdmins = usersData?.users?.filter((u: any) => u.role === "SUPER_ADMIN" || u.role === "Super Admin").length || 0;
 
   const stats = [
