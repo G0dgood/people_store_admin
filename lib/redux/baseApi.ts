@@ -62,7 +62,8 @@ export const baseApi = createApi({
     'GiftBox',
     'GiftCard',
     'Office',
-    'Attribute'
+    'Attribute',
+    'Driver'
   ],
   endpoints: () => ({}),
 });

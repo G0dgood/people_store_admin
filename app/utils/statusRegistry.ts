@@ -1,6 +1,6 @@
 "use client";
 
-export type ModuleName = "refund" | "order" | "ticket" | "transaction" | "review" | "faq";
+export type ModuleName = "refund" | "order" | "ticket" | "transaction" | "review" | "faq" | "driver" | "driverAvailability";
 
 export interface StatusConfig {
   value: string;
@@ -13,6 +13,46 @@ export interface StatusConfig {
 }
 
 const MODULE_STATUSES: Record<ModuleName, StatusConfig[]> = {
+  driver: [
+    {
+      value: "active",
+      label: "Active",
+      description: "Active driver",
+      color: "#10b981",
+      bgColor: "bg-emerald-50/30",
+      icon: "verified",
+      iconFolder: "icon",
+    },
+    {
+      value: "deactivated",
+      label: "Deactivated",
+      description: "Deactivated driver",
+      color: "#f43f5e",
+      bgColor: "bg-rose-50/30",
+      icon: "Delete",
+      iconFolder: "dashboardIcon",
+    },
+  ],
+  driverAvailability: [
+    {
+      value: "available",
+      label: "Available",
+      description: "Driver is available",
+      color: "#10b981",
+      bgColor: "bg-emerald-50/30",
+      icon: "verified",
+      iconFolder: "icon",
+    },
+    {
+      value: "unavailable",
+      label: "Unavailable",
+      description: "Driver is unavailable",
+      color: "#f43f5e",
+      bgColor: "bg-rose-50/30",
+      icon: "Delete",
+      iconFolder: "dashboardIcon",
+    },
+  ],
   faq: [
     {
       value: "Active",
