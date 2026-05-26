@@ -17,6 +17,7 @@ export interface OrderRecord {
     status: 'Pending' | 'Processing' | 'Shipped' | 'Delivered' | 'Cancelled' | 'Refunded';
     paymentStatus: 'Pending' | 'Paid' | 'Failed' | 'Refunded';
     shippingAddress: string;
+    driver?: any;
     createdAt: string;
     updatedAt: string;
     history?: {
@@ -130,6 +131,17 @@ export const orderApi = baseApi.injectEndpoints({
                 { type: 'Order', id: 'STATS' }
             ],
         }),
+        assignDriverToOrder: builder.mutation<ApiResponse<OrderRecord>, { id: string, driverId: string | null }>({
+            query: ({ id, driverId }) => ({
+                url: `/orders/assign/${id}`,
+                method: 'PATCH',
+                body: { driverId }
+            }),
+            invalidatesTags: (result, error, { id }) => [
+                { type: 'Order', id },
+                { type: 'Order', id: 'LIST' }
+            ],
+        }),
     }),
     overrideExisting: true,
 });
@@ -147,5 +159,6 @@ export const {
     useCreateOrderPaymentIntentMutation,
     usePayOrderCashMutation,
     useVerifyOrderPaymentQuery,
-    useDeleteOrderMutation
+    useDeleteOrderMutation,
+    useAssignDriverToOrderMutation
 } = orderApi;
