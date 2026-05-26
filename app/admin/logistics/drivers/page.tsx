@@ -1,24 +1,25 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Icon } from "../../../components/Icon";
 import { Button } from "../../../components/Button";
+import { Input } from "../../../components/Form/Inputs";
 import Dropdown from "../../../components/Form/Dropdown";
 import { StatusBadge } from "../../../components/StatusBadge";
-import { ListingSearch } from "../../../components/ui/ListingSearch";
 import { TabFilter } from "../../../components/Admin/TabFilter";
 import { Pagination } from "../../../components/Admin/Pagination";
 import { RowsPerPage } from "@/app/components/rows-per-page";
 import Checkbox from "@/app/components/Checkbox";
 import { ConfirmationModal } from "@/app/components/Admin/ConfirmationModal";
-import { motion } from "framer-motion";
-import { HiArrowPath } from "react-icons/hi2";
+import { DriverDetailDrawer } from "@/app/components/Admin/DriverDetailDrawer";
+import { HiArrowPath, HiOutlineEye } from "react-icons/hi2";
 import { FiExternalLink } from "react-icons/fi";
 import { useGetAllDriversQuery, useToggleDriverStatusMutation, useDeleteDriverMutation } from "@/lib/redux/services/driverApi";
 import { SVGLoaderFetch, NoRecordFound } from "@/app/components/Options";
 import { toast } from "sonner";
 import { usePrivilege } from "@/lib/contexts/PrivilegeContext";
 import { Tooltip } from "@/app/components/Tooltip";
+import { useSocket } from "@/app/context/SocketContext";
 
 const vehicleColors: Record<string, string> = {
  Motorcycle: "text-amber-700 bg-amber-50 border border-amber-100",
@@ -52,6 +53,8 @@ export default function DriversManagement() {
  const [driverToDelete, setDriverToDelete] = useState<any>(null);
  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
  const [driverToToggle, setDriverToToggle] = useState<any>(null);
+ const [selectedDriver, setSelectedDriver] = useState<any>(null);
+ const [isDetailDrawerOpen, setIsDetailDrawerOpen] = useState(false);
 
  const { canAccess } = usePrivilege();
 
@@ -72,20 +75,55 @@ export default function DriversManagement() {
   apiParams.isAvailable = availabilityFilter === "Available" ? "true" : "false";
  }
 
+ const [localDrivers, setLocalDrivers] = useState<any[]>([]);
+
  // Fetch from backend
  const { data, isLoading, refetch, isFetching } = useGetAllDriversQuery(apiParams);
 
- const drivers = data?.data?.drivers || [];
  const pagination = data?.data?.pagination || { totalPages: 1, totalDrivers: 0 };
+
+ // Sync state from RTK query
+ useEffect(() => {
+  if (data?.data?.drivers) {
+   setLocalDrivers(data.data.drivers);
+  }
+ }, [data]);
+
+ // Socket listeners for real-time updates
+ const { socket } = useSocket();
+
+ useEffect(() => {
+  if (!socket) return;
+
+  const handleDriverUpdated = (updatedDriver: any) => {
+   setLocalDrivers((prev) =>
+    prev.map((d) => (d._id === updatedDriver._id ? { ...d, ...updatedDriver } : d))
+   );
+   refetch();
+  };
+
+  const handleDriverDeleted = ({ driverId }: { driverId: string }) => {
+   setLocalDrivers((prev) => prev.filter((d) => d._id !== driverId));
+   refetch();
+  };
+
+  socket.on("driverUpdated", handleDriverUpdated);
+  socket.on("driverDeleted", handleDriverDeleted);
+
+  return () => {
+   socket.off("driverUpdated", handleDriverUpdated);
+   socket.off("driverDeleted", handleDriverDeleted);
+  };
+ }, [socket, refetch]);
 
  const [toggleDriverStatus, { isLoading: isToggling }] = useToggleDriverStatusMutation();
  const [deleteDriver, { isLoading: isDeleting }] = useDeleteDriverMutation();
 
  const toggleAll = () => {
-  if (selectedIds.length === drivers.length) {
+  if (selectedIds.length === localDrivers.length) {
    setSelectedIds([]);
   } else {
-   setSelectedIds(drivers.map((d: any) => d._id));
+   setSelectedIds(localDrivers.map((d: any) => d._id));
   }
  };
 
@@ -177,14 +215,18 @@ export default function DriversManagement() {
 
      <div className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
       {/* Search Input */}
-      <ListingSearch
+      <Input
+       shape="rounded-sm"
+       type="text"
        placeholder="Search name, email, or vehicle number..."
        value={searchQuery}
-       onChange={(val) => {
-        setSearchQuery(val);
+       onChange={(e) => {
+        setSearchQuery(e.target.value);
         setCurrentPage(1);
        }}
-       className="flex-1 xl:w-80"
+       containerClassName="flex-1 xl:w-96"
+       className="bg-white border-gray-200 placeholder:text-gray-400 text-xs font-medium"
+       suffixElement={<Icon name="search-01" folder="dashboardIcon" size="sm" className="text-gray-400" />}
       />
 
       {/* Status Dropdown */}
@@ -222,7 +264,7 @@ export default function DriversManagement() {
        <tr>
         <th className="w-10 pl-6">
          <Checkbox
-          checked={selectedIds.length === drivers.length && drivers.length > 0}
+          checked={selectedIds.length === localDrivers.length && localDrivers.length > 0}
           onChange={toggleAll}
          />
         </th>
@@ -237,10 +279,10 @@ export default function DriversManagement() {
       <tbody>
        {isLoading ? (
         <SVGLoaderFetch colSpan={7} text={"Connecting to logistics directory..."} />
-       ) : drivers.length === 0 ? (
+       ) : localDrivers.length === 0 ? (
         <NoRecordFound colSpan={7} />
        ) : (
-        drivers.map((driver: any) => (
+        localDrivers.map((driver: any) => (
          <tr key={driver._id} className="group">
           <td className="w-10 pl-6">
            <Checkbox
@@ -296,14 +338,29 @@ export default function DriversManagement() {
           </td>
           <td className="text-right pr-6">
            <div className="flex justify-end gap-3 transition-all duration-300">
+            {/* View Driver */}
+            <Tooltip text="View Driver Profile">
+             <Button
+              shape="rounded-sm"
+              variant="outline"
+              className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold border-gray-200 transition-all"
+              onClick={() => {
+               setSelectedDriver(driver);
+               setIsDetailDrawerOpen(true);
+              }}
+             >
+              <HiOutlineEye size={16} />
+             </Button>
+            </Tooltip>
+
             {canAccess("drivers", "edit") && (
              <Tooltip text={driver.status === "active" ? "Deactivate Driver" : "Reactivate Driver"}>
               <Button
                shape="rounded-sm"
                variant="outline"
                className={`!p-1.5 border-gray-200 transition-all font-bold ${driver.status === "active"
-                 ? "text-amber-500 hover:bg-amber-500 hover:text-white hover:border-amber-500"
-                 : "text-emerald-500 hover:bg-emerald-500 hover:text-white hover:border-emerald-500"
+                ? "text-amber-500 hover:bg-amber-500 hover:text-white hover:border-amber-500"
+                : "text-emerald-500 hover:bg-emerald-500 hover:text-white hover:border-emerald-500"
                 }`}
                onClick={() => {
                 setDriverToToggle(driver);
@@ -347,6 +404,16 @@ export default function DriversManagement() {
      />
     </div>
    </div>
+
+   {/* Driver Detail Drawer */}
+   <DriverDetailDrawer
+    isOpen={isDetailDrawerOpen}
+    onClose={() => {
+     setIsDetailDrawerOpen(false);
+     setSelectedDriver(null);
+    }}
+    driver={selectedDriver}
+   />
 
    {/* Toggle Status Confirmation */}
    <ConfirmationModal
