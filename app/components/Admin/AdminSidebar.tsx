@@ -61,6 +61,8 @@ const moduleIconMap: Record<string, string | React.ReactNode> = {
   roles: "settings",
   permissions: <HiShieldCheck size={14} />,
   offices: "fluent-mdl2_product-list",
+  drivers: "users",
+  deliveries: "Shipped",
 };
 
 // Map module IDs to their primary display names and routes if they differ from the default slug
@@ -69,6 +71,8 @@ const moduleMetadata: Record<string, { name?: string; href?: string }> = {
   media: { name: "Media Library", href: "/admin/products/media" },
   "products/media": { name: "Media Library", href: "/admin/products/media" },
   marketing: { name: "Coupon Code", href: "/admin/coupons" },
+  drivers: { name: "Drivers", href: "/admin/logistics/drivers" },
+  deliveries: { name: "Deliveries", href: "/admin/logistics/deliveries" },
 };
 
 
@@ -220,6 +224,13 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
             ]
           },
           {
+            title: "Logistics",
+            items: [
+              { name: "Drivers", href: "/admin/logistics/drivers", icon: moduleIconMap["drivers"], moduleId: "drivers" as any },
+              { name: "Deliveries", href: "/admin/logistics/deliveries", icon: moduleIconMap["deliveries"], moduleId: "deliveries" as any },
+            ]
+          },
+          {
             title: "Marketing",
             items: [
               { name: "Coupon Codes", href: "/admin/coupons", icon: moduleIconMap["marketing"], moduleId: "marketing" as any },
@@ -264,7 +275,7 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
 
     // 2. If we have real permissions from the DB, use them (For other roles)
     if (userPrivileges?.role?.permissions && userPrivileges.role.permissions.length > 0) {
-      const categoryOrder = ["System", "Inventory", "Finance", "Marketing", "Users", "Admin"];
+      const categoryOrder = ["System", "Inventory", "Logistics", "Finance", "Marketing", "Users", "Admin"];
       const coreModuleIds = ["dashboard", "orders"];
 
       const coreItems = userPrivileges.role.permissions
@@ -318,6 +329,25 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
           href: "/admin/gift-cards",
           icon: moduleIconMap["gift-cards"] || <HiCreditCard size={16} />,
           moduleId: "gift-cards" as any,
+        });
+      }
+
+      // Inject Logistics
+      if (!grouped["Logistics"]) grouped["Logistics"] = [];
+      if (!grouped["Logistics"].some(item => item.href === "/admin/logistics/drivers")) {
+        grouped["Logistics"].push({
+          name: "Drivers",
+          href: "/admin/logistics/drivers",
+          icon: moduleIconMap["drivers"] || "users",
+          moduleId: "drivers" as any,
+        });
+      }
+      if (!grouped["Logistics"].some(item => item.href === "/admin/logistics/deliveries")) {
+        grouped["Logistics"].push({
+          name: "Deliveries",
+          href: "/admin/logistics/deliveries",
+          icon: moduleIconMap["deliveries"] || "Shipped",
+          moduleId: "deliveries" as any,
         });
       }
 

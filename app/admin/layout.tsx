@@ -78,6 +78,8 @@ function AdminLayoutContent({
       "/admin/coupons": "marketing",
       "/admin/gift-boxes": "gift-boxes",
       "/admin/gift-cards": "gift-cards",
+      "/admin/logistics/drivers": "drivers",
+      "/admin/logistics/deliveries": "deliveries",
     };
 
     // Find the matching module for the current path

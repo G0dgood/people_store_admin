@@ -32,7 +32,7 @@ export type ModuleId =
   | "orders" | "transactions" | "refunds" | "products" | "media" | "products/media"
   | "categories" | "brands" | "reviews" | "marketing" | "deals"
   | "advert" | "customers" | "users" | "roles" | "permissions" | "profile"
-  | "gift-cards" | "gift-boxes" | "offices";
+  | "gift-cards" | "gift-boxes" | "offices" | "drivers" | "deliveries";
 
 interface PrivilegeContextType {
   userPrivileges: UserPrivileges | null;
