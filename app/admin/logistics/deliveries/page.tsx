@@ -10,7 +10,7 @@ import { Input } from "../../../components/Form/Inputs";
 import { Icon } from "../../../components/Icon";
 import { StatusBadge } from "../../../components/StatusBadge";
 import { Avatar } from "../../../components/Other/Avatar";
-import { AssignDriverDrawer } from "../../../components/Admin/AssignDriverDrawer";
+import { AssignDriverModal } from "../../../components/Admin/AssignDriverModal";
 import { DeliveryDetailDrawer } from "../../../components/Admin/DeliveryDetailDrawer";
 import { SVGLoaderFetch, NoRecordFound } from "@/app/components/Options";
 import { formatPrice } from "@/app/utils/formatPrice";
@@ -438,15 +438,15 @@ export default function DeliveriesManagement() {
    {/* Drawers */}
    {selectedOrder && (
     <>
-     <AssignDriverDrawer
-      isOpen={isAssignOpen}
-      onClose={() => {
-       setIsAssignOpen(false);
-       setSelectedOrder(null);
-      }}
-      onAssign={(driver) => handleAssignDriver(selectedOrder._id, driver)}
-      currentlyAssignedId={selectedOrder?.driver?._id || selectedOrder?.driver}
-     />
+      <AssignDriverModal
+       isOpen={isAssignOpen}
+       onClose={() => {
+        setIsAssignOpen(false);
+        setSelectedOrder(null);
+       }}
+       onAssign={(driver) => handleAssignDriver(selectedOrder._id, driver)}
+       currentlyAssignedId={selectedOrder?.driver?._id || selectedOrder?.driver}
+      />
 
      <DeliveryDetailDrawer
       isOpen={isDetailOpen}
