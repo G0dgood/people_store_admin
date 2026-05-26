@@ -2,11 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { useGetPublicNewArrivalsQuery } from "@/lib/redux/services/boutiqueApi";
 import Link from "next/link";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
-import { useCart } from "../context/CartContext";
-import { QuickViewModal } from "./Products/QuickViewModal";
-import { Button } from "./Button";
 import { toast } from "sonner";
-import { ProductGridItem } from "./Products/ProductItems";
+import { ProductGridItem } from "../Products/ProductItems";
+import { QuickViewModal } from "../Products/QuickViewModal";
+import { useCart } from "@/app/context/CartContext";
 
 const blogData = [
   {
