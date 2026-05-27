@@ -140,6 +140,15 @@ const MODULE_STATUSES: Record<ModuleName, StatusConfig[]> = {
       iconFolder: "icon",
     },
     {
+      value: "Accepted",
+      label: "Accepted",
+      description: "Driver accepted the delivery",
+      color: "#7c3aed",
+      bgColor: "bg-violet-50/40",
+      icon: "verified",
+      iconFolder: "icon",
+    },
+    {
       value: "Shipped",
       label: "Shipped",
       description: "Order is with carrier",

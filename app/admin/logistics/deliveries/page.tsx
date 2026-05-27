@@ -18,7 +18,7 @@ import { Tooltip } from "@/app/components/Tooltip";
 import { toast } from "sonner";
 import moment from "moment";
 import { motion } from "framer-motion";
-import { FiTruck, FiPackage, FiCheckCircle, FiClock, FiUserPlus, FiChevronRight, FiEye } from "react-icons/fi";
+import { FiTruck, FiPackage, FiCheckCircle, FiClock, FiUserPlus, FiChevronRight, FiEye, FiCheck } from "react-icons/fi";
 import { HiArrowPath } from "react-icons/hi2";
 import { useSocket } from "@/app/context/SocketContext";
 
@@ -33,6 +33,9 @@ export default function DeliveriesManagement() {
  const [isDetailOpen, setIsDetailOpen] = useState(false);
  const [isAssignOpen, setIsAssignOpen] = useState(false);
 
+ // Recently-accepted order IDs — drives row flash highlight
+ const [recentlyAccepted, setRecentlyAccepted] = useState<Set<string>>(new Set());
+
  const { socket } = useSocket();
 
  // Fetch Drivers and Orders
@@ -42,7 +45,9 @@ export default function DeliveriesManagement() {
  // Determine the status filter based on the active tab
  let statusFilter = "";
  if (activeTab === "Pending Dispatch") {
-  statusFilter = "Processing"; 
+  statusFilter = "Processing";
+ } else if (activeTab === "Accepted") {
+  statusFilter = "Accepted";
  } else if (activeTab === "In Transit") {
   statusFilter = "Shipped";
  } else if (activeTab === "Delivered") {
