@@ -77,7 +77,7 @@ export const AuthPersistence = ({ children }: { children: React.ReactNode }) => 
             <div className="absolute -inset-2 rounded-full border border-brand-gold/10 animate-pulse" />
             <div className="relative w-20 h-20 rounded-full bg-white border-[0.5px] border-brand-gold/30 flex items-center justify-center overflow-hidden p-4">
               <img
-                src="/brand_logo/logo.svg"
+                src="/brand_logo/icon.svg"
                 alt="Logo"
                 className="w-full h-full object-contain animate-pulse"
               />
