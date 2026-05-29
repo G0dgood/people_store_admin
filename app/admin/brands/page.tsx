@@ -16,9 +16,9 @@ import { BrandsMoreActionsDrawer } from "../../components/Admin/BrandsMoreAction
 import { Tooltip } from "../../components/Tooltip";
 import { QuickAddProductModal } from "../../components/Admin/QuickAddProductModal";
 import { BrandProductsModal } from "../../components/Admin/BrandProductsModal";
-import { HiOutlineArrowPath, HiOutlineEye } from "react-icons/hi2";
+import { HiOutlineArrowPath, HiOutlineEye, HiBars3, HiChevronUp, HiChevronDown } from "react-icons/hi2";
 
-import { useGetBrandsQuery, useDeleteBrandMutation } from "@/lib/redux/services/brandApi";
+import { useGetBrandsQuery, useDeleteBrandMutation, useReorderBrandsMutation } from "@/lib/redux/services/brandApi";
 import { toast } from "sonner";
 import { SVGLoaderFetch, NoRecordFound } from "@/app/components/Options";
 
@@ -40,6 +40,10 @@ export default function BrandsListing() {
  const [selectedBrandForQuickAdd, setSelectedBrandForQuickAdd] = useState<any>(null);
  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
  const [selectedBrandForView, setSelectedBrandForView] = useState<any>(null);
+ const [localBrands, setLocalBrands] = useState<any[]>([]);
+ const [isOrderDirty, setIsOrderDirty] = useState(false);
+ const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+ const [isSaveOrderModalOpen, setIsSaveOrderModalOpen] = useState(false);
 
  const { data: response, isLoading, refetch, isFetching } = useGetBrandsQuery({
   page: currentPage,
@@ -48,6 +52,8 @@ export default function BrandsListing() {
   status: activeTab
  });
 
+ const [reorderBrands, { isLoading: isSavingOrder }] = useReorderBrandsMutation();
+
  const handleTabChange = (tab: string) => {
   setActiveTab(tab);
   setCurrentPage(1);
@@ -55,6 +61,13 @@ export default function BrandsListing() {
  const [deleteBrand, { isLoading: isDeleting }] = useDeleteBrandMutation();
  const brandsData = response?.data?.brands || [];
  const totalPages = response?.data?.pagination?.pages || 1;
+
+ React.useEffect(() => {
+  if (brandsData) {
+   setLocalBrands(brandsData);
+   setIsOrderDirty(false);
+  }
+ }, [response]);
 
  const toggleAll = () => {
   if (selectedIds.length === brandsData?.length && brandsData?.length > 0) {
@@ -74,11 +87,101 @@ export default function BrandsListing() {
  const [isMoreActionsOpen, setIsMoreActionsOpen] = useState(false);
  const [isBulkDeactivateConfirmOpen, setIsBulkDeactivateConfirmOpen] = useState(false);
 
+ const handleDragStart = (e: React.DragEvent, index: number) => {
+  setDraggedIndex(index);
+  e.dataTransfer.effectAllowed = "move";
+ };
+
+ const handleDragOver = (e: React.DragEvent, index: number) => {
+  e.preventDefault();
+ };
+
+ const handleDrop = (e: React.DragEvent, index: number) => {
+  e.preventDefault();
+  if (draggedIndex === null || draggedIndex === index) return;
+
+  const updated = [...localBrands];
+  const [draggedItem] = updated.splice(draggedIndex, 1);
+  updated.splice(index, 0, draggedItem);
+
+  setLocalBrands(updated);
+  setIsOrderDirty(true);
+  setDraggedIndex(null);
+ };
+
+ const handleMoveUp = (index: number) => {
+  if (index === 0) return;
+  const updated = [...localBrands];
+  const temp = updated[index];
+  updated[index] = updated[index - 1];
+  updated[index - 1] = temp;
+  setLocalBrands(updated);
+  setIsOrderDirty(true);
+ };
+
+ const handleMoveDown = (index: number) => {
+  if (index === localBrands.length - 1) return;
+  const updated = [...localBrands];
+  const temp = updated[index];
+  updated[index] = updated[index + 1];
+  updated[index + 1] = temp;
+  setLocalBrands(updated);
+  setIsOrderDirty(true);
+ };
+
+ const handleOrderInputChange = (index: number, val: string) => {
+  const num = parseInt(val);
+  if (isNaN(num)) return;
+  
+  const updated = [...localBrands];
+  const item = { ...updated[index], order: num };
+  updated[index] = item;
+  
+  updated.sort((a, b) => {
+   const orderA = a.order ?? 0;
+   const orderB = b.order ?? 0;
+   if (orderA !== orderB) return orderA - orderB;
+   return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  });
+
+  setLocalBrands(updated);
+  setIsOrderDirty(true);
+ };
+
+ const handleSaveOrder = async () => {
+  try {
+   const orders = localBrands.map((b, index) => {
+    const calculatedOrder = (currentPage - 1) * rowsPerPage + index;
+    return {
+     id: b._id,
+     order: calculatedOrder
+    };
+   });
+
+   await reorderBrands({ orders }).unwrap();
+   toast.success("Brands order saved successfully");
+   setIsOrderDirty(false);
+   refetch();
+   setIsSaveOrderModalOpen(false);
+  } catch (err) {
+   toast.error("Failed to save brand order");
+  }
+ };
+
  return (
   <div className="flex flex-col gap-6">
    {/* Header Area */}
    <div className="flex flex-col sm:flex-row justify-end items-center gap-3">
     <div className="flex gap-3 w-full sm:w-auto">
+     {isOrderDirty && (
+      <Button shape="rounded-sm" variant="primary"
+       className="transition-all duration-300 bg-brand-gold hover:bg-brand-gold-dark border-brand-gold hover:border-brand-gold-dark text-white shadow-md font-bold px-4 py-2 flex-1 sm:flex-initial animate-pulse hover:animate-none"
+       onClick={() => setIsSaveOrderModalOpen(true)}
+       disabled={isSavingOrder}
+      >
+       {isSavingOrder ? "Saving..." : "Save Order"}
+      </Button>
+     )}
      <Tooltip text="Refresh List">
       <Button shape="rounded-sm" variant="outline"
        className="border-gray-200 text-gray-500 group"
@@ -155,6 +258,7 @@ export default function BrandsListing() {
           onChange={toggleAll}
          />
         </th>
+        <th className="w-24 text-center">Order</th>
         <th>Brand</th>
         <th>Category</th>
         <th>Inventory No</th>
@@ -165,17 +269,71 @@ export default function BrandsListing() {
       </thead>
       <tbody>
        {isLoading ? (
-        <SVGLoaderFetch asTable={true} text="Loading brands..." colSpan={7} />
-       ) : brandsData.length === 0 ? (
-        <NoRecordFound asTable={true} text="No brands found." colSpan={7} />
+        <SVGLoaderFetch asTable={true} text="Loading brands..." colSpan={8} />
+       ) : localBrands.length === 0 ? (
+        <NoRecordFound asTable={true} text="No brands found." colSpan={8} />
        ) : (
-        brandsData.map((brand, index) => (
-         <tr key={brand._id} className="group">
+        localBrands.map((brand, idx) => (
+         <tr
+          key={brand._id}
+          className={`group transition-all duration-200 border-b border-gray-100 ${
+           draggedIndex === idx ? "opacity-40 bg-gray-50 scale-[0.98]" : "hover:bg-gray-50/50"
+          }`}
+          draggable={!searchQuery && activeTab === "All brands"}
+          onDragStart={(e) => handleDragStart(e, idx)}
+          onDragOver={(e) => handleDragOver(e, idx)}
+          onDrop={(e) => handleDrop(e, idx)}
+          onDragEnd={() => setDraggedIndex(null)}
+         >
           <td>
            <Checkbox
             checked={selectedIds.includes(brand._id)}
             onChange={() => toggleItem(brand._id)}
            />
+          </td>
+          <td className="text-center py-4 w-24" onClick={(e) => e.stopPropagation()}>
+           <div className="flex items-center justify-center gap-2">
+            <span
+             className={`p-1.5 rounded transition-colors cursor-grab active:cursor-grabbing text-gray-400 hover:text-brand-gold ${
+               (!searchQuery && activeTab === "All brands") ? "" : "opacity-30 cursor-not-allowed hover:text-gray-400"
+             }`}
+             title={
+               (!searchQuery && activeTab === "All brands")
+                 ? "Drag to reorder brand"
+                 : "Clear search and select 'All brands' tab to reorder"
+             }
+            >
+             <HiBars3 className="w-4 h-4" />
+            </span>
+            <div className="flex flex-col items-center justify-center gap-0.5">
+             <button
+              type="button"
+              onClick={() => handleMoveUp(idx)}
+              disabled={idx === 0}
+              className={`p-0.5 rounded text-gray-400 hover:text-brand-gold transition-colors ${
+                idx === 0 ? "opacity-20 cursor-not-allowed" : "cursor-pointer"
+              }`}
+             >
+              <HiChevronUp className="w-3.5 h-3.5" />
+             </button>
+             <input
+              type="number"
+              value={brand.order !== undefined && brand.order !== null ? brand.order : (currentPage - 1) * rowsPerPage + idx}
+              onChange={(e) => handleOrderInputChange(idx, e.target.value)}
+              className="w-12 h-7 text-center text-xs font-bold text-gray-800 bg-gray-50 hover:bg-gray-100 focus:bg-white border border-gray-200 rounded focus:border-brand-gold outline-none transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+             />
+             <button
+              type="button"
+              onClick={() => handleMoveDown(idx)}
+              disabled={idx === localBrands.length - 1}
+              className={`p-0.5 rounded text-gray-400 hover:text-brand-gold transition-colors ${
+                idx === localBrands.length - 1 ? "opacity-20 cursor-not-allowed" : "cursor-pointer"
+              }`}
+             >
+              <HiChevronDown className="w-3.5 h-3.5" />
+             </button>
+            </div>
+           </div>
           </td>
           <td>
            <div className="flex items-center gap-3">
@@ -305,6 +463,20 @@ export default function BrandsListing() {
     message={`Are you sure you want to delete the brand "${brandToDelete?.name}"? This action will remove it from the storefront and cannot be undone.`}
     confirmText="Yes, delete brand"
     type="danger"
+   />
+
+   <ConfirmationModal
+    isOpen={isSaveOrderModalOpen}
+    onClose={() => {
+     if (!isSavingOrder) setIsSaveOrderModalOpen(false);
+    }}
+    onConfirm={handleSaveOrder}
+    title="Save Brands Order"
+    message="Are you sure you want to save the new order of brands? This will update the boutique storefront sorting immediately."
+    confirmText="Yes, save order"
+    cancelText="Cancel"
+    type="warning"
+    isLoading={isSavingOrder}
    />
 
    <BrandsMoreActionsDrawer

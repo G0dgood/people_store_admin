@@ -10,6 +10,7 @@ export interface Brand {
   rating: number;
   status: string;
   inventoryCount: number;
+  order?: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -56,6 +57,14 @@ export const brandApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ['Brand'],
     }),
+    reorderBrands: builder.mutation<ApiResponse<{}>, { orders: { id: string; order: number }[] }>({
+      query: (body) => ({
+        url: '/brands/reorder',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: [{ type: 'Brand', id: 'LIST' }],
+    }),
     getBrandStats: builder.query<ApiResponse<{ totalBrands: number; activeBrands: number }>, void>({
       query: () => '/brands/stats',
       providesTags: ['Brand'],
@@ -70,5 +79,6 @@ export const {
   useCreateBrandMutation,
   useUpdateBrandMutation,
   useDeleteBrandMutation,
+  useReorderBrandsMutation,
   useGetBrandStatsQuery,
 } = brandApi;

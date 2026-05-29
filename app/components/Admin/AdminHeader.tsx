@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Icon } from "../Icon";
 import { Input } from "../Form/Inputs";
 import { AdminNotificationDropdown } from "./AdminNotificationDropdown";
@@ -18,6 +18,8 @@ import Image from "next/image";
 import { useAppSelector } from "@/lib/redux/hooks";
 import { selectCurrentUser } from "@/lib/redux/features/authSlice";
 import { useAdminTheme } from "@/app/context/AdminThemeContext";
+import { useGetUnreadCountQuery } from "@/lib/redux/services/messageApi";
+import { LuMessageSquare } from "react-icons/lu";
 
 type HeaderProps = {
   onOpenMenu?: () => void;
@@ -29,7 +31,10 @@ type HeaderProps = {
 export const AdminHeader: React.FC<HeaderProps> = ({ onOpenMenu, className, isOpen, role }) => {
   const user = useAppSelector(selectCurrentUser);
   const pathname = usePathname();
+  const router = useRouter();
   const { isAdminDark, toggleAdminTheme } = useAdminTheme();
+  const { data: unreadResponse } = useGetUnreadCountQuery();
+  const unreadCount = unreadResponse?.data?.count || 0;
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -167,6 +172,22 @@ export const AdminHeader: React.FC<HeaderProps> = ({ onOpenMenu, className, isOp
         </div>
 
         <div className="flex items-center gap-6">
+          {/* Messages */}
+          <div className="relative">
+            <button
+              className="relative p-2 transition-colors group rounded-lg text-gray-400 hover:text-brand-charcoal cursor-pointer flex items-center justify-center"
+              onClick={() => router.push('/admin/customers')}
+              title="Messages"
+            >
+              <LuMessageSquare size={20} className="text-brand-charcoal" />
+              {unreadCount > 0 && (
+                <span className="absolute top-1 right-1 bg-rose-500 text-white text-[8px] font-black w-4.5 h-4.5 rounded-full flex items-center justify-center border border-white animate-pulse">
+                  {unreadCount}
+                </span>
+              )}
+            </button>
+          </div>
+
           {/* Notifications */}
           <div className="relative" ref={notificationRef}>
             <button

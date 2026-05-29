@@ -64,6 +64,19 @@ export function SupportChatDrawer({ isOpen, onClose, ticketId }: SupportChatDraw
  ] : [];
 
  useEffect(() => {
+  if (isOpen && ticketId) {
+   if (typeof window !== "undefined") {
+     (window as any).__activeSupportTicketId = String(ticketId);
+   }
+  }
+  return () => {
+   if (typeof window !== "undefined") {
+     (window as any).__activeSupportTicketId = undefined;
+   }
+  };
+ }, [isOpen, ticketId]);
+
+ useEffect(() => {
   if (isOpen) {
    scrollToBottom();
   }

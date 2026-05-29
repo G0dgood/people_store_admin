@@ -24,6 +24,7 @@ export interface CategoryItem {
   owner?: string;
   parent?: string | CategoryItem | null;
   subCategories?: string[] | CategoryItem[];
+  order?: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -66,6 +67,14 @@ export const categoryApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [{ type: 'Category', id: 'LIST' }],
     }),
+    reorderCategories: builder.mutation<ApiResponse<{}>, { orders: { id: string; order: number }[] }>({
+      query: (body) => ({
+        url: '/categories/reorder',
+        method: 'POST',
+        body,
+      }),
+      invalidatesTags: [{ type: 'Category', id: 'LIST' }],
+    }),
     getCategoryCustomAttributes: builder.query<ApiResponse<{ name: string; subAttributes: string[] }[]>, string>({
       query: (categoryIdOrName) => `/categories/${categoryIdOrName}/custom-attributes`,
       providesTags: (result, error, categoryIdOrName) => [{ type: 'Category' as const, id: `ATTRIBUTES_${categoryIdOrName}` }],
@@ -79,5 +88,6 @@ export const {
   useCreateCategoryMutation,
   useUpdateCategoryMutation,
   useDeleteCategoryMutation,
+  useReorderCategoriesMutation,
   useGetCategoryCustomAttributesQuery,
 } = categoryApi;

@@ -14,9 +14,17 @@ export interface DirectMessage {
     updatedAt: string;
 }
 
+export interface PaginatedMessages {
+    messages: DirectMessage[];
+    page: number;
+    totalPages: number;
+    totalCount: number;
+    hasMore: boolean;
+}
+
 export const messageApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
-        getChatHistory: builder.query<ApiResponse<DirectMessage[]>, string>({
+        getChatHistory: builder.query<ApiResponse<PaginatedMessages>, string>({
             query: (otherId) => `/messages/history/${otherId}`,
             providesTags: (result, error, otherId) => [{ type: 'Message' as const, id: otherId }],
         }),
@@ -32,6 +40,14 @@ export const messageApi = baseApi.injectEndpoints({
             query: () => '/messages/unread-count',
             providesTags: [{ type: 'Message', id: 'UNREAD' }],
         }),
+        markRead: builder.mutation<ApiResponse<{ modifiedCount: number }>, { senderId: string }>({
+            query: (data) => ({
+                url: '/messages/read',
+                method: 'PATCH',
+                body: data,
+            }),
+            invalidatesTags: [{ type: 'Message', id: 'UNREAD' }],
+        }),
     }),
     overrideExisting: true,
 });
@@ -40,4 +56,5 @@ export const {
     useGetChatHistoryQuery,
     useSendMessageMutation,
     useGetUnreadCountQuery,
+    useMarkReadMutation,
 } = messageApi;
