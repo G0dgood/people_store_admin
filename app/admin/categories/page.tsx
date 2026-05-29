@@ -65,6 +65,7 @@ export default function CategoriesPage() {
  const [isSaveOrderModalOpen, setIsSaveOrderModalOpen] = useState(false);
  const [isAttributeModalOpen, setIsAttributeModalOpen] = useState(false);
  const [selectedCategoryForAttributes, setSelectedCategoryForAttributes] = useState<any>(null);
+ const [selectedCategoryForGlobalAttributes, setSelectedCategoryForGlobalAttributes] = useState<string | undefined>(undefined);
  const [isQuickAddModalOpen, setIsQuickAddModalOpen] = useState(false);
  const [selectedCategoryForQuickAdd, setSelectedCategoryForQuickAdd] = useState<any>(null);
  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
@@ -478,6 +479,19 @@ export default function CategoriesPage() {
              </Tooltip>
             )}
             {canAccess("categories", "edit") && (
+             <Tooltip text="Manage Attributes" position="top">
+              <Button shape="rounded-sm" variant="outline"
+               className="!p-1.5 text-gray-400 hover:text-white hover:bg-indigo-500 hover:border-indigo-500 transition-all"
+               onClick={() => {
+                setSelectedCategoryForGlobalAttributes(c._id);
+                setIsAttributesGlobalModalOpen(true);
+               }}
+              >
+               <Icon name="poll" folder="icon" size="sm" />
+              </Button>
+             </Tooltip>
+            )}
+            {canAccess("categories", "edit") && (
              <Tooltip text="Edit Category" position="top">
               <Button shape="rounded-sm" variant="outline"
                className="!p-1.5 text-gray-400 hover:text-white hover:bg-brand-gold hover:border-brand-gold transition-all"
@@ -637,7 +651,11 @@ export default function CategoriesPage() {
 
    <ProductAttributesModal
     isOpen={isAttributesGlobalModalOpen}
-    onClose={() => setIsAttributesGlobalModalOpen(false)}
+    onClose={() => {
+     setIsAttributesGlobalModalOpen(false);
+     setSelectedCategoryForGlobalAttributes(undefined);
+    }}
+    initialCategoryId={selectedCategoryForGlobalAttributes}
    />
   </div>
  );

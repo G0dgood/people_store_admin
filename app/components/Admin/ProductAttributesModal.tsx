@@ -14,17 +14,20 @@ import {
 } from "@/lib/redux/services/attributeApi";
 import { toast } from "sonner";
 import { ConfirmationModal } from "./ConfirmationModal";
+import { ImageUpload } from "../Form/ImageUpload";
 import Checkbox from "../Checkbox";
 import { useGetCategoriesQuery, useUpdateCategoryMutation } from "@/lib/redux/services/categoryApi";
 
 interface ProductAttributesModalProps {
  isOpen: boolean;
  onClose: () => void;
+ initialCategoryId?: string;
 }
 
 export const ProductAttributesModal: React.FC<ProductAttributesModalProps> = ({
  isOpen,
  onClose,
+ initialCategoryId,
 }) => {
  const { data: attributesResponse, isLoading: isLoadingList } = useGetAttributesQuery();
  const [createAttribute, { isLoading: isCreating }] = useCreateAttributeMutation();
@@ -36,6 +39,14 @@ export const ProductAttributesModal: React.FC<ProductAttributesModalProps> = ({
  const [searchQuery, setSearchQuery] = useState("");
  const [view, setView] = useState<"list" | "form">("list");
  const [editingId, setEditingId] = useState<string | null>(null);
+ const [formImage, setFormImage] = useState("");
+ const [categoryIdFilter, setCategoryIdFilter] = useState<string>("");
+
+ React.useEffect(() => {
+  if (isOpen) {
+   setCategoryIdFilter(initialCategoryId || "");
+  }
+ }, [initialCategoryId, isOpen]);
 
  // Delete modal state
  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -54,14 +65,25 @@ export const ProductAttributesModal: React.FC<ProductAttributesModalProps> = ({
  const [formName, setFormName] = useState("");
  const [formOptions, setFormOptions] = useState<string[]>([""]);
 
- const filteredAttributes = attributes.filter((attr) =>
-  attr.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-  attr.subAttributes.some((opt) => opt.toLowerCase().includes(searchQuery.toLowerCase()))
- );
+ const filteredAttributes = attributes.filter((attr) => {
+  const matchesSearch = attr.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+   attr.subAttributes.some((opt) => opt.toLowerCase().includes(searchQuery.toLowerCase()));
+  
+  if (!matchesSearch) return false;
+  
+  if (categoryIdFilter) {
+   const cat = allCategories.find((c: any) => c._id === categoryIdFilter);
+   if (!cat) return true;
+   return cat.customAttributes?.some((a: any) => a.name.toLowerCase() === attr.name.toLowerCase());
+  }
+  
+  return true;
+ });
 
  const resetForm = () => {
   setFormName("");
   setFormOptions([""]);
+  setFormImage("");
   setSelectedCategoryIds([]);
   setEditingId(null);
   setView("list");
@@ -71,6 +93,7 @@ export const ProductAttributesModal: React.FC<ProductAttributesModalProps> = ({
   setEditingId(attr._id);
   setFormName(attr.name);
   setFormOptions(attr.subAttributes?.length > 0 ? [...attr.subAttributes] : [""]);
+  setFormImage(attr.image || "");
 
   // Pre-select categories that currently have this attribute
   const associatedCategoryIds = allCategories
@@ -85,7 +108,8 @@ export const ProductAttributesModal: React.FC<ProductAttributesModalProps> = ({
   setEditingId(null);
   setFormName("");
   setFormOptions([""]);
-  setSelectedCategoryIds([]);
+  setFormImage("");
+  setSelectedCategoryIds(categoryIdFilter ? [categoryIdFilter] : []);
   setView("form");
  };
 
@@ -122,13 +146,14 @@ export const ProductAttributesModal: React.FC<ProductAttributesModalProps> = ({
    if (editingId) {
     await updateAttribute({
      attributeId: editingId,
-     body: { name: formName.trim(), subAttributes: cleanOptions },
+     body: { name: formName.trim(), subAttributes: cleanOptions, image: formImage },
     }).unwrap();
     toast.success("Attribute updated successfully");
    } else {
     await createAttribute({
      name: formName.trim(),
      subAttributes: cleanOptions,
+     image: formImage,
     }).unwrap();
     toast.success("Attribute created successfully");
    }
@@ -264,6 +289,22 @@ export const ProductAttributesModal: React.FC<ProductAttributesModalProps> = ({
   >
    {view === "list" ? (
     <div className="flex flex-col gap-6">
+     {/* Category Filter Banner */}
+     {categoryIdFilter && (
+      <div className="px-3 py-2 bg-brand-gold/10 border border-brand-gold/20 rounded-lg flex items-center justify-between animate-in fade-in slide-in-from-top-1 duration-200">
+       <span className="text-[10px] font-black text-brand-gold uppercase tracking-wider">
+        Filtering by Category: {allCategories.find((c: any) => c._id === categoryIdFilter)?.name}
+       </span>
+       <button
+        type="button"
+        onClick={() => setCategoryIdFilter("")}
+        className="text-brand-gold hover:text-brand-gold-dark text-[10px] font-black uppercase tracking-wider hover:underline"
+       >
+        Clear Filter
+       </button>
+      </div>
+     )}
+
      {/* Search and Add */}
      <div className="flex items-center gap-3">
       <Input
@@ -303,37 +344,44 @@ export const ProductAttributesModal: React.FC<ProductAttributesModalProps> = ({
          className="p-4 bg-gray-50/30 border border-gray-150 rounded-lg flex flex-col gap-3 hover:border-brand-gold/30 hover:bg-white transition-all group"
         >
          <div className="flex justify-between items-start">
-          <div className="flex flex-col">
-           <span className="text-sm font-black text-gray-900 leading-tight">
-            {attr.name.toUpperCase()}
-           </span>
-           <span className="text-[9px] text-gray-400 font-bold uppercase tracking-wider mt-0.5">
-            {attr.subAttributes?.length || 0} OPTIONS
-           </span>
+          <div className="flex items-center gap-3">
+           {attr.image ? (
+            <div className="w-10 h-10 rounded-[6px] border border-gray-250 overflow-hidden bg-white p-1 flex-shrink-0 flex items-center justify-center">
+             <img src={attr.image} alt={attr.name} className="w-full h-full object-contain" />
+            </div>
+           ) : null}
+           <div className="flex flex-col">
+            <span className="text-sm font-black text-gray-900 leading-tight">
+             {attr.name.toUpperCase()}
+            </span>
+            <span className="text-[9px] text-gray-400 font-bold uppercase tracking-wider mt-0.5">
+             {attr.subAttributes?.length || 0} OPTIONS
+            </span>
 
-           {/* Associated Categories */}
-           {(() => {
-            const associatedCats = allCategories.filter((cat: any) =>
-             cat.customAttributes?.some((a: any) => a.name.toLowerCase() === attr.name.toLowerCase())
-            );
-            return (
-             <div className="flex flex-wrap gap-1 mt-1.5">
-              {associatedCats.map((cat: any) => (
-               <span
-                key={cat._id}
-                className="px-1.5 py-0.5 bg-brand-gold/10 text-brand-gold text-[8px] font-bold rounded uppercase tracking-wider"
-               >
-                {cat.name}
-               </span>
-              ))}
-              {associatedCats.length === 0 && (
-               <span className="text-[8px] text-gray-300 font-bold italic uppercase tracking-wider">
-                Unassigned
-               </span>
-              )}
-             </div>
-            );
-           })()}
+            {/* Associated Categories */}
+            {(() => {
+             const associatedCats = allCategories.filter((cat: any) =>
+              cat.customAttributes?.some((a: any) => a.name.toLowerCase() === attr.name.toLowerCase())
+             );
+             return (
+              <div className="flex flex-wrap gap-1 mt-1.5">
+               {associatedCats.map((cat: any) => (
+                <span
+                 key={cat._id}
+                 className="px-1.5 py-0.5 bg-brand-gold/10 text-brand-gold text-[8px] font-bold rounded uppercase tracking-wider"
+                >
+                 {cat.name}
+                </span>
+               ))}
+               {associatedCats.length === 0 && (
+                <span className="text-[8px] text-gray-300 font-bold italic uppercase tracking-wider">
+                 Unassigned
+                </span>
+               )}
+              </div>
+             );
+            })()}
+           </div>
           </div>
 
           <div className="flex items-center gap-2">
@@ -388,6 +436,15 @@ export const ProductAttributesModal: React.FC<ProductAttributesModalProps> = ({
        className="h-12 border-gray-200 font-bold"
        shape="rounded-sm"
        required
+      />
+     </div>
+
+     {/* Attribute Image */}
+     <div className="flex flex-col gap-2">
+      <ImageUpload
+       value={formImage}
+       onChange={setFormImage}
+       label="Attribute Image (Optional)"
       />
      </div>
 
@@ -487,6 +544,8 @@ export const ProductAttributesModal: React.FC<ProductAttributesModalProps> = ({
     type="danger"
     isLoading={isDeleting}
    />
+
+
   </Modal>
  );
 };

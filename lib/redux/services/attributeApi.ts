@@ -5,6 +5,7 @@ export interface AttributeItem {
   _id: string;
   name: string;
   subAttributes: string[];
+  image?: string;
   createdAt?: string;
   updatedAt?: string;
 }
