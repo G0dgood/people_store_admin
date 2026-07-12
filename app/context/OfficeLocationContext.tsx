@@ -1,7 +1,6 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { useCustomerAuth } from "./CustomerAuthContext";
 import { useAppDispatch } from "@/lib/redux/hooks";
 import { setCredentials, logOut as logOutStaff } from "@/lib/redux/features/authSlice";
 
@@ -29,16 +28,14 @@ export function OfficeLocationProvider({ children }: { children: ReactNode }) {
     officeId: null,
   });
 
-  const { customer, setCustomerData, logout: logoutCustomer } = useCustomerAuth();
+
   const dispatch = useAppDispatch();
 
   const updateStoreContext = (context: Partial<StoreContext>) => {
     setStoreContext((prev) => ({ ...prev, ...context }));
   };
 
-  const loginCustomer = (customer: any, tokens: { accessToken: string; refresh_token?: string }) => {
-    setCustomerData(customer);
-  };
+
 
   const staffLogin = (user: any, tokens: { accessToken: string; refresh_token?: string }) => {
     dispatch(setCredentials({
@@ -52,16 +49,14 @@ export function OfficeLocationProvider({ children }: { children: ReactNode }) {
   };
 
   const logoutAll = async () => {
-    await logoutCustomer();
+
     dispatch(logOutStaff());
   };
 
   return (
     <OfficeLocationContext.Provider value={{
       storeContext,
-      officelocation: customer,
       updateStoreContext,
-      loginCustomer,
       staffLogin,
       logoutStaff,
       logoutAll

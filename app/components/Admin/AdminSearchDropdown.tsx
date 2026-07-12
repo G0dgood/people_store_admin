@@ -28,20 +28,20 @@ interface SearchResult {
 
 
 const ADMIN_MODULES: SearchResult[] = [
-  { id: 903, title: "Product Inventory", subtitle: "Manage products", type: "module", url: "/admin/products" },
-  { id: 904, title: "Media Library", subtitle: "Manage files and images", type: "module", url: "/admin/products/media" },
-  { id: 905, title: "Customer Directory", subtitle: "Manage users", type: "module", url: "/admin/customers" },
-  { id: 906, title: "Staff Management", subtitle: "Admin accounts", type: "module", url: "/admin/users" },
-  { id: 907, title: "Marketing Coupons", subtitle: "Discount codes", type: "module", url: "/admin/coupons" },
-  { id: 908, title: "Deals & Offers", subtitle: "Promotional campaigns", type: "module", url: "/admin/deals" },
-  { id: 909, title: "Advert Management", subtitle: "Control storefront banners", type: "module", url: "/admin/advert" },
-  { id: 910, title: "Category Management", subtitle: "Product categories", type: "module", url: "/admin/categories" },
-  { id: 911, title: "Brand Management", subtitle: "Product brands", type: "module", url: "/admin/brands" },
-  { id: 912, title: "Product Reviews", subtitle: "Customer feedback", type: "module", url: "/admin/reviews" },
-  { id: 913, title: "Support Tickets", subtitle: "Customer service", type: "module", url: "/admin/support" },
-  { id: 914, title: "Refund Management", subtitle: "Process returns", type: "module", url: "/admin/refunds" },
-  { id: 915, title: "Governance & Roles", subtitle: "Access control", type: "module", url: "/admin/roles" },
-  { id: 916, title: "Office Locations", subtitle: "Manage store branches", type: "module", url: "/admin/offices" },
+  { id: 903, title: "Product Inventory", subtitle: "Manage products", type: "module", url: "/products" },
+  { id: 904, title: "Media Library", subtitle: "Manage files and images", type: "module", url: "/products/media" },
+  { id: 905, title: "Customer Directory", subtitle: "Manage users", type: "module", url: "/customers" },
+  { id: 906, title: "Staff Management", subtitle: "Admin accounts", type: "module", url: "/users" },
+  { id: 907, title: "Marketing Coupons", subtitle: "Discount codes", type: "module", url: "/coupons" },
+  { id: 908, title: "Deals & Offers", subtitle: "Promotional campaigns", type: "module", url: "/deals" },
+  { id: 909, title: "Advert Management", subtitle: "Control storefront banners", type: "module", url: "/advert" },
+  { id: 910, title: "Category Management", subtitle: "Product categories", type: "module", url: "/categories" },
+  { id: 911, title: "Brand Management", subtitle: "Product brands", type: "module", url: "/brands" },
+  { id: 912, title: "Product Reviews", subtitle: "Customer feedback", type: "module", url: "/reviews" },
+  { id: 913, title: "Support Tickets", subtitle: "Customer service", type: "module", url: "/support" },
+  { id: 914, title: "Refund Management", subtitle: "Process returns", type: "module", url: "/refunds" },
+  { id: 915, title: "Governance & Roles", subtitle: "Access control", type: "module", url: "/roles" },
+  { id: 916, title: "Office Locations", subtitle: "Manage store branches", type: "module", url: "/offices" },
 ];
 
 interface AdminSearchDropdownProps {
@@ -56,8 +56,8 @@ export const AdminSearchDropdown: React.FC<AdminSearchDropdownProps> = ({ query 
 
   const products = (productsRes?.data as any)?.products || [];
   const orders = (ordersRes?.data as any)?.orders || [];
-  const customers = customersRes?.data && 'customers' in customersRes.data 
-    ? customersRes.data.customers 
+  const customers = customersRes?.data && 'customers' in customersRes.data
+    ? customersRes.data.customers
     : (Array.isArray(customersRes?.data) ? customersRes.data : []);
 
   const dynamicResults: SearchResult[] = [
@@ -68,7 +68,7 @@ export const AdminSearchDropdown: React.FC<AdminSearchDropdownProps> = ({ query 
       type: "product" as const,
       image: p.productImage,
       meta: `₦${p.price.toLocaleString()}`,
-      url: `/admin/products?search=${p.name}`
+      url: `/products?search=${p.name}`
     })),
     ...orders.map((o: any) => ({
       id: o._id,
@@ -76,14 +76,14 @@ export const AdminSearchDropdown: React.FC<AdminSearchDropdownProps> = ({ query 
       subtitle: o.customer?.fullName || "Guest Customer",
       type: "order" as const,
       meta: o.status,
-      url: `/admin/orders/${o._id}`
+      url: `/orders/${o._id}`
     })),
     ...customers.map((c: any) => ({
       id: c._id,
       title: c.fullName,
       subtitle: c.email,
       type: "customer" as const,
-      url: `/admin/customers?search=${c.fullName}`
+      url: `/customers?search=${c.fullName}`
     })),
     ...ADMIN_MODULES
   ];

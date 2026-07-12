@@ -3,7 +3,6 @@
 import React, { useEffect } from "react";
 import { useSocket } from "@/app/context/SocketContext";
 import { toast } from "sonner";
-import { useCustomerAuth } from "../context/CustomerAuthContext";
 import { toastSuccess, toastInfo } from "../utils/toastWithSound";
 import { OrderDeliveredModal } from "./Modal/OrderDeliveredModal";
 import { useDispatch } from "react-redux";
@@ -14,7 +13,6 @@ import { getIsNavigating } from "../utils/navigationState";
 
 export const SocketNotificationListener = () => {
   const { on, off, isConnected } = useSocket();
-  const { customer } = useCustomerAuth();
   const dispatch = useDispatch();
   const [isDeliveredModalOpen, setIsDeliveredModalOpen] = React.useState(false);
   const [deliveredOrder, setDeliveredOrder] = React.useState<any>(null);
@@ -79,26 +77,16 @@ export const SocketNotificationListener = () => {
 
     const handleOrderStatusChanged = (order: any) => {
       // Only show for the customer who owns the order
-      if (customer && (order.customer?._id === customer._id || order.customer === customer._id)) {
-        toastInfo("Order Status Updated", {
-          description: `Your order #${order.orderId || order._id.slice(-6).toUpperCase()} is now ${order.status}.`,
-          duration: 8000,
-          icon: (
-            <div className="bg-brand-gold/10 p-1.5 rounded-full ring-4 ring-brand-gold/5">
-              <Icon name="shopping_bag" size="xs" className="text-brand-gold" />
-            </div>
-          ),
-        });
 
-        // If delivered, show the special modal
-        if (order.status === "Delivered") {
-          setDeliveredOrder(order);
-          setIsDeliveredModalOpen(true);
-        }
+
+      // If delivered, show the special modal
+      if (order.status === "Delivered") {
+        setDeliveredOrder(order);
+        setIsDeliveredModalOpen(true);
       }
     };
 
-    const handleCartUpdated = (data: any) => { 
+    const handleCartUpdated = (data: any) => {
 
       // Invalidate cart tags to trigger a re-fetch on this device
       dispatch(cartApi.util.invalidateTags(["Cart"]));
