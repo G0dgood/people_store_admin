@@ -67,12 +67,12 @@ const moduleIconMap: Record<string, string | React.ReactNode> = {
 
 // Map module IDs to their primary display names and routes if they differ from the default slug
 const moduleMetadata: Record<string, { name?: string; href?: string }> = {
-  dashboard: { name: "Dashboard Overview", href: "/admin" },
-  media: { name: "Media Library", href: "/admin/products/media" },
-  "products/media": { name: "Media Library", href: "/admin/products/media" },
-  marketing: { name: "Coupon Code", href: "/admin/coupons" },
-  drivers: { name: "Drivers", href: "/admin/logistics/drivers" },
-  deliveries: { name: "Deliveries", href: "/admin/logistics/deliveries" },
+  dashboard: { name: "Dashboard Overview", href: "" },
+  media: { name: "Media Library", href: "/products/media" },
+  "products/media": { name: "Media Library", href: "/products/media" },
+  marketing: { name: "Coupon Code", href: "/coupons" },
+  drivers: { name: "Drivers", href: "/logistics/drivers" },
+  deliveries: { name: "Deliveries", href: "/logistics/deliveries" },
 };
 
 
@@ -208,65 +208,65 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
     if (isSuperAdmin) {
       return {
         coreItems: [
-          { name: "Dashboard Overview", href: "/admin", icon: moduleIconMap["dashboard"], moduleId: "dashboard" as any },
-          { name: "Orders", href: "/admin/orders", icon: moduleIconMap["orders"], moduleId: "orders" as any },
+          { name: "Dashboard Overview", href: "/dashboard", icon: moduleIconMap["dashboard"], moduleId: "dashboard" as any },
+          { name: "Orders", href: "/orders", icon: moduleIconMap["orders"], moduleId: "orders" as any },
         ],
         navGroups: [
           {
             title: "Inventory",
             items: [
-              { name: "Products", href: "/admin/products", icon: moduleIconMap["products"], moduleId: "products" as any },
-              { name: "Media Library", href: "/admin/products/media", icon: moduleIconMap["media"], moduleId: "media" as any },
-              { name: "Categories", href: "/admin/categories", icon: moduleIconMap["categories"], moduleId: "categories" as any },
-              { name: "Brands", href: "/admin/brands", icon: moduleIconMap["brands"], moduleId: "brands" as any },
-              { name: "Deals", href: "/admin/deals", icon: moduleIconMap["deals"], moduleId: "deals" as any },
-              { name: "Reviews", href: "/admin/reviews", icon: moduleIconMap["reviews"], moduleId: "reviews" as any },
+              { name: "Products", href: "/products", icon: moduleIconMap["products"], moduleId: "products" as any },
+              { name: "Media Library", href: "/products/media", icon: moduleIconMap["media"], moduleId: "media" as any },
+              { name: "Categories", href: "/categories", icon: moduleIconMap["categories"], moduleId: "categories" as any },
+              { name: "Brands", href: "/brands", icon: moduleIconMap["brands"], moduleId: "brands" as any },
+              { name: "Deals", href: "/deals", icon: moduleIconMap["deals"], moduleId: "deals" as any },
+              { name: "Reviews", href: "/reviews", icon: moduleIconMap["reviews"], moduleId: "reviews" as any },
             ]
           },
           {
             title: "Logistics",
             items: [
-              { name: "Drivers", href: "/admin/logistics/drivers", icon: moduleIconMap["drivers"], moduleId: "drivers" as any },
-              { name: "Deliveries", href: "/admin/logistics/deliveries", icon: moduleIconMap["deliveries"], moduleId: "deliveries" as any },
+              { name: "Drivers", href: "/logistics/drivers", icon: moduleIconMap["drivers"], moduleId: "drivers" as any },
+              { name: "Deliveries", href: "/logistics/deliveries", icon: moduleIconMap["deliveries"], moduleId: "deliveries" as any },
             ]
           },
           {
             title: "Marketing",
             items: [
-              { name: "Coupon Codes", href: "/admin/coupons", icon: moduleIconMap["marketing"], moduleId: "marketing" as any },
-              { name: "Gift Boxes", href: "/admin/gift-boxes", icon: moduleIconMap["gift-boxes"], moduleId: "gift-boxes" as any },
-              { name: "Gift Cards", href: "/admin/gift-cards", icon: moduleIconMap["gift-cards"], moduleId: "gift-cards" as any },
-              { name: "Adverts", href: "/admin/advert", icon: moduleIconMap["advert"], moduleId: "advert" as any },
+              { name: "Coupon Codes", href: "/coupons", icon: moduleIconMap["marketing"], moduleId: "marketing" as any },
+              { name: "Gift Boxes", href: "/gift-boxes", icon: moduleIconMap["gift-boxes"], moduleId: "gift-boxes" as any },
+              { name: "Gift Cards", href: "/gift-cards", icon: moduleIconMap["gift-cards"], moduleId: "gift-cards" as any },
+              { name: "Adverts", href: "/advert", icon: moduleIconMap["advert"], moduleId: "advert" as any },
             ]
           },
           {
             title: "Finance",
             items: [
-              { name: "Transactions", href: "/admin/transactions", icon: moduleIconMap["transactions"], moduleId: "transactions" as any },
-              { name: "Refunds", href: "/admin/refunds", icon: moduleIconMap["refunds"], moduleId: "refunds" as any },
+              { name: "Transactions", href: "/transactions", icon: moduleIconMap["transactions"], moduleId: "transactions" as any },
+              { name: "Refunds", href: "/refunds", icon: moduleIconMap["refunds"], moduleId: "refunds" as any },
             ]
           },
           {
             title: "Governance & Staff",
             items: [
-              { name: "Staff Management", href: "/admin/users", icon: moduleIconMap["users"], moduleId: "users" as any },
-              { name: "Roles & Policies", href: "/admin/roles", icon: moduleIconMap["roles"], moduleId: "roles" as any },
-              { name: "Permissions", href: "/admin/permissions", icon: <HiShieldCheck size={14} />, moduleId: "permissions" as any },
+              { name: "Staff Management", href: "/users", icon: moduleIconMap["users"], moduleId: "users" as any },
+              { name: "Roles & Policies", href: "/roles", icon: moduleIconMap["roles"], moduleId: "roles" as any },
+              { name: "Permissions", href: "/permissions", icon: <HiShieldCheck size={14} />, moduleId: "permissions" as any },
             ]
           },
           {
             title: "Customers",
             items: [
-              { name: "All Customers", href: "/admin/customers", icon: moduleIconMap["customers"], moduleId: "customers" as any },
+              { name: "All Customers", href: "/customers", icon: moduleIconMap["customers"], moduleId: "customers" as any },
             ]
           },
           {
             title: "System",
             items: [
-              { name: "Support", href: "/admin/support", icon: moduleIconMap["support"], moduleId: "support" as any },
-              { name: "FAQ", href: "/admin/faq", icon: <HiOutlineQuestionMarkCircle size={14} />, moduleId: "faq" as any },
-              { name: "Offices", href: "/admin/offices", icon: moduleIconMap["offices"], moduleId: "offices" as any },
-              { name: "Notifications", href: "/admin/notifications", icon: moduleIconMap["notifications"], moduleId: "notifications" as any },
+              { name: "Support", href: "/support", icon: moduleIconMap["support"], moduleId: "support" as any },
+              { name: "FAQ", href: "/faq", icon: <HiOutlineQuestionMarkCircle size={14} />, moduleId: "faq" as any },
+              { name: "Offices", href: "/offices", icon: moduleIconMap["offices"], moduleId: "offices" as any },
+              { name: "Notifications", href: "/notifications", icon: moduleIconMap["notifications"], moduleId: "notifications" as any },
             ]
           }
         ]
@@ -289,7 +289,7 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
           const metadata = moduleMetadata[p.id] || {};
           return {
             name: metadata.name || p.moduleName,
-            href: metadata.href || `/admin/${p.id}`,
+            href: metadata.href || `/${p.id}`,
             icon: moduleIconMap[p.id] || "Frame",
             moduleId: p.id as ModuleId
           };
@@ -305,7 +305,7 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
 
         acc[category].push({
           name: metadata.name || p.moduleName,
-          href: metadata.href || `/admin/${p.id}`,
+          href: metadata.href || `/${p.id}`,
           icon: moduleIconMap[p.id] || "Frame",
           moduleId: p.id as ModuleId
         });
@@ -315,18 +315,18 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
 
       // Inject new modules
       if (!grouped["Marketing"]) grouped["Marketing"] = [];
-      if (!grouped["Marketing"].some(item => item.href === "/admin/gift-boxes")) {
+      if (!grouped["Marketing"].some(item => item.href === "/gift-boxes")) {
         grouped["Marketing"].push({
           name: "Gift Boxes",
-          href: "/admin/gift-boxes",
+          href: "/gift-boxes",
           icon: moduleIconMap["gift-boxes"] || <HiOutlineGift size={16} />,
           moduleId: "gift-boxes" as any,
         });
       }
-      if (!grouped["Marketing"].some(item => item.href === "/admin/gift-cards")) {
+      if (!grouped["Marketing"].some(item => item.href === "/gift-cards")) {
         grouped["Marketing"].push({
           name: "Gift Cards",
-          href: "/admin/gift-cards",
+          href: "/gift-cards",
           icon: moduleIconMap["gift-cards"] || <HiCreditCard size={16} />,
           moduleId: "gift-cards" as any,
         });
@@ -334,18 +334,18 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
 
       // Inject Logistics
       if (!grouped["Logistics"]) grouped["Logistics"] = [];
-      if (!grouped["Logistics"].some(item => item.href === "/admin/logistics/drivers")) {
+      if (!grouped["Logistics"].some(item => item.href === "/logistics/drivers")) {
         grouped["Logistics"].push({
           name: "Drivers",
-          href: "/admin/logistics/drivers",
+          href: "/logistics/drivers",
           icon: moduleIconMap["drivers"] || "users",
           moduleId: "drivers" as any,
         });
       }
-      if (!grouped["Logistics"].some(item => item.href === "/admin/logistics/deliveries")) {
+      if (!grouped["Logistics"].some(item => item.href === "/logistics/deliveries")) {
         grouped["Logistics"].push({
           name: "Deliveries",
-          href: "/admin/logistics/deliveries",
+          href: "/logistics/deliveries",
           icon: moduleIconMap["deliveries"] || "Shipped",
           moduleId: "deliveries" as any,
         });
@@ -383,7 +383,7 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
   useEffect(() => {
     if (navGroups.length > 0 && expandedGroups.length === 0) {
       const activeGroups = navGroups
-        .filter(group => group.items.some(item => pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href + "/"))))
+        .filter(group => group.items.some(item => pathname === item.href || (item.href !== "" && pathname.startsWith(item.href + "/"))))
         .map(group => group.title);
       setExpandedGroups(activeGroups);
     }
@@ -455,7 +455,7 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
         {/* Flat Core Items */}
         <div className="flex flex-col gap-1 mb-6">
           {coreItems.map((item) => {
-            const isMatch = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href + "/"));
+            const isMatch = pathname === item.href || (item.href !== "" && pathname.startsWith(item.href + "/"));
 
             // Core items don't have specific sibling matches in this context
             const isActive = isMatch;
@@ -505,7 +505,7 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
                       className="overflow-hidden flex flex-col gap-1"
                     >
                       {group.items.map((item: any) => {
-                        const isMatch = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href + "/"));
+                        const isMatch = pathname === item.href || (item.href !== "" && pathname.startsWith(item.href + "/"));
 
                         const isMoreSpecificMatch = navGroups.flatMap(g => g.items).some(other =>
                           other.href !== item.href &&

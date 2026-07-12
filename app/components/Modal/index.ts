@@ -5,7 +5,6 @@ export { default as ModalFooter } from "./ModalFooter";
 export { ForgotPasswordModal } from "./ForgotPasswordModal";
 export { TermsModal } from "./TermsModal";
 export { ClearWishlistModal } from "./ClearWishlistModal";
-export { RemoveItemModal } from "./RemoveItemModal";
-export { ReviewModal } from "./ReviewModal";
+export { RemoveItemModal } from "./RemoveItemModal"; 
 export { ClearCartModal } from "./ClearCartModal";
 export * from "./LogoutConfirmationModal";

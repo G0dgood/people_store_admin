@@ -1,23 +1,23 @@
 "use client";
 
-import { StatCard } from "../components/Admin/StatCard";
-import { TransactionTable } from "../components/Admin/TransactionTable";
-import { BestSellingProductTable } from "../components/Admin/BestSellingProductTable";
-import { DashboardInsightsDrawer } from "../components/Admin/DashboardInsightsDrawer";
+import { StatCard } from "../../components/Admin/StatCard";
+import { TransactionTable } from "../../components/Admin/TransactionTable";
+import { BestSellingProductTable } from "../../components/Admin/BestSellingProductTable";
+import { DashboardInsightsDrawer } from "../../components/Admin/DashboardInsightsDrawer";
 import { useState } from "react";
-import { RealtimeUsers } from "../components/Admin/RealtimeUsers";
-import { TopProducts } from "../components/Admin/TopProducts";
-import { QuickAddProduct } from "../components/Admin/QuickAddProduct";
-import { AnalyticsOverview } from "../components/Admin/AnalyticsOverview";
+import { RealtimeUsers } from "../../components/Admin/RealtimeUsers";
+import { TopProducts } from "../../components/Admin/TopProducts";
+import { QuickAddProduct } from "../../components/Admin/QuickAddProduct";
+import { AnalyticsOverview } from "../../components/Admin/AnalyticsOverview";
 import { useRouter } from "next/navigation";
 
 import { useGetOrderStatsQuery } from "@/lib/redux/services/orderApi";
 import { useGetCustomerStatsQuery } from "@/lib/redux/services/customerApi";
 import { useGetOfficesQuery } from "@/lib/redux/services/officeApi";
 import { HiArrowPath } from "react-icons/hi2";
-import { Tooltip } from "../components/Tooltip";
-import { Button } from "../components/Button";
-import { StatCardSkeleton } from "../components/Skeleton/StatCardSkeleton";
+import { Tooltip } from "../../components/Tooltip";
+import { Button } from "../../components/Button";
+import { StatCardSkeleton } from "../../components/Skeleton/StatCardSkeleton";
 import { useGetBrandStatsQuery } from "@/lib/redux/services/brandApi";
 import { useGetProductStatsQuery } from "@/lib/redux/services/productApi";
 
@@ -110,7 +110,7 @@ export default function AdminDashboard() {
               trendIsUp={true}
               previousLabel="Active Status"
               previousValue={(brandStats?.activeBrands || 0).toString()}
-              onViewDetails={() => router.push("/admin/brands")}
+              onViewDetails={() => router.push("/brands")}
             />
             <StatCard
               title="Total Inventory"
@@ -120,7 +120,7 @@ export default function AdminDashboard() {
               trendIsUp={true}
               previousLabel="Unique Products"
               previousValue={(productStats?.totalProducts || 0).toString()}
-              onViewDetails={() => router.push("/admin/products")}
+              onViewDetails={() => router.push("/products")}
             />
             <StatCard
               title="Office Locations"
@@ -130,7 +130,7 @@ export default function AdminDashboard() {
               trendIsUp={true}
               previousLabel="Total Branches"
               previousValue={(officesResponse?.data?.length || 0).toString()}
-              onViewDetails={() => router.push("/admin/offices")}
+              onViewDetails={() => router.push("/offices")}
             />
           </>
         )}
@@ -155,11 +155,11 @@ export default function AdminDashboard() {
           <RealtimeUsers onViewInsight={() => setActiveInsightSection('funnel')} />
 
           {/* Top Products */}
-          <TopProducts onViewAll={() => router.push("/admin/products")} />
+          <TopProducts onViewAll={() => router.push("/products")} />
 
           {/* Add New Product & Quick List */}
           <QuickAddProduct
-            onAddNew={() => router.push("/admin/products")}
+            onAddNew={() => router.push("/products")}
             onAddProduct={(name) => console.log("Add", name)}
           />
         </div>

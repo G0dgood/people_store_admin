@@ -3,8 +3,8 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
-import { HiHome, HiSparkles, HiChatBubbleLeftRight, HiChevronRight } from "react-icons/hi2";
+import { motion } from "framer-motion";
+import { HiChevronRight } from "react-icons/hi2";
 
 export default function NotFound() {
   const particles = Array.from({ length: 15 });
@@ -77,29 +77,7 @@ export default function NotFound() {
             The discovery path you were following has vanished into the atmosphere. Our curators are tracking the anomaly.
           </p>
 
-          {/* Recovery Nav Paths */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
-            <Link href="/" className="group flex flex-col items-center gap-3 p-6 rounded-3xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/20 transition-all">
-              <div className="w-10 h-10 rounded-2xl bg-brand-gold flex items-center justify-center text-white shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
-                <HiHome size={20} />
-              </div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-white/60 group-hover:text-white transition-colors">Home</span>
-            </Link>
 
-            <Link href="/brands" className="group flex flex-col items-center gap-3 p-6 rounded-3xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/20 transition-all">
-              <div className="w-10 h-10 rounded-2xl bg-[var(--brand-gold-light)] flex items-center justify-center text-[#121212] shadow-lg group-hover:scale-110 transition-transform">
-                <HiSparkles size={20} />
-              </div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-white/60 group-hover:text-white transition-colors">Brands</span>
-            </Link>
-
-            <Link href="/contact" className="group flex flex-col items-center gap-3 p-6 rounded-3xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/20 transition-all">
-              <div className="w-10 h-10 rounded-2xl bg-white flex items-center justify-center text-[#121212] shadow-lg group-hover:scale-110 transition-transform">
-                <HiChatBubbleLeftRight size={20} />
-              </div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-white/60 group-hover:text-white transition-colors">Support</span>
-            </Link>
-          </div>
 
           <Link href="/" className="flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.3em] text-[var(--brand-gold-light)] hover:text-white transition-all group">
             Teleport to Safety <HiChevronRight className="group-hover:translate-x-2 transition-transform" size={16} />

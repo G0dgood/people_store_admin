@@ -1,79 +1,56 @@
-
 "use client";
 
-import React from "react";
-import { Header } from "@/app/components/Header";
-import { Footer } from "@/app/components/Footer";
-import { HeroSection } from "@/app/components/Home/HeroSection";
-import { DealsSection } from "@/app/components/Home/DealsSection";
-import { ArtisanalCollections } from "@/app/components/Home/ArtisanalCollections";
-import RecommendedItems from "./components/Home/RecommendedItems";
-import RecentlyViewed from "./components/Home/RecentlyViewed";
-import { useGetPublicBrandsQuery } from "@/lib/redux/services/boutiqueApi";
-import { CategorySectionSkeleton } from "./components/Skeleton/CategorySectionSkeleton";
-import { BrandCategorySection } from "./components/Home/BrandCategorySection";
-import { RegionSuppliers } from "./components/Home/RegionSuppliers";
-import NewArrivals from "./components/NewArrivals";
-import { TopBrands } from "./components/Home/TopBrands";
+import React, { useState, useEffect } from "react";
+import { LoginForm } from "./components/Auth/LoginForm";
+import { LoginAdvert } from "./components/Auth/LoginAdvert";
+import { LoginBackground } from "./components/Auth/LoginBackground";
+import { getAdvertConfig, initializeAdvertConfig } from "./utils/advertState";
+import { useAppSelector } from "@/lib/redux/hooks";
+import { selectIsAuthenticated } from "@/lib/redux/features/authSlice";
+import { useRouter } from "next/navigation";
+import { useGetAdvertConfigQuery } from "@/lib/redux/services/advertApi";
 
+export default function LoginPage() {
+  const { data: liveConfig } = useGetAdvertConfigQuery();
+  const [layout, setLayout] = useState<"left-form" | "right-form" | "">("left-form");
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  const router = useRouter();
 
-const Home = () => {
-  const { data: brandsData, isLoading: isLoadingBrands } = useGetPublicBrandsQuery();
-  const brands = brandsData?.data && 'brands' in brandsData.data
-    ? brandsData.data.brands
-    : (Array.isArray(brandsData?.data) ? brandsData.data : []);
+  useEffect(() => {
+    if (liveConfig) {
+      initializeAdvertConfig(liveConfig);
+    }
+  }, [liveConfig]);
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/dashboard");
+    }
+    const config = getAdvertConfig();
+    setLayout(config.layout || "left-form");
+
+    const handleUpdate = () => {
+      const updatedConfig = getAdvertConfig();
+      setLayout(updatedConfig.layout || "left-form");
+    };
+
+    window.addEventListener("advertConfigUpdated", handleUpdate);
+    return () => window.removeEventListener("advertConfigUpdated", handleUpdate);
+  }, [isAuthenticated, router]);
 
   return (
-    <div className="min-h-screen bg-white flex flex-col font-sans text-black">
-      <Header />
+    <div className={`relative min-h-screen w-full flex flex-col items-center justify-between p-6 sm:p-12 lg:px-24 xl:px-32 
+      ${layout === "right-form" ? "lg:flex-row-reverse" : "lg:flex-row"}
+    `}>
+      {/* Immersive Background Advert Component */}
+      <LoginBackground />
 
-      <div className="flex-1 w-full max-w-[1440px] mx-auto px-6 md:px-10 lg:px-16 py-4 md:py-8 flex flex-col gap-8">
+      {/* Floating Login Card */}
+      <LoginForm />
 
-        {/* Top Hero Layout */}
-        <div className="flex flex-col xl:flex-row gap-5">
-          <div className="flex-1">
-            <HeroSection />
-          </div>
-          {/* <HeroUserCard /> */}
-        </div>
-        <TopBrands />
-        {/* <ArtisanalCollections /> */}
-        <NewArrivals />
-        <DealsSection />
-
-        <div>
-          {/* Dynamic Brand Sections */}
-          {isLoadingBrands ? (
-            <>
-              <CategorySectionSkeleton />
-              <CategorySectionSkeleton />
-              <CategorySectionSkeleton />
-            </>
-          ) : (
-            brands?.map((brand: any, idx: number) => (
-              <BrandCategorySection key={brand._id} brand={brand} index={idx} />
-            ))
-          )}
-
-        </div>
-
-
-        {/* <InquiryForm /> */}
-
-        <RecentlyViewed />
-
-        <RecommendedItems />
-
-        <ArtisanalCollections />
-
-        {/* <RegionSuppliers /> */}
-
-      </div>
-
-      <Footer />
+      {/* Expanded Advert Details */}
+      <LoginAdvert />
     </div>
   );
-};
+}
 
-export default Home;

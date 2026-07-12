@@ -14,7 +14,6 @@ import { setCredentials } from "@/lib/redux/features/authSlice";
 import { toast } from "sonner";
 import { FaGoogle, FaFacebook } from "react-icons/fa";
 import { LuCamera, LuUser, LuEye, LuEyeOff } from "react-icons/lu";
-import { useCustomerAuth } from "../../context/CustomerAuthContext";
 import { useApiError } from "@/app/hooks/useApiError";
 
 const LoginForm = ({ onSwitch }: { onSwitch: () => void }) => {
@@ -22,7 +21,6 @@ const LoginForm = ({ onSwitch }: { onSwitch: () => void }) => {
   const { setView, closeModal } = useAuthModal();
   const dispatch = useAppDispatch();
   const [login, { isLoading, isError, error }] = useLoginCustomerMutation();
-  const { setCustomerData } = useCustomerAuth();
 
   useApiError(isError, error, "Login Failed");
 
@@ -41,8 +39,7 @@ const LoginForm = ({ onSwitch }: { onSwitch: () => void }) => {
           accessToken: response.data.accessToken
         }));
 
-        // Update Context (Cookies)
-        setCustomerData(response.data.customer);
+        // Update Context (Cookies) 
 
         toast.success("Welcome back!", { description: "Happy shopping!" });
         closeModal();
@@ -94,11 +91,11 @@ const LoginForm = ({ onSwitch }: { onSwitch: () => void }) => {
         </div>
       </div>
 
-      <Checkbox 
-        label="Remember me" 
-        id="remember" 
-        checked={rememberMe} 
-        onChange={setRememberMe} 
+      <Checkbox
+        label="Remember me"
+        id="remember"
+        checked={rememberMe}
+        onChange={setRememberMe}
       />
 
       <Button
@@ -160,7 +157,6 @@ const RegisterForm = ({
   const { closeModal } = useAuthModal();
   const dispatch = useAppDispatch();
   const [register, { isLoading, isError, error }] = useRegisterCustomerMutation();
-  const { setCustomerData } = useCustomerAuth();
 
   useApiError(isError, error, "Registration Failed");
 
@@ -194,8 +190,7 @@ const RegisterForm = ({
           accessToken: response.data.accessToken || ""
         }));
 
-        // Update Context (Cookies)
-        setCustomerData(response.data);
+        // Update Context (Cookies) 
 
         toast.success("Account Created!", { description: "Welcome to our boutique." });
         closeModal();

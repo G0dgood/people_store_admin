@@ -97,28 +97,28 @@ export const AdminHeader: React.FC<HeaderProps> = ({ onOpenMenu, className, isOp
 
   // Dynamic title based on pathname
   const getPageTitle = () => {
-    if (pathname === "/admin") return "Dashboard Overview";
-    if (pathname.includes("/admin/orders")) return "Order Management";
-    if (pathname === "/admin/products") return "Product Inventory";
-    if (pathname.includes("/admin/products/media")) return "Media Library";
-    if (pathname.includes("/admin/products/drafts")) return "Product Drafts";
-    if (pathname.includes("/admin/products/new")) return "Add New Product";
-    if (pathname.includes("/admin/customers")) return "Customer Directory";
-    if (pathname.includes("/admin/users")) return "Staff Management";
-    if (pathname.includes("/admin/brands")) return "Brand Management";
-    if (pathname.includes("/admin/transactions")) return "Transaction History";
-    if (pathname.includes("/admin/refunds")) return "Refund Management";
-    if (pathname.includes("/admin/support")) return "Support Tickets";
-    if (pathname.includes("/admin/coupons")) return "Marketing Coupons";
-    if (pathname.includes("/admin/deals")) return "Deals & Offers";
-    if (pathname.includes("/admin/reviews")) return "Product Reviews";
-    if (pathname.includes("/admin/profile")) return "Personal Account";
-    if (pathname.includes("/admin/roles")) return "Governance & Roles";
-    if (pathname.includes("/admin/permissions")) return "Permissions";
-    if (pathname.includes("/admin/categories")) return "Category Management";
-    if (pathname.includes("/admin/notifications")) return "Notification Center";
-    if (pathname.includes("/admin/faq")) return "FAQ Library";
-    if (pathname.includes("/admin/offices")) return "Office Locations";
+    if (pathname === "/dashboard") return "Dashboard Overview";
+    if (pathname.includes("/orders")) return "Order Management";
+    if (pathname === "/products") return "Product Inventory";
+    if (pathname.includes("/products/media")) return "Media Library";
+    if (pathname.includes("/products/drafts")) return "Product Drafts";
+    if (pathname.includes("/products/new")) return "Add New Product";
+    if (pathname.includes("/customers")) return "Customer Directory";
+    if (pathname.includes("/users")) return "Staff Management";
+    if (pathname.includes("/brands")) return "Brand Management";
+    if (pathname.includes("/transactions")) return "Transaction History";
+    if (pathname.includes("/refunds")) return "Refund Management";
+    if (pathname.includes("/support")) return "Support Tickets";
+    if (pathname.includes("/coupons")) return "Marketing Coupons";
+    if (pathname.includes("/deals")) return "Deals & Offers";
+    if (pathname.includes("/reviews")) return "Product Reviews";
+    if (pathname.includes("/profile")) return "Personal Account";
+    if (pathname.includes("/roles")) return "Governance & Roles";
+    if (pathname.includes("/permissions")) return "Permissions";
+    if (pathname.includes("/categories")) return "Category Management";
+    if (pathname.includes("/notifications")) return "Notification Center";
+    if (pathname.includes("/faq")) return "FAQ Library";
+    if (pathname.includes("/offices")) return "Office Locations";
     return "Administrative Panel";
   };
 
@@ -176,7 +176,7 @@ export const AdminHeader: React.FC<HeaderProps> = ({ onOpenMenu, className, isOp
           <div className="relative">
             <button
               className="relative p-2 transition-colors group rounded-lg text-gray-400 hover:text-brand-charcoal cursor-pointer flex items-center justify-center"
-              onClick={() => router.push('/admin/customers')}
+              onClick={() => router.push('/customers')}
               title="Messages"
             >
               <LuMessageSquare size={20} className="text-brand-charcoal" />

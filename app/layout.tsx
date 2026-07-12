@@ -3,22 +3,16 @@ import { Geist, Geist_Mono, Inter, Outfit, Lato } from "next/font/google";
 import "./globals.css";
 import { MobileMenuProvider } from "./context/MobileMenuContext";
 import { AuthModalProvider } from "./context/AuthModalContext";
-import { CartProvider } from "./context/CartContext";
-import { WishlistProvider } from "./context/WishlistContext";
-import { MobileMenuSidebar } from "./components/Mobile/MobileMenuSidebar";
 import { PageWrapper } from "./components/Mobile/PageWrapper";
 import { AuthModal } from "./components/Modal/AuthModal";
 import { DynamicToaster } from "./components/ui/DynamicToaster";
 import { SocketProvider } from "@/app/context/SocketContext";
 import { SocketNotificationListener } from "./components/SocketNotificationListener";
 import OfflineBanner from "@/app/components/ui/OfflineBanner";
-import { CustomerAuthProvider } from "./context/CustomerAuthContext";
-import { RecentlyViewedProvider } from "./context/RecentlyViewedContext";
 import { FilterProvider } from "./context/FilterContext";
 import StoreProvider from "@/lib/redux/StoreProvider";
 import { AuthPersistence } from "./components/Auth/AuthPersistence";
 import { AdminSessionProvider } from "./context/AdminSessionContext";
-import { CustomerSessionProvider } from "./context/CustomerSessionContext";
 import { OfficeLocationProvider } from "./context/OfficeLocationContext";
 
 const geistSans = Geist({
@@ -76,38 +70,27 @@ export default function RootLayout({
         <DynamicToaster />
         <StoreProvider>
           <AdminSessionProvider>
-            <CustomerSessionProvider>
-              <CustomerAuthProvider>
-                <OfficeLocationProvider>
-                  <RecentlyViewedProvider>
-                  <FilterProvider>
-                    <AuthPersistence>
-                      <SocketProvider>
-                        <SocketNotificationListener />
-                        <OfflineBanner />
-                        <AuthModalProvider>
-                          <CartProvider>
-                            <WishlistProvider>
-                              <MobileMenuProvider>
-                                <MobileMenuSidebar />
-                                <PageWrapper>
-                                  {children}
-                                </PageWrapper>
-                              </MobileMenuProvider>
-                            </WishlistProvider>
-                          </CartProvider>
-                          <AuthModal />
-                        </AuthModalProvider>
-                      </SocketProvider>
-                    </AuthPersistence>
-                  </FilterProvider>
-                  </RecentlyViewedProvider>
-                </OfficeLocationProvider>
-              </CustomerAuthProvider>
-            </CustomerSessionProvider>
+            <OfficeLocationProvider>
+              <FilterProvider>
+                <AuthPersistence>
+                  <SocketProvider>
+                    <SocketNotificationListener />
+                    <OfflineBanner />
+                    <AuthModalProvider>
+                      <MobileMenuProvider>
+                        <PageWrapper>
+                          {children}
+                        </PageWrapper>
+                      </MobileMenuProvider>
+                      <AuthModal />
+                    </AuthModalProvider>
+                  </SocketProvider>
+                </AuthPersistence>
+              </FilterProvider>
+            </OfficeLocationProvider>
           </AdminSessionProvider>
         </StoreProvider>
       </body>
-    </html>
+    </html >
   );
 }
