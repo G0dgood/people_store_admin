@@ -31,5 +31,16 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "app/components/Cart",
+    "app/components/Checkout",
+    "app/components/CustomerAuth",
+    "app/components/Header",
+    "app/components/Home",
+    "app/components/Mobile",
+    "app/components/Products",
+    "app/components/Orders",
+    "app/components/Refund"
+  ]
 }

@@ -8,7 +8,7 @@ import { Input, Textarea } from "../Form/Inputs";
 import { Select } from "../Form/Select";
 import { HiPlus, HiMagnifyingGlass, HiCheck, HiPhoto, HiXMark } from "react-icons/hi2";
 import { useCreateGiftBoxMutation, useUpdateGiftBoxMutation, GiftBox } from "@/lib/redux/services/giftBoxApi";
-import { useGetPublicProductsQuery } from "@/lib/redux/services/boutiqueApi";
+import { useGetProductsQuery } from "@/lib/redux/services/productApi";
 import { toast } from "sonner";
 import Image from "next/image";
 import { MediaSelectionModal } from "./MediaSelectionModal";
@@ -63,7 +63,7 @@ export function AddGiftBoxModal({ isOpen, onClose, giftBox }: AddGiftBoxModalPro
   }, [giftBox, isOpen]);
 
   const [productSearch, setProductSearch] = useState("");
-  const { data: productsRes } = useGetPublicProductsQuery({ search: productSearch, limit: 10 });
+  const { data: productsRes } = useGetProductsQuery({ search: productSearch, limit: 10 });
   const allProducts = productsRes?.data?.products || [];
 
   const handleSubmit = async (e: React.FormEvent) => {

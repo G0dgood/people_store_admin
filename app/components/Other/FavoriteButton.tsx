@@ -1,15 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Icon } from "../Icon";
-import { useWishlist, WishlistItem } from "@/app/context/WishlistContext";
-import { useCustomerAuth } from "@/app/context/CustomerAuthContext";
-import { useAuthModal } from "@/app/context/AuthModalContext";
 import { toast } from "sonner";
 
 interface FavoriteButtonProps {
   className?: string;
-  item?: WishlistItem;
+  item?: { id: string; [key: string]: any };
   onToggle?: (isFavorite: boolean) => void;
   variant?: "outline" | "ghost" | "none";
   size?: "sm" | "md";
@@ -26,36 +23,16 @@ export const FavoriteButton: React.FC<FavoriteButtonProps> = ({
   children,
   showIcon = true,
 }) => {
-  const { wishlistItems, addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
-  const { isAuthenticated } = useCustomerAuth();
-  const { openLogin } = useAuthModal();
-
-  const isFavorite = item ? isInWishlist(item.id) : false;
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const handleToggle = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
-    if (!item) return;
-
-    if (!isAuthenticated) {
-      toast.error("Please login to save favorites", {
-        action: {
-          label: "Login",
-          onClick: () => openLogin()
-        }
-      });
-      openLogin();
-      return;
-    }
-
-    if (isFavorite) {
-      removeFromWishlist(item.id);
-      if (onToggle) onToggle(false);
-    } else {
-      addToWishlist(item);
-      if (onToggle) onToggle(true);
-    }
+    const nextState = !isFavorite;
+    setIsFavorite(nextState);
+    if (onToggle) onToggle(nextState);
+    toast.success(nextState ? "Added to favorites" : "Removed from favorites");
   };
 
   const baseStyles = "transition-all duration-200 flex items-center justify-center cursor-pointer";

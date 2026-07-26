@@ -12,9 +12,7 @@ interface StoreContext {
 
 interface OfficeLocationContextType {
   storeContext: StoreContext;
-  officelocation: any;
   updateStoreContext: (context: Partial<StoreContext>) => void;
-  loginCustomer: (customer: any, tokens: { accessToken: string; refresh_token?: string }) => void;
   staffLogin: (user: any, tokens: { accessToken: string; refresh_token?: string }) => void;
   logoutStaff: () => void;
   logoutAll: () => Promise<void>;

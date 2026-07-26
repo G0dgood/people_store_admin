@@ -7,7 +7,7 @@ import { HiStar, HiXMark, HiChevronRight, HiShoppingBag } from "react-icons/hi2"
 import { Button } from "../Button/Button";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useGetPublicProductsQuery } from "@/lib/redux/services/boutiqueApi";
+import { useGetProductsQuery } from "@/lib/redux/services/productApi";
 import { ProductSkeleton } from "../Skeleton/ProductSkeleton";
 import { Icon } from "../Icon";
 
@@ -22,7 +22,7 @@ export const BrandDetailModal: React.FC<BrandDetailModalProps> = ({
  onClose,
  brand,
 }) => {
- const { data: productsResponse, isLoading: isLoadingProducts } = useGetPublicProductsQuery(
+ const { data: productsResponse, isLoading: isLoadingProducts } = useGetProductsQuery(
   brand ? { brand: brand.name, limit: 4 } : undefined,
   { skip: !brand || !isOpen }
  );
