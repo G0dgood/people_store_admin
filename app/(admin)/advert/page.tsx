@@ -51,11 +51,11 @@ export default function AdvertManagement() {
   const categoriesData = categoriesResponse?.data && 'categories' in categoriesResponse.data
     ? categoriesResponse.data.categories
     : (Array.isArray(categoriesResponse?.data) ? categoriesResponse.data : []);
-  const mediaItems = mediaResponse?.data && 'media' in mediaResponse.data 
-    ? mediaResponse.data.media 
+  const mediaItems = mediaResponse?.data && 'media' in mediaResponse.data
+    ? mediaResponse.data.media
     : (Array.isArray(mediaResponse?.data) ? mediaResponse.data : []);
 
-  const availableBackgrounds = mediaItems.filter(m => m.type === "image").map(m => m.url) || [
+  const availableBackgrounds = mediaItems.filter((m: { type: string; }) => m.type === "image").map(m => m.url) || [
     "", // Fallback default
   ];
 
