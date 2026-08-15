@@ -232,28 +232,30 @@ export const AdminHeader: React.FC<HeaderProps> = ({ onOpenMenu, className, isOp
           </div>
 
           {/* User Profile */}
-          <div
-            className={`w-11 h-11 rounded-full border border-[#1C1C1C1A] overflow-hidden cursor-pointer transition-all flex items-center justify-center bg-brand-gold/10
-                ${isProfileOpen ? "border-brand-gold scale-105" : "hover:border-brand-gold/50"}
-              `}
-            onClick={toggleProfile}
-          >
-            {user?.avatar ? (
-              <div className="relative w-full h-full">
-                <Image
-                  src={user.avatar}
-                  alt="Admin"
-                  fill
-                  className="object-cover"
-                  priority
-                  sizes="44px"
-                />
-              </div>
-            ) : (
-              <HiUser className="text-brand-gold w-6 h-6" />
-            )}
+          <div className="relative" ref={profileRef}>
+            <div
+              className={`w-11 h-11 rounded-full border border-[#1C1C1C1A] overflow-hidden cursor-pointer transition-all flex items-center justify-center bg-brand-gold/10
+                  ${isProfileOpen ? "border-brand-gold scale-105" : "hover:border-brand-gold/50"}
+                `}
+              onClick={toggleProfile}
+            >
+              {user?.avatar ? (
+                <div className="relative w-full h-full">
+                  <Image
+                    src={user.avatar}
+                    alt="Admin"
+                    fill
+                    className="object-cover"
+                    priority
+                    sizes="44px"
+                  />
+                </div>
+              ) : (
+                <HiUser className="text-brand-gold w-6 h-6" />
+              )}
+            </div>
+            {isProfileOpen && <AdminProfileDropdown />}
           </div>
-          {isProfileOpen && <AdminProfileDropdown />}
         </div>
       </div>
     </header>

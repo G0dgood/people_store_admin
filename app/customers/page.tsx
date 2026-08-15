@@ -150,10 +150,14 @@ export default function CustomersListing() {
                 scales: {
                   y: {
                     min: 0,
-                    max: activeMetric === 'visitor' ? 300 : activeMetric === 'conversion' ? 10 : 50,
+                    // Visitor now uses real integer counts, so let the axis scale
+                    // to the data instead of the old hard-coded 300k ceiling.
+                    max: activeMetric === 'visitor'
+                      ? Math.max(10, ...currentChartDataset) + 5
+                      : activeMetric === 'conversion' ? 10 : 50,
                     ticks: {
-                      stepSize: activeMetric === 'visitor' ? 50 : activeMetric === 'conversion' ? 2 : 10,
-                      callback: (value: string | number) => activeMetric === 'conversion' ? `${value}%` : (activeMetric === 'visitor' ? `${value}k` : `${value}k`)
+                      stepSize: activeMetric === 'conversion' ? 2 : activeMetric === 'visitor' ? undefined : 10,
+                      callback: (value: string | number) => activeMetric === 'conversion' ? `${value}%` : (activeMetric === 'visitor' ? `${value}` : `${value}k`)
                     }
                   }
                 }
@@ -260,7 +264,7 @@ export default function CustomersListing() {
                   </td>
                   <td>{customer.phoneNumber || "N/A"}</td>
                   <td>{customer.orderCount || 0}</td>
-                  <td>{customer.totalSpend || "0.00"}</td>
+                  <td>₦{Number(customer.totalSpend || 0).toLocaleString("en-NG", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                   <td>
                     <div className="flex items-center gap-2">
                       <span className={`w-1.5 h-1.5 rounded-full ${customer.status === "active" ? "bg-emerald-500" : "bg-rose-500"}`}></span>

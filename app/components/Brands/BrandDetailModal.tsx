@@ -68,7 +68,7 @@ export const BrandDetailModal: React.FC<BrandDetailModalProps> = ({
         <span className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-gold bg-brand-charcoal/5 px-3 py-1 rounded-full backdrop-blur-sm">Artisanal House</span>
         <div className="flex items-center gap-1">
          <Icon name="star" size="sm" className="text-brand-gold" />
-         <span className="text-sm font-bold text-gray-900">{brand.rating || 5.0}</span>
+         <span className="text-sm font-bold text-gray-900">{brand.rating ? Number(brand.rating).toFixed(1) : "New"}</span>
         </div>
        </div>
        <h2 className="text-4xl md:text-6xl font-black text-gray-900 tracking-tighter leading-none">{brand.name}</h2>

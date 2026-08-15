@@ -358,7 +358,14 @@ export default function BrandsListing() {
           <td>
            <div className="flex items-center gap-1.5">
             <Icon name="star" folder="dashboardIcon" size="xs" className="text-amber-400" />
-            <span className="text-xs font-bold text-[#121212]">{brand.rating || 0}</span>
+            {brand.reviewCount ? (
+              <span className="text-xs font-bold text-[#121212]">
+               {Number(brand.rating).toFixed(1)}
+               <span className="text-gray-400 font-medium"> ({brand.reviewCount})</span>
+              </span>
+            ) : (
+              <span className="text-xs font-medium text-gray-400">No ratings</span>
+            )}
            </div>
           </td>
           <td>

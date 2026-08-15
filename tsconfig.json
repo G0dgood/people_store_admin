@@ -32,9 +32,6 @@
     "**/*.mts"
   ],
   "exclude": [
-    "node_modules",
-    "app/components/Home",
-    "app/components/Orders",
-    "app/components/Products"
+    "node_modules"
   ]
 }

@@ -37,7 +37,7 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({ images = [], title = "P
             key={idx}
             onClick={() => setActiveImage(img)}
             className={`
-               relative w-20 h-20 flex-shrink-0 border overflow-hidden bg-white p-2 transition-all duration-300
+               relative block w-20 h-20 flex-shrink-0 border overflow-hidden bg-white p-2 transition-all duration-300
                ${activeImage === img ? "border-brand-gold shadow-md" : "border-gray-200 hover:border-brand-gold/30"}
              `}
           >

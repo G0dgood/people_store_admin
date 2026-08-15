@@ -8,6 +8,7 @@ export interface Brand {
   logo: string;
   category: string;
   rating: number;
+  reviewCount?: number;
   status: string;
   inventoryCount: number;
   order?: number;

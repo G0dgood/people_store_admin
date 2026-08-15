@@ -12,6 +12,8 @@ export interface ReviewRecord {
         comment: string;
         date: string;
     };
+    helpfulBy?: string[];
+    helpfulCount?: number;
     createdAt: string;
     updatedAt: string;
 }

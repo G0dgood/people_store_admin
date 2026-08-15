@@ -7,7 +7,6 @@ import { Rating, FavoriteButton } from "../Other";
 import { Button } from "../Button/Button";
 import { HiEye } from "react-icons/hi2";
 import { useCart } from "@/app/context/CartContext";
-import { useRecentlyViewed } from "@/app/context/RecentlyViewedContext";
 import { toast } from "sonner";
 import { StockWarning } from "../StockWarning";
 import { ProductActionOverlay } from "./ProductActionOverlay";
@@ -31,7 +30,6 @@ interface ProductProps {
 
 export const ProductGridItem: React.FC<{ product: ProductProps, variant?: "default" | "joined" }> = ({ product, variant = "default" }) => {
   const { addToCart } = useCart();
-  const { addToRecentlyViewed } = useRecentlyViewed();
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -61,20 +59,10 @@ export const ProductGridItem: React.FC<{ product: ProductProps, variant?: "defau
       <Link
         href={detailPath}
         className="flex flex-col flex-1"
-        onClick={() => addToRecentlyViewed({
-          id: product.id,
-          title: product.title,
-          price: product.price,
-          image: product.image,
-          isUnlimited: product.isUnlimited,
-          stock: product.stock,
-          rating: product.rating,
-          media: product.media
-        })}
       >
         {/* Image Area */}
         <div className="relative w-full aspect-square p-8 flex items-center justify-center overflow-hidden group/image">
-          <div className="relative w-full h-full transition-all duration-400 group-hover/image:scale-110">
+          <div className="relative w-full h-full self-stretch transition-all duration-400 group-hover/image:scale-110">
             {/* Primary Image */}
             <Image
               src={product.image}
@@ -144,7 +132,6 @@ export const ProductListItem: React.FC<{
   variant = "default"
 }) => {
     const { addToCart } = useCart();
-    const { addToRecentlyViewed } = useRecentlyViewed();
 
     const handleAddToCart = (e: React.MouseEvent) => {
       e.preventDefault();
@@ -173,17 +160,8 @@ export const ProductListItem: React.FC<{
         <Link
           href={product.detailUrl || `/products/detail?id=${product.id}`}
           className="w-24 h-24 md:w-48 md:h-48 flex-shrink-0 border border-gray-200 flex items-center justify-center p-2 md:p-4 bg-white cursor-pointer overflow-hidden group/image"
-          onClick={() => addToRecentlyViewed({
-            id: product.id,
-            title: product.title,
-            price: product.price,
-            image: product.image,
-            isUnlimited: product.isUnlimited,
-            stock: product.stock,
-            media: product.media
-          })}
         >
-          <div className="relative w-full h-full transition-all duration-700 group-hover/image:scale-110">
+          <div className="relative w-full h-full self-stretch transition-all duration-700 group-hover/image:scale-110">
             {/* Primary Image */}
             <Image
               src={product.image}
@@ -212,15 +190,6 @@ export const ProductListItem: React.FC<{
             <Link
               href={product.detailUrl || `/products/detail?id=${product.id}`}
               className="text-[13px] md:text-base font-bold  tracking-wider text-gray-900 leading-snug hover:text-brand-gold cursor-pointer transition-colors line-clamp-2 md:line-clamp-none"
-              onClick={() => addToRecentlyViewed({
-                id: product.id,
-                title: product.title,
-                price: product.price,
-                image: product.image,
-                isUnlimited: product.isUnlimited,
-                stock: product.stock,
-                media: product.media
-              })}
             >
               {product.title}
             </Link>

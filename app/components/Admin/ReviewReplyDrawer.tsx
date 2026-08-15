@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Drawer from "../Drawer/Drawer";
 import { Textarea } from "../Form/Inputs";
 import { Button } from "../Button";
@@ -19,12 +19,18 @@ export function ReviewReplyDrawer({ isOpen, onClose, review }: ReviewReplyDrawer
    const [reply, setReply] = useState("");
    const [replyToReview, { isLoading }] = useReplyToReviewMutation();
 
+   // Load any existing reply so the admin sees what was already published
+   // and can edit it, instead of always starting from a blank box.
+   const existingReply = review?.reply?.comment || "";
+   useEffect(() => {
+      setReply(existingReply);
+   }, [review?._id, existingReply]);
+
    const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
       try {
          await replyToReview({ id: review._id, comment: reply }).unwrap();
-         toast.success("Reply published successfully");
-         setReply("");
+         toast.success(existingReply ? "Reply updated successfully" : "Reply published successfully");
          onClose();
       } catch (error) {
          toast.error("Failed to publish reply");
@@ -41,10 +47,10 @@ export function ReviewReplyDrawer({ isOpen, onClose, review }: ReviewReplyDrawer
             <div className="flex flex-col gap-4 p-5 bg-gray-50 rounded-2xl border border-gray-200">
                <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-white  ">
-                     <img src={review.customer.avatar} alt="" className="w-full h-full object-cover" />
+                     <img src={review.customer?.avatar || "/dashboardImage/Fashion.png"} alt="" className="w-full h-full object-cover" />
                   </div>
                   <div className="flex flex-col">
-                     <span className="text-sm font-black text-[#121212]">{review.customer.name}</span>
+                     <span className="text-sm font-black text-[#121212]">{review.customer?.fullName}</span>
                      <div className="flex items-center gap-0.5">
                         {[1, 2, 3, 4, 5].map((star) => (
                            <Icon key={star} name="star" folder="dashboardIcon" size="xs" className={star <= review.rating ? "text-amber-400" : "text-gray-200"} />
@@ -77,7 +83,7 @@ export function ReviewReplyDrawer({ isOpen, onClose, review }: ReviewReplyDrawer
                      disabled={isLoading}
                      className="w-full h-10 sm:h-12 text-[11px] font-black uppercase tracking-widest shadow-lg shadow-blue-100"
                   >
-                     {isLoading ? "Publishing..." : "Publish Reply"}
+                     {isLoading ? "Publishing..." : existingReply ? "Update Reply" : "Publish Reply"}
                   </Button>
                   <Button variant="ghost" type="button" onClick={onClose} className="w-full h-10 sm:h-12 text-[11px] font-bold text-gray-400">
                      Cancel

@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 import { Icon } from "@/app/components/Icon";
 import { Button } from "@/app/components/Button";
 import { Input } from "@/app/components/Form/Inputs";
-import { HiMiniArrowUturnLeft } from "react-icons/hi2";
+import { HiMiniArrowUturnLeft, HiOutlineHandThumbUp } from "react-icons/hi2";
 import { TabFilter } from "@/app/components/Admin/TabFilter";
 import { Pagination } from "@/app/components/Admin/Pagination";
 import { ReviewReplyDrawer } from "@/app/components/Admin/ReviewReplyDrawer";
@@ -53,6 +53,10 @@ export default function ReviewListing() {
   const [deleteReview] = useDeleteReviewMutation();
   const [bulkAction] = useBulkReviewActionMutation();
 
+  // Live helpful-vote counts pushed over socket, keyed by review id. These
+  // override the server value so counts update in real time without a refetch.
+  const [helpfulCounts, setHelpfulCounts] = useState<Record<string, number>>({});
+
   useEffect(() => {
     const socket = io(process.env.NEXT_PUBLIC_API_URL, {
       withCredentials: true,
@@ -68,6 +72,10 @@ export default function ReviewListing() {
         }
       });
       refetch();
+    });
+
+    socket.on("review-helpful", ({ reviewId, helpfulCount }: { reviewId: string; helpfulCount: number }) => {
+      setHelpfulCounts((prev) => ({ ...prev, [reviewId]: helpfulCount }));
     });
 
     return () => {
@@ -200,15 +208,16 @@ export default function ReviewListing() {
                 <th>Review</th>
                 <th>Product</th>
                 <th>Date</th>
+                <th>Helpful</th>
                 <th>Status</th>
                 <th className="text-right">Action</th>
               </tr>
             </thead>
             <tbody>
               {isLoading ? (
-                <SVGLoaderFetch colSpan={7} text="Fetching reviews..." />
+                <SVGLoaderFetch colSpan={8} text="Fetching reviews..." />
               ) : reviewsData.length === 0 ? (
-                <NoRecordFound colSpan={7} text="No reviews found." />
+                <NoRecordFound colSpan={8} text="No reviews found." />
               ) : reviewsData.map((review: any) => (
                 <tr key={review._id} className="group">
                   <td>
@@ -244,6 +253,17 @@ export default function ReviewListing() {
                       <p className="text-xs font-medium text-[#121212] leading-relaxed line-clamp-2 italic tracking-tight opacity-80">
                         "{review.comment}"
                       </p>
+                      {review.reply?.comment && (
+                        <div className="mt-1.5 flex gap-1.5 items-start rounded-md bg-brand-gold/5 border border-brand-gold/10 px-2.5 py-1.5">
+                          <HiMiniArrowUturnLeft className="w-3 h-3 text-brand-gold shrink-0 mt-0.5 -scale-x-100" />
+                          <div className="flex flex-col">
+                            <span className="text-[9px] font-black uppercase tracking-wider text-brand-gold">Admin Response</span>
+                            <p className="text-[11px] font-medium text-gray-600 line-clamp-2 leading-relaxed">
+                              {review.reply.comment}
+                            </p>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </td>
                   <td>
@@ -256,6 +276,17 @@ export default function ReviewListing() {
                   </td>
                   <td>
                     <span className="text-xs font-bold text-gray-400">{new Date(review.createdAt).toLocaleDateString()}</span>
+                  </td>
+                  <td>
+                    {(() => {
+                      const count = helpfulCounts[review._id] ?? (review.helpfulBy?.length || 0);
+                      return (
+                        <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-xs font-bold ${count > 0 ? "text-brand-gold bg-brand-gold/5" : "text-gray-400 bg-gray-50"}`}>
+                          <HiOutlineHandThumbUp className="w-3.5 h-3.5" />
+                          {count}
+                        </div>
+                      );
+                    })()}
                   </td>
                   <td>
                     <span className={`px-3 py-1.5 rounded-[6px] text-[10px] font-bold ${statusStyles[review.status as keyof typeof statusStyles]}`}>
