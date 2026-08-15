@@ -7,7 +7,7 @@ import { useGetProductsQuery, useUpdateProductMutation } from "@/lib/redux/servi
 import { Icon } from "../Icon";
 import Image from "next/image";
 import { Button } from "../Button";
-import { useApiError } from "../../hooks/useApiError";
+import { useApiError } from "@/app/hooks/useApiError";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { ConfirmationModal } from "../Admin/ConfirmationModal";
@@ -150,7 +150,7 @@ export const CategoryProductsModal: React.FC<CategoryProductsModalProps> = ({
               className="ml-auto bg-white/5 border-white/10 text-white hover:bg-white hover:text-[#121212] transition-all h-9 flex-shrink-0"
               onClick={() => {
                 onClose();
-                router.push(`/admin/products/new?category=${encodeURIComponent(category.name)}`);
+                router.push(`/products/new?category=${encodeURIComponent(category.name)}`);
               }}
             >
               Add Product
@@ -208,7 +208,7 @@ export const CategoryProductsModal: React.FC<CategoryProductsModalProps> = ({
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        router.push(`/admin/products/edit/${product._id}`);
+                        router.push(`/products/edit/${product._id}`);
                       }}
                       className="p-1 hover:bg-brand-gold/5 text-gray-300 hover:text-brand-gold rounded-md transition-all opacity-0 group-hover:opacity-100 flex-shrink-0"
                       title="Edit product"

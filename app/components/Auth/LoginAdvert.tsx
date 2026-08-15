@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { getAdvertConfig, AdvertConfig, AdvertItem } from "../../utils/advertState";
+import { getAdvertConfig, AdvertConfig, AdvertItem } from "@/app/utils/advertState";
 
 export const LoginAdvert = () => {
  const [config, setConfig] = useState<AdvertConfig | null>(null);

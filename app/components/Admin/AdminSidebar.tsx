@@ -413,12 +413,12 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
       });
 
       // Absolute navigation to clear all states
-      window.location.href = "/login";
+      window.location.href = "/";
     } catch (err) {
       // Even if the backend call fails (e.g. timeout), we should still clear local state
       dispatch(logOut());
       localStorage.clear();
-      window.location.href = "/login";
+      window.location.href = "/";
     }
   };
 

@@ -171,7 +171,7 @@ export const ProductMediaMetaSidebar: React.FC<ProductMediaMetaSidebarProps> = (
                   </label>
                 ))}
                 {offices?.length === 0 && (
-                  <p className="text-[10px] text-gray-400 italic">No offices defined. <a href="/admin/offices" className="text-brand-gold hover:underline">Add one</a></p>
+                  <p className="text-[10px] text-gray-400 italic">No offices defined. <a href="/offices" className="text-brand-gold hover:underline">Add one</a></p>
                 )}
               </div>
             </div>

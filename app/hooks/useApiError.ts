@@ -29,7 +29,7 @@ export const useApiError = (
     }
 
     // Suppress error if we are on an admin route and hideInAdmin is true
-    if (options.hideInAdmin && pathname?.startsWith("/admin")) {
+    if (options.hideInAdmin && pathname !== "/") {
       return;
     }
 

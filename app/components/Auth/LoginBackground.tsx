@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Icon } from "../Icon";
-import { getAdvertConfig, BackgroundAsset } from "../../utils/advertState";
+import { getAdvertConfig, BackgroundAsset } from "@/app/utils/advertState";
 import { motion, AnimatePresence } from "framer-motion";
 import { HiChevronLeft, HiChevronRight } from "react-icons/hi2";
 

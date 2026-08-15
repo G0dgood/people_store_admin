@@ -66,7 +66,7 @@ export const RegisterForm = ({ onToggleToLogin }: RegisterFormProps) => {
      description: "Welcome to the boutique! Your account is now active."
     });
 
-    router.push("/admin"); // Or to the shop
+    router.push("/dashboard"); // Or to the shop
    }
   } catch (err: any) {
    toast.error("Registration Failed", {

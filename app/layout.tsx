@@ -14,6 +14,8 @@ import StoreProvider from "@/lib/redux/StoreProvider";
 import { AuthPersistence } from "./components/Auth/AuthPersistence";
 import { AdminSessionProvider } from "./context/AdminSessionContext";
 import { OfficeLocationProvider } from "./context/OfficeLocationContext";
+import { AdminLayoutWrapper } from "./components/Admin/AdminLayoutWrapper";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,8 +44,8 @@ const lato = Lato({
 });
 
 export const metadata: Metadata = {
-  title: "Bloom & Mist",
-  description: "Bloom & Mist - Luxury Perfumes",
+  title: "People Store Admin",
+  description: "People Store Admin Dashboard",
 };
 
 export const viewport: Viewport = {
@@ -52,8 +54,6 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
 };
-
-import Script from "next/script";
 
 export default function RootLayout({
   children,
@@ -79,7 +79,9 @@ export default function RootLayout({
                     <AuthModalProvider>
                       <MobileMenuProvider>
                         <PageWrapper>
-                          {children}
+                          <AdminLayoutWrapper>
+                            {children}
+                          </AdminLayoutWrapper>
                         </PageWrapper>
                       </MobileMenuProvider>
                       <AuthModal />
@@ -91,6 +93,6 @@ export default function RootLayout({
           </AdminSessionProvider>
         </StoreProvider>
       </body>
-    </html >
+    </html>
   );
 }

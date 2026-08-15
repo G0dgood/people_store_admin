@@ -23,7 +23,7 @@ export function AdminSessionProvider({ children }: { children: ReactNode }) {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
   // Only handle sessions for admin paths
-  const isAdminPath = pathname?.startsWith("/admin");
+  const isAdminPath = pathname !== "/";
 
   const triggerSessionExpired = () => {
     if (isAuthenticated && isAdminPath) {
@@ -68,10 +68,10 @@ export function AdminSessionProvider({ children }: { children: ReactNode }) {
       });
 
       setIsSessionExpired(false);
-      window.location.href = "/login";
+      window.location.href = "/";
     } catch (error) {
       console.error("Admin logout failed during session expiration:", error);
-      window.location.href = "/login";
+      window.location.href = "/";
     }
   };
 

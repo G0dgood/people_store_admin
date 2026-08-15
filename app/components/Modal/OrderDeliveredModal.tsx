@@ -69,7 +69,7 @@ export const OrderDeliveredModal: React.FC<OrderDeliveredModalProps> = ({
               <Button
                 onClick={() => {
                   onClose();
-                  router.push("/admin/orders"); // Assuming user wants to see order details
+                  router.push("/orders"); // Assuming user wants to see order details
                 }}
                 className="w-full h-14 bg-black text-white font-bold text-[11px] uppercase tracking-[0.2em] hover:bg-brand-gold transition-all shadow-none rounded-none"
               >

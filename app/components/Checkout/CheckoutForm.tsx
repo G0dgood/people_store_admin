@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { Input, Radio } from "@/app/components/Form";
-import { Button } from "@/app/components/Button";
-import { Icon } from "@/app/components/Icon";
+import { Input, Radio } from "../Form";
+import { Button } from "../Button";
+import { Icon } from "../Icon";
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 20 },

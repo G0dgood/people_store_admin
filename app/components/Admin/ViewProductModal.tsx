@@ -181,7 +181,7 @@ export function ViewProductModal({ isOpen, onClose, product }: ViewProductModalP
                   variant="primary"
                   onClick={() => {
                     onClose();
-                    router.push(`/admin/products/${fullProduct._id}`);
+                    router.push(`/products/${fullProduct._id}`);
                   }}
                   iconLeft={<Icon name="settings" folder="dashboardIcon" size="sm" />}
                 >

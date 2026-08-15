@@ -13,9 +13,9 @@ interface NotificationDetailDrawerProps {
 }
 
 const typeStyles = {
-   Orders: { icon: "Cart", color: "text-brand-gold", bg: "bg-brand-gold/10", action: "/admin/orders", label: "Manage Order" },
-   Stock: { icon: "inventory_2", color: "text-amber-500", bg: "bg-amber-50", action: "/admin/products", label: "Inventory Management" },
-   Security: { icon: "security", color: "text-rose-500", bg: "bg-rose-50", action: "/admin/roles", label: "View Audit Log" },
+   Orders: { icon: "Cart", color: "text-brand-gold", bg: "bg-brand-gold/10", action: "/orders", label: "Manage Order" },
+   Stock: { icon: "inventory_2", color: "text-amber-500", bg: "bg-amber-50", action: "/products", label: "Inventory Management" },
+   Security: { icon: "security", color: "text-rose-500", bg: "bg-rose-50", action: "/roles", label: "View Audit Log" },
 };
 
 export function NotificationDetailDrawer({ isOpen, onClose, notification }: NotificationDetailDrawerProps) {

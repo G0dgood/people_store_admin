@@ -13,7 +13,7 @@ export const AuthPersistence = ({ children }: { children: React.ReactNode }) => 
   const pathname = usePathname();
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
-  const isAdminPath = pathname?.startsWith("/admin");
+  const isAdminPath = pathname !== "/";
 
   // Attempt to restore admin session
   const {

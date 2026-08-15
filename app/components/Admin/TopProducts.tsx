@@ -44,7 +44,7 @@ export const TopProducts: React.FC<TopProductsProps> = ({
         <button
           onClick={() => {
             if (onViewAll) onViewAll();
-            router.push("/admin/products");
+            router.push("/products");
           }}
           className="group flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-brand-gold/5 text-brand-gold text-[10px] font-black uppercase tracking-widest hover:bg-brand-gold hover:text-white transition-all duration-300"
         >

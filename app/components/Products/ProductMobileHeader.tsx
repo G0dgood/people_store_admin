@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Icon } from "../Icon";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCart } from "@/app/context/CartContext";
-import { useCustomerAuth } from "../../context/CustomerAuthContext";
+import { useCustomerAuth } from "@/app/context/CustomerAuthContext";
 import Link from "next/link";
 
 interface ProductMobileHeaderProps {

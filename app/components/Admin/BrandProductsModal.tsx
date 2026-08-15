@@ -7,7 +7,7 @@ import { useGetProductsQuery, useUpdateProductMutation } from "@/lib/redux/servi
 import { Icon } from "../Icon";
 import Image from "next/image";
 import { Button } from "../Button";
-import { useApiError } from "../../hooks/useApiError";
+import { useApiError } from "@/app/hooks/useApiError";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { ConfirmationModal } from "../Admin/ConfirmationModal";
@@ -125,7 +125,7 @@ export const BrandProductsModal: React.FC<BrandProductsModalProps> = ({
               className="ml-auto bg-white/5 border-white/10 text-white hover:bg-white hover:text-[#121212] transition-all h-9 flex-shrink-0"
               onClick={() => {
                 onClose();
-                router.push(`/admin/products/new?brand=${encodeURIComponent(brand.name)}`);
+                router.push(`/products/new?brand=${encodeURIComponent(brand.name)}`);
               }}
             >
               Add Product
@@ -153,7 +153,7 @@ export const BrandProductsModal: React.FC<BrandProductsModalProps> = ({
               <div
                 key={product._id}
                 className="flex items-center gap-4 p-3 bg-white border border-gray-100 rounded-xl hover:border-brand-gold/30 hover:shadow-md transition-all cursor-pointer group"
-                onClick={() => router.push(`/admin/products/edit/${product._id}`)}
+                onClick={() => router.push(`/products/edit/${product._id}`)}
               >
                 <div className="w-16 h-16 bg-gray-50 rounded-lg overflow-hidden flex-shrink-0 border border-gray-50">
                   <Image

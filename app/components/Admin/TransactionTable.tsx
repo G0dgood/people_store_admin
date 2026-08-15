@@ -90,7 +90,7 @@ export function TransactionTable() {
           shape="rounded-sm"
           variant="ghost"
           className="border border-brand-charcoal/20 text-brand-charcoal text-[10px] font-black uppercase tracking-widest px-8 h-10 rounded-[6px] hover:bg-brand-charcoal/5"
-          onClick={() => router.push("/admin/transactions")}
+          onClick={() => router.push("/transactions")}
         >
           View All Transactions
         </Button>

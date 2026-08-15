@@ -4,15 +4,15 @@ import React, { useState, useEffect } from "react";
 import Modal from "../Modal/Modal";
 import ModalBody from "../Modal/ModalBody";
 import ModalFooter from "../Modal/ModalFooter";
-import { Button } from "../../components/Button";
-import { Input } from "../../components/Form/Inputs";
+import { Button } from "@/app/components/Button";
+import { Input } from "@/app/components/Form/Inputs";
 import { Icon } from "../Icon";
 import { useGetProductsQuery, useUpdateProductMutation } from "@/lib/redux/services/productApi";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Checkbox from "../../components/Checkbox";
-import { useApiError } from "../../hooks/useApiError";
+import Checkbox from "@/app/components/Checkbox";
+import { useApiError } from "@/app/hooks/useApiError";
 
 import { useGetCategoriesQuery } from "@/lib/redux/services/categoryApi";
 import { Select } from "../Form";
@@ -101,7 +101,7 @@ export const QuickAddProductModal: React.FC<QuickAddProductModalProps> = ({
   const handleCreateNew = () => {
     onClose();
     const queryParam = isCategory ? `category=${encodeURIComponent(category.name)}` : `brand=${encodeURIComponent(brand.name)}`;
-    router.push(`/admin/products/new?${queryParam}`);
+    router.push(`/products/new?${queryParam}`);
   };
 
   return (

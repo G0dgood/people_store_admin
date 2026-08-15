@@ -13,7 +13,7 @@ import { setCredentials } from "@/lib/redux/features/authSlice";
 import { useAppDispatch } from "@/lib/redux/hooks";
 import { useRouter } from "next/navigation";
 import { FaGoogle, FaFacebook } from "react-icons/fa";
-import { useCustomerAuth } from "../../context/CustomerAuthContext";
+import { useCustomerAuth } from "@/app/context/CustomerAuthContext";
 import { useApiError } from "@/app/hooks/useApiError";
 import { toast } from "sonner";
 
