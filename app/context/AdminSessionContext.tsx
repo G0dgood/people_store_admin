@@ -55,6 +55,9 @@ export function AdminSessionProvider({ children }: { children: ReactNode }) {
   }, [pathname, isAuthenticated, isAdminPath]);
 
   const handleLogout = async () => {
+    if (typeof window !== "undefined") {
+      (window as any)._isLoggingOut = true;
+    }
     try {
       await logoutAdmin(undefined).unwrap();
     } catch (e) {

@@ -50,6 +50,9 @@ export const AdminHeader: React.FC<HeaderProps> = ({ onOpenMenu, className, isOp
   const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
 
   const handleLogout = async () => {
+    if (typeof window !== "undefined") {
+      (window as any)._isLoggingOut = true;
+    }
     try {
       await logout({}).unwrap();
     } catch {

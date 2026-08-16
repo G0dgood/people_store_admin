@@ -398,6 +398,9 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
   };
 
   const handleLogout = async () => {
+    if (typeof window !== "undefined") {
+      (window as any)._isLoggingOut = true;
+    }
     try {
       await logout(undefined).unwrap();
     } catch (err) {

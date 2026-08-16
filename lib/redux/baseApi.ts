@@ -17,8 +17,9 @@ const baseQueryWithReauth = async (args: any, api: any, extraOptions: any) => {
 
   if (result.error && (result.error as any).status === 401) {
     const isLogout = typeof args === 'string' ? args.includes('/logout') : args.url?.includes('/logout');
+    const isLoggingOut = typeof window !== 'undefined' && (window as any)._isLoggingOut;
 
-    if (typeof window !== 'undefined' && !isLogout) {
+    if (typeof window !== 'undefined' && !isLogout && !isLoggingOut) {
       // Avoid firing multiple events in a short window
       const now = Date.now();
       const lastExpired = (window as any)._lastSessionExpired || 0;
