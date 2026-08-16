@@ -45,7 +45,7 @@ export interface Product {
   stockStatus: string;
   isUnlimited: boolean;
   isFeatured: boolean;
-  status: 'Draft' | 'Published';
+  status: 'Draft' | 'Published' | 'Unpublished';
   taxIncluded: boolean;
   expiryStart?: string | null;
   expiryEnd?: string | null;

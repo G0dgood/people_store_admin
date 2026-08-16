@@ -24,8 +24,8 @@ import { LuCopy, LuPackageSearch, LuZap, LuFileText } from "react-icons/lu";
 import { HiPencil } from "react-icons/hi2";
 
 const statusStyles = {
-  Published: "text-emerald-500 bg-emerald-50/50",
-  Draft: "text-gray-400 bg-gray-50",
+  Published: "text-emerald-600 bg-emerald-50/50 border border-emerald-200",
+  Draft: "text-amber-600 bg-amber-50 border border-amber-300",
   "Out of Stock": "text-rose-500 bg-rose-50/50",
   "Low Stock": "text-amber-500 bg-amber-50/50",
 };

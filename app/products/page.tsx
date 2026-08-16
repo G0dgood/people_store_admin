@@ -30,9 +30,10 @@ import { usePrivilege } from "@/lib/contexts/PrivilegeContext";
 import { useApiError } from "@/app/hooks/useApiError";
 
 const statusStyles = {
-  Published: "text-emerald-500 bg-emerald-50/50",
-  Draft: "text-gray-400 bg-gray-50",
-  "Out of Stock": "text-rose-500 bg-rose-50/50",
+  Published: "text-emerald-600 bg-emerald-50/50 border border-emerald-200",
+  Draft: "text-amber-600 bg-amber-50 border border-amber-300",
+  Unpublished: "text-rose-600 bg-rose-50 border border-rose-300",
+  "Out of Stock": "text-rose-500 bg-rose-50/50 border border-rose-200",
   "Low Stock": "text-amber-500 bg-amber-50/50",
 };
 
@@ -40,6 +41,7 @@ const productStatusOptions = [
   { value: "All products", label: "All products" },
   { value: "Published", label: "Published" },
   { value: "Draft", label: "Draft" },
+  { value: "Unpublished", label: "Unpublished" },
   { value: "Low Stock", label: "Low Stock" },
   { value: "Out of Stock", label: "Out of Stock" },
 ];
@@ -79,7 +81,7 @@ export default function ProductListing() {
     page: currentPage,
     limit: rowsPerPage,
     search: searchQuery || undefined,
-    status: activeTab === "All products" ? undefined : activeTab,
+    status: activeTab === "All products" ? "All products" : activeTab,
     category: selectedCategory === "All Categories" ? undefined : selectedCategory,
     brand: selectedBrand === "All Brands" ? undefined : selectedBrand
   });
@@ -87,7 +89,7 @@ export default function ProductListing() {
   // Mutations
   const [deleteProduct, { isLoading: isDeleting, isError: isDeleteError, error: deleteError }] = useDeleteProductMutation();
   const [addProduct, { isLoading: isDuplicating, isError: isAddError, error: addError }] = useAddProductMutation();
-  const [updateProduct, { isError: isUpdateError, error: updateError }] = useUpdateProductMutation();
+  const [updateProduct, { isLoading: isUpdatingStatus, isError: isUpdateError, error: updateError }] = useUpdateProductMutation();
 
   // Error Handling
   useApiError(isDeleteError, deleteError, "Failed to delete product");
@@ -168,7 +170,7 @@ export default function ProductListing() {
   const handleToggleStatus = async () => {
     if (!productForStatusToggle) return;
     try {
-      const newStatus = productForStatusToggle.status === "Published" ? "Draft" : "Published";
+      const newStatus = productForStatusToggle.status === "Published" ? "Unpublished" : "Published";
       await updateProduct({
         productId: productForStatusToggle._id,
         data: { status: newStatus as any }
@@ -176,8 +178,8 @@ export default function ProductListing() {
       toast.success(`Product marked as ${newStatus}`);
       setIsStatusConfirmOpen(false);
       setProductForStatusToggle(null);
-    } catch (err) {
-      // Error handled by hook
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Failed to update product status");
     }
   };
 
@@ -412,14 +414,16 @@ export default function ProductListing() {
                           setProductForStatusToggle(product);
                           setIsStatusConfirmOpen(true);
                         }}
-                        className={`px-3 py-1.5 rounded-[6px] text-[10px] font-bold transition-all hover:ring-2 hover:ring-offset-1 group relative overflow-hidden min-w-[80px]
+                        className={`px-2 py-0.5 h-6 rounded-[6px] text-[9px] font-bold border transition-all hover:ring-1 hover:ring-offset-1 group/status relative overflow-hidden min-w-[64px] inline-flex items-center justify-center
                   ${product.status === "Published"
-                            ? "text-emerald-500 bg-emerald-50/50 hover:bg-rose-500 hover:text-white"
-                            : "text-gray-400 bg-gray-50 hover:bg-emerald-500 hover:text-white"
+                            ? "text-emerald-600 bg-emerald-50/50 border-emerald-200 hover:bg-rose-500 hover:text-white hover:border-rose-500"
+                            : product.status === "Unpublished"
+                              ? "text-rose-600 bg-rose-50 border-rose-300 hover:bg-emerald-500 hover:text-white hover:border-emerald-500"
+                              : "text-amber-600 bg-amber-50 border-amber-300 hover:bg-emerald-500 hover:text-white hover:border-emerald-500"
                           }`}
                       >
-                        <span className="group-hover:hidden">{product.status}</span>
-                        <span className="hidden group-hover:inline">
+                        <span className="group-hover/status:hidden">{product.status}</span>
+                        <span className="hidden group-hover/status:inline">
                           {product.status === "Published" ? "Unpublish" : "Publish"}
                         </span>
                       </button>
@@ -623,6 +627,7 @@ export default function ProductListing() {
         }
         confirmText={productForStatusToggle?.status === "Published" ? "Yes, unpublish" : "Yes, publish"}
         type={productForStatusToggle?.status === "Published" ? "danger" : "success"}
+        isLoading={isUpdatingStatus}
       />
       <ViewProductModal
         isOpen={isViewModalOpen}

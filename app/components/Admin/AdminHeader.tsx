@@ -15,8 +15,13 @@ import Modal from "../Modal/Modal";
 import { NotificationList } from "./AdminNotificationDropdown";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { useAppSelector } from "@/lib/redux/hooks";
-import { selectCurrentUser } from "@/lib/redux/features/authSlice";
+import { useAppSelector, useAppDispatch } from "@/lib/redux/hooks";
+import { selectCurrentUser, logOut } from "@/lib/redux/features/authSlice";
+import { clearPrivileges } from "@/lib/redux/features/privilegeSlice";
+import { baseApi } from "@/lib/redux/baseApi";
+import { useLogoutMutation } from "@/lib/redux/services/authApi";
+import { ConfirmationModal } from "./ConfirmationModal";
+import { toast } from "sonner";
 import { useAdminTheme } from "@/app/context/AdminThemeContext";
 import { useGetUnreadCountQuery } from "@/lib/redux/services/messageApi";
 import { LuMessageSquare } from "react-icons/lu";
@@ -39,6 +44,33 @@ export const AdminHeader: React.FC<HeaderProps> = ({ onOpenMenu, className, isOp
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+
+  const dispatch = useAppDispatch();
+  const [logout, { isLoading: isLoggingOut }] = useLogoutMutation();
+
+  const handleLogout = async () => {
+    try {
+      await logout({}).unwrap();
+    } catch {
+      // Ignore API errors on logout
+    } finally {
+      dispatch(logOut());
+      dispatch(clearPrivileges());
+      dispatch(baseApi.util.resetApiState());
+      localStorage.clear();
+      sessionStorage.clear();
+      document.cookie.split(";").forEach((c) => {
+        document.cookie = c
+          .replace(/^ +/, "")
+          .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+      });
+      toast.success("Session Terminated", {
+        description: "You have been successfully logged out."
+      });
+      window.location.href = "/";
+    }
+  };
 
   const notificationRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
@@ -254,10 +286,31 @@ export const AdminHeader: React.FC<HeaderProps> = ({ onOpenMenu, className, isOp
                 <HiUser className="text-brand-gold w-6 h-6" />
               )}
             </div>
-            {isProfileOpen && <AdminProfileDropdown />}
+            {isProfileOpen && (
+              <AdminProfileDropdown
+                onRequestLogout={() => {
+                  setIsProfileOpen(false);
+                  setIsLogoutModalOpen(true);
+                }}
+              />
+            )}
           </div>
         </div>
       </div>
+
+      {/* Owned by the header so the click-outside that closes the profile
+          dropdown never unmounts this modal mid-click. */}
+      <ConfirmationModal
+        isOpen={isLogoutModalOpen}
+        onClose={() => setIsLogoutModalOpen(false)}
+        onConfirm={handleLogout}
+        title="Logout Session"
+        message="Are you sure you want to end your current session? You will need to sign in again to access the administrative dashboard."
+        confirmText="Yes, Logout Now"
+        cancelText="Stay Logged In"
+        type="danger"
+        isLoading={isLoggingOut}
+      />
     </header>
   );
 };

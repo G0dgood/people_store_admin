@@ -2,8 +2,8 @@
 
 import { useEffect } from "react";
 import { useGetCurrentUserQuery } from "@/lib/redux/services/authApi";
-import { useGetCurrentCustomerQuery } from "@/lib/redux/services/customerApi";
-import { setCredentials } from "@/lib/redux/features/authSlice";
+import { setCredentials, logOut } from "@/lib/redux/features/authSlice";
+import { clearPrivileges } from "@/lib/redux/features/privilegeSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { selectIsAuthenticated } from "@/lib/redux/features/authSlice";
 import { usePathname } from "next/navigation";
@@ -13,62 +13,40 @@ export const AuthPersistence = ({ children }: { children: React.ReactNode }) => 
   const pathname = usePathname();
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
-  const isAdminPath = pathname !== "/";
-
-  // Attempt to restore admin session
+  // In the admin app, only check staff/admin authentication
   const {
     data: adminData,
     isSuccess: isAdminSuccess,
+    isError: isAdminError,
     isLoading: isAdminLoading,
-    isFetching: isAdminFetching
+    isFetching: isAdminFetching,
   } = useGetCurrentUserQuery(undefined, {
     refetchOnMountOrArgChange: true,
-    skip: !isAdminPath || isAuthenticated, // Skip if not on admin path OR already authenticated
+    skip: isAuthenticated, // Skip if already authenticated in Redux
   });
 
-  // Attempt to restore customer session (boutique side)
-  const {
-    data: customerData,
-    isSuccess: isCustomerSuccess,
-    isLoading: isCustomerLoading,
-    isFetching: isCustomerFetching
-  } = useGetCurrentCustomerQuery(undefined, {
-    refetchOnMountOrArgChange: true,
-    skip: isAdminPath || isAuthenticated, // Skip if on admin path OR already authenticated
-  });
-
-  // Restore Admin Credentials
+  // Restore Admin Credentials or clear on failure
   useEffect(() => {
     if (isAdminSuccess && adminData?.success && adminData?.data) {
-      // Only set credentials if not already authenticated to avoid wiping existing token
       if (!isAuthenticated) {
-        dispatch(setCredentials({
-          user: adminData.data,
-          accessToken: "" // Handled by cookies on refresh
-        }));
+        dispatch(
+          setCredentials({
+            user: adminData.data,
+            accessToken: "", // Managed via HTTPOnly cookies
+          })
+        );
       }
+    } else if (isAdminError) {
+      dispatch(logOut());
+      dispatch(clearPrivileges());
     }
-  }, [isAdminSuccess, adminData, dispatch, isAuthenticated]);
+  }, [isAdminSuccess, isAdminError, adminData, dispatch, isAuthenticated]);
 
-  // Restore Customer Credentials
-  useEffect(() => {
-    if (isCustomerSuccess && customerData?.success && customerData?.data) {
-      // Only set credentials if not already authenticated
-      if (!isAuthenticated) {
-        dispatch(setCredentials({
-          user: customerData.data,
-          accessToken: "" // Handled by cookies on refresh
-        }));
-      }
-    }
-  }, [isCustomerSuccess, customerData, dispatch, isAuthenticated]);
+  const isAuthPage = pathname === "/" || pathname?.includes("/login");
+  const isLoading = isAdminLoading || isAdminFetching;
 
-  const isLoading = isAdminPath
-    ? (isAdminLoading || isAdminFetching)
-    : (isCustomerLoading || isCustomerFetching);
-
-  // Prevent flicker on refresh by waiting for the relevant fetch to complete
-  if (!isAuthenticated && isLoading) {
+  // Prevent flicker on protected pages by waiting for the fetch to complete
+  if (!isAuthenticated && isLoading && !isAuthPage) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-white z-[9999]">
         <div className="flex flex-col items-center gap-6">

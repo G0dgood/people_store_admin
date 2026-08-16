@@ -12,8 +12,9 @@ import { useGetCurrentUserQuery } from "@/lib/redux/services/authApi";
 import { toast } from "sonner";
 import { SocketProvider, useSocket } from "@/app/context/SocketContext";
 import { toastSuccess, toastInfo } from "@/app/utils/toastWithSound";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { messageApi } from "@/lib/redux/services/messageApi";
+import { selectIsAuthenticated } from "@/lib/redux/features/authSlice";
 
 function AdminLayoutContent({
   children,
@@ -27,6 +28,7 @@ function AdminLayoutContent({
   const { canAccess, isLoading, userPrivileges } = usePrivilege();
 
   const dispatch = useDispatch();
+  const isAuthenticated = useSelector(selectIsAuthenticated);
   const { data: userData, isLoading: isUserLoading, isError: isUserError } = useGetCurrentUserQuery();
   const { on, off, socket } = useSocket();
 
@@ -102,12 +104,17 @@ function AdminLayoutContent({
     }
   }, [pathname]);
 
-  // Global Authentication Protection
+  // Global Authentication Protection.
+  // Only hard-redirect users who have NO client session at all. If Redux still
+  // considers us authenticated but the server rejected the request (an expired
+  // session), leave it to the AdminSessionContext "session expired" modal.
+  // Redirecting here would fight the login page's own redirect (which fires
+  // whenever isAuthenticated is true) and bounce the user in and out — a loop.
   useEffect(() => {
-    if (!isUserLoading && (isUserError || !userData)) {
+    if (!isUserLoading && !isAuthenticated) {
       router.push("/");
     }
-  }, [userData, isUserLoading, isUserError, router]);
+  }, [isAuthenticated, isUserLoading, router]);
 
   // Route-level permission protection
   useEffect(() => {

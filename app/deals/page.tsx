@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Button } from "@/app/components/Button";
 import { EmptyState } from "@/app/components/Admin/EmptyState";
 import { UpdateDealsTimerModal } from "@/app/components/Admin/UpdateDealsTimerModal";
@@ -74,30 +74,30 @@ export default function DealsPage() {
     return () => off("TIMER_UPDATED", handleTimerUpdate);
   }, [on, off, refetchTimer]);
 
-  const initialTotalSeconds = useMemo(() => {
-    return (
-      parseInt(timerValues.days) * 86400 +
-      parseInt(timerValues.hours) * 3600 +
-      parseInt(timerValues.minutes) * 60 +
-      parseInt(timerValues.seconds)
-    );
-  }, [timerValues]);
+  const endsAt = (timerValues as any).endsAt ? new Date((timerValues as any).endsAt).getTime() : null;
 
-  const [totalSeconds, setTotalSeconds] = useState(initialTotalSeconds);
-
-  useEffect(() => {
-    setTotalSeconds(initialTotalSeconds);
-  }, [initialTotalSeconds]);
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (isRunning && totalSeconds > 0) {
-      interval = setInterval(() => {
-        setTotalSeconds(prev => prev - 1);
-      }, 1000);
+  // Remaining time anchored to wall-clock so the countdown continues across
+  // refreshes/refetches instead of restarting from the configured duration.
+  const computeRemaining = useCallback(() => {
+    if (isRunning && endsAt) {
+      return Math.max(0, Math.round((endsAt - Date.now()) / 1000));
     }
+    return Math.max(0, (timerValues as any).remainingSeconds ?? 0);
+  }, [isRunning, endsAt, (timerValues as any).remainingSeconds]);
+
+  const [totalSeconds, setTotalSeconds] = useState(0);
+
+  useEffect(() => {
+    setTotalSeconds(computeRemaining());
+  }, [computeRemaining]);
+
+  useEffect(() => {
+    if (!isRunning) return;
+    const interval = setInterval(() => {
+      setTotalSeconds(computeRemaining());
+    }, 1000);
     return () => clearInterval(interval);
-  }, [isRunning, totalSeconds]);
+  }, [isRunning, computeRemaining]);
 
   const displayValues = useMemo(() => {
     const d = Math.floor(totalSeconds / 86400);

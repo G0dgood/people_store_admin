@@ -12,6 +12,8 @@ import { HiChevronDown, HiOutlineQuestionMarkCircle, HiShieldCheck, HiXMark, HiB
 import { RiPercentLine } from "react-icons/ri";
 import { useLogoutMutation } from "@/lib/redux/services/authApi";
 import { logOut, selectCurrentUser } from "@/lib/redux/features/authSlice";
+import { clearPrivileges } from "@/lib/redux/features/privilegeSlice";
+import { baseApi } from "@/lib/redux/baseApi";
 import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -398,10 +400,14 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
   const handleLogout = async () => {
     try {
       await logout(undefined).unwrap();
+    } catch (err) {
+      // Ignore API errors on logout
+    } finally {
       dispatch(logOut());
-
-      // Clear all local storage and cookies manually as a fallback
+      dispatch(clearPrivileges());
+      dispatch(baseApi.util.resetApiState());
       localStorage.clear();
+      sessionStorage.clear();
       document.cookie.split(";").forEach((c) => {
         document.cookie = c
           .replace(/^ +/, "")
@@ -412,12 +418,6 @@ export const AdminSidebar: React.FC<SidenavProps> = ({ activeItem = "dashboard",
         description: "You have been successfully logged out."
       });
 
-      // Absolute navigation to clear all states
-      window.location.href = "/";
-    } catch (err) {
-      // Even if the backend call fails (e.g. timeout), we should still clear local state
-      dispatch(logOut());
-      localStorage.clear();
       window.location.href = "/";
     }
   };

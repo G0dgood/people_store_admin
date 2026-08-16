@@ -6,8 +6,10 @@ import { Button } from "../components/Button";
 import { HiExclamationTriangle } from "react-icons/hi2";
 import { useRouter, usePathname } from "next/navigation";
 import { useLogoutMutation as useLogoutAdminMutation } from "@/lib/redux/services/authApi";
-import { useAppSelector } from "@/lib/redux/hooks";
-import { selectIsAuthenticated } from "@/lib/redux/features/authSlice";
+import { useAppDispatch, useAppSelector } from "@/lib/redux/hooks";
+import { selectIsAuthenticated, logOut } from "@/lib/redux/features/authSlice";
+import { clearPrivileges } from "@/lib/redux/features/privilegeSlice";
+import { baseApi } from "@/lib/redux/baseApi";
 
 interface AdminSessionContextType {
   isSessionExpired: boolean;
@@ -17,6 +19,7 @@ interface AdminSessionContextType {
 const AdminSessionContext = createContext<AdminSessionContextType | undefined>(undefined);
 
 export function AdminSessionProvider({ children }: { children: ReactNode }) {
+  const dispatch = useAppDispatch();
   const [isSessionExpired, setIsSessionExpired] = useState(false);
   const pathname = usePathname();
   const [logoutAdmin, { isLoading: isLoggingOut }] = useLogoutAdminMutation();
@@ -40,7 +43,7 @@ export function AdminSessionProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const handleSessionExpired = () => {
-      const isAuthPage = pathname?.includes("/login");
+      const isAuthPage = pathname?.includes("/login") || pathname === "/";
       // Only show if user is authenticated, not on auth page, and IS on admin path
       if (!isAuthPage && isAuthenticated && isAdminPath) {
         setIsSessionExpired(true);
@@ -53,14 +56,15 @@ export function AdminSessionProvider({ children }: { children: ReactNode }) {
 
   const handleLogout = async () => {
     try {
-      try {
-        await logoutAdmin(undefined).unwrap();
-      } catch (e) {
-        // Ignore errors
-      }
-
-      // Clear local storage and cookies manually
+      await logoutAdmin(undefined).unwrap();
+    } catch (e) {
+      // Ignore API errors
+    } finally {
+      dispatch(logOut());
+      dispatch(clearPrivileges());
+      dispatch(baseApi.util.resetApiState());
       localStorage.clear();
+      sessionStorage.clear();
       document.cookie.split(";").forEach((c) => {
         document.cookie = c
           .replace(/^ +/, "")
@@ -68,9 +72,6 @@ export function AdminSessionProvider({ children }: { children: ReactNode }) {
       });
 
       setIsSessionExpired(false);
-      window.location.href = "/";
-    } catch (error) {
-      console.error("Admin logout failed during session expiration:", error);
       window.location.href = "/";
     }
   };
