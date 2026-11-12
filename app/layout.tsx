@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono, Inter, Outfit, Lato } from "next/font/google";
+import { Geist_Mono, Cormorant_Garamond, Jost } from "next/font/google";
 import "./globals.css";
 import { MobileMenuProvider } from "./context/MobileMenuContext";
 import { AuthModalProvider } from "./context/AuthModalContext";
@@ -17,30 +17,22 @@ import { OfficeLocationProvider } from "./context/OfficeLocationContext";
 import { AdminLayoutWrapper } from "./components/Admin/AdminLayoutWrapper";
 import Script from "next/script";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 
-const inter = Inter({
-  variable: "--font-inter",
+const cormorant = Cormorant_Garamond({
+  variable: "--font-cormorant",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
 });
 
-const outfit = Outfit({
-  variable: "--font-outfit",
+const jost = Jost({
+  variable: "--font-jost",
   subsets: ["latin"],
-});
-
-const lato = Lato({
-  variable: "--font-lato",
-  subsets: ["latin"],
-  weight: ["100", "300", "400", "700", "900"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -63,9 +55,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${inter.variable} ${outfit.variable} ${lato.variable} h-full antialiased`}
+      className={`${geistMono.variable} ${cormorant.variable} ${jost.variable} h-full antialiased`}
     >
-      <body className="min-h-full font-inter">
+      <body className="min-h-full font-sans">
         <Script src="https://js.paystack.co/v1/inline.js" strategy="afterInteractive" />
         <DynamicToaster />
         <StoreProvider>

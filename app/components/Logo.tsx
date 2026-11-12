@@ -1,120 +1,84 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import { BrandMark } from "./BrandMark";
 
 interface LogoProps {
   variant?: "on-light" | "on-dark";
   size?: "sm" | "md" | "lg" | "xl";
   short?: boolean;
   type?: "default" | "cms";
+  /** Show the "Maison de Parfum" line under the wordmark (md and up). */
+  tagline?: boolean;
   className?: string;
 }
+
+const sizes = {
+  sm: { mark: 34, word: "text-[17px]", tag: "hidden", gap: "gap-2.5", pad: "pl-2.5" },
+  md: { mark: 48, word: "text-[23px]", tag: "text-[8.5px]", gap: "gap-3.5", pad: "pl-3.5" },
+  lg: { mark: 66, word: "text-[30px]", tag: "text-[10px]", gap: "gap-4", pad: "pl-4" },
+  xl: { mark: 96, word: "text-[42px]", tag: "text-[12px]", gap: "gap-5", pad: "pl-5" },
+};
 
 const Logo: React.FC<LogoProps> = ({
   variant = "on-light",
   size = "md",
   short = false,
   type = "default",
+  tagline = true,
   className = "",
 }) => {
-  const isCMS = type === "cms";
   const isLight = variant === "on-light";
+  const isCMS = type === "cms";
+  const s = sizes[size];
 
-  const sizeStyles = {
-    sm: {
-      box: "px-2 py-0.5 text-[11px] tracking-[0.1em]",
-      text: "text-[11px] tracking-[0.1em]",
-      img: { w: 20, h: 20 }
-    },
-    md: {
-      box: "px-3 py-1 text-sm tracking-[0.15em]",
-      text: "text-sm tracking-[0.15em]",
-      img: { w: 30, h: 30 }
-    },
-    lg: {
-      box: "px-5 py-2 text-xl tracking-[0.2em]",
-      text: "text-xl tracking-[0.2em]",
-      img: { w: 50, h: 50 }
-    },
-    xl: {
-      box: "px-8 py-3 text-3xl tracking-[0.3em]",
-      text: "text-3xl tracking-[0.3em]",
-      img: { w: 80, h: 80 }
-    },
-  };
-
-  const style = sizeStyles[size];
+  const ink = isLight ? "var(--brand-ink)" : "var(--brand-ivory)";
+  const petal = isLight ? "var(--brand-gold)" : "var(--brand-gold-light)";
 
   if (short) {
     return (
-      <div className={`inline-flex items-center justify-center ${isLight ? "bg-brand-charcoal" : "bg-white"} ${style.box} ${className}`}>
-        <span className={`font-outfit font-black uppercase ${isLight ? "text-brand-gold-light" : "text-brand-gold"}`}>B</span>
-      </div>
+      <span className={`inline-flex items-center justify-center ${className}`}>
+        <BrandMark size={s.mark} color={ink} flowerColor={petal} title="Bloom & Mist" />
+      </span>
     );
   }
 
-  // Boutique Side Logo (Image + Text Beside)
-  if (!isCMS) {
-    return (
-      <div className={`inline-flex items-center gap-1.5 ${className}`}>
-        <div className="relative flex-shrink-0">
-          <Image
-            src="/brand_logo/logo.png"
-            alt="Bloom & Mist"
-            width={style.img.w}
-            height={style.img.w} // Square icon
-            className="object-contain"
-            style={{ height: "auto" }}
-            priority
-          />
-        </div>
-        <div className="flex items-center gap-1.5 whitespace-nowrap">
-          <span className={`font-outfit font-black uppercase tracking-[0.2em] ${isLight ? "text-brand-charcoal" : "text-white"} ${size === 'sm' ? 'text-[11px]' : 'text-[14px]'}`}>
-            Bloom
-          </span>
-          <span className={`font-outfit font-light uppercase tracking-[0.3em] text-brand-gold ${size === 'sm' ? 'text-[10px]' : 'text-[13px]'}`}>
-            & Mist
-          </span>
-        </div>
-      </div>
-    );
-  }
-
-  // CMS Side Logo (CSS)
   return (
-    <div className={`inline-flex items-center justify-center gap-1 ${className}`}>
-      {/* Bloom - Box Shape */}
-      <div className="relative group">
-        {/* Box Body / Label */}
-        <div className={`
-          flex items-center justify-center transition-all duration-500
-          ${isLight ? "bg-brand-charcoal border-brand-gold-light/30 shadow-[0_4px_10px_rgba(0,0,0,0.1)]" : "bg-white border-brand-charcoal/10  "} 
-          border-[0.5px] ${style.box} rounded-[1px]
-        `}>
-          <span className={`
-            font-outfit font-black
-            uppercase tracking-[0.15em]
-            bg-gradient-to-tr from-brand-gold to-brand-gold-light bg-clip-text text-transparent
-          `}>
-            Bloom
-          </span>
-        </div>
-      </div>
-
-      <div className="pb-1 ml-1">
-        <span className={`
-          font-outfit font-black tracking-widest
-          uppercase whitespace-nowrap transition-all duration-300
-          ${isLight ? "text-brand-gold" : "text-white"} 
-          ${style.text}
-        `}>
-          CMS
+    <span className={`inline-flex items-center ${s.gap} ${className}`}>
+      <BrandMark size={s.mark} color={ink} flowerColor={petal} />
+      <span
+        className={`flex flex-col justify-center leading-none border-l ${s.pad} ${
+          isLight ? "border-[var(--brand-line-strong)]" : "border-white/15"
+        }`}
+      >
+        <span
+          className={`font-display font-medium uppercase tracking-[0.08em] whitespace-nowrap ${s.word}`}
+          style={{ color: ink }}
+        >
+          Bloom <span className="italic font-normal" style={{ color: petal }}>&amp;</span> Mist
         </span>
-      </div>
-    </div>
+        {isCMS ? (
+          <span
+            className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.42em]"
+            style={{ color: petal }}
+          >
+            Admin
+          </span>
+        ) : (
+          tagline &&
+          size !== "sm" && (
+            <span
+              className={`mt-1.5 uppercase tracking-[0.42em] whitespace-nowrap ${s.tag} ${
+                isLight ? "text-[var(--brand-muted)]" : "text-white/55"
+              }`}
+            >
+              Maison de Parfum
+            </span>
+          )
+        )}
+      </span>
+    </span>
   );
 };
 
 export { Logo };
-
