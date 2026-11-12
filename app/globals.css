@@ -7,33 +7,33 @@
 
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --primary: oklch(0.205 0 0);
+  --background: #FBF8F3;
+  --foreground: #1A1612;
+  --primary: #1A1612;
   /*  (Neutral) */
-  --neutral-900: #1A1A1A;
-  --neutral-700: #404040;
-  --neutral-500: #8D99AE;
-  --neutral-300: #B0B9C1;
-  --neutral-200: #E5E7EB;
-  --neutral-100: #F3F4F6;
+  --neutral-900: #1A1612;
+  --neutral-700: #4A4238;
+  --neutral-500: #75695C;
+  --neutral-300: #CDBFA8;
+  --neutral-200: #E8DFD0;
+  --neutral-100: #F4EEE4;
   --neutral-50: #FFFFFF;
 
 
   /* Light Colors */
   --off-white: #FFFFFF;
   --off-white-2: #FFFFFF;
-  --light-gray: #F5F5F5;
-  --medium-gray: #EEEEEE;
+  --light-gray: #F6F1E9;
+  --medium-gray: #EFE8DC;
   --off-white-3: #FFFFFF;
 
 
   /* Semantic Colors */
   --bg-primary: #FFFFFF;
-  --bg-secondary: #F3F4F6;
-  --bg-tertiary: #E5E7EB;
+  --bg-secondary: #F4EEE4;
+  --bg-tertiary: #E8DFD0;
   --bg-main: #FFFFFF;
-  --bg-hover: #F9FAFB;
+  --bg-hover: #FBF8F3;
 
   --text-primary: var(--primary);
   --text-secondary: var(--dark-slate-gray);
@@ -41,13 +41,23 @@
   --text-inverse: var(--off-white);
 
   /* Primary Color for Light Mode */
-  --primary: oklch(0.205 0 0);
+  --primary: #1A1612;
   --text-primary: var(--primary);
   /* Brand Colors - Essenza Inspired */
-  --brand-black: #080808;
-  --brand-charcoal: #121212;
-  --brand-gold: #C5A028;
-  --brand-gold-light: #D4AF37;
+  --brand-black: #1A1612;
+  --brand-charcoal: #1A1612;
+  --brand-gold: #8A6A3B; /* bronze: passes 4.5:1 as text on white/ivory */
+  --brand-gold-light: #C9A66B; /* champagne: for dark backgrounds */
+
+  /* Bloom & Mist maison palette */
+  --brand-ink: #1A1612;
+  --brand-ivory: #F6F1E9;
+  --brand-paper: #FBF8F3;
+  --brand-sand: #E9DECB;
+  --brand-line: #E8DFD0;
+  --brand-line-strong: #CDBFA8;
+  --brand-muted: #5E5549;
+  --brand-plum: #5B2A3A;
 
   /* Status Colors (for OfflineBanner and alerts) */
   --status-success: #10B981;
@@ -90,7 +100,8 @@ body:has(.admin-dark) {
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter);
+  --font-sans: var(--font-jost);
+  --font-display: var(--font-cormorant);
   --font-mono: var(--font-geist-mono);
 
   /*  */
@@ -104,11 +115,11 @@ body:has(.admin-dark) {
 
   /* Map standard tailwind gray to neutral colors to restore input/dropdown visibility */
   --color-gray-900: var(--neutral-900);
-  --color-gray-800: #1f2937;
+  --color-gray-800: #2A231C;
   --color-gray-700: var(--neutral-700);
-  --color-gray-600: #4b5563;
+  --color-gray-600: #5E5549;
   --color-gray-500: var(--neutral-500);
-  --color-gray-400: #9ca3af;
+  --color-gray-400: #A39887;
   --color-gray-300: var(--neutral-300);
   --color-gray-200: var(--neutral-200);
   --color-gray-100: var(--neutral-100);
@@ -119,11 +130,18 @@ body:has(.admin-dark) {
   --color-brand-gold: var(--brand-gold);
   --color-brand-gold-light: var(--brand-gold-light);
   --color-brand-charcoal: var(--brand-charcoal);
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-ivory: var(--brand-ivory);
+  --color-brand-paper: var(--brand-paper);
+  --color-brand-sand: var(--brand-sand);
+  --color-brand-line: var(--brand-line);
+  --color-brand-muted: var(--brand-muted);
+  --color-brand-plum: var(--brand-plum);
 
-  --font-inter: var(--font-inter);
-  --font-outfit: var(--font-outfit);
-  --font-lato: var(--font-lato);
-  --font-heading: var(--font-outfit);
+  --font-inter: var(--font-jost);
+  --font-outfit: var(--font-jost);
+  --font-lato: var(--font-jost);
+  --font-heading: var(--font-jost);
 
   /* Typography Scales */
   --font-size-h1: 2.5rem;
@@ -244,7 +262,7 @@ body:has(.admin-dark) {
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #F9FAFB;
+    --background: #FBF8F3;
     --foreground: #ededed;
   }
 }
@@ -252,7 +270,7 @@ body:has(.admin-dark) {
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-jost), system-ui, sans-serif;
 }
 
 
